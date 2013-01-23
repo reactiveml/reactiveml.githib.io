@@ -1,0 +1,136 @@
+\begin{mathpar}
+%\inferrule[Equiv]
+%  { \tyju{\tyenv}{e}{\rt}{\rk_1} \\ \effeq{\rk_1}{\rk_2} }
+%  { \tyju{\tyenv}{e}{\rt}{\rk_2} }
+%%
+%\and
+%
+\inferrule%[Var]
+  { \rt \leq \tyenv(x) }
+  { \tyju{\tyenv}{x}{\rt}{\effmin} }
+%
+\and
+%
+\inferrule%[Const]
+  { \rt \leq \tyenv_0(c) }
+  { \tyju{\tyenv}{c}{\rt}{\effmin} }
+%
+\and
+%
+\inferrule%[Pair]
+  { \tyju{\tyenv}{e_1}{\rt_1}{\effmin} \\ 
+  	\tyju{\tyenv}{e_1}{\rt_2}{\effmin}  }
+  { \tyju{\tyenv}{(e_1, e_2)}{ \rtprod{\rt_1}{\rt_2} }{\effmin} }
+%
+\and
+%
+\inferrule%[Abs]
+  { \tyju{\tyenv \tyconcat x : \rt_1} {e} {\rt_2} {\effmin} } 
+  { \tyju{\tyenv} { \elam{x}{e} }   { \rtarrow{\rt_1}{\rt_2} } {\effmin} }
+%
+\and
+%
+\inferrule%[App]
+  {  \tyju{\tyenv} {e_1}{ \rtarrow{\rt_2}{\rt_1} } {\effmin} \\
+  	 \tyju{\tyenv} {e_2}{\rt_2} {\effmin}  }
+  { \tyju{\tyenv} {\eapp{e_1}{e_2}} {\rt_1} {\effmin} }
+%
+\and
+%
+\inferrule%[Rec]
+  { \tyju{\tyenv \tyconcat x : \rt}{e}{\rt}{\effmin} }
+  {  \tyju{\tyenv}{ \erec{x}{e} }{\rt}{\effmin}  }
+%
+%\and
+%
+%\inferrule%[Seq]
+%  { \tyju{\tyenv}{e_1}{\rt_1}{\rk_1}  \\  \tyju{\tyenv}{e_2}{\rt_2}{\rk_2} }
+%  { \tyju{\tyenv}{ \eseq{e_1}{e_2} } {\rt_2} {\effcon{\rk_1}{\rk_2}} }
+%
+\and
+%
+\rulename{Process}
+\inferrule%[ProcAbs]
+  { \tyju{\tyenv}{e}{\rt}{\rk}   }
+  {  \tyju{\tyenv}{ \eproc{e} }{\rtproc{\rt}{\effor{\rk}{\rk'}}}{\effmin} }
+%
+\and
+%
+\inferrule%[ProcApp]
+  {  \tyju{\tyenv}{e}{\rtproc{\rt}{\rk}}{\effmin} }
+  {  \tyju{\tyenv}{ \erun{e} }{\rt}{\effrun{\rk}} }
+%
+\and
+%
+\tyju{\tyenv}{\epause{}}{\mathtt{unit}}{\effplus} 
+%
+\and
+%
+\inferrule%[If]
+  { \tyju{\tyenv}{e_1}{\mathtt{bool}}{\effmin} \\
+    \tyju{\tyenv}{e_2}{\rt}{\rk_2} \\
+    \tyju{\tyenv}{e_3}{\rt}{\rk_3} }
+  { \tyju{\tyenv} {\eite{e_1}{e_2}{e_3}} {\rt}{\effor{\rk_2}{\rk_3}} }
+%
+\and
+%
+\inferrule%[Par]
+  { \tyju{\tyenv}{e_1}{\rt_1}{\rk_1}  \\  
+     \tyju{\tyenv}{e_2}{\rt_2}{\rk_2} \\
+     \tyju{\tyenv \tyconcat  x_1 : gen(\rt_1, e_1, \tyenv) 
+                         \tyconcat x_2 : gen(\rt_2, e_2, \tyenv)}
+             {e}{\rt}{\rk} \\
+    }
+  {  \tyju{\tyenv}{ \eletpar{x_1}{e_1}{x_2}{e_2}{e} } {\rt} { \effcon{ (\effpar{\rk_1}{\rk_2}) }{\rk} } }
+%
+\and
+%
+\inferrule%*[Left=(Signal)]
+  { \tyju{\tyenv}{e_1}{\rt_2}{\effmin}  \\ 
+    \tyju{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\effmin} \\\\
+    \tyju{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
+  { \tyju{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \effcon{\effmin}{\rk}} }
+%
+\and
+%
+\inferrule%[Present]
+  { \tyju{\tyenv}{e_1}{\rtsig{\rt_1}{\rt_2}}{\effmin} \\\\
+    \tyju{\tyenv}{e_2}{\rt}{\rk_2}  \\
+    \tyju{\tyenv}{e_3}{\rt}{\rk_3}  }
+  { \tyju{\tyenv} { \epres{e_1}{e_2}{e_3} }{\rt}{ \effor{\rk_2}{(\effcon{\effplus}{\rk_3})} } }
+%
+\and
+%
+%\inferrule%[Emit]
+%  { \tyju{\tyenv}{e_1}{\rtsig{\rt_1}{\rt_2}}{\effmin} \\ 
+%    \tyju{\tyenv}{e_2}{\rt_1}{\effmin} }
+%  { \tyju{\tyenv}{\eemit{e_1}{e_2}}{\mathtt{unit}}{\effmin} }
+%%
+%\and
+%
+\inferrule%[Loop]
+  { \tyju{\tyenv}{e}{\rt}{\rk} }
+  { \tyju{\tyenv}{\eloop{e}}{\unit}{\effinf{\rk}} }
+%
+\and
+%
+\inferrule%[Until]
+  { \tyju{\tyenv}{e_1}{\rt}{\rk_1} \\ 
+    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} \\\\
+    \tyju{\tyenv \tyconcat x : \rt_2}{e_3}{\rt}{\rk_3}  }
+  { \tyju{\tyenv}{ \euntil{e_1}{e_2}{x}{e_3} } {\rt} { \effor{\rk_1}{\effcon{\effplus}{\rk_3}}  } } 
+%
+\and
+%
+\inferrule%[When]
+  { \tyju{\tyenv}{e_1}{\rt}{\rk} \\\\
+    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} }
+  { \tyju{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
+%
+\and
+%
+\rulename{Mask}
+\inferrule
+  { \tyju{\tyenv}{e}{\rt}{\rk} \\ \effvar \not\in fbv(\tyenv, \rt) }
+  { \tyju{\tyenv}{e}{\rt}{\rk[\effvar \leftarrow \effplus]  } }
+\end{mathpar}

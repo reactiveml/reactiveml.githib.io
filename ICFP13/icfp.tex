@@ -1,0 +1,591 @@
+%\documentclass{llncs}
+\documentclass[9pt,preprint]{sigplanconf}
+
+%\documentclass[a4paper]{article}
+
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+%\usepackage[style=alphabetic]{biblatex}
+%\usepackage{csquotes}
+\usepackage[english]{babel}
+\usepackage{url}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathpartir}
+\usepackage{listings}
+%\usepackage{cprotect} % for listings in footnotes
+\usepackage{pgf}
+\usepackage[colorlinks,
+            linkcolor=black,
+            citecolor=black,
+            urlcolor=black]{hyperref}
+%\usepackage{array}
+%\usepackage{multirow}
+\usepackage[caption=false]{subfig} % sigplanconf complains without caption=false
+\usepackage{rml}
+%\usepackage{graphicx}
+
+%\renewcommand{\ttdefault}{txtt}
+
+\input{syntax}
+
+\bibliographystyle{plain}
+
+\newcommand{\todo}[1]{ {\color{red} #1}}
+
+%\newcommand{\deq}{\stackrel{\text{\tiny def}}{=}}
+\newcommand{\deq}{\triangleq}
+\newcommand{\sdeq}{::=}
+\newcommand\rulename[1]{\text{(\textsc{#1})\;}
+}
+
+\newcommand\topck{\texttt{topck}}
+
+\lstset{columns=fixed, basicstyle=\ttfamily, mathescape=true,
+	showstringspaces=false}
+\lstset{
+basicstyle=\small\ttfamily,
+keywordstyle= \color{Blue}\bfseries,
+commentstyle=\color{Brown},
+stringstyle=\color{red}}
+\lstset{language={[par]rml},
+aboveskip=0.3em}
+
+\lstMakeShortInline{`}
+
+\newcommand{\kword}[1]{\ensuremath{\mathtt{#1}}}
+
+\newcommand\reactivec{\textsc{ReactiveC}}
+
+\begin{document}
+
+\abovedisplayshortskip=0.3em
+\belowdisplayshortskip=0.3em
+\abovedisplayskip=0.3em
+\belowdisplayskip=0.3em
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{property}{Property}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+
+\title{Reactivity of Cooperative Systems}
+%\thanks{This work is supported by the INRIA Action d'envergure Synchronics.}
+\subtitle{Application to \rml}
+
+\authorinfo{}{}{}
+%\authorinfo{ %\vspace*{-.5cm}
+%           Louis Mandel \and C\'edric Pasteur \and
+%            Marc Pouzet}
+%{DI, \'Ecole normale sup\'erieure, 45 rue d'Ulm, 75230 Paris, France}
+%{Firstname.Name@ens.fr}
+
+\maketitle
+
+\begin{abstract}
+Cooperative scheduling enables efficient sequential implementation of concurrency. But it is up to the programmer to cooperate to ensure reactivity of the program. We present an analysis that checks the reactivity of programs by abstracting programs into so-called behaviors using a type-and-effect system. Our work is applied to the functional synchronous language \rml. We prove the soundness of our analysis with respect to the big-step semantics: a well-typed program is reactive.
+\end{abstract}
+
+\category{D.3.2}{Language Classifications}{Applicative (functional) languages; Concurrent, distributed, and parallel languages}
+\category{D.3.3}{Language Constructs and Features}{Concurrent programming structures}
+\category{D.3.4}{Processors}{Compilers}
+
+\terms
+Languages, Theory
+
+\keywords
+Synchronous languages; Functional languages;  Semantics; Type systems
+
+\section{Introduction}
+\label{sec:introduction}
+
+Contributions of the paper:
+\begin{itemize}
+\item A reactivity analysis implemented as a type-and-effect system
+\item A new approach to subeffecting using row polymorphism
+\item The proof of soundness of the analysis
+\end{itemize}
+
+\section{Problem statement}
+
+\subsection{A first example}
+
+A simple example to introduce \rml{} and the problem of reactivity
+
+\subsection{Intuitions and limitations}
+
+\begin{itemize}
+\item No value analysis: false positives with some recursive processes
+\item No analysis of the presence of signals
+\item Reactivity does not equal real-time
+\end{itemize}
+
+\section{Big-step Semantics}
+
+\subsection{Abstract syntax}
+
+We consider here a kernel of \rml{}:
+%
+\begin{align*}
+e \sdeq &\phantom{\mid}  x \mid c \mid (e, e) \mid \elam{x}{e} 
+  \mid \eapp{e}{e} \mid \erec{x}{e} \\
+  & \mid \eproc{e} \mid \erun{e} \mid \epause{}  \\
+& \mid \eletpar{x}{e}{x}{e}{e} \\
+ &\mid \esig{x}{e}{e}{e} \\
+ & \mid \eemit{e}{e} \mid \epres{e}{e}{e} \\
+ & \mid \eite{e}{e}{e} \\
+ &  \mid \eloop{e} \mid \euntil{e}{e}{x}{e} 
+   \mid \ewhen{e}{e} 
+\end{align*}
+
+Using this kernel, we can encode most constructs of the language, for instance:
+%
+\begin{align*}
+%\eawaitim{e} \deq &\; \ewhen{\evoid{}}{e} \\
+\epar{e_1}{e_2} \deq &\; \eletpar{\_}{e_1}{\_}{e_2}{\evoid{}} \\
+\elet{x}{e_1}{e_2} \deq &\; \eletpar{x}{e_1}{\_}{\evoid{}}{e_2} \\
+\mathidl{let} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
+      \deq &\; \elet{f}{\elam{x_1}{\ldots \elam{x_p}{e_1}}}{e_2} \\
+\mathidl{let} \mathidl{rec} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
+      \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{e_1}}}) }{e_2} \\
+\mathidl{let} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
+      \deq &\; \elet{f}{\elam{x_1}{\ldots \elam{x_p}{ \eproc{e_1} }}}{e_2} \\     
+\mathidl{let} \mathidl{rec} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
+            \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{\eproc{e_1}}}}) }{e_2} \\
+\eseq{e_1}{e_2} \deq &\; \elet{\_}{e_1}{e_2}  \\
+\eawait{e_1}{x}{e_2} \deq&\; \euntil{ (\eloop{\epause{}}) }{e_1}{x}{e_2}
+\end{align*}
+
+
+\subsection{Semantics}
+
+Subset of the big step semantics of \rml{}
+
+The semantics is defined by the relation
+\[  \bigstep{N}{e}{e'}{E}{b}{S} \]
+
+\begin{figure*}
+\begin{small}
+\input{big_step}
+\end{small}
+
+
+\caption{Big-step semantics}
+\label{fig:big_step}
+\end{figure*}
+
+\section{The algebra of behaviors}
+
+\subsection{The behaviors}
+
+The algebra of behaviors is given by:
+\[
+\rk \sdeq \effplus ~\mid~ \effmin ~\mid~ \effvar ~\mid~ \effpar{\rk}{\rk} ~\mid~ \effor{\rk}{\rk}
+~\mid~ \effcon{\rk}{\rk}  ~\mid~ \effrec{\effvar}{\rk}  ~\mid~ \effrun{\rk}
+\]
+
+\subsection{Reactive behaviors}
+
+\begin{figure*}
+
+\subfloat[Reactive behaviors]{
+\begin{small}
+\input{wf}
+\end{small}
+\label{fig:reactive_behavior}
+}
+
+\subfloat[Non-instantaneous behaviors]{
+\begin{small}
+\input{noinst}
+\end{small}
+\label{fig:noinst_behavior}
+}
+
+\caption{Properties of behaviors}
+\end{figure*}
+
+
+\section{The type-and-effect system}
+
+\subsection{Notations}
+
+\begin{align*}
+\rt \sdeq &\;\;\; \rtvar \mid T \mid \rtprod{\rt}{\rt} \mid \rtarrow{\rt}{\rt} \\
+    &\;\mid \rtproc{\rt}{\rk} \mid \rtsig{\rt}{\rt} && \text{(types)} \\
+\rs \sdeq &\; \rt \mid \forall \effvar.\, \rs \mid \forall \rtvar.\, \rs && \text{(type schemes)} \\
+\tyenv \sdeq&\; \emptyset \mid \tyenv \tyconcat x : \rs && \text{(environments)}
+\end{align*}
+
+We denote $ftv(\rt)$ (resp. $fbv(\rt)$) the set of type~(resp. beavior) variables free in $\rt$ and $fv(\rt) = ftv(\rt), fbv(\rt)$. Instantiation and generalization are defined in a classic way:
+\begin{mathpar}
+\rs[\rtvar \leftarrow \rt] \leq \forall \rtvar.\, \rs 
+\and
+\rs[\effvar \leftarrow \rk] \leq \forall \effvar.\, \rs  
+\end{mathpar}
+\vspace{-1.3em}
+\begin{align*}
+gen(\rt, e, \tyenv) = &\, \rt && \text { if $e$ is expansive} \\
+gen(\rt, e, \tyenv) = &\; \forall \bar{\rtvar}.\forall \bar{\effvar}.\; \rt 
+   \text{ where }  \bar{\rtvar}, \bar{\effvar} = fv(\rt) \setminus fv(\tyenv)  
+   && \text{ otherwise } 
+\end{align*}
+
+The initial typing environment is: 
+\begin{align*}
+\Gamma_0 \deq [
+ &\eemit{}{} : \forall  \rtvar_1, \rtvar_2. \, 
+        \rtarrow{ \rtsig{\rtvar_1}{\rtvar_2} }{\rtarrow{\rtvar_1}{\unit{}} }; \\
+        &\mathtt{true} : \mathtt{bool};
+              \mathtt{fst} : \forall \rtvar_1, \rtvar_2.\, \rtarrow{\rtprod{\rtvar_1}{\rtvar_2}}{\rtvar_1};  \ldots ]
+\end{align*}
+
+\subsection{Typing rules}
+
+\begin{figure*}
+\begin{small}
+\input{rules}
+\end{small}
+
+\caption{Type-and-effect rules}
+\label{fig:rules}
+\end{figure*}
+
+The rules are given in Figure~\ref{fig:rules}.
+
+\begin{itemize}
+
+\item On ne cherche pas à prouver la terminaison des fonctions \ocaml{} pures (sans comportement réactif): la règle de l'application montre que l'on suppose que les appels de fonctions terminent toujours. C'est pourquoi il n'y a pas de comportement associé à une fonction, puisqu'il est toujours instantané (il n'y a pas de comportement sur les flèches contrairement à la tradition dans les systèmes de types et effets).
+
+\item Dans le modèle synchrone réactif, on ne peut pas réagir instantanément à l'absence d'un signal. C'est pourquoi dans le cas du $\mathtt{present}$ la branche $\mathtt{then}$ est exécutée immédiatement si le signal est présent et la branche $\mathtt{else}$ à l'instant suivant dans le cas contraire. Cela se traduit de façon immédiate dans le comportement de $\mathtt{present}$.
+  %
+  De même, dans un $\mathtt{until}$, en cas de préemption, la
+  continuation est exécutée à l'instant suivant la réception du
+  signal. Cela est reflété dans la règle de typage.
+% De la même façon, la préemption dans le cas du $\mathtt{until}$ est faible, puisque la continuation est exécutée à l'instant suivant, ce que l'on voit clairement sur la règle de typage.
+
+%\item Le comportement obtenu pour $\mathtt{present}$ peut sembler un peu étrange. En suivant au plus près la sémantique, on choisirait un comportement $\effor{\rk_2}{(\effcon{\effplus}{\rk_3})}$: on exécute la première branche instantanément ou la seconde à l'instant suivant. On peut montrer simplement que ce comportement est bien équivalent à $\rk_2$:
+%\[
+%\inferrule
+%  {
+%    \inferrule
+%      {
+%        \effeq{\effcon{\effplus}{\rk_3}}{\rk_3}\\
+%        \effeq{\rk_2}{\rk_2}
+%      }
+%      { 
+%      \effeq{\effor{\rk_2}{(\effcon{\effplus}{\rk_3})}}{\effor{\rk_2}{\effplus}} 
+%      }
+%      \\  
+%      \effeq{\effor{\rk_2}{\effplus}}{\rk_2}
+%  }
+%  { \effeq{\effor{\rk_2}{(\effcon{\effplus}{\rk_3})}}{\rk_2} }
+%\]
+%Le même raisonnement permet de justifier le comportement attribué à $\mathtt{until}$.
+
+\pagebreak
+\item On peut vérifier que l'encodage des primitives que l'on a donné permet bien de retrouver les comportements attendus. Par exemple, on peut considérer le cas de $\eseq{e_1}{e_2}$:
+\begin{small}
+\[ 
+\inferrule
+{
+\inferrule%*[left=(Equiv)]
+  { 
+    \inferrule 
+      {
+        \tyju{\tyenv}{e_1}{\rt_1}{\rk_1} \\
+        \tyju{\tyenv}{\evoid}{\unit}{\effmin} \\
+        \tyju{\tyenv}{e_2}{\rt_2}{\rk_2} \\
+      }
+      { 
+      \tyju{\tyenv}{\eletpar{\_}{e_1}{\_}{\evoid}{e_2}}{\rt_2}{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } 
+      } 
+  }
+  { \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt}{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } } 
+ \\
+ \inferrule
+   { \effeq{\effpar{\rk_1}{\effmin}}{\rk_1}  \\ \effeq{\rk_2}{\rk_2} }
+   { \effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } { \effcon{\rk_1}{\rk_2} } }
+}
+{
+  \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt_2}{ \effcon{\rk_1}{\rk_2} }
+}
+\]
+\end{small}
+On peut de la même façon vérifier que $\epar{e_1}{e_2}$ a bien un comportement équivalent à $\effpar{\rk_1}{\rk_2}$ ou que $\eawait{e_1}{x}{e_2}$ a le comportement $\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$ après simplification. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
+
+\item Il n'y a pas de règles particulières pour les processus récursifs. C'est l'ajout de l'opérateur $\mathtt{run}$ qui force le comportement des processus récursifs à être de la forme $\effrec{\effvar}{\rk}$ avec $\effvar \in fbv(\rk)$.
+Considérons par exemple le processus défini par \lstinline+let rec process p = run p+, que l'on écrit $\erec{p}{\eproc{(\erun{p})}}$ dans notre noyau: 
+\begin{small}
+\[
+\inferrule
+{
+\inferrule
+  {
+   \inferrule*[left=Equiv]
+     {
+     \inferrule*
+      { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{p}{\rtproc{\beta}{\rk}}{\effmin} }
+      { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\effrun{\rk}} }
+      \\
+      \effeq{\effrun{\rk}}{\rk}
+     }
+     {
+     \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\rk}
+     }
+%        \qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
+  }  
+  { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\eproc{(\erun{p})}} {\rtproc{\beta}{\rk}}{\effmin} }
+}
+{ \tyju{\tyenv}{ \erec{p}{\eproc{(\erun{p})}} }{\rtproc{\beta}{\rk}}{\effmin} }
+%\qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
+\]
+\end{small}
+On voit sur la dérivation de typage que l'on doit vérifier $\effeq{\effrun{\rk}}{\rk}$ pour pouvoir typer cette expression. Seul le comportement $\effrec{\effvar}{\effrun{\effvar}}$ vérifie cette propriété. Cela explique aussi pourquoi aucune règle d'équivalence ne concerne l'opérateur \texttt{run}, qui ne doit pas être simplifiable. En effet, sans le $\mathtt{run}$, la condition $\effeq{\rk}{\rk}$ serait toujours vraie. On aurait donc pu prendre par exemple $\rk = \effmin$ et rater la récursion instantanée.
+
+{
+\abovedisplayskip=0.5em
+\belowdisplayskip=0.5em
+\item La construction $\mathtt{loop}$ ne fait pas habituellement partie du noyau du langage puisque l'on peut l'obtenir par:
+\[
+\eloop{e} \deq \mathid{run}(( \mathidl{rec} loop = 
+     \elam{x}{\eproc{(\eseq{\erun{x}}{\erun{(\eapp{loop}{x})}})}})\; (\eproc{e})) 
+\]
+Si l'on applique les règles du système de types et en supposant que \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, on obtient les types suivants:
+\begin{align*}
+loop:&\, \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
+                {\rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
+\eproc{e} :&\, \rtproc{\rt}{\rk}
+\end{align*}
+On obtient donc le comportement $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$ pour $\eloop{e}$. Ce comportement n'est pas équivalent à $\effinf{\rk}$, mais il est réactif si et seulement si $\effinf{\rk}$ est réactif, puisque les $\mathtt{run}$ n'influent pas sur la réactivité des comportements. On aurait donc pu enlever $\mathtt{loop}$ du noyau présenté ici sans aucune incidence sur le résultat de l'analyse de réactivité.
+
+\item Ce n'est par contre pas le cas pour $\epause{}$, que l'on peut encoder par:
+\[
+\epause{} \deq \esig{s}{\evoid}{(\elam{x}{\elam{y}{\mathtt{\evoid}}})}{\epres{s}{\evoid}{\evoid}}
+\]
+Nous avons fait le choix de complètement abstraire les valeurs et les présences des signaux. Comme dans l'exemple \texttt{imprecise} de la partie~\ref{sec:intuition}, on ne prend pas en compte le fait que le signal~$s$ n'est jamais présent et que seule la seconde branche du $\mathtt{present}$ est exécutée. On obtient donc le comportement $\effeq{\effor{\effmin}{\effcon{\effplus}{\effmin}}}{\effmin}$ qui n'est pas du tout ce que l'on souhaite.
+}
+\end{itemize}
+
+\subsection{Subeffecting with row polymorphism}
+
+\begin{itemize}
+\item Remind subeffecting with constraints: enough to have a conservative extension of the type system (see \cite{Nielson:1999} for instance). Subeffecting = replacing an effect with a bigger effect. Here, replace $\rk$ with $\effor{\rk}{\rk'}$.
+\[
+\inferrule
+  { \tyju{\tyenv}{e}{\rt}{\rk} \\ \rk \sqsubseteq \rk' }
+  { \tyju{\tyenv}{e}{\rt}{\rk'}  }
+\]
+
+In \cite{Amtoft:1999}, add a constraint set to the typing rules, simple types, ie effects are always variables and:
+\[
+\inferrule
+  { \tyju{\tyenv, C}{e}{\rt}{\rk}   }
+  {  \tyju{\tyenv, C \cup {\rk \sqsubseteq \effvar} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
+\]
+For sets (like regions), $\sqsubseteq$ is subset inclusion. In our case, such that $\rk \sqsubseteq \effor{\rk}{\rk'}$.
+\item Behaviors of processes are always variables or rows (we could have enforced it using different kinds)
+\item Show extended unification algorithm:no explicit constraints, only collection of effects and unification
+\end{itemize}
+
+%L'algorithme prend en entrée en environnement de typage $\tyenv$ et une expression $e$ et renvoie une substitution $S$, un type $\rt$ et un effet $\rk$:
+%\[ \mW(\tyenv, e) = S, \rt, \rk \]
+
+%Description de l'algorithme:
+%\begin{small}
+%\begin{align*}
+%\mW(\tyenv, \evoid) =&\,(id, \mathtt{unit}, \effmin) \\
+%\mW(\tyenv, x) =&\, (id, \rt[\bar{\alpha} \leftarrow \bar{\beta}], \effmin) 
+%          \text{ où } \tyenv(x) = \forall \bar{\alpha}.\, \rt &&  \fresh{\bar{\beta}} \\
+%\mW(\tyenv, \elam{x}{e}) =&\, \mlet (S_1, \rt_1, \rk_1) = \mW(\tyenv \tyconcat x:\beta, e) && \fresh{\beta} \\
+%                                          &\,  \mIn (S_1, S_1 \rtarrow{\beta}{\effor{\rk_1}{\effvar} }{\rt_1}, \effmin) \\
+%\mW(\tyenv, \eapp{e_1}{e_2}) =&\, \mlet (S_1, \rt_1, \rk_1) = \mW(\tyenv, e_1)  \\
+%												   &\, \mand S'_1 = \mU_{\rk}(\rk_1, \effmin) \\
+%												   &\, \mand (S_2, \rt_2, \rk_2) = \mW(S'_1 S_1\tyenv, e_2) \\
+%												   &\, \mand S'_2 = \mU_{\rk}(\rk_2, \effmin) \\
+%												   &\, \mand S_3 = \mU(S'_2 S_2 \rt_1, \rt_2 \rightarrow \beta) && \fresh{\beta} \\
+%												   &\, \mIn (S_3 S'_2 S_2 S'_1 S_1, S_3\beta) \\
+%\mW(\tyenv, \elet{x}{e_1}{e_2}) =&\, \mlet (S_1, \rt_1, \rk_1) = \mW(\tyenv, e_1)  \\
+%													 &\, \mand (S_2, \rt_2, \rk_2)= \mW(S_1\tyenv \tyconcat x : gen(\rt, e_1, \tyenv), e_2) \\
+%													 &\, \mIn (S_2 S_1, \rt_2, \rk_1 \cup \rk_2) \\
+%\mW(\tyenv, \erec{x}{e}) =&\, \mlet (S_1, \rt_1) = \mW(\tyenv \tyconcat x:\beta, e) && \fresh{\beta} \\
+%										  &\, \mand  S_2 = \mU(S_1\beta, \rt_1) \\
+%										  &\, \mIn (S_2 S_1, S_2 \rt_1)
+%\end{align*}
+%\end{small}
+
+The inference algorithm is the algorithm $\mW$ with the collection of behaviors.
+
+L'algorithme d'unification prend en entrée deux types $\rt_1$ et $\rt_2$ et renvoie une substitution $S$ ou échoue avec la valeur spéciale $\fail$:
+\[  \mU(\rt_1, \rt_2) = S \]
+
+Improved unification algorithm of 
+\begin{small}
+\begin{align*}
+\mU_{\rk}(\effvar, \rk) = \mU_{\rk}(\rk, \effvar) =
+					&\, [\effvar \mapsto  \effrec{\effvar'}{\rk[\effvar \leftarrow \effvar']} ]  \text{ if } \mathtt{occur\_check}(\effvar, \rt) \\
+					&\,  [\effvar \mapsto \rk] \\
+\mU_{\rk}(\effor{\rk_1}{\effvar_1}, \effor{\rk_2}{\effvar_2}) =&\,
+                  [\effvar_1 \mapsto \effor{\rk_2}{\effvar}; \\
+                  &\,\; \effvar_1 \mapsto \effor{\rk_2}{\effvar} ] && \fresh{\effvar} \\
+\mU_{\rk}(\rk, \rk) =&\, [] \\
+\mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} && \text{ dans tous les autres cas}
+\end{align*}
+\end{small}
+
+
+\subsection{Simplifying behaviors}
+
+\begin{itemize}
+\item In the proof of correction, we only use the fact that the behavior is reactive.
+\item We introduce an equivalence on behaviors, that preserve reactivity
+\item Add a new typing rule (some kind of subtyping), can also simplify some rules
+\end{itemize}
+
+Elle est définie de telle sorte que si $\effeq{\rk_1}{\rk_2}$ et $\wf{R}{\rk_1}$ alors $\wf{R}{\rk_2}$.
+
+La relation $\effeq{}{}$ est une relation d'équivalence, c'est-à-dire une relation réflexive, symétrique et transitive. Les opérateurs $\effcon{}{}$ et $\effpar{}{}$ et $\effor{}{}$ sont compatibles avec cette relation d'équivalence et idempotents. 
+$\effcon{}{}$ et $\effpar{}{}$ et $\effor{}{}$ sont associatifs. $\effpar{}{}$~et $\effor{}{}$ sont commutatifs (mais pas $;\,$). Le comportement~$\effmin$~(resp.~$\effplus$) est l'élément neutre de $\effcon{}{}$ et $\effpar{}{}$ (resp.~$\effor{}{}$). On ajoute aussi les règles suivantes, qui expriment les propriétés de l'opérateur de récursion et traduisent l'intuition de récursion:
+%
+\begin{mathpar}
+\inferrule
+  { \effeq{\rk_1}{\rk_2} }
+  { \effeq{\effrec{\effvar}{\rk_1}}{\effrec{\effvar}{\rk_2}} }
+%
+\and
+%
+\effeq{\effrec{\effvar}{\rk}}{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
+%
+\and
+%
+\effeq{\effinf{\effplus}}{\effplus}
+\end{mathpar}
+
+On peut par exemple montrer que le comportement
+$\effrec{\effvar}{(\effcon{(\effpar{\effplus}{\effmin})}{(\effor{\effrun{\effvar}}{\effrun{\effvar}})})}$
+est équivalent à
+$\effrec{\effvar}{\effcon{\effplus}{\effrun{\effvar}}}$.
+
+New typing rule:
+\[ 
+\inferrule
+  { \tyju{\tyenv}{e}{\rt}{\rk_1} \\ \effeq{\rk_1}{\rk_2} }
+  { \tyju{\tyenv}{e}{\rt}{\rk_2} } 
+\]
+
+\subsection{Examples}
+
+\section{Proof of soundness}
+
+
+On définit une opération $\rkfst{\rk}$ qui ne garde que l'effet correspondant au premier instant:
+\begin{align*}
+\rkfst{\effmin} =&\, \rkfst{\effplus}  = \effmin \\
+\rkfst{\effvar} =&\, \effvar \\
+\rkfst{\effrun{\rk}} =&\, \effrun{(\rkfst{\rk})} \\ 
+\rkfst{\effpar{\rk_1}{\rk_2}} =&\, \effpar{\rkfst{\rk_1}}{\rkfst{\rk2}} \\
+\rkfst{\effor{\rk_1}{\rk_2}} =&\, \effor{\rkfst{\rk_1}}{\rkfst{\rk2}} \\
+\rkfst{\effcon{\rk_1}{\rk_2}} =&\, \effcon{\rk_1}{\rkfst{\rk2}} &&\text{ si } \rkfst{\rk_1} = \rk_1\\
+\rkfst{\effcon{\rk_1}{\rk_2}} =&\, \rkfst{\rk_1} && \text{ sinon } \\
+\rkfst{\effrec{\effvar}{\rk}} =&\, \rkfst{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
+\end{align*}
+Dans le cas d'un comportement récursif, $\rkfst{\rk}$ est bien défini si le comportement est réactif, mais peut ne pas etre défini sinon.
+
+\begin{property}
+Si le comportement $\rk$ est réactif, alors $\rkfst{\rk}$ est un comportement fini (i.e. il est équivalent à un comportement sans comportement récursif).
+\end{property}
+Cette propriété est la base de la preuve de correction. Le comportement de tout processus bien typé est fini, donc on sait que l'on va appeler un nombre fini de processus au cours de l'instant. On montre ainsi que l'exécution de l'instant est finie, sous réserve que les fonctions terminent.
+
+\begin{theorem}[Sureté]
+Si $\tyju{\tyenv}{e}{\rt}{\rk}$ et si on suppose que "les fonctions terminent", alors il existe $e'$ tel que $\bigstep{N}{e}{e'} {E}{b}{S}$ et $\tyju{\tyenv}{e'}{\rt}{\rk'}$.
+\end{theorem}
+\begin{proof}
+On va montrer par récurrence sur la taille de $\rkfst{\rk}$ que l'on peut obtenir une dérivation finie dans la sémantique à grands pas de \rml{} pour tout terme bien typé. L'hypothèse que "les fonctions terminent" se traduit plus formellement par le fait qu'on suppose qu'il existe une dérivation finie $\Pi$ pour toute expression $e$ (surement) instantanée, c'est-à-dire:
+\[ 0 \vdash e \Rightarrow \exists v.\, \inferrule{\Pi}{ \bigstep{N}{e}{v} {E}{b}{S} } \] 
+(Il y a la preuve dans le Lemme 8 p. 81 de la thèse de Louis que les expressions instantanées se réduisent instantanément en une valeur ou se réduisent infiniment. On suppose ici que le deuxième cas ne peut pas arriver.)
+
+Dans le cas des primitives réactives, on utilise l'hypothèse de récurrence sur les sous-expressions, qui ont un comportement plus petit:
+\begin{itemize}
+\item Cas de $\erun{e}$: On a alors que $0 \vdash e$ donc il existe $\Pi$ tel que 
+\[ \inferrule{\Pi}{ \bigstep{N_1}{e}{\eproc{e_1}} {E}{true}{S} } \]
+De plus, comme $\erun{e}$ est bien typé, on a:
+\[
+\inferrule
+  {
+  \inferrule
+    { \tyju{\tyenv}{e_1} {\rt}{\rk}  }
+    { \tyju{\tyenv}{\eproc{e_1}} { \rtproc{\rt}{\rk} }{\effmin} }
+  }
+  { \tyju{\tyenv}{\erun{(\eproc{e_1})}} {\rt}{\effrun{\rk}} }
+\]
+On peut appliquer l'hypothèse de récurrence sur $e_1$ et on obtient donc que:
+\[  \inferrule{\Pi_1}{ \bigstep{N_2}{e_1}{e'_1} {E_1}{b}{S} } \]
+et on peut donc construire la dérivation complète pour $\erun{e}$:
+\[
+\inferrule
+{
+\inferrule{\Pi}{ \bigstep{N_1}{e}{\eproc{e_1}} {E}{true}{S} } \\
+\inferrule{\Pi_1}{ \bigstep{N_2}{e_1}{e'_1} {E_1}{b}{S} }
+}
+{ \bigstep{N_1 \cdotp N_2}{\erun{e}}{e'_1} {E \sqcup E_1}{b}{S} }
+\]
+
+\item Cas de $\epause{}$: La dérivation est finie sans aucune hypothèse.
+
+\item Cas de $\epres{e}{e_1}{e_2}$: 
+De la meme façon, on prouve que :
+\[ \inferrule{\Pi}{ \bigstep{N_1}{e}{n} {E}{true}{S} } \]
+La règle de typage nous donne:
+\[ 
+\inferrule%[Present]
+  { \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effmin} \\
+    \tyju{\tyenv}{e_1}{\rt}{\rk_1}  \\
+    \tyju{\tyenv}{e_2}{\rt}{\rk_2}  }
+  { \tyju{\tyenv} { \epres{e}{e_1}{e_2} }{\rt}{ \effor{\rk_1}{(\effcon{\effplus}{\rk_2})} } }
+\]
+On doit traiter les deux cas, selon la présence du signal:
+\begin{itemize}
+\item Cas où $n \in S$: Alors on applique l'hypothèse de récurrence sur $e_1$  et on conclut simplement.
+\item Cas où $n \not\in S$: Alors la dérivation est finie.
+\end{itemize}
+
+\item Cas de $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$: Idem.
+
+\item Cas de $\euntil{e_1}{e_2}{x}{e_3}$: Idem.
+
+\item Cas de $\esig{x}{e_1}{e_2}{e}$: On utilise l'hypothèse sur les expressions instantanées pour $e_1$ et $e_2$. Pour traiter le cas de $e$, on doit supposer que la règle de typage est la suivante:
+\[
+\inferrule%*[Left=(Signal)]
+  { \tyju{\tyenv}{e_1}{\rt_2}{\effmin}  \\ 
+    \tyju{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\effmin} \\
+    \tyju{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
+  { \tyju{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \effcon{\effmin}{\rk}} }
+\]
+Le comportement donné à l'expression est équivalent mais permet d'avoir un comportement qui décroit.
+
+\item Cas de $\ewhen{e_1}{e_2}$: On modifie de la meme façon la règle de typage devient:
+\[
+\inferrule%[When]
+  { \tyju{\tyenv}{e_1}{\rt}{\rk} \\
+    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} }
+  { \tyju{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
+\]
+
+\end{itemize}
+
+Pour prouver que l'on obtient une expression bien typée pour l'instant suivant, on étend la preuve de correction du typage, qui est faite sur la sémantique à petits pas (dont l'équivalence avec la sémantique à grands pas a été prouvée), pour prendre en compte les comportements. On n'a besoin d'aucune propriété sur le comportement $\rk'$ de $e'$, puisqu'on n'utilise seulement le fait que ce comportement est réactif (qui est inclut dans la définition de bien typé). 
+
+\end{proof}
+
+\section{Related work}
+
+
+\section{Conclusion}
+
+\bibliographystyle{plain}
+
+\begin{small}
+\bibliography{biblio}
+\end{small}
+
+\end{document}

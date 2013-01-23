@@ -1,0 +1,53 @@
+\begin{mathpar}
+\inferrule{ }{ \noinst{\effplus} }
+%
+\and
+%
+\inferrule{ }{ \noinst{\effvar} }
+%
+\and
+%
+\inferrule
+  { \noinst{\rk_1} }
+  {\noinst{\effcon{\rk_1}{\rk_2}}} 
+%
+\and
+%
+\inferrule
+  { \noinst{\rk_2} }
+  {\noinst{\effcon{\rk_1}{\rk_2}}} 
+%
+\and
+%
+\inferrule
+  { \noinst{\rk_1} }
+  {\noinst{\effpar{\rk_1}{\rk_2}}} 
+%
+\and
+%
+\inferrule
+  { \noinst{\rk_2} }
+  {\noinst{\effpar{\rk_1}{\rk_2}}} 
+%
+\\
+%
+\inferrule
+  { \noinst{\rk_1} \\ \noinst{\rk_2} }
+  {\noinst{\effor{\rk_1}{\rk_2}}} 
+%
+\and
+%
+%\inferrule
+%  {\effvar \in fbv(\rk) \lor \noinst{\rk}}
+%  {\noinst{\effrec{\effvar}{\rk}}}
+%\noinst{\effrec{\effvar}{\rk}}
+\inferrule
+  { \noinst{\rk} }
+  { \noinst{\effrec{\effvar}{\rk}}  }
+%
+\and
+%
+\inferrule
+  {\noinst{\rk}}
+  {\noinst{\effrun{\rk}}}
+\end{mathpar}

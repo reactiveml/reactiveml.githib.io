@@ -1,0 +1,88 @@
+\usepackage{cancel}
+
+\newcommand\mathid[1]{\;\mathtt{#1}\;}
+\newcommand\mathidl[1]{\mathtt{#1}\;}
+\newcommand\mathidr[1]{\;\mathtt{#1}}
+
+% Syntaxe abstraite - Expressions
+\newcommand\elam[2]{\lambda #1. #2}
+\newcommand\eapp[2]{#1\; #2}
+\newcommand\erec[2]{\mathidl{rec} #1 = #2}
+\newcommand\eproc[1]{\mathidl{process} #1}
+\newcommand\erun[1]{\mathidl{run} #1}
+\newcommand{\epause}{\mathidl{pause}}
+\newcommand\eseq[2]{#1 ; #2}
+\newcommand\elet[3]{ \mathidl{let} #1 = #2 \mathid{in} #3 }
+\newcommand\eletpar[5]{ \mathidl{let} #1 = #2 \mathid{and} #3 = #4 \mathid{in} #5 }
+\newcommand\epar[2]{#1 \,||\, #2}
+\newcommand\esig[4]
+   { \mathidl{signal} #1 \mathid{default} #2 \mathid{gather} #3 \mathid{in} #4 }
+\newcommand\esigshort[2]{ \mathidl{signal} #1 \mathid{in} #2 }
+\newcommand\epres[3]{ \mathidl{present} #1 \mathid{then} #2 \mathid{else} #3 }
+\newcommand\eemit[2]{ \mathidl{emit} #1\; #2 }
+\newcommand\eawait[3]{ \mathidl{await} #1(#2) \mathid{in} #3 }
+\newcommand\eawaitim[1]{ \mathidl{await} \mathidl{immediate} #1 }
+\newcommand\eawaitimone[3]{ \mathidl{await} \mathidl{immediate} \mathidl{one} #1(#2) \mathid{in} #3 }
+\newcommand\efordopar[4]{\mathidl{for} #1 = #2 \mathid{to} #3 \mathid{dopar} #4}
+\newcommand\eite[3]{\mathidl{if} #1 \mathid{then} #2 \mathid{else} #3}
+\newcommand\eloop[1]{\mathidl{loop} #1}
+\newcommand\elast[1]{ \mathidl{last} #1}
+\newcommand\euntil[4]{\mathidl{do} #1 \mathid{until} #2(#3) \rightarrow #4 }
+\newcommand\ewhen[2]{ \mathidl{do} #1 \mathid{when} #2 }
+\newcommand\evoid{\mathtt{()}}
+
+% Semantique grands pas
+%\newcommand\bigstep[6]{ #1 \vdash #2 \xrightarrow[#6]{#4, #5} #3 }
+\newcommand\bigstep[6]{#2 \xrightarrow[#6]{#4, #5} #3 }
+
+% Types
+\newcommand\rt{\tau}
+\newcommand\rs{\sigma}
+\newcommand\rk{\kappa}
+
+\newcommand\rtvar{\alpha}
+\newcommand\rtdot{.}
+\newcommand\rtprod[2]{#1 \times #2}
+\newcommand\rtarrow[2]{#1 \rightarrow #2}
+\newcommand\rtproc[2] { #1 \,\mathtt{process}[#2] }
+\newcommand\rtsig[2]{ (#1, #2) \,\mathtt{event} }
+\newcommand\rtsigck[3]{ (#1, #2) \,\mathtt{sig}\{#3\} }
+\newcommand\unit{\mathtt{unit}}
+
+% Effets
+\newcommand\effvar{\phi}
+\newcommand\effpar[2]{ #1 \mid\mid #2 }
+\newcommand\effcon[2]{#1 ; #2}
+\newcommand\effor[2]{#1 + #2}
+\newcommand\effrec[2]{\mu #1.\, #2}
+\newcommand\effplus{\bullet}
+\newcommand\effmin{\textsf{0}}
+\newcommand\efftop{\top}
+\newcommand\effrun[1]{\mathidl{run} #1}
+\newcommand\effinf[1]{#1^\infty}
+
+\newcommand\effeq[2]{#1 \equiv #2}
+\newcommand\wf[2]{#1 \vdash #2}
+\newcommand\noinst[1]{#1\downarrow^{\bullet}}
+
+% Typage
+\newcommand\tyenv{\Gamma}
+\newcommand\tyconcat{,}
+\newcommand\tyju[4]{ #1 \vdash #2 : #3 \mid #4 }
+
+
+% Unification
+\newcommand\mW{\mathcal{W}}
+\newcommand\mM{\mathcal{M}}
+\newcommand\mU{\mathcal{U}}
+\newcommand\mlet{\mathtt{let}\,}
+\newcommand\mIn{\mathtt{in}\,}
+\newcommand\mand{\mathtt{and}\,}
+\newcommand\fresh[1]{#1 \text{ frais}}
+\newcommand\fail{\mathtt{fail}}
+
+
+% Preuve de typage
+\newcommand\rkfst[1]{\mathtt{fst}(#1)}
+
+
