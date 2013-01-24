@@ -228,11 +228,9 @@ let rec process good_rec =
 let rec process bad_rec =
     run bad_rec; pause
 \end{lstlisting}
-As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must verify that~$ \rk = \effcon{\effplus}{\effrun{\rk}}$. This can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effplus}{\effrun{\effvar}}$. Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
+As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must verify that~$ \rk = \effcon{\effplus}{\effrun{\rk}}$. The $\mathtt{run}$ operator is associated to running a process and is necessary to solve technical problems in the type system, that will be discussed in Section~\ref{sec:type_system}. This equation can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effplus}{\effrun{\effvar}}$. Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
 
-\subsection{Reactive behaviors}
-
-\begin{figure*}
+\begin{figure}[t]
 
 \subfloat[Reactive behaviors]{
 \begin{small}
@@ -249,10 +247,17 @@ As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must
 }
 
 \caption{Properties of behaviors}
-\end{figure*}
+\end{figure}
 
+
+\subsection{Reactive behaviors}
+
+Using the language of behaviors, we can now characterize the behaviors that we want to reject, that is instantaneous loops and recursions. We actually enforce a stronger sufficient condition, that can be checked easily and efficiently: there must be at least one instant before each recursive call. This condition is not necessary, as the `par_map` example of Section~\ref{} showed. As the behavior of a loop is just a particular case of recursive behavior, this condition also implies that the body of a loop is non-instantaneous.
+
+A behavior that respect this condition is called a \emph{reactive} behavior. A behavior is reactive if for each recursive behavior $\effrec{\effvar}{\rk}$, the recursion variable $\effvar$ does not appear in the first instant of the body $\rk$. Formally, we define a predicate $\wf{R}{\rk}$ meaning that the behavior $\rk$ is reactive with respect to the set of variables $R$, that is, these variables do not appear in the first instant of $\rk$ and all the recursions inside $\rk$ are well-formed. This relation is defined in Figure~\ref{fig:reactive_behavior}. It uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined in Figure~\ref{fig:noinst_behavior}. Indeed, in the case of $\eseq{\rk_1}{\rk_2}$, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{[]}{\rk_2}$.
 
 \section{The type-and-effect system}
+\label{sec:type_system}
 
 \subsection{Notations}
 
