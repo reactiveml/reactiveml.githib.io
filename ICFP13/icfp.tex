@@ -113,6 +113,7 @@ Contributions of the paper:
 A simple example to introduce \rml{} and the problem of reactivity
 
 \subsection{Intuitions and limitations}
+\label{sec:intuition}
 
 \begin{itemize}
 \item No value analysis: false positives with some recursive processes
@@ -228,7 +229,9 @@ let rec process good_rec =
 let rec process bad_rec =
     run bad_rec; pause
 \end{lstlisting}
-As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must verify that~$ \rk = \effcon{\effplus}{\effrun{\rk}}$. The $\mathtt{run}$ operator is associated to running a process and is necessary to solve technical problems in the type system, that will be discussed in Section~\ref{sec:type_system}. This equation can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effplus}{\effrun{\effvar}}$. Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
+As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must verify that~$ \rk = \effcon{\effplus}{\effrun{\rk}}$. The $\mathtt{run}$ operator is associated to running a process and is necessary to solve technical problems in the type system, that will be discussed in Section~\ref{sec:type_system}. This equation can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effplus}{\effrun{\effvar}}$. Recursive behaviors verify the usual property:
+\[ \effrec{\effvar}{\rk} = \rk[\effvar \leftarrow \effrec{\effvar}{\rk}] \]
+ Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
 
 \begin{figure}[t]
 
@@ -256,19 +259,53 @@ Using the language of behaviors, we can now characterize the behaviors that we w
 
 A behavior that respect this condition is called a \emph{reactive} behavior. A behavior is reactive if for each recursive behavior $\effrec{\effvar}{\rk}$, the recursion variable $\effvar$ does not appear in the first instant of the body $\rk$. Formally, we define a predicate $\wf{R}{\rk}$ meaning that the behavior $\rk$ is reactive with respect to the set of variables $R$, that is, these variables do not appear in the first instant of $\rk$ and all the recursions inside $\rk$ are well-formed. This relation is defined in Figure~\ref{fig:reactive_behavior}. It uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined in Figure~\ref{fig:noinst_behavior}. Indeed, in the case of $\eseq{\rk_1}{\rk_2}$, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{[]}{\rk_2}$.
 
+The fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantaneous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
+
+\subsection{Equivalence on behaviors}
+\label{sec:equiv_behaviors}
+
+We can define an equivalence relation~$\effeq{}{}$ on behaviors. An important property of this relation is that it preserves reactivity, that is, if $\effeq{\rk_1}{\rk_2}$ and $\wf{R}{\rk_1}$ then $\wf{R}{\rk_2}$.
+
+The~$\effeq{}{}$~relation is an equivalence relation, i.e. it is reflexive, symmetric and transitive. The operators $\effcon{}{}$ and $\effpar{}{}$ and $\effor{}{}$ are compatible with this relation, idempotent and associative. $\effpar{}{}$~and $\effor{}{}$ are commutative (but not $;\,$). The~$\effmin$~behavior~(resp.~$\effplus$) is the neutral element of $\effcon{}{}$ and $\effpar{}{}$ (resp.~$\effor{}{}$). The equivalence relation also verifies the following properties:
+%
+\begin{mathpar}
+\inferrule
+  { \effeq{\rk_1}{\rk_2} }
+  { \effeq{\effrec{\effvar}{\rk_1}}{\effrec{\effvar}{\rk_2}} }
+%
+\and
+%
+%\effeq{\effrec{\effvar}{\rk}}{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
+%
+%\and
+%
+\effeq{\effinf{\effplus}}{\effplus}
+\end{mathpar}
+
+For instance, it is easy to show that:
+\[
+\effeq
+ { \effrec{\effvar}{(\effcon{(\effpar{\effplus}{\effmin})}{(\effor{\effrun{\effvar}}{\effrun{\effvar}})})} }
+ { \effrec{\effvar}{\effcon{\effplus}{\effrun{\effvar}}} }
+\]
+
 \section{The type-and-effect system}
 \label{sec:type_system}
 
+
+
 \subsection{Notations}
 
+Types and behaviors are defined by:
 \begin{align*}
 \rt \sdeq &\;\;\; \rtvar \mid T \mid \rtprod{\rt}{\rt} \mid \rtarrow{\rt}{\rt} \\
     &\;\mid \rtproc{\rt}{\rk} \mid \rtsig{\rt}{\rt} && \text{(types)} \\
 \rs \sdeq &\; \rt \mid \forall \effvar.\, \rs \mid \forall \rtvar.\, \rs && \text{(type schemes)} \\
 \tyenv \sdeq&\; \emptyset \mid \tyenv \tyconcat x : \rs && \text{(environments)}
 \end{align*}
+A type is either a type variable $\rtvar$, a base type $T$ (like $\mathtt{bool}$ or $\mathtt{unit}$), a product, a function, a process or a signal. The type of a process is parametrized by its return type and its behavior. The type of a signal is parametrized by the type of emitted values and the type of the read value.
 
-We denote $ftv(\rt)$ (resp. $fbv(\rt)$) the set of type~(resp. beavior) variables free in $\rt$ and $fv(\rt) = ftv(\rt), fbv(\rt)$. Instantiation and generalization are defined in a classic way:
+Types schemes quantify universally type variables $\rtvar$ and behavior variables $\effvar$. We denote $ftv(\rt)$ (resp. $fbv(\rt)$) the set of type~(resp. beavior) variables free in $\rt$ and $fv(\rt) = ftv(\rt), fbv(\rt)$. Instantiation and generalization are defined in a classic way:
 \begin{mathpar}
 \rs[\rtvar \leftarrow \rt] \leq \forall \rtvar.\, \rs 
 \and
@@ -277,12 +314,16 @@ We denote $ftv(\rt)$ (resp. $fbv(\rt)$) the set of type~(resp. beavior) variable
 \vspace{-1.3em}
 \begin{align*}
 gen(\rt, e, \tyenv) = &\, \rt && \text { if $e$ is expansive} \\
-gen(\rt, e, \tyenv) = &\; \forall \bar{\rtvar}.\forall \bar{\effvar}.\; \rt 
-   \text{ where }  \bar{\rtvar}, \bar{\effvar} = fv(\rt) \setminus fv(\tyenv)  
-   && \text{ otherwise } 
+gen(\rt, e, \tyenv) = &\; \forall \bar{\rtvar}.\forall \bar{\effvar}.\; \rt  && \text{ otherwise } \\
+  & \text{ where }  \bar{\rtvar}, \bar{\effvar} = fv(\rt) \setminus fv(\tyenv)  
 \end{align*}
+As for references in ML, we have to be careful to not generalize expressions that allocate signals. We use the syntactic criterion of expansive and non-expansive expressions~\cite{Tofte:1990}.
 
-The initial typing environment is: 
+\subsection{Typing rules}
+
+Typing judgments are given by 
+\[ \tyju{\tyenv}{e}{\rt}{\rk} \] 
+meaning that, in the type environment~$\tyenv$, the expression $e$ has type $\rt$ and behavior $\rk$. The initial typing environment $\tyenv_0$ is defined by: 
 \begin{align*}
 \Gamma_0 \deq [
  &\eemit{}{} : \forall  \rtvar_1, \rtvar_2. \, 
@@ -290,8 +331,6 @@ The initial typing environment is:
         &\mathtt{true} : \mathtt{bool};
               \mathtt{fst} : \forall \rtvar_1, \rtvar_2.\, \rtarrow{\rtprod{\rtvar_1}{\rtvar_2}}{\rtvar_1};  \ldots ]
 \end{align*}
-
-\subsection{Typing rules}
 
 \begin{figure*}
 \begin{small}
@@ -302,40 +341,18 @@ The initial typing environment is:
 \label{fig:rules}
 \end{figure*}
 
-The rules are given in Figure~\ref{fig:rules}.
+The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, it is exactly the same type system as the one presented in~\cite{Mandel:2005}, which is itself an extension of ML type system. 
 
 \begin{itemize}
 
-\item On ne cherche pas à prouver la terminaison des fonctions \ocaml{} pures (sans comportement réactif): la règle de l'application montre que l'on suppose que les appels de fonctions terminent toujours. C'est pourquoi il n'y a pas de comportement associé à une fonction, puisqu'il est toujours instantané (il n'y a pas de comportement sur les flèches contrairement à la tradition dans les systèmes de types et effets).
+\item A design choice of \rml{} is to separate pure ML expressions, that are surely instantaneous, from processes. For instance, it is impossible to call $\epause$ within the body of a function, that must be instantaneous. A static analysis done before typing checks this well-formation of expressions, denoted $k \vdash e$ in~\cite{Mandel:2005}. It should be noted that ML expressions, such that $0 \vdash e$, are always such that $\tyju{\tyenv}{e}{\rt}{\effmin}$. This is why many rules enforce the behavior of some expressions to be equal to $\effmin$. This does not add any new condition with respect to the well-formation analysis. The converse is false as the $\effmin$ behavior is associated to \emph{potentially} instantaneous processes whereas $0 \vdash e$ means that $e$ is \emph{necessarily} instantaneous.
 
-\item Dans le modèle synchrone réactif, on ne peut pas réagir instantanément à l'absence d'un signal. C'est pourquoi dans le cas du $\mathtt{present}$ la branche $\mathtt{then}$ est exécutée immédiatement si le signal est présent et la branche $\mathtt{else}$ à l'instant suivant dans le cas contraire. Cela se traduit de façon immédiate dans le comportement de $\mathtt{present}$.
-  %
-  De même, dans un $\mathtt{until}$, en cas de préemption, la
-  continuation est exécutée à l'instant suivant la réception du
-  signal. Cela est reflété dans la règle de typage.
-% De la même façon, la préemption dans le cas du $\mathtt{until}$ est faible, puisque la continuation est exécutée à l'instant suivant, ce que l'on voit clairement sur la règle de typage.
+\item We do not try to prove the termination of pure ML functions without any reactive behavior: the rule of application shows that we suppose that function calls always terminate instantaneously. That is why there is no behavior associated to functions, that is, there is no behaviors on arrows unlike traditional type-and-effect systems.
 
-%\item Le comportement obtenu pour $\mathtt{present}$ peut sembler un peu étrange. En suivant au plus près la sémantique, on choisirait un comportement $\effor{\rk_2}{(\effcon{\effplus}{\rk_3})}$: on exécute la première branche instantanément ou la seconde à l'instant suivant. On peut montrer simplement que ce comportement est bien équivalent à $\rk_2$:
-%\[
-%\inferrule
-%  {
-%    \inferrule
-%      {
-%        \effeq{\effcon{\effplus}{\rk_3}}{\rk_3}\\
-%        \effeq{\rk_2}{\rk_2}
-%      }
-%      { 
-%      \effeq{\effor{\rk_2}{(\effcon{\effplus}{\rk_3})}}{\effor{\rk_2}{\effplus}} 
-%      }
-%      \\  
-%      \effeq{\effor{\rk_2}{\effplus}}{\rk_2}
-%  }
-%  { \effeq{\effor{\rk_2}{(\effcon{\effplus}{\rk_3})}}{\rk_2} }
-%\]
-%Le même raisonnement permet de justifier le comportement attribué à $\mathtt{until}$.
+\item As explained earlier, in the case of $\epres{e}{e_1}{e_2}$, the first branch $e_1$ is executed immediately if the signal $e$ is present and the second branch $e_2$ is executed at the next instant if it is absent. This is reflected by the behavior associated to the expression. Similarly, the handler $e_2$ of $\euntil{e_1}{e}{x}{e_2}$ is executed at the instant following the presence of $e$.
 
-\pagebreak
-\item On peut vérifier que l'encodage des primitives que l'on a donné permet bien de retrouver les comportements attendus. Par exemple, on peut considérer le cas de $\eseq{e_1}{e_2}$:
+\item We can also check that the encoding of primitives given in Figure~\ref{fig:derived} yields th expected behavior. This is for instance the case of $\eseq{e_1}{e_2}$
+%
 \begin{small}
 \[ 
 \inferrule
@@ -363,59 +380,61 @@ The rules are given in Figure~\ref{fig:rules}.
 }
 \]
 \end{small}
-On peut de la même façon vérifier que $\epar{e_1}{e_2}$ a bien un comportement équivalent à $\effpar{\rk_1}{\rk_2}$ ou que $\eawait{e_1}{x}{e_2}$ a le comportement $\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$ après simplification. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
+We can also check that $\epar{e_1}{e_2}$ has a behavior equivalent to $\effpar{\rk_1}{\rk_2}$ ou que $\eawait{e_1}{x}{e_2}$ a le comportement $\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$ après simplification. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
 
-\item Il n'y a pas de règles particulières pour les processus récursifs. C'est l'ajout de l'opérateur $\mathtt{run}$ qui force le comportement des processus récursifs à être de la forme $\effrec{\effvar}{\rk}$ avec $\effvar \in fbv(\rk)$.
-Considérons par exemple le processus défini par \lstinline+let rec process p = run p+, que l'on écrit $\erec{p}{\eproc{(\erun{p})}}$ dans notre noyau: 
+\item There is no particular rules for recursive processes. The addition of the $\mathtt{run}$ operator in behaviors ensures that the behavior associated to a recursive process is always a recursive behavior, that is, $\effrec{\effvar}{\rk}$ with $\effvar \in fbv(\rk)$. Let's for instance consider the process defined by `let rec process p = run p`, written $\erec{p}{\eproc{(\erun{p})}}$ in the abstract syntax:
+%
 \begin{small}
 \[
 \inferrule
 {
 \inferrule
   {
-   \inferrule*[left=Equiv]
-     {
+   %\inferrule*[left=Equiv]
+     %{
      \inferrule*
       { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{p}{\rtproc{\beta}{\rk}}{\effmin} }
       { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\effrun{\rk}} }
-      \\
-      \effeq{\effrun{\rk}}{\rk}
-     }
-     {
-     \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\rk}
-     }
+      %\\
+      %\effeq{\effrun{\rk}}{\rk}
+     %}
+     %{
+     %\tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\rk}
+     %}
 %        \qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
   }  
-  { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\eproc{(\erun{p})}} {\rtproc{\beta}{\rk}}{\effmin} }
+  { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\eproc{(\erun{p})}} {\rtproc{\beta}{\effrun{\rk}}}{\effmin} }
 }
 { \tyju{\tyenv}{ \erec{p}{\eproc{(\erun{p})}} }{\rtproc{\beta}{\rk}}{\effmin} }
 %\qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
 \]
 \end{small}
-On voit sur la dérivation de typage que l'on doit vérifier $\effeq{\effrun{\rk}}{\rk}$ pour pouvoir typer cette expression. Seul le comportement $\effrec{\effvar}{\effrun{\effvar}}$ vérifie cette propriété. Cela explique aussi pourquoi aucune règle d'équivalence ne concerne l'opérateur \texttt{run}, qui ne doit pas être simplifiable. En effet, sans le $\mathtt{run}$, la condition $\effeq{\rk}{\rk}$ serait toujours vraie. On aurait donc pu prendre par exemple $\rk = \effmin$ et rater la récursion instantanée.
+The typing derivation shows that we must have $\effrun{\rk} = \rk$ to type this expression. The only behavior that verifies this equation is $\rk = \effrec{\effvar}{\effrun{\effvar}}$. Without $\mathtt{run}$, the typing derivation would be valid for any behavior $\rk$, for instance $\rk = \effmin$. It means that our analysis would have accepted this process even though it is obviously non-reactive. 
 
-{
-\abovedisplayskip=0.5em
-\belowdisplayskip=0.5em
-\item La construction $\mathtt{loop}$ ne fait pas habituellement partie du noyau du langage puisque l'on peut l'obtenir par:
+\item In~\cite{Mandel:2005}, the $\mathtt{loop}$ construct is encoded as a recursive process by:
+%
 \[
 \eloop{e} \deq \mathid{run}(( \mathidl{rec} loop = 
      \elam{x}{\eproc{(\eseq{\erun{x}}{\erun{(\eapp{loop}{x})}})}})\; (\eproc{e})) 
 \]
-Si l'on applique les règles du système de types et en supposant que \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, on obtient les types suivants:
+If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then we get the following types and behaviors:
+%
 \begin{align*}
 loop:&\, \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
                 {\rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
 \eproc{e} :&\, \rtproc{\rt}{\rk}
 \end{align*}
-On obtient donc le comportement $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$ pour $\eloop{e}$. Ce comportement n'est pas équivalent à $\effinf{\rk}$, mais il est réactif si et seulement si $\effinf{\rk}$ est réactif, puisque les $\mathtt{run}$ n'influent pas sur la réactivité des comportements. On aurait donc pu enlever $\mathtt{loop}$ du noyau présenté ici sans aucune incidence sur le résultat de l'analyse de réactivité.
+The behavior of this encoding is thus $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$. It is not equivalent to $\effinf{\rk}$, in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
 
-\item Ce n'est par contre pas le cas pour $\epause{}$, que l'on peut encoder par:
-\[
-\epause{} \deq \esig{s}{\evoid}{(\elam{x}{\elam{y}{\mathtt{\evoid}}})}{\epres{s}{\evoid}{\evoid}}
-\]
-Nous avons fait le choix de complètement abstraire les valeurs et les présences des signaux. Comme dans l'exemple \texttt{imprecise} de la partie~\ref{sec:intuition}, on ne prend pas en compte le fait que le signal~$s$ n'est jamais présent et que seule la seconde branche du $\mathtt{present}$ est exécutée. On obtient donc le comportement $\effeq{\effor{\effmin}{\effcon{\effplus}{\effmin}}}{\effmin}$ qui n'est pas du tout ce que l'on souhaite.
-}
+\item This is not the case of $\mathtt{pause}$ that can also be encoded by:
+%
+\begin{align*}
+\mathtt{pause} \deq &\; \esig{s}{\evoid}{(\elam{x}{\elam{y}{\mathtt{\evoid}}})}
+                                    { \\ &\qquad \epres{s}{\evoid}{\evoid}}
+\end{align*}
+%
+We have chosen to completely abstract values. As in the `imprecise` example of Section~\ref{sec:intuition}, we do not consider the fact the signal $s$ is always absent, so that only the second branch of the $\mathtt{present}$ is executed. The consequence is that the behavior computed by the type system, that is, $\effeq{\effor{\effmin}{\effcon{\effplus}{\effmin}}}{\effmin}$, is the opposite of the correct behavior of $\epause$.
+
 \end{itemize}
 
 \subsection{Subeffecting with row polymorphism}
@@ -489,33 +508,10 @@ Improved unification algorithm of
 
 \begin{itemize}
 \item In the proof of correction, we only use the fact that the behavior is reactive.
-\item We introduce an equivalence on behaviors, that preserve reactivity
+\item the equivalence on behaviors, that preserve reactivity
 \item Add a new typing rule (some kind of subtyping), can also simplify some rules
+\item Not in the type system as soundness relies on the fact that the size of the behavior of sub-expressions is smaller, so we cannot do any simplification
 \end{itemize}
-
-Elle est définie de telle sorte que si $\effeq{\rk_1}{\rk_2}$ et $\wf{R}{\rk_1}$ alors $\wf{R}{\rk_2}$.
-
-La relation $\effeq{}{}$ est une relation d'équivalence, c'est-à-dire une relation réflexive, symétrique et transitive. Les opérateurs $\effcon{}{}$ et $\effpar{}{}$ et $\effor{}{}$ sont compatibles avec cette relation d'équivalence et idempotents. 
-$\effcon{}{}$ et $\effpar{}{}$ et $\effor{}{}$ sont associatifs. $\effpar{}{}$~et $\effor{}{}$ sont commutatifs (mais pas $;\,$). Le comportement~$\effmin$~(resp.~$\effplus$) est l'élément neutre de $\effcon{}{}$ et $\effpar{}{}$ (resp.~$\effor{}{}$). On ajoute aussi les règles suivantes, qui expriment les propriétés de l'opérateur de récursion et traduisent l'intuition de récursion:
-%
-\begin{mathpar}
-\inferrule
-  { \effeq{\rk_1}{\rk_2} }
-  { \effeq{\effrec{\effvar}{\rk_1}}{\effrec{\effvar}{\rk_2}} }
-%
-\and
-%
-\effeq{\effrec{\effvar}{\rk}}{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
-%
-\and
-%
-\effeq{\effinf{\effplus}}{\effplus}
-\end{mathpar}
-
-On peut par exemple montrer que le comportement
-$\effrec{\effvar}{(\effcon{(\effpar{\effplus}{\effmin})}{(\effor{\effrun{\effvar}}{\effrun{\effvar}})})}$
-est équivalent à
-$\effrec{\effvar}{\effcon{\effplus}{\effrun{\effvar}}}$.
 
 New typing rule:
 \[ 
