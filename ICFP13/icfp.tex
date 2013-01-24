@@ -355,8 +355,8 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
 %
 \begin{small}
 \[ 
-\inferrule
-{
+%\inferrule
+%{
 \inferrule%*[left=(Equiv)]
   { 
     \inferrule 
@@ -370,17 +370,17 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
       } 
   }
   { \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt}{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } } 
- \\
- \inferrule
-   { \effeq{\effpar{\rk_1}{\effmin}}{\rk_1}  \\ \effeq{\rk_2}{\rk_2} }
-   { \effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } { \effcon{\rk_1}{\rk_2} } }
-}
-{
-  \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt_2}{ \effcon{\rk_1}{\rk_2} }
-}
+% \\
+% \inferrule
+%   { \effeq{\effpar{\rk_1}{\effmin}}{\rk_1}  \\ \effeq{\rk_2}{\rk_2} }
+%   { \effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } { \effcon{\rk_1}{\rk_2} } }
+%  }
+%{
+%  \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt_2}{ \effcon{\rk_1}{\rk_2} }
+%}
 \]
 \end{small}
-We can also check that $\epar{e_1}{e_2}$ has a behavior equivalent to $\effpar{\rk_1}{\rk_2}$ ou que $\eawait{e_1}{x}{e_2}$ a le comportement $\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$ après simplification. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
+It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \effcon{\rk_1}{\rk_2} }$.  We can also check that $\epar{e_1}{e_2}$ has a behavior equivalent to $\effpar{\rk_1}{\rk_2}$ or that $\eawait{e_1}{x}{e_2}$ has a behavior \mbox{$\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$}. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
 
 \item There is no particular rules for recursive processes. The addition of the $\mathtt{run}$ operator in behaviors ensures that the behavior associated to a recursive process is always a recursive behavior, that is, $\effrec{\effvar}{\rk}$ with $\effvar \in fbv(\rk)$. Let's for instance consider the process defined by `let rec process p = run p`, written $\erec{p}{\eproc{(\erun{p})}}$ in the abstract syntax:
 %
@@ -413,15 +413,15 @@ The typing derivation shows that we must have $\effrun{\rk} = \rk$ to type this 
 
 \item In~\cite{Mandel:2005}, the $\mathtt{loop}$ construct is encoded as a recursive process by:
 %
-\[
-\eloop{e} \deq \mathid{run}(( \mathidl{rec} loop = 
-     \elam{x}{\eproc{(\eseq{\erun{x}}{\erun{(\eapp{loop}{x})}})}})\; (\eproc{e})) 
-\]
+\begin{align*}
+\eloop{e} \deq &\mathid{run}(( \mathidl{rec} loop = 
+     \elam{x}{ \\ &\qquad \eproc{(\eseq{\erun{x}}{\erun{(\eapp{loop}{x})}})}})\; (\eproc{e})) 
+\end{align*}
 If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then we get the following types and behaviors:
 %
 \begin{align*}
 loop:&\, \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
-                {\rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
+                { \\ &\qquad\qquad\qquad \rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
 \eproc{e} :&\, \rtproc{\rt}{\rk}
 \end{align*}
 The behavior of this encoding is thus $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$. It is not equivalent to $\effinf{\rk}$, in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
