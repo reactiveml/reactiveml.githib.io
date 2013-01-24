@@ -11,6 +11,12 @@
 %%
 %\and
 %%
+%\inferrule
+%  { \bigstep{N_1}{e_1}{n} {E_1}{true}{S} \\ \bigstep{N_2}{e_2}{v} {E_2}{true}{S} }
+%  { \bigstep{}{\eemit{e_1}{e_2}}{\evoid{}} { E_1 \sqcup E_2 \sqcup [\{v\}/n] }{true}{S} }
+%%
+%\and
+%
 \inferrule
    { 
       \bigstep{N_1}{e_1}{\lambda x.\; e} {E_1}{true}{S} \\  

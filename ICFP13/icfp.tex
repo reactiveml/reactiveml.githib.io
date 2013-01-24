@@ -180,7 +180,7 @@ Additional conditions express for instance the fact that the emitted values in $
 
 
 
-Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Apppendix~\ref{sec:big_step_other}. The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant. The expression $\epres{e}{e_1}{e_2}$ executes its first branch immediately if the signal is present, but executes the second branch on the next instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids any inconsistency in the presence of signals. The body of $\mathtt{do/when}$ is executed only during the instants when the signal is present. when this body reduces to a value, the $\mathtt{do/when}$ reduces immediately to the same value. The unconditional loop executes keeps executing its body until it awaits the next instant, that is, the termination status $b$ is equal to true. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
+Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant. The expression $\epres{e}{e_1}{e_2}$ executes its first branch immediately if the signal is present, but executes the second branch on the next instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids any inconsistency in the presence of signals. The body of $\mathtt{do/when}$ is executed only during the instants when the signal is present. when this body reduces to a value, the $\mathtt{do/when}$ reduces immediately to the same value. The unconditional loop executes keeps executing its body until it awaits the next instant, that is, the termination status $b$ is equal to true. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
 
 \begin{figure*}
 \begin{small}
@@ -194,6 +194,8 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 
 \section{The algebra of behaviors}
 
+Behaviors are used to abstract the reactive behavior of processes. A main design choice is to completely abstract values and the presence of signals. It is however necessary to keep part of the structure of the program (or an abstraction of it) in order to have a precise analysis.
+
 \subsection{The behaviors}
 
 The algebra of behaviors is given by:
@@ -201,6 +203,32 @@ The algebra of behaviors is given by:
 \rk \sdeq \effplus ~\mid~ \effmin ~\mid~ \effvar ~\mid~ \effpar{\rk}{\rk} ~\mid~ \effor{\rk}{\rk}
 ~\mid~ \effcon{\rk}{\rk}  ~\mid~ \effrec{\effvar}{\rk}  ~\mid~ \effrun{\rk}
 \]
+
+It is first necessary to distinguish (surely) instantaneous actions that takes at least one instant to execute, such as $\epause{}$, from (potentially) non-instantaneous ones like calling a pure ML function or emitting a signal. The former are denoted $\effplus{}$ while the latter are denoted $\effmin$.
+
+Behaviors must reflect the structure of the program, starting with parallel composition and alternatives, as shown by the following examples: 
+\begin{lstlisting}
+let process par_comb q1 q2 =
+  loop
+    run q1 || run q2
+  end
+
+let process if_comb c q1 q2 =
+  loop
+    if c then run q1 else run q2
+  end
+\end{lstlisting}
+In the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous, while in the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how values are abstracted: we only keep the different alternatives and forget about the conditions.
+
+It is also necessary to have a notion of sequence, denoted $;$ in the language of behaviors, as illustrated by the following example. The order between the recursive call and the call to `pause` is crucial as the `good_rec` process is correct while `bad_rec` loops instantaneously:
+\begin{lstlisting}
+let rec process good_rec =
+  pause; run good_rec
+
+let rec process bad_rec =
+    run bad_rec; pause
+\end{lstlisting}
+As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must verify that~$ \rk = \effcon{\effplus}{\effrun{\rk}}$. This can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effplus}{\effrun{\effvar}}$. Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
 
 \subsection{Reactive behaviors}
 
