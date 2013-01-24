@@ -122,11 +122,14 @@ A simple example to introduce \rml{} and the problem of reactivity
 
 \section{Big-step Semantics}
 
+In this section, we give an overview of the big-step semantics of \rml{}, also called the behavioral semantics. The interested reader can refer to~\cite{Mandel:2005} for a more detailed presentation. We use here the same notations.
+
 \subsection{Abstract syntax}
 
 We consider here a kernel of \rml{}:
 %
 \begin{align*}
+v \sdeq & c \mid (v, v) \mid n \mid \elam{x}{e} \mid \eproc{e} \\
 e \sdeq &\phantom{\mid}  x \mid c \mid (e, e) \mid \elam{x}{e} 
   \mid \eapp{e}{e} \mid \erec{x}{e} \\
   & \mid \eproc{e} \mid \erun{e} \mid \epause{}  \\
@@ -138,8 +141,11 @@ e \sdeq &\phantom{\mid}  x \mid c \mid (e, e) \mid \elam{x}{e}
    \mid \ewhen{e}{e} 
 \end{align*}
 
-Using this kernel, we can encode most constructs of the language, for instance:
+Values are constants (integers, booleans, etc.), pairs of values, signal names $n$, functions an processes. The language is a call-by-value lambda-calculus, extended with constructs for creating~($\mathtt{process}$) and running~($\mathtt{run}$) processes, waiting for the next instant~($\mathtt{pause}$), parallel definitions~($\mathtt{let/and}$), declaring signals~($\mathtt{signal}$), emitting a signal~($\mathtt{emit}$) and several control structures: the test of presence of a signal~($\mathtt{present}$), the unconditional loop~($\mathtt{loop}$), weak preemption~($\mathtt{do/until}$) and suspension~($\mathtt{do/when}$).  The expression $\euntil{e_1}{s}{x}{e_2}$ executes its body $e_1$ and, when signal~$s$ is present, stops the execution of~$e_1$ and the executes the continuation~$e_2$ on the next instant, binding~$x$ to the value of~$s$. We denote $\_$ variables that do not appear free in the body of a $\mathtt{let}$ and $\evoid{}$ the unique value of type $\mathtt{unit}$. From this kernel, we can encode most constructs of the language, as shown in Figure~\ref{fig:derived}.
 %
+\begin{figure*}
+
+\begin{small}
 \begin{align*}
 %\eawaitim{e} \deq &\; \ewhen{\evoid{}}{e} \\
 \epar{e_1}{e_2} \deq &\; \eletpar{\_}{e_1}{\_}{e_2}{\evoid{}} \\
@@ -155,14 +161,26 @@ Using this kernel, we can encode most constructs of the language, for instance:
 \eseq{e_1}{e_2} \deq &\; \elet{\_}{e_1}{e_2}  \\
 \eawait{e_1}{x}{e_2} \deq&\; \euntil{ (\eloop{\epause{}}) }{e_1}{x}{e_2}
 \end{align*}
+\end{small}
+
+\caption{Derived language constructs}
+\label{fig:derived}
+\end{figure*}
 
 
 \subsection{Semantics}
 
-Subset of the big step semantics of \rml{}
-
-The semantics is defined by the relation
+A reaction of an expression is given by the relation
 \[  \bigstep{N}{e}{e'}{E}{b}{S} \]
+which means during the instant, in the signal environment $S$, the expression~$e$ rewrites to~$e'$ and emits the signals in $E$. $b$ is a boolean that indicates if $e'$ has terminated. We write $n \in S$ when the signal $n$ is present in the signal environment $S$, and $n \not\in S$ otherwise.
+
+The execution of a program is made of a (potentially infinite) number of reactions and terminates when the status $b$ is equal to true. The execution of an instant is defined by the smallest signal environment $S_i$ such that:
+\[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
+Additional conditions express for instance the fact that the emitted values in $E_i$ must agree with the signal environment $S_i$. Again we refer the reader to~\cite{Mandel:2005} for a more complete description.
+
+
+
+Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Apppendix~\ref{sec:big_step_other}. The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant. The expression $\epres{e}{e_1}{e_2}$ executes its first branch immediately if the signal is present, but executes the second branch on the next instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids any inconsistency in the presence of signals. The body of $\mathtt{do/when}$ is executed only during the instants when the signal is present. when this body reduces to a value, the $\mathtt{do/when}$ reduces immediately to the same value. The unconditional loop executes keeps executing its body until it awaits the next instant, that is, the termination status $b$ is equal to true. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
 
 \begin{figure*}
 \begin{small}
@@ -414,7 +432,7 @@ For sets (like regions), $\sqsubseteq$ is subset inclusion. In our case, such th
 %\end{align*}
 %\end{small}
 
-The inference algorithm is the algorithm $\mW$ with the collection of behaviors.
+The inference algorithm is the algorithm $\mW$ with the collection of behaviors. Can be easily implemented in any ML type inference algorithm.
 
 L'algorithme d'unification prend en entrée deux types $\rt_1$ et $\rt_2$ et renvoie une substitution $S$ ou échoue avec la valeur spéciale $\fail$:
 \[  \mU(\rt_1, \rt_2) = S \]
@@ -587,5 +605,13 @@ Pour prouver que l'on obtient une expression bien typée pour l'instant suivant,
 \begin{small}
 \bibliography{biblio}
 \end{small}
+
+
+\appendix
+
+\section{Other rules for the big-step semantics}
+\label{sec:big_step_other}
+
+\todo{Mettre autres regles}
 
 \end{document}
