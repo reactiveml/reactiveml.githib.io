@@ -36,33 +36,11 @@
 %\newcommand{\deq}{\stackrel{\text{\tiny def}}{=}}
 \newcommand{\deq}{\triangleq}
 \newcommand{\sdeq}{::=}
-\newcommand\rulename[1]{\text{(\textsc{#1})\;}
-}
-
-\newcommand\topck{\texttt{topck}}
-
-\lstset{columns=fixed, basicstyle=\ttfamily, mathescape=true,
-	showstringspaces=false}
-\lstset{
-basicstyle=\small\ttfamily,
-keywordstyle= \color{Blue}\bfseries,
-commentstyle=\color{Brown},
-stringstyle=\color{red}}
-\lstset{language={[par]rml},
-aboveskip=0.3em}
-
-\lstMakeShortInline{`}
-
-\newcommand{\kword}[1]{\ensuremath{\mathtt{#1}}}
+\newcommand\rulename[1]{\text{(\textsc{#1})\;} }
 
 \newcommand\reactivec{\textsc{ReactiveC}}
 
 \begin{document}
-
-\abovedisplayshortskip=0.3em
-\belowdisplayshortskip=0.3em
-\abovedisplayskip=0.3em
-\belowdisplayskip=0.3em
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{property}{Property}
@@ -285,6 +263,10 @@ The~$\effeq{}{}$~relation is an equivalence relation, i.e. it is reflexive, symm
 %\and
 %
 \effeq{\effinf{\effplus}}{\effplus}
+\and
+\effeq{\effrun{\effmin}}{\effmin}
+\and
+\effeq{\effrun{\effplus}}{\effplus}
 \end{mathpar}
 
 For instance, it is easy to show that:
@@ -489,8 +471,11 @@ The \emph{first-instant behavior} of a behavior, denoted $\rkfst{\rk}$ is the pa
 \rkfst{\effrun{\rk}} =&\, \effrun{(\rkfst{\rk})} \\ 
 \rkfst{\effpar{\rk_1}{\rk_2}} =&\, \effpar{\rkfst{\rk_1}}{\rkfst{\rk2}} \\
 \rkfst{\effor{\rk_1}{\rk_2}} =&\, \effor{\rkfst{\rk_1}}{\rkfst{\rk2}} \\
-\rkfst{\effcon{\rk_1}{\rk_2}} =&\, \effcon{\rk_1}{\rkfst{\rk2}} &&\text{ si } \rkfst{\rk_1} = \rk_1\\
-\rkfst{\effcon{\rk_1}{\rk_2}} =&\, \rkfst{\rk_1} && \text{ sinon } \\
+\rkfst{\effcon{\rk_1}{\rk_2}} =&\, 
+		\left\{ \begin{array}{ll}  
+				\effcon{\rk_1}{\rkfst{\rk2}} &\text{if } \rkfst{\rk_1} = \rk_1 \\
+				\rkfst{\rk_1} & \text{otherwise} 
+		\end{array}\right. \\
 \rkfst{\effrec{\effvar}{\rk}} =&\, \rkfst{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
 \end{align*}
 \end{definition}
@@ -597,7 +582,9 @@ The are then two cases depending on the status of $n$:
 
 \subsection{Simplifying behaviors}
 
-The behaviors computed by our type system are very big. For instance, the behavior associated to the `timer` example is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}. This behavior is unnecessarily detailed and almost as big (if not bigger) than the source program. However, we can notice that this behavior is equivalent to $\effinf{\effmin}$.
+The behaviors computed by our type system are very big. For instance, the behavior associated to the `timer` example is 
+\[ \effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})} \] 
+This behavior is unnecessarily detailed and almost as big (if not bigger) than the source program. However, we can notice that this behavior is equivalent to $\effinf{\effmin}$.
 
 We would like to use this equivalence relation on behaviors defined in Section~\ref{sec:equiv_behaviors} in our type system to reduce the size of the computed behaviors. We must  make sure that this does not break the proof of soundness of Section~\ref{sec:soundness}. This is ensured by the fact that the equivalence relation preserves reactivity, which is the only condition requested by the proof.
 
@@ -645,6 +632,25 @@ By applying Property~\ref{prop:variant_system} and Property~\ref{prop:equiv_reac
 
 \subsection{Examples}
 
+
+\subsection{Adding references}
+
+References are not included in the kernel of our language. However, they are relevant to the matter as they can be used to encode recursivity, as in the following example that creates a process that loops instantaneously:
+%
+\begin{lstlisting}
+let landin () =
+  let f = ref (process ()) in
+  f := process (run !f);
+  !f
+?val landin : unit -> 
+        unit process[0 + (rec 'r1. run (0 + 'r1)) + 'r2]?
+?W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
+%
+%?val landin : unit -> 
+%        unit process[$\effor{\effor{\effmin}{\effrec{\effvar
+%                         }{\effrun{(\effor{\effmin}{\effvar})}}}}{\effvar'}$] ?
+As our analysis does not have any special case for recursive processes and is only based on unification, it is able to detect the reactivity issue even though there is no explicit recursivity.
 
 \subsection{Implementation}
 

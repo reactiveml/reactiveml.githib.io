@@ -6,16 +6,14 @@
 \newcommand{\ocaml}{\textsc{Ocaml}\xspace}
 \newcommand{\rml}{\textsc{ReactiveML}\xspace}
 
-\newenvironment{lstrmlpar}{\begin{lstlisting}[language={[par]rml}]}
-  {\end{lstlisting}}
-
 % Definition relatives aux listings
 
 \lstdefinelanguage{rml}[]{}{
   morekeywords=[2]{fun,let,rec,in,type,mutable,await,immediate,process,signal,gather,default,event,clock,match,with,of},
   morekeywords=[1]{end,where,loop,when,while,do,until,control,for,to,dopar,present,if,then,else,done},
   morekeywords=[3]{pause,emit,run,one,},
-  morecomment={[s]{(*}{*)}}
+  morecomment={[s]{(*}{*)}},
+  moredelim=[is][\itshape\small]{?}{?}
 }
 
 
@@ -24,5 +22,18 @@
   morekeywords=[1]{automaton,reset,every,continue},
   morekeywords=[3]{pauseclock}
 }
+
+\lstset{
+basicstyle=\ttfamily,
+keywordstyle= \color{Blue}\bfseries,
+commentstyle=\color{Brown},
+stringstyle=\color{red},
+keepspaces=true,%
+aboveskip=0.3em,
+mathescape=true, 
+columns=fullflexible
+}
+
+\lstMakeShortInline{`}
 
 \lstset{language=rml}
