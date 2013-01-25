@@ -66,8 +66,11 @@ aboveskip=0.3em}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{property}{Property}
-\newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
+\newtheorem*{hypothesis}{Hypothesis}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
 
 \title{Reactivity of Cooperative Systems}
 %\thanks{This work is supported by the INRIA Action d'envergure Synchronics.}
@@ -122,6 +125,7 @@ A simple example to introduce \rml{} and the problem of reactivity
 \end{itemize}
 
 \section{Big-step Semantics}
+\label{sec:semantics}
 
 In this section, we give an overview of the big-step semantics of \rml{}, also called the behavioral semantics. The interested reader can refer to~\cite{Mandel:2005} for a more detailed presentation. We use here the same notations.
 
@@ -254,6 +258,7 @@ As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must
 
 
 \subsection{Reactive behaviors}
+\label{sec:reactive_behavior}
 
 Using the language of behaviors, we can now characterize the behaviors that we want to reject, that is instantaneous loops and recursions. We actually enforce a stronger sufficient condition, that can be checked easily and efficiently: there must be at least one instant before each recursive call. This condition is not necessary, as the `par_map` example of Section~\ref{} showed. As the behavior of a loop is just a particular case of recursive behavior, this condition also implies that the body of a loop is non-instantaneous.
 
@@ -309,6 +314,8 @@ Types and behaviors are defined by:
 \tyenv \sdeq&\; \emptyset \mid \tyenv \tyconcat x : \rs && \text{(environments)}
 \end{align*}
 A type is either a type variable $\rtvar$, a base type $T$ (like $\mathtt{bool}$ or $\mathtt{unit}$), a product, a function, a process or a signal. The type of a process is parametrized by its return type and its behavior. The type of a signal is parametrized by the type of emitted values and the type of the read value.
+
+We lift the notion of reactivity and equivalence from behaviors to types. A type is reactive if it contains only reactive behaviors. Two types are equivalent, also denoted $\tyeq{\rt_1}{\rt_2}$, if they have the same structure and their behaviors are equivalent.
 
 Types schemes quantify universally type variables $\rtvar$ and behavior variables $\effvar$. We denote $ftv(\rt)$ (resp. $fbv(\rt)$) the set of type~(resp. beavior) variables free in $\rt$ and $fv(\rt) = ftv(\rt), fbv(\rt)$. Instantiation and generalization are defined in a classic way:
 \begin{mathpar}
@@ -470,7 +477,12 @@ A downside of our approach is that it introduces one behavior variable for each 
 \section{Proof of soundness}
 \label{sec:soundness}
 
-On définit une opération $\rkfst{\rk}$ qui ne garde que l'effet correspondant au premier instant:
+The intuition of the proof is that the first instant of a reactive behavior (as defined in Section~\ref{sec:reactive_behavior}) is a finite behavior, without any recursion. We then prove by induction on the size of behaviors that a well-typed process admits a finite derivation in the big-step semantics of Section~\ref{sec:semantics}.
+
+\subsection{First instant of a behavior}
+
+\begin{definition}
+The \emph{first-instant behavior} of a behavior, denoted $\rkfst{\rk}$ is the part of the behavior that corresponds to the execution of the first instant of the corresponding process. It is formally defined by:
 \begin{align*}
 \rkfst{\effmin} =&\, \rkfst{\effplus}  = \effmin \\
 \rkfst{\effvar} =&\, \effvar \\
@@ -481,26 +493,58 @@ On définit une opération $\rkfst{\rk}$ qui ne garde que l'effet correspondant 
 \rkfst{\effcon{\rk_1}{\rk_2}} =&\, \rkfst{\rk_1} && \text{ sinon } \\
 \rkfst{\effrec{\effvar}{\rk}} =&\, \rkfst{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
 \end{align*}
-Dans le cas d'un comportement récursif, $\rkfst{\rk}$ est bien défini si le comportement est réactif, mais peut ne pas etre défini sinon.
+\end{definition}
+In the case of a recursive behavior,  the first-instant behavior is well-defined only if the behavior is reactive, that is, the recursion is not instantaneous.
+
+\todo{Ne le definir que pour comportement ferme ?}
+\begin{definition}
+A behavior is \emph{finite}, denoted $\rkfinite{\rk}$, if it does not contain any true recursive behavior. Formally, the predicate is defined by:
+\begin{mathpar}
+\inferrule{ }{\rkfinite{\effmin}}
+\and
+\inferrule{ }{\rkfinite{\effplus}}
+\and
+\inferrule{ }{\rkfinite{\effvar}}
+\and
+\inferrule{ \rkfinite{\rk_1} \\ \rkfinite{\rk_2} }{ \rkfinite{\effpar{\rk_1}{\rk_2}}  }
+\and
+\inferrule{ \rkfinite{\rk_1} \\ \rkfinite{\rk_2} }{ \rkfinite{\effor{\rk_1}{\rk_2}}  }
+\and
+\inferrule{ \rkfinite{\rk_1} \\ \rkfinite{\rk_2} }{ \rkfinite{\effcon{\rk_1}{\rk_2}}  }
+\and
+\inferrule{ \rkfinite{\rk} \\ \effvar \not\in fbv(\rk) }{ \rkfinite{\effrec{\effvar}{\rk} } }
+\and
+\inferrule{ \rkfinite{\rk} }{ \rkfinite{\effrun{\rk} } }
+\end{mathpar}
+\end{definition}
 
 \begin{property}
-Si le comportement $\rk$ est réactif, alors $\rkfst{\rk}$ est un comportement fini (i.e. il est équivalent à un comportement sans comportement récursif).
+If $\rk$ is reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
+\[ \wf{[]}{\rk} \Rightarrow \rkfinite{\rkfst{\rk}} \]
 \end{property}
-Cette propriété est la base de la preuve de correction. Le comportement de tout processus bien typé est fini, donc on sait que l'on va appeler un nombre fini de processus au cours de l'instant. On montre ainsi que l'exécution de l'instant est finie, sous réserve que les fonctions terminent.
 
-\begin{theorem}[Sureté]
-Si $\tyju{\tyenv}{e}{\rt}{\rk}$ et si on suppose que "les fonctions terminent", alors il existe $e'$ tel que $\bigstep{N}{e}{e'} {E}{b}{S}$ et $\tyju{\tyenv}{e'}{\rt}{\rk'}$.
+\subsection{Soundness}
+
+In the introduction, we mentioned that we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the rule for application (Figure~\ref{fig:rules}) by the fact that the behavior of the application is always the instantaneous behavior $\effmin$. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
+
+\begin{hypothesis}
+Function calls always terminate. Formally, for any ML expression $e$ such that $0 \vdash e$, there exists a finite derivation $\Pi_e$ such that:
+\[ \exists v.\, \inferrule{\Pi_e}{ \bigstep{N}{e}{v} {E}{b}{S} } \] 
+\end{hypothesis}
+
+We can now express the soundness of our analysis:
+\begin{theorem}[Soundness]
+If \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$} and $\rt$ and $\rk$ are reactive and we suppose that function calls terminate, then there exists $e'$ such that \mbox{$\bigstep{N}{e}{e'} {E}{b}{S}$} and \mbox{$\tyju{\tyenv}{e'}{\rt}{\rk'}$} with $\rk'$ reactive.
 \end{theorem}
 \begin{proof}
-On va montrer par récurrence sur la taille de $\rkfst{\rk}$ que l'on peut obtenir une dérivation finie dans la sémantique à grands pas de \rml{} pour tout terme bien typé. L'hypothèse que "les fonctions terminent" se traduit plus formellement par le fait qu'on suppose qu'il existe une dérivation finie $\Pi$ pour toute expression $e$ (surement) instantanée, c'est-à-dire:
-\[ 0 \vdash e \Rightarrow \exists v.\, \inferrule{\Pi}{ \bigstep{N}{e}{v} {E}{b}{S} } \] 
-(Il y a la preuve dans le Lemme 8 p. 81 de la thèse de Louis que les expressions instantanées se réduisent instantanément en une valeur ou se réduisent infiniment. On suppose ici que le deuxième cas ne peut pas arriver.)
-
-Dans le cas des primitives réactives, on utilise l'hypothèse de récurrence sur les sous-expressions, qui ont un comportement plus petit:
+The proof is done by induction on the size of the first-instant behavior of well-types expressions. The main point is that the behaviors of sub-expressions, but we have to be careful that we must consider only the first-instant behavior. To prove that the result is well-typed, we can classic syntactic techniques for type soundness~\cite{Pierce:2002} on the small-step semantics described in~\cite{Mandel:2005}. The proof of equivalence of the two semantics is also given in the same paper.
+%
 \begin{itemize}
-\item Cas de $\erun{e}$: On a alors que $0 \vdash e$ donc il existe $\Pi$ tel que 
+\item Case $\eapp{e_1}{e_2}$ and $\erec{x}{e}$: By hypothesis. 
+
+\item Case $\erun{e}$: We know that $0 \vdash e$ so there exists $\Pi$ such that 
 \[ \inferrule{\Pi}{ \bigstep{N_1}{e}{\eproc{e_1}} {E}{true}{S} } \]
-De plus, comme $\erun{e}$ est bien typé, on a:
+Then, as $\erun{e}$ is well-typed, we have that:
 \[
 \inferrule
   {
@@ -510,9 +554,9 @@ De plus, comme $\erun{e}$ est bien typé, on a:
   }
   { \tyju{\tyenv}{\erun{(\eproc{e_1})}} {\rt}{\effrun{\rk}} }
 \]
-On peut appliquer l'hypothèse de récurrence sur $e_1$ et on obtient donc que:
+As \mbox{$\rkfst{\effrun{\rk}} = \effrun{(\rkfst{\rk})}$}, we can apply the induction hypothesis on $e_1$ to get:
 \[  \inferrule{\Pi_1}{ \bigstep{N_2}{e_1}{e'_1} {E_1}{b}{S} } \]
-et on peut donc construire la dérivation complète pour $\erun{e}$:
+which enables us to build the complete derivation of $\erun{e}$:
 \[
 \inferrule
 {
@@ -522,12 +566,12 @@ et on peut donc construire la dérivation complète pour $\erun{e}$:
 { \bigstep{N_1 \cdotp N_2}{\erun{e}}{e'_1} {E \sqcup E_1}{b}{S} }
 \]
 
-\item Cas de $\epause{}$: La dérivation est finie sans aucune hypothèse.
+\item Case $\epause{}$: The derivation is already finite without any hypothesis.
 
-\item Cas de $\epres{e}{e_1}{e_2}$: 
-De la meme façon, on prouve que :
+\item Case $\epres{e}{e_1}{e_2}$: 
+Like in the first case, we have:
 \[ \inferrule{\Pi}{ \bigstep{N_1}{e}{n} {E}{true}{S} } \]
-La règle de typage nous donne:
+The typing rule is as follows:
 \[ 
 \inferrule%[Present]
   { \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effmin} \\
@@ -535,37 +579,16 @@ La règle de typage nous donne:
     \tyju{\tyenv}{e_2}{\rt}{\rk_2}  }
   { \tyju{\tyenv} { \epres{e}{e_1}{e_2} }{\rt}{ \effor{\rk_1}{(\effcon{\effplus}{\rk_2})} } }
 \]
-On doit traiter les deux cas, selon la présence du signal:
+The are then two cases depending on the status of $n$:
 \begin{itemize}
-\item Cas où $n \in S$: Alors on applique l'hypothèse de récurrence sur $e_1$  et on conclut simplement.
-\item Cas où $n \not\in S$: Alors la dérivation est finie.
+\item If \mbox{$n \in S$}: We can notice that \[ \rkfst{\effor{\rk_1}{(\effcon{\effplus}{\rk_2})}} = \effor{\rkfst{\rk_1}}{\effmin} \] so we can apply the induction hypothesis on $e_1$ and conclude. 
+\item If $n \not\in S$: The derivation is finite.
 \end{itemize}
 
-\item Cas de $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$: Idem.
+\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\euntil{e_1}{e_2}{x}{e_3}$: Idem.
 
-\item Cas de $\euntil{e_1}{e_2}{x}{e_3}$: Idem.
-
-\item Cas de $\esig{x}{e_1}{e_2}{e}$: On utilise l'hypothèse sur les expressions instantanées pour $e_1$ et $e_2$. Pour traiter le cas de $e$, on doit supposer que la règle de typage est la suivante:
-\[
-\inferrule%*[Left=(Signal)]
-  { \tyju{\tyenv}{e_1}{\rt_2}{\effmin}  \\ 
-    \tyju{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\effmin} \\
-    \tyju{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
-  { \tyju{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \effcon{\effmin}{\rk}} }
-\]
-Le comportement donné à l'expression est équivalent mais permet d'avoir un comportement qui décroit.
-
-\item Cas de $\ewhen{e_1}{e_2}$: On modifie de la meme façon la règle de typage devient:
-\[
-\inferrule%[When]
-  { \tyju{\tyenv}{e_1}{\rt}{\rk} \\
-    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} }
-  { \tyju{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
-\]
-
+\item Case $\ewhen{e_1}{e_2}$: We can use the same reasoning. It is interesting to note that the behavior associated to the expression, i.e. $\effor{\rk}{\effinf{\effplus}}$, is not equal to the behavior of the body, as one could expect, so that we can apply the induction hypothesis.
 \end{itemize}
-
-Pour prouver que l'on obtient une expression bien typée pour l'instant suivant, on étend la preuve de correction du typage, qui est faite sur la sémantique à petits pas (dont l'équivalence avec la sémantique à grands pas a été prouvée), pour prendre en compte les comportements. On n'a besoin d'aucune propriété sur le comportement $\rk'$ de $e'$, puisqu'on n'utilise seulement le fait que ce comportement est réactif (qui est inclut dans la définition de bien typé). 
 
 \end{proof}
 
@@ -603,10 +626,6 @@ We cannot add this rule to the original system as the proof of soundness relies 
 %
 \end{mathpar}
 
-
-
-To express the following properties, we lift the equivalence on behaviors to an equivalence on types, also denoted $\tyeq{\rt_1}{\rt_2}$.
-
 The \textsc{Equiv} rule does not change the fact that a program is accepted or rejected by the type system. It only allows to reduce the size of computed behaviors:
 \begin{property}
 \label{prop:variant_system}
@@ -617,8 +636,8 @@ Straightforward by induction on the typing rules
 \end{proof}
 
 We can then express the soundness theorem in terms of the variant of the type system:
-\begin{theorem}[Soudness (Variant)]
-If $\tyjus{\tyenv}{e}{\rt}{\rk}$, $\rt$ and $\rk$ are reactive and we suppose that "functions terminate", then there exists $e'$ such that $\bigstep{N}{e}{e'} {E}{b}{S}$ and $\tyjus{\tyenv}{e'}{\rt}{\rk'}$.
+\begin{theorem}[Soundness (variant)]
+If \mbox{$\tyjus{\tyenv}{e}{\rt}{\rk}$} and $\rt$ and $\rk$ are reactive and we suppose that function calls terminate, then there exists $e'$ such that \mbox{$\bigstep{N}{e}{e'} {E}{b}{S}$} and \mbox{$\tyjus{\tyenv}{e'}{\rt}{\rk'}$} with $\rk'$ reactive.
 \end{theorem}
 \begin{proof}
 By applying Property~\ref{prop:variant_system} and Property~\ref{prop:equiv_reactivty}.
