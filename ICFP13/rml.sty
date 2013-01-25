@@ -9,7 +9,7 @@
 % Definition relatives aux listings
 
 \lstdefinelanguage{rml}[]{}{
-  morekeywords=[2]{fun,let,rec,in,type,mutable,await,immediate,process,signal,gather,default,event,clock,match,with,of},
+  morekeywords=[2]{fun,let,and,rec,in,type,mutable,await,immediate,process,signal,gather,default,event,clock,match,with,of},
   morekeywords=[1]{end,where,loop,when,while,do,until,control,for,to,dopar,present,if,then,else,done},
   morekeywords=[3]{pause,emit,run,one,},
   morecomment={[s]{(*}{*)}},
@@ -33,6 +33,10 @@ aboveskip=0.3em,
 mathescape=true, 
 columns=fullflexible
 }
+
+\lstnewenvironment{rmlcl}[1][1]%
+{\lstset{numbers=left,numberstyle=\tiny,numbersep=5pt,firstnumber=#1}}
+{}
 
 \lstMakeShortInline{`}
 

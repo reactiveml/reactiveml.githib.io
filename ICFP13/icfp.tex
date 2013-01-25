@@ -89,18 +89,108 @@ Contributions of the paper:
 
 \section{Problem statement}
 
+Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity. Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
+
 \subsection{A first example}
 
-A simple example to introduce \rml{} and the problem of reactivity
+Let us first start by creating a process that emits a signal every `timer` seconds:
+%
+\begin{rmlcl}
+let process clock timer s =
+  let time = ref (Unix.gettimeofday ()) in
+  loop
+    let time' = Unix.gettimeofday () in
+    if time' -. !time >= timer
+    then (emit s (); time := time')
+  end
+\end{rmlcl}
+%
+The `process` keyword is used to define a process, that is, a function that takes time: its execution can span several logical instants. The `clock`~process is parametrized by a float~`timer` and a signal~`s`. Signals are communication channels between processes, with instantaneous broadcast. The process starts by initializing a local reference `time` initialized by the current time~(line 2), read using the `gettimeofday` function of the `Unix`~module from the standard library. Then it enters an infinite loop~(line 3 to 7). At each iteration, it reads the new current time and emits the signal~`s` if enough time has elapsed~(line 6). The compiler prints the following warning when compiling this process:
+\begin{lstlisting}
+?Line 3, characters 2-120:
+W: This expression may be an instantaneous loop?
+\end{lstlisting}
+The problem is that the body of the loop is instantaneous. It means that this process never cooperates, so that logical instants do not progress. To solve this problem, the programmer must explicit cooperate using the `pause` operator~(line~7) that awaits the next instant:
+\begin{rmlcl}
+let process clock timer s =
+  let time = ref (Unix.gettimeofday ()) in
+  loop
+    let time' = Unix.gettimeofday () in
+    if time' -. !time >= timer
+    then (emit s (); time := time');
+    pause 
+  end
+\end{rmlcl}
+
+The second part of the program is a process that prints `top` every time a signal `s` is emitted:
+\begin{rmlcl}[10]
+let process print_clock s =
+  loop
+    do
+      print_string "top"; print_newline ()
+    when s done
+  end
+\end{rmlcl}
+\begin{lstlisting}
+?Line 11, characters 2-78:?
+?W: This expression may be an instantaneous loop.?
+\end{lstlisting}
+%
+Once again, this loop can be instantaneous, but this time it depends on the presence of the signal. While the signal 's' is absent, the process cooperates. When it is present, the body of the `do/when` executes and terminates instantaneously. So the body of the loop also terminates instantaneously, and a new iteration of the loop is started in the same logical instant. Since the signal is still present, the body of the `do/when` executes one more time, and so on. This process can also be fixed by a call to `pause`.
+
+We can then put these two processes in parallel, after declaring a local signal `s`:
+\begin{rmlcl}[18]
+let process main =
+  signal s default () gather (fun () () -> ()) in
+  run (print_clock s) || run (clock 1. s)
+\end{rmlcl}
+The declaration of a signal takes as arguments the default value of the signal and a combination function that is used to compute the value of the signal in case of multiple emissions during the same instant. Here, the default value is `()` and the signal keeps this value in case of multi-emission. The `||` operator represents the synchronous parallel composition. Both branches are executed at each instant and communicate through the local signal `s`.
 
 \subsection{Intuitions and limitations}
 \label{sec:intuition}
 
-\begin{itemize}
-\item No value analysis: false positives with some recursive processes
-\item No analysis of the presence of signals
-\item Reactivity does not equal real-time
-\end{itemize}
+In the previous example, we have seen the first cause of non-reactivity, that is, instantaneous loops. The second one is instantaneous recursive processes, as in this example:
+\begin{lstlisting}
+let rec process intantaneous s =
+  emit s ();
+  run (intantaneous s)
+
+?W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
+
+A sufficient condition to ensure that a recursive process is reactive is to have \emph{at least one instant between the instantiation of the process and any recursive call}. The idea of our analysis is to statically check this condition.
+
+This condition is very strong and rejects interesting programs that are reactive. For instance, the execution of a parallel `map` is rejected (the `let/and` construct executes its two branches in parallel):
+\begin{lstlisting}
+let rec process par_map p l =
+  match l with
+  | [] -> []
+  | x :: l -> let x' = run (p x)
+              and l' = run (par_map p l) in
+              x' :: l'
+\end{lstlisting}
+This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). AS we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs. For the same reasons, we suppose that all functions terminate instantaneously and only focus on the reactivity of processes. In particular, we do not deal with blocking functions, like I/O, that can also make the program non-reactive. One should simply not use such functions in a cooperative context. Many cooperative light-threads libraries provide alternative implementations of I/O that are compatible with cooperative scheduling~\cite{Vouillon:2008}.
+
+The analysis does not either take into account the presence of signals and over-approximates the possible behaviors, as in the following example:
+\begin{lstlisting}
+let rec process imprecise =
+  signal s default () gather (fun () () -> ()) in
+  present s then () else (* implicit pause *) ();
+  run imprecise
+  
+?W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
+%
+The `present/then/else` construct executes instantaneously its first branch if the signal is present or executes the second branch with a delay of one instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids inconsistencies in the status of signals. In the example, the signal is absent so the `else` branch is executed. It means that the recursion is not instantaneous and the process is reactive. Our analysis still prints a warning, because if the signal `s` could be present, the recursion would be instantaneous.
+
+Finally, we only guarantee that a program will react, not that is is real-time, that is that it reacts in a bounded time, as shown by this example:
+\begin{lstlisting}
+let rec process server add =
+  await add(p, ack) in
+  run (server add) || let v = run p in emit ack v
+\end{lstlisting}
+%
+The `server` process receives on a signal `add` both a process `p` and a signal `ack` on which to send back the result. As it creates one new process each time the `add` signal is emitted, this program can execute an arbitrary number of processes at the same time. It is thus not real-time, but it is indeed reactive, as waiting for the value of a signal takes one instant (one has to collect and combine all the values emitted during the instant).
 
 \section{Big-step Semantics}
 \label{sec:semantics}
@@ -142,7 +232,7 @@ Values are constants (integers, booleans, etc.), pairs of values, signal names $
 \mathidl{let} \mathidl{rec} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
             \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{\eproc{e_1}}}}) }{e_2} \\
 \eseq{e_1}{e_2} \deq &\; \elet{\_}{e_1}{e_2}  \\
-\eawait{e_1}{x}{e_2} \deq&\; \euntil{ (\eloop{\epause{}}) }{e_1}{x}{e_2}
+\eawait{e_1}{x}{e_2} \deq&\; \euntil{ (\eloop{\mathtt{pause}}) }{e_1}{x}{e_2}
 \end{align*}
 \end{small}
 
@@ -163,7 +253,7 @@ Additional conditions express for instance the fact that the emitted values in $
 
 
 
-Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant. The expression $\epres{e}{e_1}{e_2}$ executes its first branch immediately if the signal is present, but executes the second branch on the next instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids any inconsistency in the presence of signals. The body of $\mathtt{do/when}$ is executed only during the instants when the signal is present. when this body reduces to a value, the $\mathtt{do/when}$ reduces immediately to the same value. The unconditional loop executes keeps executing its body until it awaits the next instant, that is, the termination status $b$ is equal to true. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
+Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant. The unconditional loop executes keeps executing its body until it awaits the next instant, that is, the termination status $b$ is equal to true. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
 
 \begin{figure*}
 \begin{small}
