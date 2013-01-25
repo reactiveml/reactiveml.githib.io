@@ -439,88 +439,28 @@ We have chosen to completely abstract values. As in the `imprecise` example of S
 
 \subsection{Subeffecting with row polymorphism}
 
-\begin{itemize}
-\item Remind subeffecting with constraints: enough to have a conservative extension of the type system (see \cite{Nielson:1999} for instance). Subeffecting = replacing an effect with a bigger effect. Here, replace $\rk$ with $\effor{\rk}{\rk'}$.
-\[
-\inferrule
-  { \tyju{\tyenv}{e}{\rt}{\rk} \\ \rk \sqsubseteq \rk' }
-  { \tyju{\tyenv}{e}{\rt}{\rk'}  }
-\]
+The typing rule for the creation of processes intuitively mean that a process has \emph{at least} the behavior of its body. This subtyping restricted to effects is often referred to as \emph{subeffecting}~\cite{Nielson:1999}: we can always replace an effect with a bigger, i.e. less precise, one. It allows the type system to be a conservative extension of \rml{} type system, that is, we are able to give a behavior to any correct \rml{} program.
 
-In \cite{Amtoft:1999}, add a constraint set to the typing rules, simple types, ie effects are always variables and:
-\[
-\inferrule
-  { \tyju{\tyenv, C}{e}{\rt}{\rk}   }
-  {  \tyju{\tyenv, C \cup {\rk \sqsubseteq \effvar} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
-\]
-For sets (like regions), $\sqsubseteq$ is subset inclusion. In our case, such that $\rk \sqsubseteq \effor{\rk}{\rk'}$.
-\item Behaviors of processes are always variables or rows (we could have enforced it using different kinds)
-\item Show extended unification algorithm:no explicit constraints, only collection of effects and unification
-\end{itemize}
+The consequence of this rule is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
 
-%L'algorithme prend en entrée en environnement de typage $\tyenv$ et une expression $e$ et renvoie une substitution $S$, un type $\rt$ et un effet $\rk$:
-%\[ \mW(\tyenv, e) = S, \rt, \rk \]
+During unification, the behavior of a process is always either a behavior variable~$\effvar$ or a row~$\effor{\rk}{\effvar}$. We could have made this fact more visible by having two different kind of behavior: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a}, and only use the following algorithm for unification of behaviors:
 
-%Description de l'algorithme:
-%\begin{small}
-%\begin{align*}
-%\mW(\tyenv, \evoid) =&\,(id, \mathtt{unit}, \effmin) \\
-%\mW(\tyenv, x) =&\, (id, \rt[\bar{\alpha} \leftarrow \bar{\beta}], \effmin) 
-%          \text{ où } \tyenv(x) = \forall \bar{\alpha}.\, \rt &&  \fresh{\bar{\beta}} \\
-%\mW(\tyenv, \elam{x}{e}) =&\, \mlet (S_1, \rt_1, \rk_1) = \mW(\tyenv \tyconcat x:\beta, e) && \fresh{\beta} \\
-%                                          &\,  \mIn (S_1, S_1 \rtarrow{\beta}{\effor{\rk_1}{\effvar} }{\rt_1}, \effmin) \\
-%\mW(\tyenv, \eapp{e_1}{e_2}) =&\, \mlet (S_1, \rt_1, \rk_1) = \mW(\tyenv, e_1)  \\
-%												   &\, \mand S'_1 = \mU_{\rk}(\rk_1, \effmin) \\
-%												   &\, \mand (S_2, \rt_2, \rk_2) = \mW(S'_1 S_1\tyenv, e_2) \\
-%												   &\, \mand S'_2 = \mU_{\rk}(\rk_2, \effmin) \\
-%												   &\, \mand S_3 = \mU(S'_2 S_2 \rt_1, \rt_2 \rightarrow \beta) && \fresh{\beta} \\
-%												   &\, \mIn (S_3 S'_2 S_2 S'_1 S_1, S_3\beta) \\
-%\mW(\tyenv, \elet{x}{e_1}{e_2}) =&\, \mlet (S_1, \rt_1, \rk_1) = \mW(\tyenv, e_1)  \\
-%													 &\, \mand (S_2, \rt_2, \rk_2)= \mW(S_1\tyenv \tyconcat x : gen(\rt, e_1, \tyenv), e_2) \\
-%													 &\, \mIn (S_2 S_1, \rt_2, \rk_1 \cup \rk_2) \\
-%\mW(\tyenv, \erec{x}{e}) =&\, \mlet (S_1, \rt_1) = \mW(\tyenv \tyconcat x:\beta, e) && \fresh{\beta} \\
-%										  &\, \mand  S_2 = \mU(S_1\beta, \rt_1) \\
-%										  &\, \mIn (S_2 S_1, S_2 \rt_1)
-%\end{align*}
-%\end{small}
-
-The inference algorithm is the algorithm $\mW$ with the collection of behaviors. Can be easily implemented in any ML type inference algorithm.
-
-L'algorithme d'unification prend en entrée deux types $\rt_1$ et $\rt_2$ et renvoie une substitution $S$ ou échoue avec la valeur spéciale $\fail$:
-\[  \mU(\rt_1, \rt_2) = S \]
-
-Improved unification algorithm of 
 \begin{small}
 \begin{align*}
 \mU_{\rk}(\effvar, \rk) = \mU_{\rk}(\rk, \effvar) =
 					&\, [\effvar \mapsto  \effrec{\effvar'}{\rk[\effvar \leftarrow \effvar']} ]  \text{ if } \mathtt{occur\_check}(\effvar, \rt) \\
-					&\,  [\effvar \mapsto \rk] \\
+					= &\,  [\effvar \mapsto \rk] \\
 \mU_{\rk}(\effor{\rk_1}{\effvar_1}, \effor{\rk_2}{\effvar_2}) =&\,
-                  [\effvar_1 \mapsto \effor{\rk_2}{\effvar}; \\
-                  &\,\; \effvar_1 \mapsto \effor{\rk_2}{\effvar} ] && \fresh{\effvar} \\
+                  [\effvar_1 \mapsto \effor{\rk_2}{\effvar};  \effvar_1 \mapsto \effor{\rk_2}{\effvar} ]  \qquad \fresh{\effvar} \\
 \mU_{\rk}(\rk, \rk) =&\, [] \\
-\mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} && \text{ dans tous les autres cas}
+\mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} \qquad\text{otherwise}
 \end{align*}
 \end{small}
 
+This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}.
 
-\subsection{Simplifying behaviors}
+A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we chose to replace it with $\effmin$, which is the neutral element of $\effor$.
 
-\begin{itemize}
-\item In the proof of correction, we only use the fact that the behavior is reactive.
-\item the equivalence on behaviors, that preserve reactivity
-\item Add a new typing rule (some kind of subtyping), can also simplify some rules
-\item Not in the type system as soundness relies on the fact that the size of the behavior of sub-expressions is smaller, so we cannot do any simplification
-\end{itemize}
-
-New typing rule:
-\[ 
-\inferrule
-  { \tyju{\tyenv}{e}{\rt}{\rk_1} \\ \effeq{\rk_1}{\rk_2} }
-  { \tyju{\tyenv}{e}{\rt}{\rk_2} } 
-\]
-
-\subsection{Examples}
 
 \section{Proof of soundness}
 
@@ -624,8 +564,75 @@ Pour prouver que l'on obtient une expression bien typée pour l'instant suivant,
 
 \end{proof}
 
+\section{Discussion}
+
+
+\subsection{Simplifying behaviors}
+
+\begin{itemize}
+\item In the proof of correction, we only use the fact that the behavior is reactive.
+\item the equivalence on behaviors, that preserve reactivity
+\item We define a variant of the type system with simplification : Add a new typing rule (some kind of subtyping), can also simplify some rules
+\item Not in the type system as soundness relies on the fact that the size of the behavior of sub-expressions is smaller, so we cannot do any simplification
+\item If a program is well-typed in the second type system, it is well-typed in the first type system and the behaviors are equivalent, so if the first one is reactive, so is the second one, and so the program is reactive
+\end{itemize}
+
+New typing rules:
+\begin{mathpar}
+\inferrule
+  { \tyjus{\tyenv}{e}{\rt}{\rk_1} \\ \effeq{\rk_1}{\rk_2} }
+  { \tyjus{\tyenv}{e}{\rt}{\rk_2} } 
+%
+\and
+%
+\inferrule%*[Left=(Signal)]
+  { \tyjus{\tyenv}{e_1}{\rt_2}{\effmin}  \\ 
+    \tyjus{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\effmin} \\\\
+    \tyjus{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
+  { \tyjus{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \effcon{\effmin}{\rk}} }
+%
+\and
+%
+\inferrule%[When]
+  { \tyjus{\tyenv}{e_1}{\rt}{\rk} \\\\
+    \tyjus{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} }
+  { \tyjus{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
+\end{mathpar}
+
+\subsection{Examples}
+
+
+\subsection{Implementation}
+
 \section{Related work}
 
+
+Subeffecting is usually expressed as a non-syntax directed rule (we reuse the same notations as in Section~\ref{sec:type_system} for better comparison):
+%
+\[
+\inferrule
+  { \tyju{\tyenv}{e}{\rt}{\rk} \\ \rk \sqsubseteq \rk' }
+  { \tyju{\tyenv}{e}{\rt}{\rk'}  }
+\]
+%
+The order $\sqsubseteq$ on effects is given by set inclusion when effects are sets (of regions for example). In our case, It is defined by:
+\begin{mathpar}
+\rk_1 \sqsubseteq \effor{\rk_1}{\rk_2}
+\and
+\rk_2 \sqsubseteq \effor{\rk_1}{\rk_2}
+\and
+\inferrule{ \effeq{\rk_1}{\rk_2} }{ \rk_1 \sqsubseteq \rk_2 }
+\end{mathpar}
+
+A similar approach is used in~\cite{Amtoft:1999}. It enforces effects to be \emph{simple}, that is, effects on arrows are syntactically forced to be variables. A constraint set is added to the type system to keep track of the relations between variables and effects. Subeffecting is then expressed as:
+%
+\[
+\inferrule
+  { \tyju{\tyenv, C}{e}{\rt}{\rk}   }
+  {  \tyju{\tyenv, C \cup \{ \rk \sqsubseteq \effvar \} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
+\]
+
+These three formulations appear to be equivalent.
 
 \section{Conclusion}
 
