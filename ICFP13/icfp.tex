@@ -92,6 +92,7 @@ Contributions of the paper:
 Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity. Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
 
 \subsection{A first example}
+\label{sec:first_example}
 
 Let us first start by creating a process that emits a signal every `timer` seconds:
 %
@@ -154,7 +155,6 @@ In the previous example, we have seen the first cause of non-reactivity, that is
 let rec process intantaneous s =
   emit s ();
   run (intantaneous s)
-
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 
@@ -692,14 +692,14 @@ We cannot add this rule to the original system as the proof of soundness relies 
   { \tyjus{\tyenv}{e_1}{\rt_2}{\effmin}  \\ 
     \tyjus{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\effmin} \\\\
     \tyjus{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
-  { \tyjus{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \effcon{\effmin}{\rk}} }
+  { \tyjus{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \rk} }
 %
 \and
 %
 \inferrule%[When]
   { \tyjus{\tyenv}{e_1}{\rt}{\rk} \\\\
     \tyjus{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} }
-  { \tyjus{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
+  { \tyjus{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} {\rk} } 
 %
 \end{mathpar}
 
@@ -722,6 +722,77 @@ By applying Property~\ref{prop:variant_system} and Property~\ref{prop:equiv_reac
 
 \subsection{Examples}
 
+The behavior computed for the `timer` example of Section~\ref{sec:first_example} is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}, which is equivalent to $\effinf{\effmin}$ and not reactive. After the fix, the behavior becomes \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{\effcon{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})}{\effplus}})}$} (equivalent to $\effinf{\effplus}$), which is now reactive. Similarly, the `instantaneous` process defined in Section~\ref{sec:intuition} has a behavior equal to $\effrec{\effvar}{\effcon{\effmin}{\effrun{\effvar}}}$, that is obviously non reactive.
+
+Using a type-based analysis makes it easy to deal with cases of aliasing, like in the following example:
+\begin{lstlisting}
+let rec process p =
+  let q = (fun x -> x) p in
+  run q 
+?val p : 'a process[(rec 'r. run 'r) + ..]?
+?W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
+As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
+%
+The analysis can also handle combinators. In that case, there is no warning when defining the combinator when it is not possible to decide of its reactivity:
+\begin{lstlisting}
+let process par_comb q1 q2 =
+  loop
+    run q1 || run q2
+  end
+?val par_comb : 'a process['r1] -> 'b process ['r2] ->
+  unit process[(rec 'r3. run 'r1 || run 'r2 ;  'r3) + ..]?
+\end{lstlisting}
+%
+This is reflected formally by the fact that free behavior variables are considered to be non-instantaneous (see Figure~\ref{fig:noinst_behavior}). The reactivity is then checked at instantiation:
+\begin{lstlisting}
+let process p1 = 
+  run (par_comb (process ()) (process (pause)))
+?val p1 : unit process[(rec 'r. run 0 || run *; 'r) + ..]?
+
+let process p2 = 
+  run (par_comb (process ()) (process ()))
+?val p2 : unit process[(rec 'r. run 0 || run 0; 'r) + ..]
+W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
+
+The behavior can sometimes be hard to understand, as in the following more complex example, but the analysis remains precise:
+\begin{lstlisting}
+let h_o f =
+ let rec process p =
+   let q = f p in
+   run q
+ in p
+?val h_o : ('a process[run 'r1 + 'r2] -> 'a process['r1]) 
+                -> 'a process[run 'r1 + 'r2]?
+
+let process good = 
+  run (higher_order 
+         (fun x -> process (pause; run x)))
+?val good :
+ 'a process[run (run ((rec 'r1. *; run (run 'r1)) + ..))]?
+
+let process pb = 
+  run (higher_order (fun x -> process (run x)))
+?val pb :
+  'a process[run (run ((rec 'r1. run (run 'r1)) + ..))]
+W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
+
+Another interesting process that is rejected by our analysis is a fixpoint operator. It takes as input a function expecting a continuation, and applies it with itself as the continuation. This fixpoint operator can be used to create a recursive process, which reactivity is checked by our analysis:
+\begin{lstlisting}
+let rec fix f x = f (fix f) x
+?val fix : (('a -> 'b) -> 'a -> 'b) -> 'a -> 'b?
+
+let process main =
+  let process p k v =
+    print_int v; print_newline (); 
+    run (k (v+1))
+  in
+  run (fix p 0)
+?val main : 'a process[(run (rec 'r. run 'r)) + ..]
+W: This expression may produce an instantaneous recursion?
+\end{lstlisting}
 
 \subsection{Adding references}
 
@@ -733,14 +804,14 @@ let landin () =
   f := process (run !f);
   !f
 ?val landin : unit -> 
-        unit process[0 + (rec 'r1. run (0 + 'r1)) + 'r2]?
+        unit process[0 + (rec 'r1. run (0 + 'r1)) + ..]?
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 %
 %?val landin : unit -> 
 %        unit process[$\effor{\effor{\effmin}{\effrec{\effvar
 %                         }{\effrun{(\effor{\effmin}{\effvar})}}}}{\effvar'}$] ?
-As our analysis does not have any special case for recursive processes and is only based on unification, it is able to detect the reactivity issue even though there is no explicit recursivity.
+As our analysis does not have any special case for recursive processes and is only based on unification, it is able to detect the reactivity issue even though there is no explicit recursion.
 
 \subsection{Implementation}
 
@@ -775,6 +846,8 @@ A similar approach is used in~\cite{Amtoft:1999}. It enforces effects to be \emp
 These three formulations appear to be equivalent.
 
 \section{Conclusion}
+
+Future work: meta-theory of type system (principality, etc). Comparison with other subeffecting formulations
 
 \bibliographystyle{plain}
 
