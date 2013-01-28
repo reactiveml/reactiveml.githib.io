@@ -523,9 +523,40 @@ We have chosen to completely abstract values. As in the `imprecise` example of S
 
 \subsection{Subeffecting with row polymorphism}
 
+\subsubsection*{Subeffecting}
+
 The typing rule for the creation of processes intuitively mean that a process has \emph{at least} the behavior of its body. This subtyping restricted to effects is often referred to as \emph{subeffecting}~\cite{Nielson:1999}: we can always replace an effect with a bigger, i.e. less precise, one. It allows the type system to be a conservative extension of \rml{} type system, that is, we are able to give a behavior to any correct \rml{} program.
 
-The consequence of this rule is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
+Subeffecting~\cite{Talpin:1992a,Nielson:1999} is usually expressed as a non-syntax directed rule (we reuse the same notations as in Section~\ref{sec:type_system} for better comparison):
+%
+\[
+\inferrule
+  { \tyju{\tyenv}{e}{\rt}{\rk} \\ \rk \sqsubseteq \rk' }
+  { \tyju{\tyenv}{e}{\rt}{\rk'}  }
+\]
+%
+The order $\sqsubseteq$ on effects is given by set inclusion when effects are sets (of regions for example). In our case, It is defined by:
+\begin{mathpar}
+\rk_1 \sqsubseteq \effor{\rk_1}{\rk_2}
+\and
+\rk_2 \sqsubseteq \effor{\rk_1}{\rk_2}
+\and
+\inferrule{ \effeq{\rk_1}{\rk_2} }{ \rk_1 \sqsubseteq \rk_2 }
+\end{mathpar}
+
+A similar approach is used in~\cite{Amtoft:1999}. It enforces effects to be \emph{simple}, that is, effects on arrows are syntactically forced to be variables. A constraint set is added to the type system to keep track of the relations between variables and effects. Subeffecting is then expressed as:
+%
+\[
+\inferrule
+  { \tyju{\tyenv, C}{e}{\rt}{\rk}   }
+  {  \tyju{\tyenv, C \cup \{ \rk \sqsubseteq \effvar \} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
+\]
+
+These three formulations appear to be equivalent.
+
+\subsubsection*{Implementing subeffecting with row polymorphism}
+
+The consequence of the typing rule for processes is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
 
 During unification, the behavior of a process is always either a behavior variable~$\effvar$ or a row~$\effor{\rk}{\effvar}$. We could have made this fact more visible by having two different kind of behavior: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a}, and only use the following algorithm for unification of behaviors:
 
@@ -543,7 +574,7 @@ During unification, the behavior of a process is always either a behavior variab
 
 This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}.
 
-A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we chose to replace it with $\effmin$, which is the neutral element of $\effor$.
+A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}~\cite{Lucassen:1988}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we chose to replace it with $\effmin$, which is the neutral element of $\effor$.
 
 
 \section{Proof of soundness}
@@ -817,33 +848,13 @@ As our analysis does not have any special case for recursive processes and is on
 
 \section{Related work}
 
+Reactivity analysis is a classic topic in synchronous languages, also referred to as \emph{causality} analysis. In \esterel~\cite{Berry:1997}, the first imperative synchronous language, reactivity can be checked easily as the language is first order without recursion. Closer to \rml, the reactivity analysis~\cite{Amadio:2007b} of \funloft~\cite{Boussinot:2010} not only checks that instants terminate, but also give a bound on the duration of the instants trough a value analysis. The analysis is also restricted to the first-order setting. In \ulm~\cite{Boudol:2004}, each recursive call induces an implicit pause. Hence, it is impossible to have instantaneous recursions, at the expense of expressivity. For instance, in the `server` example of Section~\ref{sec:intuition}, a message could be lost between receiving a message on `add` and awaiting a new message.
 
-Subeffecting is usually expressed as a non-syntax directed rule (we reuse the same notations as in Section~\ref{sec:type_system} for better comparison):
-%
-\[
-\inferrule
-  { \tyju{\tyenv}{e}{\rt}{\rk} \\ \rk \sqsubseteq \rk' }
-  { \tyju{\tyenv}{e}{\rt}{\rk'}  }
-\]
-%
-The order $\sqsubseteq$ on effects is given by set inclusion when effects are sets (of regions for example). In our case, It is defined by:
-\begin{mathpar}
-\rk_1 \sqsubseteq \effor{\rk_1}{\rk_2}
-\and
-\rk_2 \sqsubseteq \effor{\rk_1}{\rk_2}
-\and
-\inferrule{ \effeq{\rk_1}{\rk_2} }{ \rk_1 \sqsubseteq \rk_2 }
-\end{mathpar}
+The causality analysis~\cite{Cuoq:2001} of \lucy~\cite{Caspi:1995} is a type-and-effect system using row types. It is based on the exception analysis done in~\cite{Leroy:2000}. Both are a more direct application of row types~\cite{Remy:1993}, whereas our system differs in the absence of labels in rows.
 
-A similar approach is used in~\cite{Amtoft:1999}. It enforces effects to be \emph{simple}, that is, effects on arrows are syntactically forced to be variables. A constraint set is added to the type system to keep track of the relations between variables and effects. Subeffecting is then expressed as:
-%
-\[
-\inferrule
-  { \tyju{\tyenv, C}{e}{\rt}{\rk}   }
-  {  \tyju{\tyenv, C \cup \{ \rk \sqsubseteq \effvar \} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
-\]
 
-These three formulations appear to be equivalent.
+Our language of behaviors and type system is inspired by the work of~\cite{Amtoft:1999}. Their analysis is done on the \cml~\cite{Reppy:2007} language, which extends ML with message passing primitives. The behavior of a process records every emission and reception on communication channels. The authors use the type system to prove properties on particular examples, not for a general analysis. For instance, they prove that the emission on a given channel always precede the emission on a second channel in a given program. \cite{Boudol:2010} uses a type-and-effect system to prove termination of functional programs using references, by stratifying memory to avoid recursion through references.
+
 
 \section{Conclusion}
 
