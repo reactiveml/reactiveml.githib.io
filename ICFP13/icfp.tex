@@ -80,36 +80,58 @@ Synchronous languages; Functional languages;  Semantics; Type systems
 \section{Introduction}
 \label{sec:introduction}
 
+%\begin{itemize}
+%\item Cooperative scheduling: enables lightweight threads, create thousands, millions of threads. Impossible with OS threads. Synchronization almost for free. Available in all languages (asynchronous computations~\cite{Syme:2011} in \fsharp, \conhaskell~\cite{Jones:1996}, \lwt~\cite{Vouillon:2008} for \ocaml), implementation easy with continuations (see \cite{Claessen:1999})
+%\item Idea: Each thread cooperates with the scheduler at some point to let other processes execute
+%\item Two problems:
+%\begin{itemize}
+%\item The programmer has to cooperate at some point. In particular in infinite loop that are characteristic of reactive and interactive systems: at each occurence of this event, do that; forever do that
+%\item Cannot call blocking functions, in particluar OS primitives for I/O
+%\end{itemize}
+
+Most functional languages offer light thread facilities, either integrated in the language like the asynchronous computations~\cite{Syme:2011} in \fsharp, or available as a library like \conhaskell~\cite{Jones:1996}, or \lwt~\cite{Vouillon:2008} for \ocaml. These libraries are based on cooperative scheduling: each thread of execution cooperates with the scheduler to let other threads execute. This enable an efficient and sequential implementation of concurrency, allowing to create up to millions of separate threads, which is impossible with operating system threads. Synchronization also comes almost for free, without requiring any synchronization primitive like locks. The functional paradigm makes the implementation even easier, by using \emph{continuations}~\cite{Claessen:1999}.
+
+The downside of cooperative scheduling is that it is necessary to make sure that threads actually cooperate:
 \begin{itemize}
-\item Cooperative scheduling: enables lightweight threads, create thousands, millions of threads. Impossible with OS threads. Available in all languages (asynchronous computations~\cite{Syme:2011} in \fsharp, \conhaskell~\cite{Jones:1996}, \lwt~\cite{Vouillon:2008} for \ocaml), implementation easy with continuations (see \cite{Claessen:1999})
-\item Idea: Each thread cooperates with the scheduler at some point to let other processes execute
-\item Two problems:
-\begin{itemize}
-\item The programmer has to cooperate at some point. In particular in infinite loop that are characteristic of reactive and interactive systems: at each occurence of this event, do that; forever do that
-\item Cannot call blocking functions, in particluar OS primitives for I/O
+\item The programmer has to return control to the scheduler regularly. This is in particular true for infinite loops, that are very often present in \emph{reactive} and \emph{interactive} systems~\cite{Harel:1985}. 
+\item He cannot call blocking functions like operating system primitives for I/O. 
 \end{itemize}
 
-\item Solution to the latter: never use these functions. Libraries implement cooperative alternatives, use them instead. See \cite{Marlow:2004} for an overview on how to implement these blocking operations safely.
+%\item Solution to the latter: never use these functions. Libraries implement cooperative alternatives, use them instead. See \cite{Marlow:2004} for an overview on how to implement these blocking operations safely.
 
-\item In this paper we tackle the first issue: not forget to cooperate with the scheduler.
+The solution to the latter is pretty simple: never use blocking functions inside cooperative threads. All the facilities mentioned earlier provide either I/O libraries compatible with cooperative scheduling or means to safely call blocking functions. See \cite{Marlow:2004} for an overview on how to implement blocking operations safely in this context.
 
-\item Aalysis applied to the \rml language: a reactive extension of ML, i.e. ML with a synchronous model of concurrency. Divide the execution in logical time steps. Communication and computations instantaneous. Deterministic concurrency. Advantage of \rml for reactivity analysis:
+%\item In this paper we tackle the first issue: not forget to cooperate with the scheduler.
+%\item Analysis applied to the \rml language~\cite{Mandel:2005}: a reactive extension of ML, i.e. ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Divide the execution in logical time steps. Communication and computations instantaneous. Deterministic concurrency. Advantage of \rml for reactivity analysis:
+%\begin{itemize}
+%\item Concurrency exposed at the level of language, so easier to implement an analysis
+%\item Synchrony gives a simple meaning to reactivity: a program is reactive if logical instants progress. So a program is reactive if all process cooperate at each instant. The analysis could be applied to other concurrency model, but require some hypothesis of fairness from the scheduler. Synchrony is Very strong fairness hypothesis: processes execute in lock-step.
+%\end{itemize}
+
+The contribution of this paper is a static analysis, called \emph{reactivity analysis}, to remedy the first problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
+%
+Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} introduces the language and an informal semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}. Exposing concurrency at the level of the language level makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library. Furthermore, synchrony gives us a simple definition for reactivity: a program is reactive if all processes cooperate at each instant. A reactive \rml program is one where logical instants progress. Doing a similar analysis with another model of concurrency would require assumptions on the fairness of the scheduler. (Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step)
+
+
+
+%Contributions of the paper:
+%\begin{itemize}
+%\item A reactivity analysis implemented as a type-and-effect system~\cite{Lucassen:1988}
+%\item A new approach to subeffecting~\cite{Nielson:1999}, i.e replacing an effect with a less precise one, using row polymorphism~\cite{Remy:1993}
+%\item The proof of soundness of the analysis
+%\end{itemize}
+
+The contributions of this paper are the following:
 \begin{itemize}
-\item Concurrency exposed at the level of language, so easier to implement an analysis
-\item Synchrony gives a simple meaning to reactivity: a program is reactive if logical instants progress. Very strong fairness hypothesis: processes execute in lock-step. 
+\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Sections~\ref{sec:behaviors}~and~\ref{sec:type_system}.
+\item A novel approach to \emph{subeffecting}~\cite{Nielson:1999} based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}.
+\item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
 
-\end{itemize}
-
-
-Contributions of the paper:
-\begin{itemize}
-\item A reactivity analysis implemented as a type-and-effect system
-\item A new approach to subeffecting using row polymorphism
-\item The proof of soundness of the analysis
-\end{itemize}
+The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) and related work~(Section~\ref{sec:related_work}).
 
 \section{Problem statement}
+\label{sec:problem}
 
 Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity. Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
 
@@ -199,7 +221,6 @@ let rec process imprecise =
   signal s default () gather (fun () () -> ()) in
   present s then () else (* implicit pause *) ();
   run imprecise
-  
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 %
@@ -288,6 +309,8 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 \end{figure*}
 
 \section{The algebra of behaviors}
+\label{sec:behaviors}
+
 
 Behaviors are used to abstract the reactive behavior of processes. A main design choice is to completely abstract values and the presence of signals. It is however necessary to keep part of the structure of the program (or an abstraction of it) in order to have a precise analysis.
 
@@ -544,6 +567,7 @@ We have chosen to completely abstract values. As in the `imprecise` example of S
 \end{itemize}
 
 \subsection{Subeffecting with row polymorphism}
+\label{sec:subeffecting_row}
 
 \subsubsection*{Subeffecting}
 
@@ -721,7 +745,7 @@ The are then two cases depending on the status of $n$:
 \end{proof}
 
 \section{Discussion}
-
+\label{sec:discussion}
 
 \subsection{Simplifying behaviors}
 
@@ -869,6 +893,7 @@ As our analysis does not have any special case for recursive processes and is on
 \subsection{Implementation}
 
 \section{Related work}
+\label{sec:related_work}
 
 Reactivity analysis is a classic topic in synchronous languages, also referred to as \emph{causality} analysis. In \esterel~\cite{Berry:1997}, the first imperative synchronous language, reactivity can be checked easily as the language is first order without recursion. Closer to \rml, the reactivity analysis of \funloft~\cite{Amadio:2007b} not only checks that instants terminate, but also give a bound on the duration of the instants trough a value analysis. The analysis is also restricted to the first-order setting. In \ulm~\cite{Boudol:2004}, each recursive call induces an implicit pause. Hence, it is impossible to have instantaneous recursions, at the expense of expressivity. For instance, in the `server` example of Section~\ref{sec:intuition}, a message could be lost between receiving a message on `add` and awaiting a new message.
 
