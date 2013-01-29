@@ -128,7 +128,7 @@ The contributions of this paper are the following:
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
 
-The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) and related work~(Section~\ref{sec:related_work}).
+The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) and related work~(Section~\ref{sec:related_work}). The work presented here is implemented in the \rml compiler available at \url{http://reactiveml.org}.
 
 \clearpage
 
@@ -368,6 +368,15 @@ It uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ 
 
 The fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantan\-eous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
 
+\begin{figure*}[t]
+\begin{small}
+\input{rules}
+\end{small}
+
+\caption{Type-and-effect rules}
+\label{fig:rules}
+\end{figure*}
+
 \subsection{Equivalence on behaviors}
 \label{sec:equiv_behaviors}
 
@@ -408,7 +417,7 @@ if $\effeq{\rk_1}{\rk_2}$ and $\wf{R}{\rk_1}$ then $\wf{R}{\rk_2}$
 \section{The type-and-effect system}
 \label{sec:type_system}
 
-
+\todo{Use a type system guarantees polynomial complexity in practice}
 
 \subsection{Notations}
 
@@ -449,15 +458,6 @@ meaning that, in the type environment~$\tyenv$, the expression $e$ has type $\rt
         &\mathtt{true} : \mathtt{bool};
               \mathtt{fst} : \forall \rtvar_1, \rtvar_2.\, \rtarrow{\rtprod{\rtvar_1}{\rtvar_2}}{\rtvar_1};  \ldots ]
 \end{align*}
-
-\begin{figure*}
-\begin{small}
-\input{rules}
-\end{small}
-
-\caption{Type-and-effect rules}
-\label{fig:rules}
-\end{figure*}
 
 The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, it is exactly the same type system as the one presented in~\cite{Mandel:2005}, which is itself an extension of ML type system. 
 
@@ -536,12 +536,16 @@ The typing derivation shows that we must have $\effrun{\rk} = \rk$ to type this 
      \elam{x}{ \\ &\qquad \eproc{(\eseq{\erun{x}}{\erun{(\eapp{loop}{x})}})}})\; (\eproc{e})) 
 \end{align*}
 If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then we get the following types and behaviors:
-%
+
+{
+\small
 \begin{align*}
 loop:&\, \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
-                { \\ &\qquad\qquad\qquad \rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
+                { \rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
 \eproc{e} :&\, \rtproc{\rt}{\rk}
 \end{align*}
+}
+
 The behavior of this encoding is thus $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$. It is not equivalent to $\effinf{\rk}$, in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
 
 \item This is not the case of $\mathtt{pause}$ that can also be encoded by:
@@ -673,7 +677,7 @@ Function calls always terminate. Formally, for any ML expression $e$ such that $
 \[ \exists v.\, \inferrule{\Pi_e}{ \bigstep{N}{e}{v} {E}{b}{S} } \] 
 \end{hypothesis}
 
-We can now express the soundness of our analysis:
+We can now express the soundness of our analysis, that is, a well-typed program is reactive. Being reactive means here that there exists a derivation, necessarily finite, to rewrite the program into a well-typed program.
 \begin{theorem}[Soundness]
 If \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$} and $\rt$ and $\rk$ are reactive and we suppose that function calls terminate, then there exists $e'$ such that \mbox{$\bigstep{N}{e}{e'} {E}{b}{S}$} and \mbox{$\tyju{\tyenv}{e'}{\rt}{\rk'}$} with $\rk'$ reactive.
 \end{theorem}
@@ -810,7 +814,7 @@ let process par_comb q1 q2 =
   unit process[(rec 'r3. run 'r1 || run 'r2 ;  'r3) + ..]?
 \end{lstlisting}
 %
-This is reflected formally by the fact that free behavior variables are considered to be non-instantaneous (see Figure~\ref{fig:noinst_behavior}). The reactivity is then checked at instantiation:
+This is reflected formally by the fact that free behavior variables are considered to be non-instantaneous (see Section~\ref{sec:reactive_behavior}). The reactivity is then checked at instantiation:
 \begin{lstlisting}
 let process p1 = 
   run (par_comb (process ()) (process (pause)))
@@ -880,6 +884,8 @@ let landin () =
 As our analysis does not have any special case for recursive processes and is only based on unification, it is able to detect the reactivity issue even though there is no explicit recursion.
 
 \subsection{Implementation}
+
+The type inference algorithm of \rml has been extended to compute the behaviors of processes, with a small impact on its structure and complexity. The rules given in Section~\ref{sec:reactive_behavior} are easily translated into an algorithm for checking the reactivity of behaviors, polynomial in the size of behaviors. Inference simplifies behaviors during the computation, but does not necessarily compute the smallest behavior possible. For instance, simplifying $\effor{\rk}{\rk}$ can be costly in some cases, so it only checks simple cases (e.g. if $\rk = \effmin$ or $\rk = \effplus$). Overall, the analysis has a small impact on the compilation time of \rml programs.
 
 \section{Related work}
 \label{sec:related_work}
