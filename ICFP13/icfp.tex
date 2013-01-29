@@ -269,7 +269,7 @@ Values are constants (integers, booleans, etc.), pairs of values, signal names $
 
 A reaction of an expression is given by the relation
 \[  \bigstep{N}{e}{e'}{E}{b}{S} \]
-which means that during the instant, in the signal environment $S$, the expression~$e$ rewrites to~$e'$ and emits the signals in $E$. $b$ is a boolean that indicates if $e'$ has terminated. We write $n \in S$ when the signal $n$ is present in the signal environment $S$ and $n \not\in S$ otherwise. 
+which means that during the instant, in the signal environment $S$, the expression~$e$ rewrites to~$e'$ and emits the signals in $E$. $b$ is a boolean that indicates if $e'$ has terminated. We write $n \in S$ when the signal $n$ is present in the signal environment $S$ and $n \not\in S$ otherwise. We omit all other details concerning the signal environment and refer the reader to~\cite{Mandel:2005}.
 %
 The execution of an instant is defined by the smallest signal environment $S_i$ such that:
 \[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
@@ -277,7 +277,12 @@ Additional conditions express for instance the fact that the emitted values in $
 The execution of a program is made of the succession of a (potentially infinite) number of reactions and terminates when the status $b$ is equal to true.
 
 
-Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant. The unconditional loop keeps executing its body until it awaits the next instant, that is, its termination status $b$ becomes false. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
+Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. 
+\begin{itemize}
+\item  The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant.
+\item The $\mathtt{let}/\mathtt{and}$ construct executes its two branches until both are terminated.
+\item The unconditional loop keeps executing its body until it awaits the next instant, that is, its termination status $b$ becomes false. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
+\end{itemize}
 
 \begin{figure*}
 \begin{small}
