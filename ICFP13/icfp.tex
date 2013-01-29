@@ -108,7 +108,7 @@ The solution to the latter is pretty simple: never use blocking functions inside
 %\item Synchrony gives a simple meaning to reactivity: a program is reactive if logical instants progress. So a program is reactive if all process cooperate at each instant. The analysis could be applied to other concurrency model, but require some hypothesis of fairness from the scheduler. Synchrony is Very strong fairness hypothesis: processes execute in lock-step.
 %\end{itemize}
 
-The contribution of this paper is a static analysis, called \emph{reactivity analysis}, to remedy the first problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
+The goal of this paper is to design a static analysis, called \emph{reactivity analysis}, to remedy the first problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
 %
 Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} introduces the language and an informal semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}. Exposing concurrency at the level of the language level makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library. Furthermore, synchrony gives us a simple definition for reactivity: a program is reactive if all processes cooperate at each instant. A reactive \rml program is one where logical instants progress. Doing a similar analysis with another model of concurrency would require assumptions on the fairness of the scheduler. (Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step)
 
@@ -196,6 +196,8 @@ The declaration of a signal takes as arguments the default value of the signal a
 \subsection{Intuitions and limitations}
 \label{sec:intuition}
 
+\input{derived}
+
 In the previous example, we have seen the first cause of non-reactivity, that is, instantaneous loops. The second one is instantaneous recursive processes, as in this example:
 \begin{lstlisting}
 let rec process intantaneous s =
@@ -260,31 +262,6 @@ e \sdeq &\phantom{\mid}  x \mid c \mid (e, e) \mid \elam{x}{e}
 \end{align*}
 
 Values are constants (integers, booleans, etc.), pairs of values, signal names $n$, functions an processes. The language is a call-by-value lambda-calculus, extended with constructs for creating~($\mathtt{process}$) and running~($\mathtt{run}$) processes, waiting for the next instant~($\mathtt{pause}$), parallel definitions~($\mathtt{let/and}$), declaring signals~($\mathtt{signal}$), emitting a signal~($\mathtt{emit}$) and several control structures: the test of presence of a signal~($\mathtt{present}$), the unconditional loop~($\mathtt{loop}$), weak preemption~($\mathtt{do/until}$) and suspension~($\mathtt{do/when}$).  The expression $\euntil{e_1}{s}{x}{e_2}$ executes its body $e_1$ and, when signal~$s$ is present, stops the execution of~$e_1$ and the executes the continuation~$e_2$ on the next instant, binding~$x$ to the value of~$s$. We denote $\_$ variables that do not appear free in the body of a $\mathtt{let}$ and $\evoid{}$ the unique value of type $\mathtt{unit}$. From this kernel, we can encode most constructs of the language, as shown in Figure~\ref{fig:derived}.
-%
-\begin{figure*}
-
-\begin{small}
-\begin{align*}
-%\eawaitim{e} \deq &\; \ewhen{\evoid{}}{e} \\
-\epar{e_1}{e_2} \deq &\; \eletpar{\_}{e_1}{\_}{e_2}{\evoid{}} \\
-\elet{x}{e_1}{e_2} \deq &\; \eletpar{x}{e_1}{\_}{\evoid{}}{e_2} \\
-\mathidl{let} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
-      \deq &\; \elet{f}{\elam{x_1}{\ldots \elam{x_p}{e_1}}}{e_2} \\
-\mathidl{let} \mathidl{rec} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
-      \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{e_1}}}) }{e_2} \\
-\mathidl{let} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
-      \deq &\; \elet{f}{\elam{x_1}{\ldots \elam{x_p}{ \eproc{e_1} }}}{e_2} \\     
-\mathidl{let} \mathidl{rec} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
-            \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{\eproc{e_1}}}}) }{e_2} \\
-\eseq{e_1}{e_2} \deq &\; \elet{\_}{e_1}{e_2}  \\
-\eawait{e_1}{x}{e_2} \deq&\; \euntil{ (\eloop{\mathtt{pause}}) }{e_1}{x}{e_2}
-\end{align*}
-\end{small}
-
-\caption{Derived language constructs}
-\label{fig:derived}
-\end{figure*}
-
 
 \subsection{Semantics}
 
@@ -352,34 +329,44 @@ As it is defined recursively, the behavior  $\rk$  associated to `good_rec` must
 \[ \effrec{\effvar}{\rk} = \rk[\effvar \leftarrow \effrec{\effvar}{\rk}] \]
  Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
 
-\begin{figure}[t]
-
-\subfloat[Reactive behaviors]{
-\begin{small}
-\input{wf}
-\end{small}
-\label{fig:reactive_behavior}
-}
-
-\subfloat[Non-instantaneous behaviors]{
-\begin{small}
-\input{noinst}
-\end{small}
-\label{fig:noinst_behavior}
-}
-
-\caption{Properties of behaviors}
-\end{figure}
+%\begin{figure}[t]
+%
+%\subfloat[Reactive behaviors]{
+%\begin{small}
+%\input{wf}
+%\end{small}
+%\label{fig:reactive_behavior}
+%}
+%
+%\subfloat[Non-instantaneous behaviors]{
+%\begin{small}
+%\input{noinst}
+%\end{small}
+%\label{fig:noinst_behavior}
+%}
+%
+%\caption{Properties of behaviors}
+%\end{figure}
 
 
 \subsection{Reactive behaviors}
 \label{sec:reactive_behavior}
 
-Using the language of behaviors, we can now characterize the behaviors that we want to reject, that is instantaneous loops and recursions. We actually enforce a stronger sufficient condition, that can be checked easily and efficiently: there must be at least one instant before each recursive call. This condition is not necessary, as the `par_map` example of Section~\ref{} showed. As the behavior of a loop is just a particular case of recursive behavior, this condition also implies that the body of a loop is non-instantaneous.
+Using the language of behaviors, we can now characterize the behaviors that we want to reject, that is instantaneous loops and recursions. We actually enforce a stronger sufficient condition, that can be checked easily and efficiently: there must be at least one instant before each recursive call. This condition is not necessary, as the `par_map` example of Section~\ref{sec:intuition} showed. As the behavior of a loop is just a particular case of recursive behavior, this condition also implies that the body of a loop is non-instantaneous.
 
-A behavior that respect this condition is called a \emph{reactive} behavior. A behavior is reactive if for each recursive behavior $\effrec{\effvar}{\rk}$, the recursion variable $\effvar$ does not appear in the first instant of the body $\rk$. Formally, we define a predicate $\wf{R}{\rk}$ meaning that the behavior $\rk$ is reactive with respect to the set of variables $R$, that is, these variables do not appear in the first instant of $\rk$ and all the recursions inside $\rk$ are well-formed. This relation is defined in Figure~\ref{fig:reactive_behavior}. It uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined in Figure~\ref{fig:noinst_behavior}. Indeed, in the case of $\eseq{\rk_1}{\rk_2}$, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{[]}{\rk_2}$.
+A behavior that respect this condition is called a \emph{reactive} behavior. A behavior is reactive if for each recursive behavior $\effrec{\effvar}{\rk}$, the recursion variable $\effvar$ does not appear in the first instant of the body $\rk$. Formally, we define a predicate $\wf{R}{\rk}$ meaning that the behavior $\rk$ is reactive with respect to the set of variables $R$, that is, these variables do not appear in the first instant of $\rk$ and all the recursions inside $\rk$ are well-formed. This relation is defined by:
 
-The fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantaneous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
+\begin{small}
+\input{wf}
+\end{small}
+
+It uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined below. Indeed, in the case of $\eseq{\rk_1}{\rk_2}$, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{[]}{\rk_2}$.
+
+\begin{small}
+\input{noinst}
+\end{small}
+
+The fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantan\-eous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
 
 \subsection{Equivalence on behaviors}
 \label{sec:equiv_behaviors}
