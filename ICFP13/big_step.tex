@@ -2,72 +2,72 @@
 %
 \inferrule
    { 
-      \bigstep{N_1}{e_1}{\lambda x.\; e} {E_1}{true}{S} \\  
-      \bigstep{N_2}{e_2}{v_2} {E_2}{true}{S} \\
-      \bigstep{N_3}{e[x \leftarrow v_2]}{v} {E_3}{true}{S}
+      \bigstep{N_1}{e_1}{\lambda x.\; e} {E_1}{\strue}{S} \\  
+      \bigstep{N_2}{e_2}{v_2} {E_2}{\strue}{S} \\
+      \bigstep{N_3}{e[x \leftarrow v_2]}{v} {E_3}{\strue}{S}
    }
-   { \bigstep{N_1 \cdotp N_2 \cdotp N_3}{ \eapp{e_1}{e_2} }{v} {E_1 \sqcup E_2 \sqcup E_3}{true}{S} }
+   { \bigstep{N_1 \cdotp N_2 \cdotp N_3}{ \eapp{e_1}{e_2} }{v} {E_1 \sqcup E_2 \sqcup E_3}{\strue}{S} }
 %
 \and
 %
 \inferrule
-   { \bigstep{N}{e[x \leftarrow \erec{x}{e}]}{v} {E}{true}{S} }
-   { \bigstep{N}{\erec{x}{e}}{v} {E}{true}{S}  }
+   { \bigstep{N}{e[x \leftarrow \erec{x}{e}]}{v} {E}{\strue}{S} }
+   { \bigstep{N}{\erec{x}{e}}{v} {E}{\strue}{S}  }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e} {\eproc{e_1}}  {E}{true}{S}  \\ 
+  { \bigstep{N}{e} {\eproc{e_1}}  {E}{\strue}{S}  \\ 
     \bigstep{N_1}{e_1}{e'_1}  {E_1}{b}{S}   }
   { \bigstep{N \cdotp N_1}{\erun{e}}{e'_1} {E \sqcup E_1}{b}{S}  }
 %
 \and
 %
-\bigstep{\emptyset}{\epause{}}{\evoid{}}  {\emptyset}{false}{S}
+\bigstep{\emptyset}{\epause{}}{\evoid{}}  {\emptyset}{\sfalse}{S}
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \in S \\ 
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \in S \\ 
     \bigstep{N_1}{e_1}{e'_1} {E_1}{b}{S} }
   { \bigstep{N \cdotp N_1}{\epres{e}{e_1}{e_2}}{e'_1} {E \sqcup  E_1}{b}{S}  }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \not\in S }
-  { \bigstep{N}{\epres{e}{e_1}{e_2}}{e_2} {E}{false}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \not\in S }
+  { \bigstep{N}{\epres{e}{e_1}{e_2}}{e_2} {E}{\sfalse}{S} }
 %
 \\
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \not\in S }
-  { \bigstep{N}{\ewhen{e_1}{e}}{\ewhen{e_1}{n}}  {E}{false}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \not\in S }
+  { \bigstep{N}{\ewhen{e_1}{e}}{\ewhen{e_1}{n}}  {E}{\sfalse}{S} }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \in S \\
-     \bigstep{N_1}{e_1}{e'_1} {E_1}{false}{S}  }
-  { \bigstep{N \cdotp N_1}{\ewhen{e_1}{e}}{\ewhen{e'_1}{n}}  {E \sqcup E_1}{false}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \in S \\
+     \bigstep{N_1}{e_1}{e'_1} {E_1}{\sfalse}{S}  }
+  { \bigstep{N \cdotp N_1}{\ewhen{e_1}{e}}{\ewhen{e'_1}{n}}  {E \sqcup E_1}{\sfalse}{S} }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \in S \\
-     \bigstep{N_1}{e_1}{v} {E_1}{true}{S}  }
-  { \bigstep{N \cdotp N_1}{\ewhen{e_1}{e}}{v}  {E \sqcup E_1}{true}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \in S \\
+     \bigstep{N_1}{e_1}{v} {E_1}{\strue}{S}  }
+  { \bigstep{N \cdotp N_1}{\ewhen{e_1}{e}}{v}  {E \sqcup E_1}{\strue}{S} }
 %
 \and
 %
 \inferrule 
-  {  \bigstep{N}{e}{e'} {E}{false}{S}  }
-  { \bigstep{N}{\eloop{e}}{\eseq{e'}{\eloop{e}}} {E}{false}{S}  }
+  {  \bigstep{N}{e}{e'} {E}{\sfalse}{S}  }
+  { \bigstep{N}{\eloop{e}}{\eseq{e'}{\eloop{e}}} {E}{\sfalse}{S}  }
 %
 \and
 %
 \inferrule 
-  {  \bigstep{N_1}{e}{v} {E_1}{true}{S} \\ \bigstep{N_2}{\eloop{e}}{e'} {E_2}{b}{S}  }
-  { \bigstep{N_1 \cdotp N_2}{\eloop{e}}{\eseq{e'}{\eloop{e}}} {E_1 \sqcup E_2}{false}{S}  }
+  {  \bigstep{N_1}{e}{v} {E_1}{\strue}{S} \\ \bigstep{N_2}{\eloop{e}}{e'} {E_2}{b}{S}  }
+  { \bigstep{N_1 \cdotp N_2}{\eloop{e}}{\eseq{e'}{\eloop{e}}} {E_1 \sqcup E_2}{\sfalse}{S}  }
 %
 \end{mathpar}

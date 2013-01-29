@@ -10,7 +10,7 @@
 \newcommand\erec[2]{\mathidl{rec} #1 = #2}
 \newcommand\eproc[1]{\mathidl{process} #1}
 \newcommand\erun[1]{\mathidl{run} #1}
-\newcommand{\epause}{\mathidl{pause}}
+\newcommand{\epause}{\mathtt{pause}}
 \newcommand\eseq[2]{#1 ; #2}
 \newcommand\elet[3]{ \mathidl{let} #1 = #2 \mathid{in} #3 }
 \newcommand\eletpar[5]{ \mathidl{let} #1 = #2 \mathid{and} #3 = #4 \mathid{in} #5 }
@@ -34,7 +34,8 @@
 % Semantique grands pas
 %\newcommand\bigstep[6]{ #1 \vdash #2 \xrightarrow[#6]{#4, #5} #3 }
 \newcommand\bigstep[6]{#2 \xrightarrow[#6]{#4, #5} #3 }
-
+\newcommand\sfalse{ff}
+\newcommand\strue{tt}
 % Types
 \newcommand\rt{\tau}
 \newcommand\rs{\sigma}

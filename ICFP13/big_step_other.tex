@@ -1,25 +1,25 @@
 \begin{mathpar}
 %
-\bigstep{N}{v} {v} {\emptyset}{true}{S}
+\bigstep{N}{v} {v} {\emptyset}{\strue}{S}
 %
 \and
 %
 \inferrule
-   { \bigstep{N_1}{e_1}{v_1} {E_1}{true}{S} \\  \bigstep{N_2}{e_2}{v_2} {E_2}{true}{S} }
-   { \bigstep{N_1 \cdotp N_2}{(e_1, e_2) }{ (v_1, v_2) } {E_1 \sqcup E_2}{true}{S}  }
+   { \bigstep{N_1}{e_1}{v_1} {E_1}{\strue}{S} \\  \bigstep{N_2}{e_2}{v_2} {E_2}{\strue}{S} }
+   { \bigstep{N_1 \cdotp N_2}{(e_1, e_2) }{ (v_1, v_2) } {E_1 \sqcup E_2}{\strue}{S}  }
 %
 \and
 %
 \inferrule
-  { \bigstep{N_1}{e_1}{n} {E_1}{true}{S} \\ \bigstep{N_2}{e_2}{v} {E_2}{true}{S} }
-  { \bigstep{}{\eemit{e_1}{e_2}}{\evoid{}} { E_1 \sqcup E_2 \sqcup [\{v\}/n] }{true}{S} }
+  { \bigstep{N_1}{e_1}{n} {E_1}{\strue}{S} \\ \bigstep{N_2}{e_2}{v} {E_2}{\strue}{S} }
+  { \bigstep{}{\eemit{e_1}{e_2}}{\evoid{}} { E_1 \sqcup E_2 \sqcup [\{v\}/n] }{\strue}{S} }
 %
 \and
 %
 \inferrule
   {  \bigstep{N_1}{e_1}{e'_1}  {E_1}{b_1}{S} \\
      \bigstep{N_2}{e_2}{e'_2}  {E_2}{b_2}{S} \\ 
-     b_1 \land b_2 = false }
+     b_1 \land b_2 = \sfalse }
   {
     \bigstep{N_1 \cdotp N_2}{ \eletpar{x_1}{e_1}{x_2}{e_2}{e} }
           { \eletpar{x_1}{e'_1}{x_2}{e'_2}{e} }  {E_1 \sqcup E_2}{b}{S}
@@ -28,8 +28,8 @@
 \and
 %
 \inferrule
-  { \bigstep{N_1}{e_1} {v_1}  {E_1}{true}{S} \\
-     \bigstep{N_2}{e_2} {v_2}  {E_2}{true}{S} \\ 
+  { \bigstep{N_1}{e_1} {v_1}  {E_1}{\strue}{S} \\
+     \bigstep{N_2}{e_2} {v_2}  {E_2}{\strue}{S} \\ 
      \bigstep{N}{e[x_1 \leftarrow v_1; x_2 \leftarrow v_2]} {e'}  {E}{b}{S}  }
   {
     \bigstep{N_1 \cdotp N_2 \cdotp N} 
@@ -39,10 +39,10 @@
 \and
 
 \inferrule
-  { \bigstep{N_1}{e_1}{v_1}  {E_1}{true}{S} \\
-     \bigstep{N_2}{e_2}{v_2}  {E_2}{true}{S} \\ 
+  { \bigstep{N_1}{e_1}{v_1}  {E_1}{\strue}{S} \\
+     \bigstep{N_2}{e_2}{v_2}  {E_2}{\strue}{S} \\ 
      \bigstep{N}{e[x_1 \leftarrow n]}{e'}  {E}{b}{S} \\
-     S(n) = (v_1, v_2, (false, v_1), m) }
+     S(n) = (v_1, v_2, (\sfalse, v_1), m) }
   {
     \bigstep{N_1 \cdotp N_2 \cdotp N \cdotp \{ n \}} 
        { \esig{x}{e_1}{e_2}{e}}{e'}  {E_1 \sqcup E_2 \sqcup E}{b}{S}
@@ -51,13 +51,13 @@
 \and
 %
 \inferrule
-  { \bigstep{N}{e_1}{e'_1}  {E_1}{false}{S}  }
-  { \bigstep{N}{\eseq{e_1}{e_2}}{\eseq{e'_1}{e_2}}  {E_1}{false}{S} }
+  { \bigstep{N}{e_1}{e'_1}  {E_1}{\sfalse}{S}  }
+  { \bigstep{N}{\eseq{e_1}{e_2}}{\eseq{e'_1}{e_2}}  {E_1}{\sfalse}{S} }
 %
 \and
 %
 \inferrule
-  { \bigstep{N_1}{e_1}{v_1}  {E_1}{true}{S}  \\ \bigstep{N_2}{e_2}{e'_2}  {E_2}{b}{S} }
+  { \bigstep{N_1}{e_1}{v_1}  {E_1}{\strue}{S}  \\ \bigstep{N_2}{e_2}{e'_2}  {E_2}{b}{S} }
   { \bigstep{N_1 \cdotp N_2}{\eseq{e_1}{e_2}}{e'_2}  {E_1 \sqcup E_2}{b}{S} }
 %
 \and
@@ -65,35 +65,35 @@
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\
-    \bigstep{N_1}{e_1}{v} {E_1}{true}{S}  }
-  { \bigstep{N}{ \euntil{e_1}{e}{x}{e_2} }{v}  {E}{true}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\
+    \bigstep{N_1}{e_1}{v} {E_1}{\strue}{S}  }
+  { \bigstep{N}{ \euntil{e_1}{e}{x}{e_2} }{v}  {E}{\strue}{S} }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \in S \\
-    \bigstep{N_1}{e_1}{e'_1} {E_1}{false}{S}  }
-  { \bigstep{N \cdotp N_1}{ \euntil{e_1}{e}{x}{e_2} }{e_2[x \leftarrow S^v(n)]}  {E \sqcup E_1}{true}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \in S \\
+    \bigstep{N_1}{e_1}{e'_1} {E_1}{\sfalse}{S}  }
+  { \bigstep{N \cdotp N_1}{ \euntil{e_1}{e}{x}{e_2} }{e_2[x \leftarrow S^v(n)]}  {E \sqcup E_1}{\strue}{S} }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{n} {E}{true}{S} \\ n \not\in S \\
-    \bigstep{N_1}{e_1}{e'_1} {E_1}{false}{S}  }
-  { \bigstep{N \cdotp N_1}{ \euntil{e_1}{e}{x}{e_2} }{ \euntil{e'_1}{e}{x}{e_2} }  {E \sqcup E_1}{false}{S} }
+  { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \not\in S \\
+    \bigstep{N_1}{e_1}{e'_1} {E_1}{\sfalse}{S}  }
+  { \bigstep{N \cdotp N_1}{ \euntil{e_1}{e}{x}{e_2} }{ \euntil{e'_1}{e}{x}{e_2} }  {E \sqcup E_1}{\sfalse}{S} }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{true} {E}{true}{S} \\ 
+  { \bigstep{N}{e}{\strue} {E}{\strue}{S} \\ 
     \bigstep{N_1}{e_1}{e'_1} {E_1}{b}{S} }
   { \bigstep{N \cdotp N_1}{\eite{e}{e_1}{e_2}}{e'_1} {E \sqcup  E_1}{b}{S}  }
 %
 \and
 %
 \inferrule
-  { \bigstep{N}{e}{false} {E}{true}{S} \\ 
+  { \bigstep{N}{e}{\sfalse} {E}{\strue}{S} \\ 
     \bigstep{N_2}{e_2}{e'_2} {E_2}{b}{S} }
   { \bigstep{N \cdotp N_2}{\eite{e}{e_1}{e_2}}{e'_2} {E \sqcup  E_2}{b}{S}  }
 %
