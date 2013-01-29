@@ -130,6 +130,8 @@ The contributions of this paper are the following:
 
 The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) and related work~(Section~\ref{sec:related_work}).
 
+\clearpage
+
 \section{Problem statement}
 \label{sec:problem}
 
@@ -737,7 +739,7 @@ The are then two cases depending on the status of $n$:
 \item If $n \not\in S$: The derivation is finite.
 \end{itemize}
 
-\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\euntil{e_1}{e_2}{x}{e_3}$: Idem.
+\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\euntil{e_1}{e_2}{x}{e_3}$ or $\eloop{e}$: Idem.
 
 \item Case $\ewhen{e_1}{e_2}$: We can use the same reasoning. It is interesting to note that the behavior associated to the expression, i.e. $\effor{\rk}{\effinf{\effplus}}$, is not equal to the behavior of the body, as one could expect, so that we can apply the induction hypothesis.
 \end{itemize}
@@ -913,12 +915,22 @@ Future work: meta-theory of type system (principality, etc). Comparison with oth
 \bibliography{biblio}
 \end{small}
 
+\clearpage
 
 \appendix
+
+\begin{figure*}[T]
+\begin{small}
+\input{big_step_other}
+\end{small}
+
+\caption{Remaining rules for the big-step semantics}
+\label{fig:big_step_other}
+\end{figure*}
 
 \section{Other rules for the big-step semantics}
 \label{sec:big_step_other}
 
-\todo{Mettre autres regles}
+See Figure~\ref{fig:big_step_other}.
 
 \end{document}
