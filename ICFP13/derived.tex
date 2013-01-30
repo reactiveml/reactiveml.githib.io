@@ -1,11 +1,9 @@
 \begin{figure*}[t]
 
-\begin{small}
-\begin{mathpar}
-\epar{e_1}{e_2} \deq \eletpar{\_}{e_1}{\_}{e_2}{\evoid{}} \and
-\elet{x}{e_1}{e_2} \deq \eletpar{x}{e_1}{\_}{\evoid{}}{e_2} 
-\end{mathpar}
+%\begin{small}
 \begin{align*}
+\epar{e_1}{e_2} \deq &\; \eletpar{\_}{e_1}{\_}{e_2}{\evoid{}} \\
+\elet{x}{e_1}{e_2} \deq &\; \eletpar{x}{e_1}{\_}{\evoid{}}{e_2}  \\
 %\eawaitim{e} \deq &\; \ewhen{\evoid{}}{e} \\
 \mathidl{let} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
       \deq &\; \elet{f}{\elam{x_1}{\ldots \elam{x_p}{e_1}}}{e_2} \\
@@ -14,13 +12,11 @@
 \mathidl{let} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
       \deq &\; \elet{f}{\elam{x_1}{\ldots \elam{x_p}{ \eproc{e_1} }}}{e_2} \\     
 \mathidl{let} \mathidl{rec} \mathidl{process} f\, x_1\, \ldots x_p = e_1 \mathid{in} e_2
-            \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{\eproc{e_1}}}}) }{e_2} 
+            \deq &\; \elet{f}{ (\erec{f}{\elam{x_1}{\ldots \elam{x_p}{\eproc{e_1}}}}) }{e_2} \\
+\eseq{e_1}{e_2} \deq &\; \elet{\_}{e_1}{e_2}  \\
+\eawait{e_1}{x}{e_2} \deq &\; \euntil{ (\eloop{\mathtt{pause}}) }{e_1}{x}{e_2}
 \end{align*}
-\begin{mathpar}
-\eseq{e_1}{e_2} \deq \elet{\_}{e_1}{e_2}  \and
-\eawait{e_1}{x}{e_2} \deq \euntil{ (\eloop{\mathtt{pause}}) }{e_1}{x}{e_2}
-\end{mathpar}
-\end{small}
+%\end{small}
 
 \caption{Derived language constructs}
 \label{fig:derived}

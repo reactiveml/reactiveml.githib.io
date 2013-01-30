@@ -45,7 +45,7 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{property}{Property}
 \newtheorem{lemma}{Lemma}
-\newtheorem*{hypothesis}{Hypothesis}
+\newtheorem{hypothesis}{Hypothesis}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
@@ -157,13 +157,9 @@ The `process` keyword is used to define a process, that is, a function that take
 ?Line 3, characters 2-120:
 W: This expression may be an instantaneous loop?
 \end{lstlisting}
-The problem is that the body of the loop is instantaneous. It means that this process never cooperates, so that logical instants do not progress. To solve this problem, the programmer must explicit cooperate using the `pause` operator~(line~7) that awaits the next instant:
-\begin{rmlcl}
-let process clock timer s =
-  let time = ref (Unix.gettimeofday ()) in
-  loop
-    let time' = Unix.gettimeofday () in
-    if time' -. !time >= timer
+The problem is that the body of the loop is instantaneous. It means that this process never cooperates, so that logical instants do not progress. To solve this problem, the programmer must explicit cooperate by calling the `pause` operator~(line~7), which awaits the next instant, at the end of the loop:
+\begin{rmlcl}[5]
+[...]
     then (emit s (); time := time');
     pause 
   end
@@ -285,9 +281,9 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 \end{itemize}
 
 \begin{figure*}
-\begin{small}
+%\begin{small}
 \input{big_step}
-\end{small}
+%\end{small}
 
 
 \caption{Big-step semantics}
@@ -300,7 +296,7 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 The idea of our analysis is to abstract processes into a simpler language called \emph{behaviors}, following the work of~\cite{Amtoft:1999}. Behaviors abstract the reactive behavior of processes. A main design choice is to completely abstract values and the presence of signals. It is however necessary to keep part of the structure of the program (or an abstraction of it) in order to have a precise analysis.
 
 \subsection{The behaviors}
-
+\todo{Priorite dan l'ecriture}
 The algebra of behaviors is given by:
 \[
 \rk \sdeq \effplus ~\mid~ \effmin ~\mid~ \effvar ~\mid~ \effpar{\rk}{\rk} ~\mid~ \effor{\rk}{\rk}
@@ -377,9 +373,9 @@ The rule for the sequence $\eseq{\rk_1}{\rk_2}$ uses the notion of \emph{non-ins
 The fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantan\-eous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
 
 \begin{figure*}[t]
-\begin{small}
+%\begin{small}
 \input{rules}
-\end{small}
+%\end{small}
 
 \caption{Type-and-effect rules}
 \label{fig:rules}
@@ -638,11 +634,11 @@ The \emph{first-instant behavior} of a behavior, denoted $\rkfst{\rk}$ is the pa
 \rkfst{\effmin} =&\, \rkfst{\effplus}  = \effmin \\
 \rkfst{\effvar} =&\, \effvar \\
 \rkfst{\effrun{\rk}} =&\, \effrun{(\rkfst{\rk})} \\ 
-\rkfst{\effpar{\rk_1}{\rk_2}} =&\, \effpar{\rkfst{\rk_1}}{\rkfst{\rk2}} \\
-\rkfst{\effor{\rk_1}{\rk_2}} =&\, \effor{\rkfst{\rk_1}}{\rkfst{\rk2}} \\
+\rkfst{\effpar{\rk_1}{\rk_2}} =&\, \effpar{\rkfst{\rk_1}}{\rkfst{\rk_2}} \\
+\rkfst{\effor{\rk_1}{\rk_2}} =&\, \effor{\rkfst{\rk_1}}{\rkfst{\rk_2}} \\
 \rkfst{\effcon{\rk_1}{\rk_2}} =&\, 
 		\left\{ \begin{array}{ll}  
-				\effcon{\rk_1}{\rkfst{\rk2}} &\text{if } \rkfst{\rk_1} = \rk_1 \\
+				\effcon{\rk_1}{\rkfst{\rk_2}} &\text{if } \rkfst{\rk_1} = \rk_1 \\
 				\rkfst{\rk_1} & \text{otherwise} 
 		\end{array}\right. \\
 \rkfst{\effrec{\effvar}{\rk}} =&\, \rkfst{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
@@ -682,6 +678,7 @@ If $\rk$ is reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
 In the introduction, we mentioned that we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the rule for application (Figure~\ref{fig:rules}) by the fact that the behavior of the application is always the instantaneous behavior $\effmin$. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
 
 \begin{hypothesis}
+\label{hyp:fun_terminate}
 Function calls always terminate. Formally, for any ML expression $e$ such that $0 \vdash e$, there exists a finite derivation $\Pi_e$ and a value $v$ such that:
 \[ \inferrule{\Pi_e}{ \bigstep{N}{e}{v} {E}{b}{S} } \] 
 \end{hypothesis}
@@ -695,7 +692,7 @@ If \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$} and $\rt$ and $\rk$ are reactive and we s
 The proof is done by induction on the size of the first-instant behavior of well-typed expressions. The main point is that the behaviors of sub-expressions is always smaller, but we have to be careful that we must consider only the first-instant behavior. To prove that the result is well-typed, we can use classic syntactic techniques for type soundness~\cite{Pierce:2002} on the small-step semantics described in~\cite{Mandel:2005}. The proof of equivalence of the two semantics is also given in the same paper.
 %
 \begin{itemize}
-\item Case $\eapp{e_1}{e_2}$ and $\erec{x}{e}$: By hypothesis. 
+\item Case $\eapp{e_1}{e_2}$ and $\erec{x}{e}$: By hypothesis~\ref{hyp:fun_terminate}.
 
 \item Case $\erun{e}$: We know that $0 \vdash e$ so there exists $\Pi$ such that 
 \[ \inferrule{\Pi}{ \bigstep{N_1}{e}{\eproc{e_1}} {E}{true}{S} } \]
@@ -740,7 +737,7 @@ The are then two cases depending on the status of $n$:
 \item If $n \not\in S$: The derivation is finite.
 \end{itemize}
 
-\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\euntil{e_1}{e_2}{x}{e_3}$ or $\eloop{e}$: Idem.
+\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\eloop{e}$: Idem.
 
 \item Case $\ewhen{e_1}{e_2}$: We can use the same reasoning. It is interesting to note that the behavior associated to the expression, i.e. $\effor{\rk}{\effinf{\effplus}}$, is not equal to the behavior of the body, as one could expect, so that we can apply the induction hypothesis.
 \end{itemize}
