@@ -135,7 +135,7 @@ The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) 
 \section{Problem statement}
 \label{sec:problem}
 
-Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity. Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
+Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity.\footnote{This example is taken from an email sent by a \rml programmer asking for help. It motivated the reflexion that lead to this work.} Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
 
 \subsection{A first example}
 \label{sec:first_example}
@@ -165,7 +165,7 @@ The problem is that the body of the loop is instantaneous. It means that this pr
   end
 \end{rmlcl}
 
-The second part of the program is a process that prints \verb+`top`+ every time a signal `s` is emitted. 
+The second part of the program is a process that prints \verb+`top'+ every time a signal `s` is emitted. 
 \begin{rmlcl}[10]
 let process print_clock s =
   loop
@@ -214,6 +214,7 @@ let rec process par_map p l =
   | x :: l -> let x' = run (p x)
               and l' = run (par_map p l) in
               x' :: l'
+?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). As we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs. For the same reasons, we suppose that all functions terminate instantaneously and only focus on the reactivity of processes. In particular, we do not deal with blocking functions, like I/O, that can also make the program non-reactive. 
 
@@ -247,8 +248,8 @@ In this section, we give an overview of the big-step semantics of \rml{}, also c
 We consider here a kernel of \rml{}:
 %
 \begin{align*}
-v \sdeq & c \mid (v, v) \mid n \mid \elam{x}{e} \mid \eproc{e} \\
-e \sdeq &\phantom{\mid}  x \mid c \mid (e, e) \mid \elam{x}{e} 
+v \sdeq &\; c \mid (v, v) \mid n \mid \elam{x}{e} \mid \eproc{e} \\
+e \sdeq &\;  x \mid c \mid (e, e) \mid \elam{x}{e} 
   \mid \eapp{e}{e} \mid \erec{x}{e} \\
   & \mid \eproc{e} \mid \erun{e} \mid \epause{}  \\
 & \mid \eletpar{x}{e}{x}{e}{e} \\
@@ -296,14 +297,14 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 The idea of our analysis is to abstract processes into a simpler language called \emph{behaviors}, following the work of~\cite{Amtoft:1999}. Behaviors abstract the reactive behavior of processes. A main design choice is to completely abstract values and the presence of signals. It is however necessary to keep part of the structure of the program (or an abstraction of it) in order to have a precise analysis.
 
 \subsection{The behaviors}
-\todo{Priorite dan l'ecriture}
+
 The algebra of behaviors is given by:
 \[
 \rk \sdeq \effplus ~\mid~ \effmin ~\mid~ \effvar ~\mid~ \effpar{\rk}{\rk} ~\mid~ \effor{\rk}{\rk}
 ~\mid~ \effcon{\rk}{\rk}  ~\mid~ \effrec{\effvar}{\rk}  ~\mid~ \effrun{\rk}
 \]
 
-Surely instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially non-instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$.
+Surely instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially non-instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$. The language also includes behavior variables $\effvar$ to represent the behaviors of processes taken as arguments.
 
 Behaviors must reflect the structure of the program, starting with parallel composition and alternatives, as shown by the following examples: 
 \begin{lstlisting}
@@ -317,9 +318,9 @@ let process if_comb c q1 q2 =
     if c then run q1 else run q2
   end
 \end{lstlisting}
-In the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous, while in the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how values are abstracted: we only keep the different alternatives and forget about the conditions.
+In the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous, while in the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how  we abstract values: we only keep the different alternatives and forget about the conditions.
 
-It is also necessary to have a notion of sequence, denoted $;$ in the language of behaviors, as illustrated by the following example:
+It is also necessary to have a notion of sequence, denoted $;$ in the language of behaviors, as illustrated by the two following processes:
 \begin{lstlisting}
 let rec process good_rec =
   pause; run good_rec
@@ -327,11 +328,19 @@ let rec process good_rec =
 let rec process bad_rec =
     run bad_rec; pause
 \end{lstlisting}
-The order between the recursive call and the call to `pause` is crucial as the `good_rec` process is correct while `bad_rec` loops instantaneously.
+The order between the recursive call and the call to `pause` is crucial as the `good_rec` process is reactive while `bad_rec` loops instantaneously.
 
 As it is defined recursively, the behavior  $\rk$  associated to the `good_rec` process must verify that~\mbox{$ \rk = \effcon{\effplus}{\effrun{\rk}}$}. The $\mathtt{run}$ operator is associated to running a process and is necessary to solve technical problems in the type system, that will be discussed in Section~\ref{sec:type_system}. This equation can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effcon{\effplus}{\effrun{\effvar}}}$. Recursive behaviors verify the usual property:
 \[ \effrec{\effvar}{\rk} = \rk[\effvar \leftarrow \effrec{\effvar}{\rk}] \]
- Similarly, the behavior of an unconditional loop is given by $\effinf{\rk}$ where $\rk$ is the behavior of the body of the loop. It intuitively represents the infinite repetition of the behavior $\rk$ and can be defined as a recursive behavior by $\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}}$. 
+
+It should be noted that there is no operator for representing the behavior of a loop. Indeed, a loop is just a special case of recursion. The behavior of a loop, denoted $\effinf{\rk}$ (where $\rk$ is the behavior of the body of the loop) is thus defined as a recursive behavior by:
+\[\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}} \]
+
+The order of precedence of operators is the following (from highest to lowest): $\mathtt{run}$, $;$, $+$, $||$ and finally $\mu$. So, for instance, 
+\[ \effrec{\effvar}{\effpar{\rk_1}{\effor{\effrun{\rk_2}}{\effcon{\effplus}{\rk_3}}}} \] 
+should be understood as 
+\[ \effrec{\effvar}{(\effpar{\rk_1}{(\effor{\effrun{(\rk_2)}}{(\effcon{\effplus}{\rk_3})})})} \]
+
 
 %\begin{figure}[t]
 %
@@ -384,7 +393,7 @@ The fact that variables are considered non-instantaneous means that any process 
 \subsection{Equivalence on behaviors}
 \label{sec:equiv_behaviors}
 
-We can define an equivalence relation~$\effeq{}{}$ on behaviors. An important property of this relation is that it preserves reactivity, which is expressed below by the following Property:
+We can define an equivalence relation~$\effeq{}{}$ on behaviors. An important property of this relation is that it preserves reactivity, which is expressed below by the following property:
 \begin{property}
 \label{prop:equiv_reactivty}
 if $\effeq{\rk_1}{\rk_2}$ and $\wf{R}{\rk_1}$ then $\wf{R}{\rk_2}$
@@ -917,16 +926,18 @@ Future work: meta-theory of type system (principality, etc). Comparison with oth
 
 \clearpage
 
-\appendix
-
-\begin{figure*}[T]
-\begin{small}
+\begin{figure*}[t]
+%\begin{small}
 \input{big_step_other}
-\end{small}
+%\end{small}
 
 \caption{Remaining rules for the big-step semantics}
 \label{fig:big_step_other}
 \end{figure*}
+
+
+
+\appendix
 
 \section{Other rules for the big-step semantics}
 \label{sec:big_step_other}
