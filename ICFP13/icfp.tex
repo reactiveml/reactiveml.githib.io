@@ -483,9 +483,9 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
 
 \item As explained earlier, in the case of $\epres{e}{e_1}{e_2}$, the first branch $e_1$ is executed immediately if the signal $e$ is present and the second branch $e_2$ is executed at the next instant if it is absent. This is reflected by the behavior associated to the expression. Similarly, the handler $e_2$ of $\euntil{e_1}{e}{x}{e_2}$ is executed at the instant following the presence of $e$.
 
-\item We can also check that the encoding of primitives given in Figure~\ref{fig:derived} yields the expected behaviors. This is for instance the case of $\eseq{e_1}{e_2}$
+\item We can also check that the encoding of primitives given in Figure~\ref{fig:derived} yields the expected behaviors. This is for instance the case of $\eseq{e_1}{e_2}$:
 %
-\begin{small}
+\par\nobreak\vspace{-2ex}{ \small
 \[ 
 %\inferrule
 %{
@@ -511,12 +511,12 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
 %  \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt_2}{ \effcon{\rk_1}{\rk_2} }
 %}
 \]
-\end{small}
+}%
 It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \effcon{\rk_1}{\rk_2} }$.  We can also check that $\epar{e_1}{e_2}$ has a behavior equivalent to $\effpar{\rk_1}{\rk_2}$ or that $\eawait{e_1}{x}{e_2}$ has a behavior \mbox{$\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$}. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
 
 \item There is no particular rules for recursive processes. The addition of the $\mathtt{run}$ operator in behaviors ensures that the behavior associated to a recursive process is always a recursive behavior, that is, $\effrec{\effvar}{\rk}$ with $\effvar \in fbv(\rk)$. Let's for instance consider the process defined by `let rec process p = run p`, written $\erec{p}{\eproc{(\erun{p})}}$ in the abstract syntax:
 %
-\begin{small}
+\par\nobreak\vspace{-2ex}{\small
 \[
 \inferrule
 {
@@ -540,7 +540,8 @@ It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \
 { \tyju{\tyenv}{ \erec{p}{\eproc{(\erun{p})}} }{\rtproc{\beta}{\rk}}{\effmin} }
 %\qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
 \]
-\end{small}
+}
+
 The typing derivation shows that we must have \mbox{$\effrun{\rk} = \rk$} to type this expression. The only behavior that verifies this equation is $\rk = \effrec{\effvar}{\effrun{\effvar}}$. Without $\mathtt{run}$, the typing derivation would be valid for any behavior $\rk$, for instance $\rk = \effmin$. It means that our analysis would have accepted this process even though it is obviously non-reactive. 
 
 \item In~\cite{Mandel:2005}, the $\mathtt{loop}$ construct is encoded as a recursive process by:
@@ -549,18 +550,15 @@ The typing derivation shows that we must have \mbox{$\effrun{\rk} = \rk$} to typ
 \eloop{e} \deq &\mathid{run}(( \mathidl{rec} loop = 
      \elam{x}{ \\ &\qquad \eproc{(\eseq{\erun{x}}{\erun{(\eapp{loop}{x})}})}})\; (\eproc{e})) 
 \end{align*}
-If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then we get the following types and behaviors:
+%
+By applying the rules here, we have that:
+\[ loop: \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
+                { \rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}} \]
+%
 
-{
-\small
-\begin{align*}
-loop:&\, \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
-                { \rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}}  \\
-\eproc{e} :&\, \rtproc{\rt}{\rk}
-\end{align*}
-}
-
-The behavior of this encoding is thus $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$. It is not equivalent to $\effinf{\rk}$ in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
+If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then the behavior of this encoding is: 
+  \[ \effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})} \]
+It is not equivalent to $\effinf{\rk}$ in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
 
 \item This is not the case of $\mathtt{pause}$ that can also be encoded by:
 %
