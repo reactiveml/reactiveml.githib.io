@@ -373,7 +373,7 @@ A behavior is said to be \emph{reactive} if it respects this condition, that is,
 \input{wf}
 \end{small}
 
-The rule for the sequence $\eseq{\rk_1}{\rk_2}$ uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined below. Indeed, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{[]}{\rk_2}$.
+The rule for the sequence $\eseq{\rk_1}{\rk_2}$ uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined below. Indeed, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{\emptyset}{\rk_2}$.
 
 \begin{small}
 \input{noinst}
@@ -516,7 +516,6 @@ It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \
 
 \item There is no particular rules for recursive processes. The addition of the $\mathtt{run}$ operator in behaviors ensures that the behavior associated to a recursive process is always a recursive behavior, that is, $\effrec{\effvar}{\rk}$ with $\effvar \in fbv(\rk)$. Let's for instance consider the process defined by `let rec process p = run p`, written $\erec{p}{\eproc{(\erun{p})}}$ in the abstract syntax:
 %
-\par\nobreak\vspace{-2ex}{\small
 \[
 \inferrule
 {
@@ -525,8 +524,8 @@ It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \
    %\inferrule*[left=Equiv]
      %{
      \inferrule*
-      { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{p}{\rtproc{\beta}{\rk}}{\effmin} }
-      { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\effrun{\rk}} }
+      { \tyju{\tyenv'}{p}{\rtproc{\beta}{\rk}}{\effmin} }
+      { \tyju{\tyenv'}{\erun{p}} {\beta}{\effrun{\rk}} }
       %\\
       %\effeq{\effrun{\rk}}{\rk}
      %}
@@ -535,14 +534,15 @@ It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \
      %}
 %        \qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
   }  
-  { \tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\eproc{(\erun{p})}} {\rtproc{\beta}{\effrun{\rk}}}{\effmin} }
+  { \tyju{\tyenv'}{\eproc{(\erun{p})}} 
+                     {\rtproc{\beta}{ \effor{\effrun{\rk}}{\rk'} }}{\effmin} }
 }
 { \tyju{\tyenv}{ \erec{p}{\eproc{(\erun{p})}} }{\rtproc{\beta}{\rk}}{\effmin} }
 %\qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
 \]
-}
-
-The typing derivation shows that we must have \mbox{$\effrun{\rk} = \rk$} to type this expression. The only behavior that verifies this equation is $\rk = \effrec{\effvar}{\effrun{\effvar}}$. Without $\mathtt{run}$, the typing derivation would be valid for any behavior $\rk$, for instance $\rk = \effmin$. It means that our analysis would have accepted this process even though it is obviously non-reactive. 
+%
+where $\tyenv' = \tyenv \tyconcat p : \rtproc{\beta}{\rk}$.
+The typing derivation shows that we must have \mbox{$\effor{\effrun{\rk}}{\rk'} = \rk$} to type this expression. The only behavior that verifies this equation is \mbox{$\rk = \effrec{\effvar}{\effor{\effrun{\effvar}}{\rk'}}$} ($\rk'$ is unconstrained here). Without $\mathtt{run}$, the typing derivation would be valid for any behavior $\rk$, for instance $\rk = \effmin$. It means that our analysis would have accepted this process even though it is obviously non-reactive. 
 
 \item In~\cite{Mandel:2005}, the $\mathtt{loop}$ construct is encoded as a recursive process by:
 %
@@ -603,13 +603,13 @@ A similar approach is used in~\cite{Amtoft:1999}. It enforces effects to be \emp
   {  \tyju{\tyenv, C \cup \{ \rk \sqsubseteq \effvar \} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
 \]
 
-These three formulations appear to be equivalent.
+These three formulations appear to be equivalent. Indeed, our system and the one of~\cite{Amtoft:1999} are just syntax-directed versions of the first one, where the subtyping relation is applied only for lambda abstractions (or processes in our case).
 
 \subsubsection*{Implementing subeffecting with row polymorphism}
 
 The consequence of the typing rule for processes is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
 
-During unification, the behavior of a process is always either a behavior variable~$\effvar$ or a row~$\effor{\rk}{\effvar}$. We could have made this fact more visible by having two different kinds of behaviors: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a} and only use the following algorithm $\mU_{\rk}$ for unification of behaviors. It takes as input two behaviors and returns a substitution that maps behavior variables to behaviors, that we denote $[\effvar_1 \mapsto \rk_1; \effvar_2 \mapsto \rk_2; \dots]$. It is defined as follows:
+During unification, the behavior of a process is always either a behavior variable~$\effvar$, a row~$\effor{\rk}{\effvar}$ or a recursive row~$\effrec{\effvar}{\effor{\rk}{\effvar'}}$. We could have made this fact more visible by having two different kinds of behaviors: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a} and only use the following algorithm $\mU_{\rk}$ for unification of behaviors. It takes as input two behaviors and returns a substitution that maps behavior variables to behaviors, that we denote $[\effvar_1 \mapsto \rk_1; \effvar_2 \mapsto \rk_2; \dots]$. It is defined as follows:
 
 \begin{small}
 \begin{align*}
@@ -619,11 +619,26 @@ During unification, the behavior of a process is always either a behavior variab
 					= &\,  [\effvar \mapsto \rk] \\
 \mU_{\rk}(\effor{\rk_1}{\effvar_1}, \effor{\rk_2}{\effvar_2}) =&\,
                   [\effvar_1 \mapsto \effor{\rk_2}{\effvar};  \effvar_1 \mapsto \effor{\rk_1}{\effvar} ]  \qquad \fresh{\effvar} \\
+\mU_{\rk}(\effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}}, \rk_2) 
+    = &\, \mU_{\rk}(\rk_2, \effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}}) \\ 
+    = &\, \mlet K_1 = \effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}} \\
+    &\, \mIn\, \mU_{\rk}( \effor{\rk_1[\effvar'_1 \leftarrow K_1]}{\effvar_1} , \rk_2) \\
+%\mU_{\rk}(\effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}}, \effor{\rk_2}{\effvar_2} ) = 
+%    &\, \mlet K_1 = \effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}} \\
+%    &\, \mIn [ \effvar_1 \mapsto \effor{\rk_2}{\effvar} ;  \quad \fresh{\effvar} \\
+%     & \quad\;\;                 \effvar_2 \mapsto \effor{\rk_1[\effvar'_1 \leftarrow K_1]}{\effvar}] \\
+%\mU_{\rk}(\effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}}, 
+%                 \effrec{\effvar'_2}{\effor{\rk_2}{\effvar_2}} ) = 
+%         &\, \mlet K_1 = \effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}} \\
+%         &\, \mand K_2 = \effrec{\effvar'_2}{\effor{\rk_2}{\effvar_2}} \\
+%         &\, \mIn [   \effvar_1 \mapsto \effor{\rk_2[\effvar'_2 \leftarrow K_2]}{\effvar} ; 
+%                                       \quad \fresh{\effvar} \\
+%         & \quad\;\; \effvar_2 \mapsto \effor{\rk_1[\effvar'_1 \leftarrow K_1]}{\effvar} ] \\
 \mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} \qquad\text{otherwise}
 \end{align*}
 \end{small}
 
-\noindent This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}.
+\noindent This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}. Special care has to be taken to unfold recursive rows to reveal the row variable.
 
 A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}~\cite{Lucassen:1988}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we choose to replace it with $\effplus$, which is the neutral element of $\effor$.
 
@@ -677,7 +692,7 @@ A behavior is \emph{finite}, denoted $\rkfinite{\rk}$, if it does not contain an
 
 \begin{property}
 If $\rk$ is reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
-\[ \wf{[]}{\rk} \Rightarrow \rkfinite{\rkfst{\rk}} \]
+\[ \wf{\emptyset}{\rk} \Rightarrow \rkfinite{\rkfst{\rk}} \]
 \end{property}
 
 \subsection{Soundness}
@@ -687,7 +702,7 @@ In the introduction, we mentioned that we do not try to prove that functions ter
 \begin{hypothesis}
 \label{hyp:fun_terminate}
 Function calls always terminate. Formally, for any ML expression $e$ such that $0 \vdash e$, there exists a finite derivation $\Pi_e$ and a value $v$ such that:
-\[ \inferrule{\Pi_e}{ \bigstep{N}{e}{v} {E}{b}{S} } \] 
+\[ \inferrule{\Pi_e}{ \quad \bigstep{N}{e}{v} {E}{b}{S} \quad } \] 
 \end{hypothesis}
 
 We can now express the soundness of our analysis, that is, a well-typed program is reactive. Being reactive means here that there exists a derivation, necessarily finite, to rewrite the program into a well-typed program.
@@ -747,6 +762,8 @@ The are then two cases depending on the status of $n$:
 \item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\eloop{e}$: Idem.
 
 \item Case $\ewhen{e_1}{e_2}$: We can use the same reasoning. It is interesting to note that the behavior associated to the expression, i.e. $\effor{\rk}{\effinf{\effplus}}$, is not equal to the behavior of the body, as one could expect, so that we can apply the induction hypothesis.
+
+\todo{Parler de loop: on ne tombe jamais dans le second cas}
 \end{itemize}
 
 \end{proof}
