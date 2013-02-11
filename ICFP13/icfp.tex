@@ -2,7 +2,7 @@
 \documentclass[9pt,preprint]{sigplanconf}
 %\documentclass[a4paper]{article}
 %\usepackage[utf8]{inputenc}
-\usepackage{lmodern}
+%\usepackage{lmodern}
 \usepackage[T1]{fontenc}
 %\usepackage[style=alphabetic]{biblatex}
 %\usepackage{csquotes}
@@ -21,8 +21,8 @@
 %\usepackage{array}
 %\usepackage{multirow}
 
-% Pour avoir la police tt ligt en lmodern
-\DeclareFontFamily{T1}{lmtt}{} \DeclareFontShape{T1}{lmtt}{m}{n}{<-> ec-lmtl10}{} \DeclareFontShape{T1}{lmtt}{m}{\itdefault}{<-> ec-lmtlo10}{} \DeclareFontShape{T1}{lmtt}{\bfdefault}{n}{<-> ec-lmtk10}{} \DeclareFontShape{T1}{lmtt}{\bfdefault}{\itdefault}{<-> ec-lmtko10}{}
+%% Pour avoir la police tt ligt en lmodern
+%\DeclareFontFamily{T1}{lmtt}{} \DeclareFontShape{T1}{lmtt}{m}{n}{<-> ec-lmtl10}{} \DeclareFontShape{T1}{lmtt}{m}{\itdefault}{<-> ec-lmtlo10}{} \DeclareFontShape{T1}{lmtt}{\bfdefault}{n}{<-> ec-lmtk10}{} \DeclareFontShape{T1}{lmtt}{\bfdefault}{\itdefault}{<-> ec-lmtko10}{}
 
 \usepackage[caption=false]{subfig} % sigplanconf complains without caption=false
 \usepackage{rml}
@@ -45,7 +45,7 @@
 \newcommand{\sdeq}{::=}
 \newcommand\rulename[1]{\text{(\textsc{#1})\;} }
 
-\newcommand\reactivec{\textsc{ReactiveC}}
+
 
 \begin{document}
 
@@ -101,7 +101,7 @@ Most functional languages offer light thread facilities, either integrated in th
 The downside of cooperative scheduling is that it is necessary to make sure that threads actually cooperate:
 \begin{itemize}
 \item The programmer has to return control to the scheduler regularly. This is in particular true for infinite loops, that are very often present in \emph{reactive} and \emph{interactive} systems~\cite{Harel:1985}. 
-\item He cannot call blocking functions like operating system primitives for I/O. 
+\item She cannot call blocking functions like operating system primitives for I/O. 
 \end{itemize}
 
 %\item Solution to the latter: never use these functions. Libraries implement cooperative alternatives, use them instead. See \cite{Marlow:2004} for an overview on how to implement these blocking operations safely.
@@ -117,7 +117,7 @@ The solution to the latter is pretty simple: never use blocking functions inside
 
 The goal of this paper is to design a static analysis, called \emph{reactivity analysis}, to remedy the first problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
 %
-Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} informally introduces the language and its semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}. Exposing concurrency at the level of the language level makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library. Furthermore, synchrony gives us a simple definition for reactivity: a reactive \rml program is one where logical instants progress. It also gives us a simple condition for reactivity: a program is reactive if all processes cooperate at each instant. Doing a similar analysis with another model of concurrency would require assumptions on the fairness of the scheduler. (\todo{Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step ??})
+Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} informally introduces the language and its semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}.  Synchrony gives us a simple definition for reactivity: a reactive \rml program is one where logical instants progress. It also gives us a simple condition for reactivity: a program is reactive if all processes cooperate at each instant. Doing a similar analysis with another model of concurrency would require assumptions on the fairness of the scheduler. (\todo{Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step ??})
 
 
 
@@ -130,7 +130,7 @@ Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extensi
 
 The contributions of this paper are the following:
 \begin{itemize}
-\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Sections~\ref{sec:behaviors}~and~\ref{sec:type_system}.
+\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Section~\ref{sec:type_system}. The computed effects are called \emph{behaviors}~\cite{Amtoft:1999} and are introduced in Section~\ref{sec:behaviors}. They represent the reactive behaviors of processes, by abstracting away values but keeping some part of the structure of the program. Exposing concurrency in the language makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library.
 \item A novel approach to \emph{subeffecting}~\cite{Nielson:1999}, that is, subtyping on effects, based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}.
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
@@ -159,12 +159,12 @@ let process clock timer s =
   end
 \end{rmlcl}
 %
-The `process` keyword is used to define a process, that is, a function that takes time: its execution can span several logical instants. The `clock`~process is parametrized by a float~`timer` and a signal~`s`. Signals are communication channels between processes, with instantaneous broadcast. The process starts by initializing a local reference `time` with the current time~(line 2), read using the `gettimeofday` function of the `Unix`~module from the standard library. Then it enters an infinite loop~(line 3 to 7). At each iteration, it reads the new current time and emits the unit value on the signal~`s` if enough time has elapsed~(line 6). The compiler prints the following warning when compiling this process:
+In \rml, there is a distinction between regular ML functions and \emph{processes}, that is, functions whose execution can span several logical instants.  They are defined using the `process` keyword. The `clock`~process is parametrized by a float~`timer` and a signal~`s`. Signals are communication channels between processes, with instantaneous broadcast. The process starts by initializing a local reference `time` with the current time~(line 2), read using the `gettimeofday` function of the `Unix`~module from the standard library. Then it enters an infinite loop~(line 3 to 7). At each iteration, it reads the new current time and emits the unit value on the signal~`s` if enough time has elapsed~(line 6). The compiler prints the following warning when compiling this process:
 \begin{lstlisting}
 ?Line 3, characters 2-120:
 W: This expression may be an instantaneous loop?
 \end{lstlisting}
-The problem is that the body of the loop is instantaneous. It means that this process never cooperates, so that logical instants do not progress. To solve this problem, the programmer must explicit cooperate by calling the `pause` operator~(line~7), which awaits the next instant, at the end of the loop:
+The problem is that the body of the loop is instantaneous. It means that this process never cooperates, so that logical instants do not progress. To solve this problem, the programmer must explicitely cooperate by calling the `pause` operator~(line~7), which awaits the next instant, at the end of the loop:
 \begin{rmlcl}[5]
 [...]
     then (emit s (); time := time');
@@ -173,6 +173,8 @@ The problem is that the body of the loop is instantaneous. It means that this pr
 \end{rmlcl}
 
 The second part of the program is a process that prints \verb+`top'+ every time a signal `s` is emitted. 
+The `do/when` construct executes its body only when the signal `s` is present (i.e. it is emitted). It terminates by returning the value of its body instantaneously after the termination of the body. Processes have a consistent view of a signal during an instant. It is either present or absent and its status cannot change during the instant.
+%
 \begin{rmlcl}[10]
 let process print_clock s =
   loop
@@ -183,11 +185,9 @@ let process print_clock s =
 \end{rmlcl}
 \begin{lstlisting}
 ?Line 11, characters 2-78:?
-?W: This expression may be an instantaneous loop.?
+?W: This expression may be an instantaneous loop?
 \end{lstlisting}
 %
-The `do/when` construct executes its body only when the signal `s` is present (i.e. it is emitted). It terminates by returning the value of its body instantaneously after the termination of the body. Processes have a consistent view of a signal during an instant. It is either present or absent and its status cannot change during the instant.
-
 Once again, this loop can be instantaneous, but this time it depends on the presence of the signal. While the signal `s` is absent, the process cooperates. When it is present, the body of the `do/when` executes and terminates instantaneously. So the body of the loop also terminates instantaneously, and a new iteration of the loop is started in the same logical instant. Since the signal is still present, the body of the `do/when` executes one more time, and so on. This process can also be fixed by a call to `pause`.
 
 We can then put these two processes in parallel, after declaring a local signal `s`. The result is a program that prints \verb+`top'+ every second:
@@ -239,7 +239,7 @@ let rec process imprecise =
 %
 The `present/then/else` construct executes instantaneously its first branch if the signal is present or executes the second branch with a delay of one instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids inconsistencies in the status of signals. In the example, the signal is absent so the `else` branch is executed. It means that the recursion is not instantaneous and the process is reactive. Our analysis still prints a warning, because if the signal `s` could be present, the recursion would be instantaneous.
 
-Finally, we only guarantee that a program will react, not that is is real-time, that is, that it reacts in a bounded time, as shown by this example:
+Finally, we only guarantee that a program will react, not that is is real-time, that is, that it reacts in bounded time, as shown by this example:
 \begin{lstlisting}
 let rec process server add =
   await add(p, ack) in
@@ -260,9 +260,8 @@ We consider here a kernel of \rml{}:
 \begin{align*}
 v \sdeq &\; c \mid (v, v) \mid n \mid \elam{x}{e} \mid \eproc{e} \\
 e \sdeq &\;  x \mid c \mid (e, e) \mid \elam{x}{e} 
-  \mid \eapp{e}{e} \mid \erec{x}{e} \\
-  & \mid \eproc{e} \mid \erun{e} \mid \epause{}  \\
-& \mid \eletpar{x}{e}{x}{e}{e} \\
+  \mid \eapp{e}{e} \mid \erec{x}{e}  \mid \eproc{e} \mid \erun{e} \\
+ & \mid \epause{} \mid \eletpar{x}{e}{x}{e}{e} \\
  &\mid \esig{x}{e}{e}{e} \\
  & \mid \eemit{e}{e} \mid \epres{e}{e}{e} \\
  & \mid \eite{e}{e}{e} \\
@@ -274,20 +273,19 @@ Values are constants (integers, booleans, etc.), pairs of values, signal names $
 
 \subsection{Semantics}
 
-The reaction of an expression is given by the relation
-\[  \bigstep{N}{e}{e'}{E}{b}{S} \]
-which means that during the instant, in the signal environment $S$, the expression~$e$ rewrites to~$e'$ and emits the signals in $E$. $b$ is a boolean that indicates if $e'$ has terminated. We write $n \in S$ when the signal $n$ is present in the signal environment $S$ and $n \not\in S$ otherwise. We omit all other details concerning the signal environment and refer the reader to~\cite{Mandel:2005}.
-%
-The execution of an instant is defined by the smallest signal environment $S_i$ such that:
+The reaction of an expression is defined by the smallest signal environment $S_i$ such that:
 \[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
-Additional conditions express for instance the fact that the emitted values in $E_i$ must agree with the signal environment $S_i$. Again we refer the reader to~\cite{Mandel:2005} for a more complete description.
-The execution of a program is made of the succession of a (potentially infinite) number of reactions and terminates when the status $b$ is equal to true.
+which means that during the instant, in the signal environment $S_i$, the expression~$e_i$ rewrites to~$e_{i+1}$ and emits the signals in $E_i$. $b_i$ is a boolean that indicates if $e_{i+1}$ has terminated. Additional conditions express for instance the fact that the emitted values in $E_i$ must agree with the signal environment $S_i$. The execution of a program is made of the succession of a (potentially infinite) number of reactions and terminates when the status $b_i$ is equal to true.
+%
+ We refer the reader to~\cite{Mandel:2005} or Appendix~\ref{sec:big_step_other} for a more formal presentation, including the definition of the signal environment $S$. We just write $n \in S$ when the signal $n$ is present in the signal environment $S$ (i.e. it has been emitted in the current instant) and $n \not\in S$ otherwise.
 
 
 Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. 
 \begin{itemize}
 \item  The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant.
 \item The $\mathtt{let}/\mathtt{and}$ construct executes its two branches until both are terminated.
+\item The $\mathtt{present}$ construct executes the $\mathtt{then}$ branch immediately if the signal is present, but it executes the $\mathtt{else}$ branch on the next instant if it is absent.
+\item The $\mathtt{do/when}$ construct executes its body only if the signal $n$ is present. If the body terminates, that is, rewrites to a value $v$, then the constructs also terminates instantaneously and rewrites to the same value.
 \item The unconditional loop keeps executing its body until it awaits the next instant, that is, its termination status $b$ becomes false. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
 \end{itemize}
 
@@ -328,7 +326,7 @@ let process if_comb c q1 q2 =
     if c then run q1 else run q2
   end
 \end{lstlisting}
-In the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous, while in the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how  we abstract values: we only keep the different alternatives and forget about the conditions.
+The synchronous parallel composition terminates when both bran\-ches have terminated. It means that, in the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous. In the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how  we abstract values: we only keep the different alternatives and forget about the conditions.
 
 It is also necessary to have a notion of sequence, denoted~$;$ in the language of behaviors, as illustrated by the two following processes:
 \begin{lstlisting}
@@ -339,7 +337,7 @@ let rec process bad_rec =
     run bad_rec; pause
 \end{lstlisting}
 The order between the recursive call and the call to `pause` is crucial as the `good_rec` process is reactive while `bad_rec` loops instantaneously.
-
+%
 As it is defined recursively, the behavior  $\rk$  associated to the `good_rec` process must verify that~\mbox{$ \rk = \effcon{\effplus}{\effrun{\rk}}$}. The $\mathtt{run}$ operator is associated to running a process and is necessary to solve technical problems in the type system, that will be discussed in Section~\ref{sec:type_system}. This equation can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effcon{\effplus}{\effrun{\effvar}}}$. Recursive behaviors verify the usual property:
 \[ \effrec{\effvar}{\rk} = \rk[\effvar \leftarrow \effrec{\effvar}{\rk}] \]
 
@@ -418,15 +416,21 @@ The~$\effeq{}{}$~relation is an equivalence relation, i.e. it is reflexive, symm
 %
 \and
 %
+\inferrule
+  { \effeq{\rk_1}{\rk_2} }
+  { \effeq{\effrun{\rk_1}}{\effrun{\rk_2}} }
+%
+\and
+%
 %\effeq{\effrec{\effvar}{\rk}}{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
 %
 %\and
 %
 \effeq{\effinf{\effplus}}{\effplus}
-\and
-\effeq{\effrun{\effmin}}{\effmin}
-\and
-\effeq{\effrun{\effplus}}{\effplus}
+%\and
+%\effeq{\effrun{\effmin}}{\effmin}
+%\and
+%\effeq{\effrun{\effplus}}{\effplus}
 \end{mathpar}
 
 For instance, it is easy to show that:
@@ -487,7 +491,9 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
 
 \begin{itemize}
 
-\item A design choice of \rml{} is to separate pure ML expressions, that are surely instantaneous, from processes. For instance, it is impossible to call $\epause$ within the body of a function, that must be instantaneous. A static analysis done before typing checks this well-formation of expressions, denoted $k \vdash e$ in~\cite{Mandel:2005}. It should be noted that ML expressions, such that $0 \vdash e$, always verify $\tyju{\tyenv}{e}{\rt}{\effmin}$. This is why many rules enforce the behavior of some expressions to be equal to $\effmin$. This does not add any new condition with respect to the well-formation analysis. The converse is false as the $\effmin$ behavior is associated to \emph{potentially} instantaneous processes whereas $0 \vdash e$ means that $e$ is \emph{necessarily} instantaneous.
+\item A design choice of \rml{} is to separate pure ML expressions, that are surely instantaneous, from processes. For instance, it is impossible to call $\epause$ within the body of a function, that must be instantaneous. A static analysis done before typing checks this well-formation of expressions, denoted $k \vdash e$ in~\cite{Mandel:2005}. That is why our type system ignores the behavior of expressions that must be ML expressions, like the body of a function. We could prove that in that case we also compute a behavior that is equivalent to the instantaneous behavior $\effmin$.
+
+% It should be noted that ML expressions, such that $0 \vdash e$, always verify $\tyju{\tyenv}{e}{\rt}{\effmin}$. This is why many rules enforce the behavior of some expressions to be equal to $\effmin$. This does not add any new condition with respect to the well-formation analysis. The converse is false as the $\effmin$ behavior is associated to \emph{potentially} instantaneous processes whereas $0 \vdash e$ means that $e$ is \emph{necessarily} instantaneous.
 
 \item We do not try to prove the termination of pure ML functions without any reactive behavior: the rule of application shows that we suppose that function calls always terminate instantaneously. That is why there is no behavior associated to functions, that is, there is no behaviors on arrows unlike traditional type-and-effect systems.
 
@@ -523,36 +529,6 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
 \]
 }%
 It is easy to check that $\effeq{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} }{ \effcon{\rk_1}{\rk_2} }$.  We can also check that $\epar{e_1}{e_2}$ has a behavior equivalent to $\effpar{\rk_1}{\rk_2}$ or that $\eawait{e_1}{x}{e_2}$ has a behavior \mbox{$\effeq{\effor{\effinf{\effplus}}{(\effcon{\effplus}{\rk_2})}}{\effcon{\effplus}{\rk_2}}$}. % ou encore que $\eawaitim{e_1}$ a un comportement instantané $\effmin$. 
-
-\item There is no particular rules for recursive processes. The addition of the $\mathtt{run}$ operator in behaviors ensures that the behavior associated to a recursive process is always a recursive behavior, that is, $\effrec{\effvar}{\rk}$ with $\effvar \in fbv(\rk)$. Let's for instance consider the process defined by `let rec process p = run p`, written $\erec{p}{\eproc{(\erun{p})}}$ in the abstract syntax:
-%
-\[
-\inferrule
-{
-\inferrule
-  {
-   %\inferrule*[left=Equiv]
-     %{
-     \inferrule*
-      { \tyju{\tyenv'}{p}{\rtproc{\beta}{\rk}}{\effmin} }
-      { \tyju{\tyenv'}{\erun{p}} {\beta}{\effrun{\rk}} }
-      %\\
-      %\effeq{\effrun{\rk}}{\rk}
-     %}
-     %{
-     %\tyju{\tyenv \tyconcat p : \rtproc{\beta}{\rk}}{\erun{p}} {\beta}{\rk}
-     %}
-%        \qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
-  }  
-  { \tyju{\tyenv'}{\eproc{(\erun{p})}} 
-                     {\rtproc{\beta}{ \effor{\effrun{\rk}}{\rk'} }}{\effmin} }
-}
-{ \tyju{\tyenv}{ \erec{p}{\eproc{(\erun{p})}} }{\rtproc{\beta}{\rk}}{\effmin} }
-%\qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
-\]
-%
-where $\tyenv' = \tyenv \tyconcat p : \rtproc{\beta}{\rk}$.
-The typing derivation shows that we must have \mbox{$\effor{\effrun{\rk}}{\rk'} = \rk$} to type this expression. The only behavior that verifies this equation is \mbox{$\rk = \effrec{\effvar}{\effor{\effrun{\effvar}}{\rk'}}$} ($\rk'$ is unconstrained here). Without $\mathtt{run}$, the typing derivation would be valid for any behavior $\rk$, for instance $\rk = \effmin$. It means that our analysis would have accepted this process even though it is obviously non-reactive. 
 
 \item In~\cite{Mandel:2005}, the $\mathtt{loop}$ construct is encoded as a recursive process by:
 %
@@ -657,12 +633,12 @@ A downside of our approach is that it introduces one behavior variable for each 
 \section{Proof of soundness}
 \label{sec:soundness}
 
-The intuition of the proof is that the first instant of a reactive behavior (as defined in Section~\ref{sec:reactive_behavior}) is a finite behavior, without any recursion. We then prove by induction on the size of behaviors that a well-typed process admits a finite derivation in the big-step semantics of Section~\ref{sec:semantics}.
+We will know prove the soundness of our analysis, that is, a well-typed program is reactive. The intuition of the proof is that the first instant of a reactive behavior (as defined in Section~\ref{sec:reactive_behavior}) is a finite behavior, without any recursion. We then prove by induction on the size of behaviors that a well-typed process admits a finite derivation in the big-step semantics of Section~\ref{sec:semantics}.
 
 \subsection{First instant of a behavior}
 
 \begin{definition}
-The \emph{first-instant behavior} of a behavior, denoted $\rkfst{\rk}$ is the part of the behavior that corresponds to the execution of the first instant of the corresponding process. It is formally defined by:
+The \emph{first-instant} of a behavior, denoted $\rkfst{\rk}$ is the part of the behavior that corresponds to the execution of the first instant of the corresponding process. It is formally defined by:
 \begin{align*}
 \rkfst{\effmin} =&\, \rkfst{\effplus}  = \effmin \\
 \rkfst{\effvar} =&\, \effvar \\
@@ -716,9 +692,11 @@ Formally, for any ML expression $e$ such that $0 \vdash e$, there exists a finit
 \[ \inferrule{\Pi_e}{ \quad \bigstep{N}{e}{v} {E}{b}{S} \quad } \] 
 \end{hypothesis}
 
+We first need to prove the soundness of our definition of non-instantaneous behavior, as expressed in the following lemma;
 \begin{lemma}
 \label{lem:noinst}
-If $ \bigstep{N}{e}{e'} {E}{b}{S}$ and $\tyju{\tyenv}{e}{\rt}{\rk}$ then 
+An expression whose behavior is not instantaneous never reduces instantaneously.
+Formally, if $ \bigstep{N}{e}{e'} {E}{b}{S}$ and $\tyju{\tyenv}{e}{\rt}{\rk}$ then 
    \[ \noinst{\rk} \Rightarrow b = \sfalse \]
 \end{lemma}
 \begin{proof}
@@ -861,6 +839,50 @@ If \mbox{$\tyjus{\tyenv}{e}{\rt}{\rk}$} and $\rt$ and $\rk$ are reactive and we 
 By applying Property~\ref{prop:variant_system}, Property~\ref{prop:equiv_reactivty} and Theorem~\ref{thm:soundness}.
 \end{proof}
 
+\subsection{The $\mathtt{run}$ operator}
+
+So far, we have not justified the presence of the $\mathtt{run}$ operator in the language of behaviors. It is here to ensure that the behavior associated to a recursive process is always a recursive behavior, that is, $\effrec{\effvar}{\rk}$ with $\effvar \in fbv(\rk)$. 
+
+Suppose that we remove the $\mathtt{run}$ operator from our language. Let's now consider the process  $\erec{p}{\eproc{(\erun{p})}}$. In the variant of the type system, we could give it the instantaneous behavior $\effmin$ and miss the instantaneous recursion:
+%
+\[
+\inferrule
+{
+\inferrule
+  {
+     \inferrule*[left=Equiv]
+     {
+     \inferrule*
+      { \tyjus{\tyenv'}{p}{\rtproc{\beta}{\effor{\effmin}{\effplus}}}{\effmin} }
+      { \tyjus{\tyenv'}{\erun{p}} {\beta}{\effor{\effmin}{\effplus}} }
+      \\
+      \effeq{\effor{\effmin}{\effplus}}{\effmin}
+     }
+     {
+     \tyjus{\tyenv'}{\erun{p}} {\beta}{\effmin}
+     }
+%        \qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
+  }  
+  { \tyjus{\tyenv'}{\eproc{(\erun{p})}} 
+                     {\rtproc{\beta}{\effor{\effmin}{\effplus}}}{\effmin} }
+}
+{ \tyjus{\tyenv}{ \erec{p}{\eproc{(\erun{p})}} }{\rtproc{\beta}{\effmin}}{\effmin} }
+%\qquad \boxed{\rtvar = \rtproc{\beta}{\rk}}  
+\]
+%
+where $\tyenv' = \tyenv \tyconcat p : \rtproc{\beta}{\effor{\effmin}{\effplus}}$.
+%
+Thanks to the addition of $\mathtt{run}$, the only way to type this process is to give it the behavior $\effrec{\effvar}{\effor{\effrun{\effvar}}{\rk'}}$ (where $\rk'$ is not constrained). This also explains why there is no equivalence rule to simplify a $\mathtt{run}$. For instance, $\effrun{\effmin}$ is not equivalent to $\effmin$.
+
+%The typing derivation shows that we must have \mbox{$\effor{\effrun{\rk}}{\rk'} = \rk$} to type this expression. The only behavior that verifies this equation is \mbox{$\rk = \effrec{\effvar}{\effor{\effrun{\effvar}}{\rk'}}$} ($\rk'$ is unconstrained here). Without $\mathtt{run}$, the typing derivation would be valid for any behavior $\rk$, for instance $\rk = \effmin$. It means that our analysis would have accepted this process even though it is obviously non-reactive. 
+
+
+
+\subsection{Implementation}
+
+The type inference algorithm of \rml has been extended to compute the behaviors of processes, with a small impact on its structure and complexity thanks to the use of row polymorphism for subeffecting (see Section~\ref{sec:subeffecting_row}). The rules given in Section~\ref{sec:reactive_behavior} are easily translated into an algorithm for checking the reactivity of behaviors, polynomial in the size of behaviors. Inference simplifies behaviors during the computation, but does not necessarily compute the smallest behavior possible. For instance, simplifying $\effor{\rk}{\rk}$ can be costly in some cases, so it only checks simple cases (e.g. if $\rk = \effmin$ or $\rk = \effplus$). Overall, the analysis has a small impact on the compilation time of \rml programs.
+
+
 \subsection{Examples}
 %
 %The behavior computed for the `timer` example of Section~\ref{sec:first_example} is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}, which is equivalent to $\effinf{\effmin}$ and not reactive. After the fix, the behavior becomes \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{\effcon{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})}{\effplus}})}$} (equivalent to $\effinf{\effplus}$), which is now reactive. Similarly, the `instantaneous` process defined in Section~\ref{sec:intuition} has a behavior equal to $\effrec{\effvar}{\effcon{\effmin}{\effrun{\effvar}}}$, that is obviously non reactive.
@@ -875,7 +897,7 @@ let rec process p =
 \end{lstlisting}
 `q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
 
-The analysis can also handle combinators. In that case, there is no warning when defining the combinator if it is not possible to decide of its reactivity:
+The analysis can also handle combinators. We define here a combinator that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop:
 \begin{lstlisting}
 let process par_comb q1 q2 =
   loop
@@ -885,17 +907,17 @@ let process par_comb q1 q2 =
  unit process[rec 'r3. ((run 'r1 || run 'r2);  'r3 + ..)]?
 \end{lstlisting}
 %
-This is reflected formally by the fact that free behavior variables are considered to be non-instantaneous (see Section~\ref{sec:reactive_behavior}). The reactivity is then checked at instantiation:
+There is no warning when defining the combinator because it is not possible to decide of its reactivity. Indeed, the synchronous parallel composition terminates when both branches have terminated. It means that the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous. Formally, the computed behavior is reactive because free behavior variables are considered to be non-instantaneous (see Section~\ref{sec:reactive_behavior}). The reactivity is then checked at instantiation:
 \begin{lstlisting}
 let process p1 = 
   run (par_comb (process ()) (process (pause)))
-?val p1 : unit process[run (rec 'r. *; 'r) + ..]?
+?val p1 : unit process[run (rec 'r. (run 0 || run *); 'r) + ..]?
 \end{lstlisting}
 If we instantiate the `par_comb` combinator with two anonymous processes, one instantaneous and the other non-instantaneous, then we obtain a process that is indeed reactive, so no warning is printed.
 \begin{lstlisting}
 let process p2 = 
   run (par_comb (process ()) (process ()))
-?val p2 : unit process[run (rec 'r. 'r) + ..)]
+?val p2 : unit process[run (rec 'r. (run 0 || run 0); 'r) + ..)]
 W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 However, if the two processes are instantaneous, then the loop becomes instantaneous. The simplified behavior that results is obviously non-reactive, so a warning is shown.
@@ -959,10 +981,6 @@ let landin () =
 %        unit process[$\effor{\effor{\effmin}{\effrec{\effvar
 %                         }{\effrun{(\effor{\effmin}{\effvar})}}}}{\effvar'}$] ?
 As our analysis does not have any special case for recursive processes and is only based on unification, it is able to detect the reactivity issue even though there is no explicit recursion.
-
-\subsection{Implementation}
-
-The type inference algorithm of \rml has been extended to compute the behaviors of processes, with a small impact on its structure and complexity thanks to the use of row polymorphism for subeffecting (see Section~\ref{sec:subeffecting_row}). The rules given in Section~\ref{sec:reactive_behavior} are easily translated into an algorithm for checking the reactivity of behaviors, polynomial in the size of behaviors. Inference simplifies behaviors during the computation, but does not necessarily compute the smallest behavior possible. For instance, simplifying $\effor{\rk}{\rk}$ can be costly in some cases, so it only checks simple cases (e.g. if $\rk = \effmin$ or $\rk = \effplus$). Overall, the analysis has a small impact on the compilation time of \rml programs.
 
 \section{Related work}
 \label{sec:related_work}
