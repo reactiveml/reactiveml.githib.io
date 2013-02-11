@@ -23,6 +23,7 @@
 %
 \and
 %
+\rulename{Let-Par}
 \inferrule
   {  \bigstep{N_1}{e_1}{e'_1}  {E_1}{b_1}{S} \\
      \bigstep{N_2}{e_2}{e'_2}  {E_2}{b_2}{S} \\ 
@@ -34,6 +35,7 @@
 %
 \and
 %
+\rulename{Let-Done}
 \inferrule
   { \bigstep{N_1}{e_1} {v_1}  {E_1}{\strue}{S} \\
      \bigstep{N_2}{e_2} {v_2}  {E_2}{\strue}{S} \\ 
@@ -82,12 +84,14 @@
 %
 \and
 %
+\rulename{Loop-Stuck}
 \inferrule 
   {  \bigstep{N}{e}{e'} {E}{\sfalse}{S}  }
   { \bigstep{N}{\eloop{e}}{\eseq{e'}{\eloop{e}}} {E}{\sfalse}{S}  }
 %
 \and
 %
+\rulename{Loop-Unroll}
 \inferrule 
   {  \bigstep{N_1}{e}{v} {E_1}{\strue}{S} \\ \bigstep{N_2}{\eloop{e}}{e'} {E_2}{\sfalse}{S}  }
   { \bigstep{N_1 \cdotp N_2}{\eloop{e}}{e'} {E_1 \sqcup E_2}{\sfalse}{S}  }

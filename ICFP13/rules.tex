@@ -77,8 +77,8 @@
 \inferrule%[Par]
   { \tyju{\tyenv}{e_1}{\rt_1}{\rk_1}  \\  
      \tyju{\tyenv}{e_2}{\rt_2}{\rk_2} \\
-     \tyju{\tyenv \tyconcat  x_1 : gen(\rt_1, e_1, \tyenv) 
-                         \tyconcat x_2 : gen(\rt_2, e_2, \tyenv)}
+     \tyju{\tyenv \tyconcat  x_1 : \mathit{gen}(\rt_1, e_1, \tyenv) 
+                         \tyconcat x_2 : \mathit{gen}(\rt_2, e_2, \tyenv)}
              {e}{\rt}{\rk} \\
     }
   {  \tyju{\tyenv}{ \eletpar{x_1}{e_1}{x_2}{e_2}{e} } {\rt} { \effcon{ (\effpar{\rk_1}{\rk_2}) }{\rk} } }
@@ -110,7 +110,7 @@
 %
 \inferrule%[Loop]
   { \tyju{\tyenv}{e}{\rt}{\rk} }
-  { \tyju{\tyenv}{\eloop{e}}{\unit}{\effinf{\rk}} }
+  { \tyju{\tyenv}{\eloop{e}}{\unit}{\effinf{(\effcon{\effmin}{\rk})}} }
 %
 \and
 %

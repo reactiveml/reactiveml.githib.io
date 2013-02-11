@@ -1,10 +1,9 @@
 %\documentclass{llncs}
 \documentclass[9pt,preprint]{sigplanconf}
-
 %\documentclass[a4paper]{article}
-
 %\usepackage[utf8]{inputenc}
-%\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
 %\usepackage[style=alphabetic]{biblatex}
 %\usepackage{csquotes}
 \usepackage[english]{babel}
@@ -21,10 +20,18 @@
             urlcolor=black]{hyperref}
 %\usepackage{array}
 %\usepackage{multirow}
+
+% Pour avoir la police tt ligt en lmodern
+\DeclareFontFamily{T1}{lmtt}{} \DeclareFontShape{T1}{lmtt}{m}{n}{<-> ec-lmtl10}{} \DeclareFontShape{T1}{lmtt}{m}{\itdefault}{<-> ec-lmtlo10}{} \DeclareFontShape{T1}{lmtt}{\bfdefault}{n}{<-> ec-lmtk10}{} \DeclareFontShape{T1}{lmtt}{\bfdefault}{\itdefault}{<-> ec-lmtko10}{}
+
 \usepackage[caption=false]{subfig} % sigplanconf complains without caption=false
 \usepackage{rml}
 %\usepackage{graphicx}
 
+
+%\renewcommand{\ttdefault}{pcr}
+%\usepackage{beramono}
+%\usepackage{bold-extra}
 %\renewcommand{\ttdefault}{txtt}
 
 \input{syntax}
@@ -124,7 +131,7 @@ Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extensi
 The contributions of this paper are the following:
 \begin{itemize}
 \item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Sections~\ref{sec:behaviors}~and~\ref{sec:type_system}.
-\item A novel approach to \emph{subeffecting}~\cite{Nielson:1999} based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}.
+\item A novel approach to \emph{subeffecting}~\cite{Nielson:1999}, that is, subtyping on effects, based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}.
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
 
@@ -152,7 +159,7 @@ let process clock timer s =
   end
 \end{rmlcl}
 %
-The `process` keyword is used to define a process, that is, a function that takes time: its execution can span several logical instants. The `clock`~process is parametrized by a float~`timer` and a signal~`s`. Signals are communication channels between processes, with instantaneous broadcast. The process starts by initializing a local reference `time` initialized by the current time~(line 2), read using the `gettimeofday` function of the `Unix`~module from the standard library. Then it enters an infinite loop~(line 3 to 7). At each iteration, it reads the new current time and emits the signal~`s` if enough time has elapsed~(line 6). The compiler prints the following warning when compiling this process:
+The `process` keyword is used to define a process, that is, a function that takes time: its execution can span several logical instants. The `clock`~process is parametrized by a float~`timer` and a signal~`s`. Signals are communication channels between processes, with instantaneous broadcast. The process starts by initializing a local reference `time` with the current time~(line 2), read using the `gettimeofday` function of the `Unix`~module from the standard library. Then it enters an infinite loop~(line 3 to 7). At each iteration, it reads the new current time and emits the unit value on the signal~`s` if enough time has elapsed~(line 6). The compiler prints the following warning when compiling this process:
 \begin{lstlisting}
 ?Line 3, characters 2-120:
 W: This expression may be an instantaneous loop?
@@ -216,9 +223,12 @@ let rec process par_map p l =
               x' :: l'
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
-This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). As we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs. For the same reasons, we suppose that all functions terminate instantaneously and only focus on the reactivity of processes. In particular, we do not deal with blocking functions, like I/O, that can also make the program non-reactive. 
+This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). As we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs. As ML functions are always considered instantaneous, they are reactive if and only if they terminate. This is where the syntactic separation between functions and processes helps us: we can restrict our analysis to processes and suppose that functions always terminate.
+We thus avoid showing a warning for each recursive function.
+%
+Furthermore, we do not deal with blocking functions, like I/O, that can also make the program non-reactive. Indeed, such functions should \emph{never} be used in the context of cooperative scheduling, so no analysis is necessary.
 
-The analysis does not either take into account the presence of signals and over-approximates the possible behaviors, as in the following example:
+The analysis does not either take into account the presence of signals. It over-approximates the possible behaviors, as in the following example:
 \begin{lstlisting}
 let rec process imprecise =
   signal s default () gather (fun () () -> ()) in
@@ -264,7 +274,7 @@ Values are constants (integers, booleans, etc.), pairs of values, signal names $
 
 \subsection{Semantics}
 
-A reaction of an expression is given by the relation
+The reaction of an expression is given by the relation
 \[  \bigstep{N}{e}{e'}{E}{b}{S} \]
 which means that during the instant, in the signal environment $S$, the expression~$e$ rewrites to~$e'$ and emits the signals in $E$. $b$ is a boolean that indicates if $e'$ has terminated. We write $n \in S$ when the signal $n$ is present in the signal environment $S$ and $n \not\in S$ otherwise. We omit all other details concerning the signal environment and refer the reader to~\cite{Mandel:2005}.
 %
@@ -304,7 +314,7 @@ The algebra of behaviors is given by:
 ~\mid~ \effcon{\rk}{\rk}  ~\mid~ \effrec{\effvar}{\rk}  ~\mid~ \effrun{\rk}
 \]
 
-Surely instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially non-instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$. The language also includes behavior variables $\effvar$ to represent the behaviors of processes taken as arguments.
+Surely non-instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$. The language also includes behavior variables $\effvar$ to represent the behaviors of processes taken as arguments.
 
 Behaviors must reflect the structure of the program, starting with parallel composition and alternatives, as shown by the following examples: 
 \begin{lstlisting}
@@ -320,7 +330,7 @@ let process if_comb c q1 q2 =
 \end{lstlisting}
 In the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous, while in the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how  we abstract values: we only keep the different alternatives and forget about the conditions.
 
-It is also necessary to have a notion of sequence, denoted $;$ in the language of behaviors, as illustrated by the two following processes:
+It is also necessary to have a notion of sequence, denoted~$;$ in the language of behaviors, as illustrated by the two following processes:
 \begin{lstlisting}
 let rec process good_rec =
   pause; run good_rec
@@ -454,8 +464,8 @@ Instantiation and generalization are defined in a classic way:
 \end{mathpar}
 \vspace{-1.3em}
 \begin{align*}
-gen(\rt, e, \tyenv) = &\, \rt && \text { if $e$ is expansive} \\
-gen(\rt, e, \tyenv) = &\; \forall \bar{\rtvar}.\forall \bar{\effvar}.\; \rt  && \text{ otherwise } \\
+\mathit{gen}(\rt, e, \tyenv) = &\, \rt && \text { if $e$ is expansive} \\
+\mathit{gen}(\rt, e, \tyenv) = &\; \forall \bar{\rtvar}.\forall \bar{\effvar}.\; \rt  && \text{ otherwise } \\
   & \text{ where }  \bar{\rtvar}, \bar{\effvar} = fv(\rt) \setminus fv(\tyenv)  
 \end{align*}
 As for references in ML, we have to be careful to not generalize expressions that allocate signals. We use the syntactic criterion of expansive and non-expansive expressions~\cite{Tofte:1990}.
@@ -615,7 +625,8 @@ During unification, the behavior of a process is always either a behavior variab
 \begin{align*}
 \mU_{\rk}(\rk, \rk) =&\, [] \\
 \mU_{\rk}(\effvar, \rk) = \mU_{\rk}(\rk, \effvar) =
-					&\, [\effvar \mapsto  \effrec{\effvar'}{\rk[\effvar \leftarrow \effvar']} ]  \text{ if } \mathtt{occur\_check}(\effvar, \rt) \\
+%					&\, [\effvar \mapsto  \effrec{\effvar'}{\rk[\effvar \leftarrow \effvar']} ]  \text{ if } \mathtt{occur\_check}(\effvar, \rk) \\
+					&\, [\effvar \mapsto  \effrec{\effvar}{\rk} ]  \text{ if } \mathtt{occur\_check}(\effvar, \rk) \\
 					= &\,  [\effvar \mapsto \rk] \\
 \mU_{\rk}(\effor{\rk_1}{\effvar_1}, \effor{\rk_2}{\effvar_2}) =&\,
                   [\effvar_1 \mapsto \effor{\rk_2}{\effvar};  \effvar_1 \mapsto \effor{\rk_1}{\effvar} ]  \qquad \fresh{\effvar} \\
@@ -634,13 +645,13 @@ During unification, the behavior of a process is always either a behavior variab
 %         &\, \mIn [   \effvar_1 \mapsto \effor{\rk_2[\effvar'_2 \leftarrow K_2]}{\effvar} ; 
 %                                       \quad \fresh{\effvar} \\
 %         & \quad\;\; \effvar_2 \mapsto \effor{\rk_1[\effvar'_1 \leftarrow K_1]}{\effvar} ] \\
-\mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} \qquad\text{otherwise}
+%\mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} \qquad\text{otherwise}
 \end{align*}
 \end{small}
 
-\noindent This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}. Special care has to be taken to unfold recursive rows to reveal the row variable.
+\noindent It should be noted that unification never fails, so that we obtain a conservative extension of \rml type system. This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}. The last case unfolds a recursive row to reveal the row variable, so that it can be unified with other rows. 
 
-A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}~\cite{Lucassen:1988}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we choose to replace it with $\effplus$, which is the neutral element of $\effor$.
+A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}~\cite{Lucassen:1988}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we choose to replace it with $\effplus$, which is the neutral element of $+$, so that it can be simplified away.
 
 
 \section{Proof of soundness}
@@ -660,8 +671,8 @@ The \emph{first-instant behavior} of a behavior, denoted $\rkfst{\rk}$ is the pa
 \rkfst{\effor{\rk_1}{\rk_2}} =&\, \effor{\rkfst{\rk_1}}{\rkfst{\rk_2}} \\
 \rkfst{\effcon{\rk_1}{\rk_2}} =&\, 
 		\left\{ \begin{array}{ll}  
-				\effcon{\rk_1}{\rkfst{\rk_2}} &\text{if } \rkfst{\rk_1} = \rk_1 \\
-				\rkfst{\rk_1} & \text{otherwise} 
+				\rkfst{\rk_1} & \text{if } \noinst{\rk_1} \\
+				\effcon{\rkfst{\rk_1}}{\rkfst{\rk_2}} &\text{otherwise} 
 		\end{array}\right. \\
 \rkfst{\effrec{\effvar}{\rk}} =&\, \rkfst{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
 \end{align*}
@@ -697,13 +708,22 @@ If $\rk$ is reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
 
 \subsection{Soundness}
 
-In the introduction, we mentioned that we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the rule for application (Figure~\ref{fig:rules}) by the fact that the behavior of the application is always the instantaneous behavior $\effmin$. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
+As we said earlier, we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the rule for application (Figure~\ref{fig:rules}) by the fact that the behavior of the application is always the instantaneous behavior $\effmin$. This hypothesis is made possible by the syntactic distinction between functions and processes. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
 
-\begin{hypothesis}
-\label{hyp:fun_terminate}
-Function calls always terminate. Formally, for any ML expression $e$ such that $0 \vdash e$, there exists a finite derivation $\Pi_e$ and a value $v$ such that:
+\begin{hypothesis}[Function calls always terminate]
+\label{hyp:fun_terminate} 
+Formally, for any ML expression $e$ such that $0 \vdash e$, there exists a finite derivation $\Pi_e$ and a value $v$ such that:
 \[ \inferrule{\Pi_e}{ \quad \bigstep{N}{e}{v} {E}{b}{S} \quad } \] 
 \end{hypothesis}
+
+\begin{lemma}
+\label{lem:noinst}
+If $ \bigstep{N}{e}{e'} {E}{b}{S}$ and $\tyju{\tyenv}{e}{\rt}{\rk}$ then 
+   \[ \noinst{\rk} \Rightarrow b = \sfalse \]
+\end{lemma}
+\begin{proof}
+By induction on the derivation of the big-step semantics.
+\end{proof}
 
 We can now express the soundness of our analysis, that is, a well-typed program is reactive. Being reactive means here that there exists a derivation, necessarily finite, to rewrite the program into a well-typed program.
 \begin{theorem}[Soundness]
@@ -713,6 +733,7 @@ If \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$} and $\rt$ and $\rk$ are reactive and we s
 \begin{proof}
 The proof is done by induction on the size of the first-instant behavior of well-typed expressions. The main point is that the behaviors of sub-expressions is always smaller, but we have to be careful that we must consider only the first-instant behavior. To prove that the result is well-typed, we can use classic syntactic techniques for type soundness~\cite{Pierce:2002} on the small-step semantics described in~\cite{Mandel:2005}. The proof of equivalence of the two semantics is also given in the same paper.
 %
+\todo{Corriger les notations dans les regles et ici pour les accorder}
 \begin{itemize}
 \item Case $\eapp{e_1}{e_2}$ and $\erec{x}{e}$: By hypothesis~\ref{hyp:fun_terminate}.
 
@@ -724,11 +745,11 @@ Then, as $\erun{e}$ is well-typed, we have that:
   {
   \inferrule
     { \tyju{\tyenv}{e_1} {\rt}{\rk}  }
-    { \tyju{\tyenv}{\eproc{e_1}} { \rtproc{\rt}{\rk} }{\effmin} }
+    { \tyju{\tyenv}{\eproc{e_1}} { \rtproc{\rt}{\effor{\rk}{\rk'}} }{\effmin} }
   }
-  { \tyju{\tyenv}{\erun{(\eproc{e_1})}} {\rt}{\effrun{\rk}} }
+  { \tyju{\tyenv}{\erun{(\eproc{e_1})}} {\rt}{\effrun{(\effor{\rk}{\rk'})}} }
 \]
-As \mbox{$\rkfst{\effrun{\rk}} = \effrun{(\rkfst{\rk})}$}, we can apply the induction hypothesis on $e_1$ to get:
+As \mbox{$\rkfst{\effrun{(\effor{\rk}{\rk'})}} = \effor{\effrun{(\rkfst{\rk})}}{\effrun{(\rkfst{\rk'})}}$}, we can apply the induction hypothesis on $e_1$ to get:
 \[  \inferrule{\Pi_1}{ \bigstep{N_2}{e_1}{e'_1} {E_1}{b}{S} } \]
 which enables us to build the complete derivation of $\erun{e}$:
 \[
@@ -759,11 +780,24 @@ The are then two cases depending on the status of $n$:
 \item If $n \not\in S$: The derivation is finite.
 \end{itemize}
 
-\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$ or $\eloop{e}$: Idem.
-
 \item Case $\ewhen{e_1}{e_2}$: We can use the same reasoning. It is interesting to note that the behavior associated to the expression, i.e. $\effor{\rk}{\effinf{\effplus}}$, is not equal to the behavior of the body, as one could expect, so that we can apply the induction hypothesis.
 
-\todo{Parler de loop: on ne tombe jamais dans le second cas}
+\item Case $\eletpar{x_1}{e_1}{x_2}{e_2}{e}$:
+When we compute the first instant of a sequence, there are two possible cases:
+\begin{itemize}
+\item If $\noinst{(\effpar{\rk_1}{\rk_2})}$, then we have that 
+\[  \rkfst{\rk} = \effpar{\rkfst{\rk_1}}{\rkfst{\rk_2}} \]
+From $\noinst{(\effpar{\rk_1}{\rk_2})}$, we get that either $\noinst{\rk_1}$ which implies that $b_1 = \sfalse$, or $\noinst{\rk_2}$ which implies that $b_2 = \sfalse$ using Lemma~\ref{lem:noinst}. So we are sure that $b_1 \land b_2 = \sfalse$. We can then apply the induction hypothesis on $e_1$ and $e_2$ using the rule~\textsc{Let-Par}.
+
+\item Otherwise, we have that
+\[  \rkfst{\rk} = \effcon{(\effpar{\rkfst{\rk_1}}{\rkfst{\rk_2}})}{\rkfst{\rk}} \]
+We can apply the induction hypothesis on $e_1$, $e_2$ and $e$ using either \textsc{Let-par} or \textsc{Let-Done} depending on the values of $b_1$ and $b_2$.
+\end{itemize}
+
+\item Case $\eloop{e_1}$: 
+We have that $\rkfst{(\effcon{\effmin}{\rk})} = \effcon{\effmin}{\rkfst{\rk}}$, so we can apply the induction hypothesis on $e_1$.
+As the behavior $\effinf{(\effcon{\effmin}{\rk})}$ is reactive, we know that $\noinst{\rk}$. By applying Lemma~\ref{lem:noinst}, we get that $b_1 = \sfalse$, so we reconstruct the complete derivation for $e$ using the \textsc{Loop-Stuck} rule.
+
 \end{itemize}
 
 \end{proof}
@@ -801,6 +835,12 @@ We cannot add this rule to the original system as the proof of soundness relies 
   { \tyjus{\tyenv}{e_1}{\rt}{\rk} \\\\
     \tyjus{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effmin} }
   { \tyjus{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} {\rk} } 
+%
+\and
+%
+\inferrule%[Loop]
+  { \tyju{\tyenv}{e}{\rt}{\rk} }
+  { \tyju{\tyenv}{\eloop{e}}{\unit}{\effinf{\rk}} }
 %
 \end{mathpar}
 
@@ -954,8 +994,10 @@ Future work: meta-theory of type system (principality, etc). Comparison with oth
 
 \appendix
 
-\section{Other rules for the big-step semantics}
+\section{The complete big-step semantics}
 \label{sec:big_step_other}
+
+\todo{mettre les règles exactes de définition de l'environnement de signal et des règeles de reaction telles que dans \cite{Mandel:2005}}
 
 See Figure~\ref{fig:big_step_other}.
 
