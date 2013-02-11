@@ -735,7 +735,7 @@ The proof is done by induction on the size of the first-instant behavior of well
 %
 \todo{Corriger les notations dans les regles et ici pour les accorder}
 \begin{itemize}
-\item Case $\eapp{e_1}{e_2}$ and $\erec{x}{e}$: By hypothesis~\ref{hyp:fun_terminate}.
+\item Case $\eapp{e_1}{e_2}$ and $\erec{x}{e}$: By Hypothesis~\ref{hyp:fun_terminate}.
 
 \item Case $\erun{e}$: We know that $0 \vdash e$ so there exists $\Pi$ such that 
 \[ \inferrule{\Pi}{ \bigstep{N_1}{e}{\eproc{e_1}} {E}{true}{S} } \]
@@ -862,19 +862,19 @@ By applying Property~\ref{prop:variant_system}, Property~\ref{prop:equiv_reactiv
 \end{proof}
 
 \subsection{Examples}
-
-The behavior computed for the `timer` example of Section~\ref{sec:first_example} is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}, which is equivalent to $\effinf{\effmin}$ and not reactive. After the fix, the behavior becomes \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{\effcon{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})}{\effplus}})}$} (equivalent to $\effinf{\effplus}$), which is now reactive. Similarly, the `instantaneous` process defined in Section~\ref{sec:intuition} has a behavior equal to $\effrec{\effvar}{\effcon{\effmin}{\effrun{\effvar}}}$, that is obviously non reactive.
+%
+%The behavior computed for the `timer` example of Section~\ref{sec:first_example} is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}, which is equivalent to $\effinf{\effmin}$ and not reactive. After the fix, the behavior becomes \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{\effcon{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})}{\effplus}})}$} (equivalent to $\effinf{\effplus}$), which is now reactive. Similarly, the `instantaneous` process defined in Section~\ref{sec:intuition} has a behavior equal to $\effrec{\effvar}{\effcon{\effmin}{\effrun{\effvar}}}$, that is obviously non reactive.
 
 Using a type-based analysis makes it easy to deal with cases of aliasing, like in the following example:
 \begin{lstlisting}
 let rec process p =
   let q = (fun x -> x) p in
   run q 
-?val p : 'a process[(rec 'r. run 'r) + ..]?
+?val p : 'a process[rec 'r. (run 'r + ..)]?
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
-As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
-%
+`q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
+
 The analysis can also handle combinators. In that case, there is no warning when defining the combinator if it is not possible to decide of its reactivity:
 \begin{lstlisting}
 let process par_comb q1 q2 =
@@ -882,22 +882,25 @@ let process par_comb q1 q2 =
     run q1 || run q2
   end
 ?val par_comb : 'a process['r1] -> 'b process ['r2] ->
-  unit process[(rec 'r3. run 'r1 || run 'r2 ;  'r3) + ..]?
+ unit process[rec 'r3. ((run 'r1 || run 'r2);  'r3 + ..)]?
 \end{lstlisting}
 %
 This is reflected formally by the fact that free behavior variables are considered to be non-instantaneous (see Section~\ref{sec:reactive_behavior}). The reactivity is then checked at instantiation:
 \begin{lstlisting}
 let process p1 = 
   run (par_comb (process ()) (process (pause)))
-?val p1 : unit process[(rec 'r. run 0 || run *; 'r) + ..]?
-
+?val p1 : unit process[run (rec 'r. *; 'r) + ..]?
+\end{lstlisting}
+If we instantiate the `par_comb` combinator with two anonymous processes, one instantaneous and the other non-instantaneous, then we obtain a process that is indeed reactive, so no warning is printed.
+\begin{lstlisting}
 let process p2 = 
   run (par_comb (process ()) (process ()))
-?val p2 : unit process[(rec 'r. run 0 || run 0; 'r) + ..]
+?val p2 : unit process[run (rec 'r. 'r) + ..)]
 W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
+However, if the two processes are instantaneous, then the loop becomes instantaneous. The simplified behavior that results is obviously non-reactive, so a warning is shown.
 
-Here is another more complex example using higher-order functions and processes:
+Here is another more complex example using higher-order functions and processes. We define a function `h_o` that takes as input a combinator `f`. It then creates a recursive process that applies `f` on itself and runs the result:
 \begin{lstlisting}
 let h_o f =
  let rec process p =
@@ -906,17 +909,20 @@ let h_o f =
  in p
 ?val h_o : ('a process[run 'r1 + 'r2] -> 'a process['r1]) 
                 -> 'a process[run 'r1 + 'r2]?
-
+\end{lstlisting}
+If we instantiate this function with a process that waits an instant before calling its argument, we obtain a reactive process:
+\begin{lstlisting}
 let process good = 
-  run (higher_order 
-         (fun x -> process (pause; run x)))
+  run (h_o (fun x -> process (pause; run x)))
 ?val good :
- 'a process[run (run ((rec 'r1. *; run (run 'r1)) + ..))]?
-
+ 'a process[run (run ((rec 'r1. *; run (run 'r1))) + ..]?
+\end{lstlisting}
+This is no longer the case if the process calls its argument instantaneously. The instantaneous recursion is again detected by the analysis:
+\begin{lstlisting}
 let process pb = 
-  run (higher_order (fun x -> process (run x)))
-?val pb :
-  'a process[run (run ((rec 'r1. run (run 'r1)) + ..))]
+  run (h_o (fun x -> process (run x)))
+?val pb : 
+     'a process[run (run (rec 'r1. run (run 'r1))) + ..]
 W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 
@@ -961,15 +967,17 @@ The type inference algorithm of \rml has been extended to compute the behaviors 
 \section{Related work}
 \label{sec:related_work}
 
-Reactivity analysis is a classic topic in synchronous languages, also referred to as \emph{causality} analysis. In \esterel~\cite{Berry:1997}, the first imperative synchronous language, reactivity can be checked easily as the language is first order without recursion. Closer to \rml, the reactivity analysis of \funloft~\cite{Amadio:2007b} not only checks that instants terminate, but also give a bound on the duration of the instants trough a value analysis. The analysis is also restricted to the first-order setting. In \ulm~\cite{Boudol:2004}, each recursive call induces an implicit pause. Hence, it is impossible to have instantaneous recursions, at the expense of expressivity. For instance, in the `server` example of Section~\ref{sec:intuition}, a message could be lost between receiving a message on `add` and awaiting a new message.
 
-The causality analysis of \lucy~\cite{Cuoq:2001} is a type-and-effect system using row types. It is based on the exception analysis done in~\cite{Leroy:2000}. Both are a more direct application of row types~\cite{Remy:1993}, whereas our system differs in the absence of labels in rows.
+Our language of behaviors and type system is inspired by the work of~\cite{Amtoft:1999}. Their analysis is done on the \cml~\cite{Reppy:2007} language, which extends ML with message passing primitives. The behavior of a process records every emission and reception on communication channels. The authors use the type system to prove properties on particular examples, not for a general analysis. For instance, they prove that the emission on a given channel always precede the emission on a second channel in a given program. \cite{Boudol:2010}~uses a type-and-effect system to prove termination of functional programs using references, by stratifying memory to avoid recursion through references.\todo{So what ?}
 
+Reactivity analysis is a classic topic in synchronous languages. In \esterel~\cite{Berry:1997}, the first imperative synchronous language, reactivity can be checked easily as the language is first order without recursion. Closer to \rml, the reactivity analysis of \funloft~\cite{Amadio:2007b} not only checks that instants terminate, but also give a bound on the duration of the instants trough a value analysis. The analysis is also restricted to the first-order setting. In \ulm~\cite{Boudol:2004}, each recursive call induces an implicit pause. Hence, it is impossible to have instantaneous recursions, at the expense of expressivity. For instance, in the `server` example of Section~\ref{sec:intuition}, a message could be lost between receiving a message on `add` and awaiting a new message.
 
-Our language of behaviors and type system is inspired by the work of~\cite{Amtoft:1999}. Their analysis is done on the \cml~\cite{Reppy:2007} language, which extends ML with message passing primitives. The behavior of a process records every emission and reception on communication channels. The authors use the type system to prove properties on particular examples, not for a general analysis. For instance, they prove that the emission on a given channel always precede the emission on a second channel in a given program. \cite{Boudol:2010}~uses a type-and-effect system to prove termination of functional programs using references, by stratifying memory to avoid recursion through references.
+On a related subject, the causality analysis of \lucy~\cite{Cuoq:2001} is a type-and-effect system using row types. It is based on the exception analysis done in~\cite{Leroy:2000}. Both are a more direct application of row types~\cite{Remy:1993}, whereas our system differs in the absence of labels in rows.
 
 
 \section{Conclusion}
+
+Important hypothesis: separate functions from processes. Only check reactivity of processes
 
 Future work: meta-theory of type system (principality, etc). Comparison with other subeffecting formulations
 
