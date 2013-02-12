@@ -1010,9 +1010,13 @@ On a related subject, the causality analysis of \lucy~\cite{Cuoq:2001} is a type
 
 \section{Conclusion}
 
-Important hypothesis: separate functions from processes. Only check reactivity of processes
+We have presented a reactivity analysis on the \rml language. The idea of the analysis is to abstract processes into a simpler language called behaviors using a type-and-effect system. Checking reactivity of behaviors is then straightforward. We have proven the soundness of our analysis, that is, a well-typed program is reactive. Thanks in particular to the syntactic separation between functions and processes, the analysis does not detect too much false positives in practice and has been proven very useful for avoiding reactivity bugs.
 
-Future work: meta-theory of type system (principality, etc). Comparison with other subeffecting formulations
+An important direction for future work is to study the properties of our type system. In particular, it would be interesting to compare our approach to subeffecting using row polymorphism with traditional solutions and see if it could be applied in a different setting.
+%
+%Important hypothesis: separate functions from processes. Only check reactivity of processes
+%
+%Future work: meta-theory of type system (principality, etc). Comparison with other subeffecting formulations
 
 \bibliographystyle{plain}
 
