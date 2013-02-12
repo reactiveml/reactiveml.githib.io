@@ -40,6 +40,7 @@
 \newcommand\rt{\tau}
 \newcommand\rs{\sigma}
 \newcommand\rk{\kappa}
+\newcommand{\rkf}{\kappa^{\star}}
 
 \newcommand\rtvar{\alpha}
 \newcommand\rtdot{.}
@@ -65,13 +66,18 @@
 \newcommand\effeq[2]{#1 \equiv #2}
 \newcommand\wf[2]{#1 \vdash #2}
 \newcommand\noinst[1]{#1\downarrow^{\bullet}}
-\newcommand\rkfinite[1]{\mathtt{fin}(#1)}
+%\newcommand\rkfinite[1]{\mathtt{fin}(#1)}
+\newcommand\rkfinite[1]{#1 \in \rkf}
 
 % Typage
 \newcommand\tyenv{\Gamma}
 \newcommand\tyconcat{,}
 \newcommand\tyju[4]{ #1 \vdash #2 : #3 \mid #4 }
 \newcommand\tyjus[4]{ #1 \vdash_{S} #2 : #3 \mid #4 }
+
+\newcommand\fbv[1]{\mathit{fbv}(#1)}
+\newcommand\ftv[1]{\mathit{ftv}(#1)}
+\newcommand\fv[1]{\mathit{fv}(#1)}
 
 % Unification
 \newcommand\mW{\mathcal{W}}

@@ -116,14 +116,14 @@
 %
 \inferrule%[Until]
   { \tyju{\tyenv}{e_1}{\rt}{\rk_1} \\ 
-    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\rk_2} \\\\
+    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\rk_2} \\
     \tyju{\tyenv \tyconcat x : \rt_2}{e_3}{\rt}{\rk_3}  }
   { \tyju{\tyenv}{ \euntil{e_1}{e_2}{x}{e_3} } {\rt} { \effor{\rk_1}{\effcon{(\effplus}{\rk_3})}  } } 
 %
 \\
 %
 \inferrule%[When]
-  { \tyju{\tyenv}{e_1}{\rt}{\rk} \\\\
+  { \tyju{\tyenv}{e_1}{\rt}{\rk} \\
     \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\rk_2} }
   { \tyju{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
 %
