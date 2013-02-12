@@ -380,18 +380,18 @@ should be understood as
 Using the language of behaviors, we can now characterize the behaviors that we want to reject, that is instantaneous loops and recursions. We actually enforce a stronger sufficient condition, that can be checked easily and efficiently: there must be at least one instant before each recursive call. This condition is not necessary, as the `par_map` example of Section~\ref{sec:intuition} showed. As the behavior of a loop is just a particular case of recursive behavior, this condition also implies that the body of a loop is non-instantaneous.
 
 A behavior is said to be \emph{reactive} if it respects this condition, that is, if for each recursive behavior $\effrec{\effvar}{\rk}$, the recursion variable $\effvar$ does not appear in the first instant of the body $\rk$. Formally, we define a predicate $\wf{R}{\rk}$ meaning that the behavior $\rk$ is reactive with respect to the set of variables $R$, that is, these variables do not appear in the first instant of $\rk$ and all the recursions inside $\rk$ are not instantaneous. This relation is defined by:
-
-\begin{small}
+%
+%\begin{small}
 \input{wf}
-\end{small}
-
+%\end{small}
+%
 The rule for the sequence $\eseq{\rk_1}{\rk_2}$ uses the notion of \emph{non-instantaneous} behavior, denoted $\noinst{\rk}$ and defined below. Indeed, if the behavior $\rk_1$ is non-instantaneous, then it is not necessary to check if the variables in $R$ appear free in $\rk_2$. However, we still have to check that $\rk_2$ is reactive, that is, that $\wf{\emptyset}{\rk_2}$.
-
-\begin{small}
+%
+%\begin{small}
 \input{noinst}
-\end{small}
-
-The fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantan\-eous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
+%\end{small}
+%
+T he fact that variables are considered non-instantaneous means that any process taken as argument is supposed to be non-instantan\-eous. If this is not the case, then the verification of reactivity is done when this variable is instantiated with the actual behavior of the process.
 
 \begin{figure*}[t]
 %\begin{small}
@@ -600,8 +600,8 @@ These three formulations appear to be equivalent. Indeed, our system and the one
 The consequence of the typing rule for processes is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
 
 During unification, the behavior of a process is always either a behavior variable~$\effvar$, a row~$\effor{\rk}{\effvar}$ or a recursive row~$\effrec{\effvar}{(\effor{\rk}{\effvar'})}$. We could have made this fact more visible by having two different kinds of behaviors: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a} and only use the following algorithm $\mU_{\rk}$ for unification of behaviors. It takes as input two behaviors and returns a substitution that maps behavior variables to behaviors, that we denote $[\effvar_1 \mapsto \rk_1; \effvar_2 \mapsto \rk_2; \dots]$. It is defined as follows:
-
-\begin{small}
+%
+%\begin{small}
 \begin{align*}
 \mU_{\rk}(\rk, \rk) =&\, [] \\
 \mU_{\rk}(\effvar, \rk) = \mU_{\rk}(\rk, \effvar) =
@@ -609,7 +609,7 @@ During unification, the behavior of a process is always either a behavior variab
 					&\, [\effvar \mapsto  \effrec{\effvar}{\rk} ]  \text{ if } \mathtt{occur\_check}(\effvar, \rk) \\
 					= &\,  [\effvar \mapsto \rk] \\
 \mU_{\rk}(\effor{\rk_1}{\effvar_1}, \effor{\rk_2}{\effvar_2}) =&\,
-                  [\effvar_1 \mapsto \effor{\rk_2}{\effvar};  \effvar_1 \mapsto \effor{\rk_1}{\effvar} ]  \qquad \fresh{\effvar} \\
+                  [\effvar_1 \mapsto \effor{\rk_2}{\effvar};  \effvar_1 \mapsto \effor{\rk_1}{\effvar} ]  \text{, } \fresh{\effvar} \\
 \mU_{\rk}(\effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}}, \rk_2) 
     = &\, \mU_{\rk}(\rk_2, \effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}}) \\ 
     = &\, \mlet K_1 = \effrec{\effvar'_1}{\effor{\rk_1}{\effvar_1}} \\
@@ -627,9 +627,9 @@ During unification, the behavior of a process is always either a behavior variab
 %         & \quad\;\; \effvar_2 \mapsto \effor{\rk_1[\effvar'_1 \leftarrow K_1]}{\effvar} ] \\
 %\mU_{\rk}(\rk_1, \rk_2) =&\, \fail{} \qquad\text{otherwise}
 \end{align*}
-\end{small}
-
-\noindent It should be noted that unification never fails, so that we obtain a conservative extension of \rml type system. This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}. The last case unfolds a recursive row to reveal the row variable, so that it can be unified with other rows. 
+%\end{small}
+%
+It should be noted that unification never fails, so that we obtain a conservative extension of \rml type system. This unification algorithm also reuse traditional techniques for handling recursive types~\cite{Huet:1975}. The last case unfolds a recursive row to reveal the row variable, so that it can be unified with other rows. 
 
 A downside of our approach is that it introduces one behavior variable for each process, so that the computed behaviors may get very big and unreadable. The purpose of the \textsc{Mask} rule is to remedy this, by using \emph{effect masking}~\cite{Lucassen:1988}. The idea is that if a behavior variable appearing in the behavior is free in the environment, it is not constrained so we can give it any value. In particular, we choose to replace it with $\effplus$, which is the neutral element of $+$, so that it can be simplified away.
 
@@ -1020,7 +1020,28 @@ Future work: meta-theory of type system (principality, etc). Comparison with oth
 \bibliography{biblio}
 \end{small}
 
-\clearpage
+%\clearpage
+
+
+\appendix
+
+%\begin{figure*}
+%\begin{align*}
+%&E = E_1 \sqcup E_2 \text{ iff } \forall n \in \mathit{Dom}(E_1) \cup \mathit{Dom}(E_2).\, 
+%    E(n) = E_1(n) \uplus E_2(n) \\
+%&E_1 \sqsubseteq E_2 \text{ iff } \forall n \in \mathit{Dom}(E_1).\, E_1(n) \subseteq E_2(n) \\
+%&S_1 \sqsubseteq S_2 \text{ iff } S^m_1 \sqsubseteq S^m_2 \\
+%&(S + [v/n])(n') = \left\{ 
+%  \begin{array}{ll}
+%    S(n') & \text{if } n' \neq n \\
+%    (S^d(n), S^g(n), S^m(n) \uplus \{v\}) & \text{if } n' = n
+%  \end{array}
+% \right.
+%\end{align*}
+%
+%\caption{Operations on signal environments and events}
+%\label{fig:events_op}
+%\end{figure*}
 
 \begin{figure*}[t]
 %\begin{small}
@@ -1032,14 +1053,69 @@ Future work: meta-theory of type system (principality, etc). Comparison with oth
 \end{figure*}
 
 
-
-\appendix
-
-\section{The complete big-step semantics}
+\section{Big-step semantics (continued)}
 \label{sec:big_step_other}
 
-\todo{mettre les règles exactes de définition de l'environnement de signal et des règeles de reaction telles que dans \cite{Mandel:2005}}
+\subsection{Notations}
 
-See Figure~\ref{fig:big_step_other}.
+\subsubsection*{Signal environment}
+
+%Let $\mathcal{N}$ be a numerable set of signal names $n$. We denote $N_i$ subsets of $\mathcal{N}$. $N_1 \cdotp N_2$ is the disjoint union of the two sets and is only defined if $N_1 \cap N_2 = \emptyset$.
+ A \emph{signal environment} $S$ is a function
+\[ S \deq [ (d_1, g_1, m_1)/n_1, \dots, (d_k, g_k, m_k)/n_k ] \] 
+that maps a signal name $n_i$ to a tuple $(d_i, g_i, m_i)$ where $d_i$ is the default value of the signal, $g_i$ its combination function and $m_i$ is the multi-set of values emitted during the reaction. If the signal $n_i$ has the type $\rtsig{\rt_1}{\rt_2}$, then these fields have the following types:
+\begin{mathpar}
+d_i : \rt_2
+\and
+g_i : \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}}
+\and
+m_i : \rt_2 \mathid{multiset}
+\end{mathpar}
+We denote $S^d(n_i) = d_i$, $S^g(n_i) = g_i$ and $S^m(n_i) = m_i$. We also define $S^v(n_i) = \mathit{fold}\; g_i\; m_i\; d_i$ where:
+\begin{align*}
+\mathit{fold}\; f\; (\{ v_1 \} \uplus m)\; v_2 &= \mathit{fold}\; f\; m\; (f v_1 v_2) \\
+\mathit{fold}\; f\; \emptyset\; v_2 &= v
+\end{align*}
+We denote $n \in S$ when the signal $n$ is present, that is, when $S^m(n) \neq \emptyset$, and $n \not\in S$ otherwise.
+
+\subsubsection*{Events}
+
+An \emph{event} $E$ is a function mapping a signal name to a multi-set of values:
+\[ E \deq [ m_1/n_1, \dots, m_k/n_k] \]
+Events represent the values emitted during an instant. $S^m$ is the event associated to the signal environment $S$.
+
+\subsection*{Operations on signal environments and events}
+
+The union of events is the point-wise union, that is, if $E = E_1 \sqcup E_2$, then for all  $n \in \mathit{Dom}(E_1) \cup \mathit{Dom}(E_2)$: 
+\[ E(n) = E_1(n) \uplus E_2(n) \]
+Similarly, the inclusion of events is the point-wise inclusion. We define the inclusion of signal environments by:
+\[ S_1 \sqsubseteq S_2 \text{ iff } S^m_1 \sqsubseteq S^m_2 \\ \]
+
+%We define several operations on signal environments and events in Figure~\ref{fig:events_op}. %In particular, the operation $S + [v/n]$ adds $v$ to the multi-set of values associated to $n$ in $S$.
+
+\subsection{Big-step semantics}
+
+At each instant, the program reads inputs~$I_i$ and produces outputs~$O_i$. The reaction of an expression is defined by the smallest signal environment $S_i$ (for the relation $\sqsubseteq$) such that:
+\[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
+where
+\begin{align}
+& (I_i \sqcup E_i ) \sqsubseteq S_i^m \\
+& O_i \sqsubseteq E_i \\
+%& \forall n \in N_{i+1}.\; n \not\in \mathit{Dom}(S_i) \\
+& S^d_i \subseteq S^d_{i+1} \text{ and } S^g_i \subseteq S^g_{i+1} 
+\end{align}
+\begin{itemize}
+\item[(1)] The signal environment must contain the inputs and emitted signals.
+\item[(2)] The outputs are included in the set of emitted signals.
+%\item[(3)] This properties guarantees that new signal names are fresh.
+\item[(3)] Default values and combination functions are kept from one instant to the next.
+\end{itemize}
+
+The rules defining the relation are given in Figure~\ref{fig:big_step} and Figure~\ref{fig:big_step_other}:
+\begin{itemize}
+\item $\eemit{e_1}{e_2}$ evaluates $e_1$ into s signal name $n$ and adds the result of the evaluation of $e_2$ to the multi-set of emitted values on $n$.
+\item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting $x$ with a fresh signal name $n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for how to do this).
+\item The preemption in \rml is weak, that is, a process can only be preempted at the end of the instant. This is reflected by the fact that $e_1$ is always evaluated, regardless of the status of the signal~$n$. It also means that, when the signal is present, $e_2$ is executed at the next instant.
+\end{itemize}
 
 \end{document}
