@@ -61,17 +61,21 @@
 %\thanks{This work is supported by the INRIA Action d'envergure Synchronics.}
 \subtitle{Application to \rml}
 
-\authorinfo{}{}{}
-%\authorinfo{ %\vspace*{-.5cm}
-%           Louis Mandel \and C\'edric Pasteur \and
-%            Marc Pouzet}
-%{DI, \'Ecole normale sup\'erieure, 45 rue d'Ulm, 75230 Paris, France}
-%{Firstname.Name@ens.fr}
+\authorinfo{ %\vspace*{-.5cm}
+           Louis Mandel}
+{LRI, Universit\'e Paris-Sud 11, Orsay, France}
+{louis.mandel@lri.fr}
+
+\authorinfo{C\'edric Pasteur}
+{DI, \'Ecole normale sup\'erieure, Paris, France}
+{cedric.pasteur@ens.fr}
 
 \maketitle
 
 \begin{abstract}
-Cooperative scheduling enables efficient sequential implementation of concurrency. But it is up to the programmer to cooperate to ensure reactivity of the program. We present an analysis that checks the reactivity of programs by abstracting programs into so-called behaviors using a type-and-effect system. Our work is applied to the functional synchronous language \rml. We prove the soundness of our analysis with respect to the big-step semantics: a well-typed program is reactive.
+Cooperative scheduling enables efficient sequential implementation of concurrency. It is widely used to provide light threads facilities. However, it is up to the programmer to actually cooperate to ensure the reactivity of the program. 
+
+We present a static analysis that checks the reactivity of programs by abstracting programs into so-called \emph{behaviors} using a type-and-effect system. Our work is applied and implemented in the functional synchronous language \rml. We prove the soundness of our analysis with respect to the big-step semantics: a well-typed program is reactive.
 \end{abstract}
 
 \category{D.3.2}{Language Classifications}{Applicative (functional) languages; Concurrent, distributed, and parallel languages}
