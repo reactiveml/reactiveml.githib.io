@@ -39,9 +39,9 @@
 \inferrule
   { \bigstep{N_1}{e_1} {v_1}  {E_1}{\strue}{S} \\
      \bigstep{N_2}{e_2} {v_2}  {E_2}{\strue}{S} \\ 
-     \bigstep{N}{e_3[x_1 \leftarrow v_1; x_2 \leftarrow v_2]} {e_3'}  {E_3}{b_3}{S}  }
+     \bigstep{N_3}{e_3[x_1 \leftarrow v_1; x_2 \leftarrow v_2]} {e_3'}  {E_3}{b_3}{S}  }
   {
-    \bigstep{N_1 \cdotp N_2 \cdotp N} 
+    \bigstep{N_1 \cdotp N_2 \cdotp N_3} 
        {\eletpar{x_1}{e_1}{x_2}{e_2}{e_3}} {e_3'}  {E_1 \sqcup E_2 \sqcup E_3}{b_3}{S}
   }
 %
