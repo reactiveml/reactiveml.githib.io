@@ -205,8 +205,6 @@ The declaration of a signal takes as arguments the default value of the signal a
 \subsection{Intuitions and limitations}
 \label{sec:intuition}
 
-\input{derived}
-
 In the previous example, we have seen the first cause of non-reactivity, that is, instantaneous loops. The second one is instantaneous recursive processes, as in this example:
 \begin{lstlisting}
 let rec process instantaneous s =
@@ -254,60 +252,10 @@ let rec process server add =
 %
 The `server` process receives on a signal `add` both a process `p` and a signal `ack` on which to send back the result. As it creates one new process each time the `add` signal is emitted, this program can execute an arbitrary number of processes at the same time. It is thus not real-time, but it is indeed reactive, as waiting for the value of a signal takes one instant (one has to collect and combine all the values emitted during the instant).
 
-\todo{Mettre syntaxe dans 5 et semantique avec la preuve}
-\section{Big-step Semantics}
-\label{sec:semantics}
-
-In this section, we give an overview of the big-step semantics of \rml{}, also called the behavioral semantics in reference to the one of \esterel~\cite{Berry:1996} from which it is inspired. The interested reader can refer to~\cite{Mandel:2005} for a more detailed presentation of this semantics.
-
-\subsection{Abstract syntax}
-
-We consider here a kernel of \rml{}:
-%
-\begin{align*}
-v \sdeq &\; c \mid (v, v) \mid n \mid \elam{x}{e} \mid \eproc{e} \\
-e \sdeq &\;  x \mid c \mid (e, e) \mid \elam{x}{e} 
-  \mid \eapp{e}{e} \mid \erec{x}{e}  \mid \eproc{e} \mid \erun{e} \\
- & \mid \epause{} \mid \eletpar{x}{e}{x}{e}{e} \\
- &\mid \esig{x}{e}{e}{e} \\
- & \mid \eemit{e}{e} \mid \epres{e}{e}{e} \\
- & \mid \eite{e}{e}{e} \\
- &  \mid \eloop{e} \mid \euntil{e}{e}{x}{e} 
-   \mid \ewhen{e}{e} 
-\end{align*}
-
-Values are constants (integers, booleans, etc.), pairs of values, signal names $n$, functions and processes. The language is a call-by-value lambda-calculus, extended with constructs for creating~($\mathtt{process}$) and running~($\mathtt{run}$) processes, waiting for the next instant~($\mathtt{pause}$), parallel definitions~($\mathtt{let/and}$), declaring signals~($\mathtt{signal}$), emitting a signal~($\mathtt{emit}$) and several control structures: the test of presence of a signal~($\mathtt{present}$), the unconditional loop~($\mathtt{loop}$), weak preemption~($\mathtt{do/until}$) and suspension~($\mathtt{do/when}$).  The expression $\euntil{e_1}{s}{x}{e_2}$ executes its body $e_1$ and, when the signal~$s$ is present, stops the execution of~$e_1$ and then executes the continuation~$e_2$ on the next instant, binding~$x$ to the value of~$s$. We denote $\_$ variables that do not appear free in the body of a $\mathtt{let}$ and $\evoid{}$ the unique value of type $\mathtt{unit}$. From this kernel, we can encode most constructs of the language, as shown in Figure~\ref{fig:derived}.
-
-\subsection{Semantics}
-
-The reaction of an expression is defined by the smallest signal environment $S_i$ such that:
-\[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
-which means that during the instant, in the signal environment $S_i$, the expression~$e_i$ rewrites to~$e_{i+1}$ and emits the signals in $E_i$. $b_i$ is a boolean that indicates if $e_{i+1}$ has terminated. Additional conditions express for instance the fact that the emitted values in $E_i$ must agree with the signal environment $S_i$. The execution of a program is made of the succession of a (potentially infinite) number of reactions and terminates when the status $b_i$ is equal to true.
-%
- We refer the reader to~\cite{Mandel:2005} or Appendix~\ref{sec:big_step_other} for a more formal presentation, including the definition of the signal environment $S$. We just write $n \in S$ when the signal $n$ is present in the signal environment $S$ (i.e. it has been emitted in the current instant) and $n \not\in S$ otherwise.
-
-
-Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. 
-\begin{itemize}
-\item  The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant.
-\item The $\mathtt{let}/\mathtt{and}$ construct executes its two branches until both are terminated.
-\item The $\mathtt{present}$ construct executes the $\mathtt{then}$ branch immediately if the signal is present, but it executes the $\mathtt{else}$ branch on the next instant if it is absent.
-\item The $\mathtt{do/when}$ construct executes its body only if the signal $n$ is present. If the body terminates, that is, it rewrites to a value $v$, then the construct also terminates instantaneously and rewrites to the same value.
-\item The unconditional loop keeps executing its body until it awaits the next instant, that is, its termination status $b$ becomes false. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
-\end{itemize}
-
-\begin{figure*}
-%\begin{small}
-\input{big_step}
-%\end{small}
-
-
-\caption{Big-step semantics}
-\label{fig:big_step}
-\end{figure*}
-
 \section{The algebra of behaviors}
 \label{sec:behaviors}
+
+\input{derived}
 
 The idea of our analysis is to abstract processes into a simpler language called \emph{behaviors}, following the work of~\cite{Amtoft:1999}. Behaviors abstract the reactive behavior of processes. A main design choice is to completely abstract values and the presence of signals. It is however necessary to keep part of the structure of the program (or an abstraction of it) in order to have a precise analysis.
 
@@ -476,7 +424,25 @@ For instance, it is easy to show that:
 
 The link between processes and behaviors is done by a type-and-effect system~\cite{Lucassen:1988}. The behavior of a process is the effect computed using the type system. A type system is a simple and efficient way to implement a higher-order static analysis.
 
-\subsection{Notations}
+\subsection{Abstract syntax}
+
+We consider here a kernel of \rml{}:
+%
+\begin{align*}
+v \sdeq &\; c \mid (v, v) \mid n \mid \elam{x}{e} \mid \eproc{e} \\
+e \sdeq &\;  x \mid c \mid (e, e) \mid \elam{x}{e} 
+  \mid \eapp{e}{e} \mid \erec{x}{e}  \mid \eproc{e} \mid \erun{e} \\
+ & \mid \epause{} \mid \eletpar{x}{e}{x}{e}{e} \\
+ &\mid \esig{x}{e}{e}{e} \\
+ & \mid \eemit{e}{e} \mid \epres{e}{e}{e} \\
+ & \mid \eite{e}{e}{e} \\
+ &  \mid \eloop{e} \mid \euntil{e}{e}{x}{e} 
+   \mid \ewhen{e}{e} 
+\end{align*}
+
+Values are constants (integers, booleans, etc.), pairs of values, signal names $n$, functions and processes. The language is a call-by-value lambda-calculus, extended with constructs for creating~($\mathtt{process}$) and running~($\mathtt{run}$) processes, waiting for the next instant~($\mathtt{pause}$), parallel definitions~($\mathtt{let/and}$), declaring signals~($\mathtt{signal}$), emitting a signal~($\mathtt{emit}$) and several control structures: the test of presence of a signal~($\mathtt{present}$), the unconditional loop~($\mathtt{loop}$), weak preemption~($\mathtt{do/until}$) and suspension~($\mathtt{do/when}$).  The expression $\euntil{e_1}{s}{x}{e_2}$ executes its body $e_1$ and, when the signal~$s$ is present, stops the execution of~$e_1$ and then executes the continuation~$e_2$ on the next instant, binding~$x$ to the value of~$s$. We denote $\_$ variables that do not appear free in the body of a $\mathtt{let}$ and $\evoid{}$ the unique value of type $\mathtt{unit}$. From this kernel, we can encode most constructs of the language, as shown in Figure~\ref{fig:derived}.
+
+\subsection{Types}
 
 Types and behaviors are defined by:
 \begin{align*}
@@ -664,7 +630,9 @@ A downside of our approach is that it introduces one behavior variable for each 
 \section{Proof of soundness}
 \label{sec:soundness}
 
-We will now prove the soundness of our analysis, that is, that a well-typed program is reactive. The intuition of the proof is that the first instant of a reactive behavior (as defined in Section~\ref{sec:reactive_behavior}) is a finite behavior, without any recursion. We then prove by induction on the size of behaviors that a well-typed program admits a finite derivation in the big-step semantics of Section~\ref{sec:semantics}.
+\input{big_step}
+
+We will now prove the soundness of our analysis, that is, that a well-typed program is reactive. The intuition of the proof is that the first instant of a reactive behavior (as defined in Section~\ref{sec:reactive_behavior}) is a finite behavior, without any recursion. We then prove by induction on the size of behaviors that a well-typed program admits a finite derivation in the big-step semantics.
 
 \subsection{First instant of a behavior}
 
@@ -720,6 +688,28 @@ If $\rk$ is  reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
 \begin{proof}
 By induction on the structure of behaviors.
 \end{proof}
+
+\subsection{Big-step Semantics}
+\label{sec:semantics}
+
+In this section, we give an overview of the big-step semantics of \rml{}, also called the behavioral semantics in reference to the one of \esterel~\cite{Berry:1996} from which it is inspired. The interested reader can refer to~\cite{Mandel:2005} for a more detailed presentation of this semantics.
+
+The reaction of an expression is defined by the smallest signal environment $S_i$ such that:
+\[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
+which means that during the instant, in the signal environment $S_i$, the expression~$e_i$ rewrites to~$e_{i+1}$ and emits the signals in $E_i$. $b_i$ is a boolean that indicates if $e_{i+1}$ has terminated. Additional conditions express for instance the fact that the emitted values in $E_i$ must agree with the signal environment $S_i$. The execution of a program is made of the succession of a (potentially infinite) number of reactions and terminates when the status $b_i$ is equal to true.
+%
+ We refer the reader to~\cite{Mandel:2005} or Appendix~\ref{sec:big_step_other} for a more formal presentation, including the definition of the signal environment $S$. We just write $n \in S$ when the signal $n$ is present in the signal environment $S$ (i.e. it has been emitted in the current instant) and $n \not\in S$ otherwise.
+
+
+Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. 
+\begin{itemize}
+\item  The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant.
+\item The $\mathtt{let}/\mathtt{and}$ construct executes its two branches until both are terminated.
+\item The $\mathtt{present}$ construct executes the $\mathtt{then}$ branch immediately if the signal is present, but it executes the $\mathtt{else}$ branch on the next instant if it is absent.
+\item The $\mathtt{do/when}$ construct executes its body only if the signal $n$ is present. If the body terminates, that is, it rewrites to a value $v$, then the construct also terminates instantaneously and rewrites to the same value.
+\item The unconditional loop keeps executing its body until it awaits the next instant, that is, its termination status $b$ becomes false. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
+\end{itemize}
+
 
 \subsection{Soundness}
 
@@ -938,7 +928,7 @@ let rec process p =
 \end{lstlisting}
 `q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
 
-The analysis can also handle combinators. We define here a combinator that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop: \todo{Start from example of section...}
+The analysis can also handle combinators. For instance, the type system computes the following behavior for the `par_comb` example of Section~\ref{sec:intuition}:
 \begin{lstlisting}
 let process par_comb q1 q2 =
   loop
