@@ -275,7 +275,7 @@ $ \effrec{\effvar}{(\effpar{\rk_1}{(\effor{\effrun{(\rk_2)}}{(\effcon{\effplus}{
 
 Surely non-instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$. The language also includes behavior variables $\effvar$ to represent the behaviors of processes taken as arguments. 
 
-Behaviors must reflect the structure of the program, starting with parallel composition. This is illustrated by the following example, which defines a combinator that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop: 
+Behaviors must reflect the structure of the program, starting with parallel composition. This is illustrated by the following example, which defines a combinator `par_comb` that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop: 
 \begin{lstlisting}
 let process par_comb q1 q2 =
   loop (run q1 || run q2) end
@@ -291,11 +291,9 @@ In the case of `if_comb`, both processes must be non-instantaneous. To represent
 
 It is also necessary to have a notion of sequence, denoted~$;$ in the language of behaviors, as illustrated by the two following processes: 
 \begin{lstlisting}
-let rec process good_rec = 
-  pause; run good_rec
+let rec process good_rec = pause; run good_rec
   
-let rec process bad_rec = 
-  run bad_rec; pause
+let rec process bad_rec = run bad_rec; pause
 \end{lstlisting}
 The order between the recursive call and the call to `pause` is crucial as the `good_rec` process is reactive while `bad_rec` loops instantaneously.
 %
@@ -692,16 +690,17 @@ By induction on the structure of behaviors.
 \subsection{Big-step Semantics}
 \label{sec:semantics}
 
-In this section, we give an overview of the big-step semantics of \rml{}, also called the behavioral semantics in reference to the one of \esterel~\cite{Berry:1996} from which it is inspired. The interested reader can refer to~\cite{Mandel:2005} for a more detailed presentation of this semantics.
+In this section, we give an overview of the big-step semantics of \rml{}, also called the behavioral semantics in reference to the one of \esterel~\cite{Berry:1996} from which it is inspired. The interested reader can refer to Appendix~\ref{sec:big_step_other} or~\cite{Mandel:2005} for a more detailed and formal presentation of this semantics.
 
 The reaction of an expression is defined by the smallest signal environment $S_i$ such that:
 \[ \bigstep{N}{e_i}{e_{i+1}}{E_i}{b_i}{S_i} \]
 which means that during the instant, in the signal environment $S_i$, the expression~$e_i$ rewrites to~$e_{i+1}$ and emits the signals in $E_i$. $b_i$ is a boolean that indicates if $e_{i+1}$ has terminated. Additional conditions express for instance the fact that the emitted values in $E_i$ must agree with the signal environment $S_i$. The execution of a program is made of the succession of a (potentially infinite) number of reactions and terminates when the status $b_i$ is equal to true.
 %
- We refer the reader to Appendix~\ref{sec:big_step_other} or~\cite{Mandel:2005} for a more formal presentation, including the definition of the signal environment $S$. We just write $n \in S$ when the signal $n$ is present in the signal environment $S$ (i.e. it has been emitted in the current instant) and $n \not\in S$ otherwise.
+%We refer the reader to Appendix~\ref{sec:big_step_other} or~\cite{Mandel:2005} for a more formal presentation, including the definition of the signal environment $S$. 
+We write $n \in S$ when the signal $n$ is present in the signal environment $S$ (i.e. it has been emitted in the current instant) and $n \not\in S$ otherwise.
 
 
-Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. 
+Figure~\ref{fig:big_step} shows part of the rules defining the relation. The remaining rules can be found in Appendix~\ref{sec:big_step_other}. Let us briefly discuss some important points of the semantics:
 \begin{itemize}
 \item  The rule for $\epause{}$ shows the meaning of the boolean $b$: if it is false, it means that the expression is stuck waiting for the next instant.
 \item The $\mathtt{let}/\mathtt{and}$ construct executes its two branches until both are terminated.
@@ -1028,8 +1027,6 @@ Closer to \rml, the reactivity analysis of \funloft~\cite{Amadio:2007b} not only
 
 The causality analysis of \lucy~\cite{Cuoq:2001} is a type-and-effect system using row types. It is based on the exception analysis done in~\cite{Leroy:2000}. Both are a more direct application of row types~\cite{Remy:1993}, whereas our system differs in the absence of labels in rows.
 
-\todo{These de Gimenez}
-
 \section{Conclusion}
 
 We have presented a reactivity analysis on the \rml language. The idea of the analysis is to abstract processes into a simpler language called behaviors using a type-and-effect system. Checking reactivity of behaviors is then straightforward. We have proven the soundness of our analysis, that is, a well-typed program is reactive. Thanks in particular to the syntactic separation between functions and processes, the analysis does not detect too much false positives in practice and has been proven very useful for avoiding reactivity bugs. 
@@ -1042,7 +1039,7 @@ An important direction for future work is to study the properties of our type sy
 %
 %Future work: meta-theory of type system (principality, etc). Comparison with other subeffecting formulations
 
-\bibliographystyle{plain}
+\bibliographystyle{alpha}
 
 \begin{small}
 \bibliography{biblio}
@@ -1088,7 +1085,8 @@ An important direction for future work is to study the properties of our type sy
 \label{fig:big_step_other}
 \end{figure*}
 
-\todo{Parler de la preuve des expressions ajoutées dans cette section}
+\vfill
+\pagebreak
 
 \section{Well-formation of expressions}
 \label{sec:wfexp}
@@ -1100,8 +1098,6 @@ $\wfexp{k}{e}$ means that $\wfexp{1}{e}$ and $\wfexp{0}{e}$. It means that $e$ c
 
 \section{Big-step semantics (continued)}
 \label{sec:big_step_other}
-
-\todo{Rappeler la definition de la bonne formation des expressions}
 
 \subsection{Notations}
 
@@ -1164,5 +1160,7 @@ The rules defining the relation are given in Figure~\ref{fig:big_step} and Figur
 \item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting $x$ with a fresh signal name $n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for how to do this).
 \item The preemption in \rml is weak, that is, a process can only be preempted at the end of the instant. This is reflected by the fact that $e_1$ is always evaluated, regardless of the status of the signal~$n$. It also means that, when the signal is present, $e_2$ is executed at the next instant.
 \end{itemize}
+
+The proof of soundness for these expressions follows the same patterns as in the proof of Theorem~\ref{thm:soundness}.
 
 \end{document}
