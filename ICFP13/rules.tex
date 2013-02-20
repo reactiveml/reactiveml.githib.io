@@ -67,10 +67,10 @@
 \and
 %
 \inferrule%[If]
-  { \tyju{\tyenv}{e_1}{\mathtt{bool}}{\effany} \\
-    \tyju{\tyenv}{e_2}{\rt}{\rk_2} \\
-    \tyju{\tyenv}{e_3}{\rt}{\rk_3} }
-  { \tyju{\tyenv} {\eite{e_1}{e_2}{e_3}} {\rt}{\effor{\rk_2}{\rk_3}} }
+  { \tyju{\tyenv}{e}{\mathtt{bool}}{\effany} \\
+    \tyju{\tyenv}{e_1}{\rt}{\rk_1} \\
+    \tyju{\tyenv}{e_2}{\rt}{\rk_2} }
+  { \tyju{\tyenv} {\eite{e}{e_1}{e_2}} {\rt}{\effor{\rk_1}{\rk_2}} }
 %
 \and
 %
@@ -94,10 +94,10 @@
 \and
 %
 \inferrule%[Present]
-  { \tyju{\tyenv}{e_1}{\rtsig{\rt_1}{\rt_2}}{\effany} \\\\
-    \tyju{\tyenv}{e_2}{\rt}{\rk_2}  \\
-    \tyju{\tyenv}{e_3}{\rt}{\rk_3}  }
-  { \tyju{\tyenv} { \epres{e_1}{e_2}{e_3} }{\rt}{ \effor{\rk_2}{(\effcon{\effplus}{\rk_3})} } }
+  { \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effany} \\\\
+    \tyju{\tyenv}{e_1}{\rt}{\rk_1}  \\
+    \tyju{\tyenv}{e_2}{\rt}{\rk_2}  }
+  { \tyju{\tyenv} { \epres{e}{e_1}{e_2} }{\rt}{ \effor{\rk_1}{(\effcon{\effplus}{\rk_2})} } }
 %
 \and
 %
@@ -116,16 +116,16 @@
 %
 \inferrule%[Until]
   { \tyju{\tyenv}{e_1}{\rt}{\rk_1} \\ 
-    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effany} \\
-    \tyju{\tyenv \tyconcat x : \rt_2}{e_3}{\rt}{\rk_3}  }
-  { \tyju{\tyenv}{ \euntil{e_1}{e_2}{x}{e_3} } {\rt} { \effor{\rk_1}{\effcon{(\effplus}{\rk_3})}  } } 
+    \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effany} \\
+    \tyju{\tyenv \tyconcat x : \rt_2}{e_2}{\rt}{\rk_2}  }
+  { \tyju{\tyenv}{ \euntil{e_1}{e}{x}{e_2} } {\rt} { \effor{\rk_1}{\effcon{(\effplus}{\rk_2})}  } } 
 %
 \\
 %
 \inferrule%[When]
   { \tyju{\tyenv}{e_1}{\rt}{\rk} \\
-    \tyju{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effany} }
-  { \tyju{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
+    \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effany} }
+  { \tyju{\tyenv}{ \ewhen{e_1}{e} } {\rt} { \effor{\rk}{\effinf{\effplus}} } } 
 %
 \and
 %
