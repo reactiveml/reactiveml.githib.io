@@ -334,7 +334,7 @@ We denote $\fbv{\rk}$ the set of free behavior variables in $\rk$. It should be 
 
 Using the language of behaviors, we can now characterize the behaviors that we want to reject, that is instantaneous loops and recursions. We actually enforce a stronger sufficient condition, that can be checked easily and efficiently: there must be at least one instant before each recursive call. This condition is not necessary, as the `par_map` example of Section~\ref{sec:intuition} showed. One can also check from the definition of $\effinf{\rk}$ as a recursive behavior that this condition also implies that the body of a loop is non-instantaneous.
 
-First, we define the notion of \emph{non-instantaneous} behavior:
+To formally define what is a reactive behavior, we thus have to define the notion of \emph{non-instantaneous} behavior:
 \begin{definition}[Non-instantaneous behavior]
 A behavior is \emph{non-instantaneous}, denoted $\noinst{\rk}$, if:
 %\begin{small}
@@ -475,7 +475,7 @@ As for references in ML, we have to be careful to not generalize expressions tha
 
 Typing judgments are given by 
 \[ \tyju{\tyenv}{e}{\rt}{\rk} \] 
-meaning that, in the type environment~$\tyenv$, the expression $e$ has type $\rt$ and behavior $\rk$. The initial typing environment $\tyenv_0$ is defined by: 
+meaning that, in the type environment~$\tyenv$, the expression $e$ has type~$\rt$ and behavior~$\rk$. We write $\tyju{\tyenv}{e}{\rt}{\effany}$ when the behavior of the expression $e$ is not constrained and does not appear in the conclusion of the inference rule. The initial typing environment $\tyenv_0$ is defined by: 
 \begin{align*}
 \Gamma_0 \deq [
  &\eemit{}{} : \forall  \rtvar_1, \rtvar_2. \, 
@@ -484,7 +484,7 @@ meaning that, in the type environment~$\tyenv$, the expression $e$ has type $\rt
               \mathtt{fst} : \forall \rtvar_1, \rtvar_2.\, \rtarrow{\rtprod{\rtvar_1}{\rtvar_2}}{\rtvar_1};  \ldots ]
 \end{align*}
 
-The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, it is exactly the same type system as the one presented in~\cite{Mandel:2005}, which is itself an extension of ML type system. 
+The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, it is exactly the same type system as the one presented in~\cite{Mandel:2005}, which is itself an extension of ML type system. We discuss here the novelties of these rules related to behaviors. The rules \textsc{Process} and \textsc{Mask} are related to subeffecting and will be discussed in Section~\ref{sec:subeffecting_row}. 
 
 \begin{itemize}
 
@@ -543,7 +543,7 @@ If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then the behavior of thi
   \[ \effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})} \]
 It is not equivalent to $\effinf{\rk}$ in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is reactive, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
 
-\item This is not the case of $\mathtt{pause}$ that can also be encoded by:
+\item As for \texttt{loop}, the $\mathtt{pause}$ operator can also be encoded by:
 %
 \begin{align*}
 \mathtt{pause} \deq &\; \esig{s}{\evoid}{(\elam{x}{\elam{y}{\mathtt{\evoid}}})}
@@ -590,7 +590,7 @@ These three formulations appear to be equivalent. Indeed, our system and the one
 
 \subsubsection*{Implementing subeffecting with row polymorphism}
 
-The consequence of the typing rule for processes is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
+The consequence of the typing rule for processes is that the principal type of an expression $\eproc{e}$ is always of the shape $\effor{\rk}{\effvar}$. The idea to use a free type variable to represent other possible types is reminiscent of Remy's row types~\cite{Remy:1993}. It makes it possible to implement subeffecting using only unification, without manipulating constraint sets as in traditional approaches~\cite{Talpin:1992a, Amtoft:1999}. This makes it easier to integrate it in any existing ML type inference implementation. For instance, \ocaml{} type inference is also based on row polymorphism, so it would be easy to implement our analysis on top of the full language. 
 
 During unification, the behavior of a process is always either a behavior variable~$\effvar$, a row~$\effor{\rk}{\effvar}$ or a recursive row~$\effrec{\effvar}{(\effor{\rk}{\effvar'})}$. We could have made this fact more visible by having two different kinds of behaviors: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a} and only use the following algorithm $\mU_{\rk}$ for unification of behaviors. It takes as input two behaviors and returns a substitution that maps behavior variables to behaviors, that we denote $[\effvar_1 \mapsto \rk_1; \effvar_2 \mapsto \rk_2; \dots]$. It is defined as follows:
 %
@@ -683,7 +683,7 @@ A behavior is \emph{finite}, denoted $\rkfinite{\rk}$, if it does not contain an
 We can now express the important property of reactive behaviors, that is, the first instant of a reactive behavior is finite.
 \begin{property}
 If $\rk$ is  reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
-\[ \wf{\emptyset}{\rk} \Rightarrow \rkfinite{\rkfst{\rk}} \]
+\[ \wf{\emptyset}{\rk} \ \Rightarrow\  \rkfinite{\rkfst{\rk}} \]
 \end{property}
 \begin{proof}
 By induction on the structure of behaviors.
@@ -717,7 +717,7 @@ As we said earlier, we do not try to prove that functions terminate and only car
 
 \begin{hypothesis}[Function calls always terminate]
 \label{hyp:fun_terminate} 
-For any ML expression $e$, i.e. such that $0 \vdash e$, there exists a finite derivation $\Pi$ and a value $v$ such that:
+For any ML expression $e$, i.e. such that $0 \vdash e$ (defined in \cite{Mandel:2005}), there exists a finite derivation $\Pi$ and a value $v$ such that:
 \[ \inferrule{\Pi}{ \quad \bigstep{N}{e}{v} {E}{b}{S} \quad } \] 
 \end{hypothesis}
 
@@ -726,8 +726,8 @@ We first need to prove the soundness of our definition of non-instantaneous beha
 \label{lem:noinst}
 An expression whose behavior is not instantaneous never reduces instantaneously.
 \[
-\left( \bigstep{N}{e}{e'} {E}{b}{S} \land \tyju{\tyenv}{e}{\rt}{\rk}
- \land \noinst{\rk}  \right) \Rightarrow b = \sfalse \]
+\left( \tyju{\tyenv}{e}{\rt}{\rk}
+ \ \land\  \noinst{\rk} \ \land\  \bigstep{N}{e}{e'} {E}{b}{S}  \right) \ \Rightarrow\  b = \sfalse \]
 \end{lemma}
 \begin{proof}
 By induction on the derivation of the big-step semantics.
@@ -757,7 +757,10 @@ Then, as $\erun{e}$ is well-typed, we have that:
   }
   { \tyju{\tyenv}{\erun{(\eproc{e_1})}} {\rt}{\effrun{(\effor{\rk}{\rk'})}} }
 \]
-As \mbox{$\rkfst{\effrun{(\effor{\rk}{\rk'})}} = \effor{\effrun{(\rkfst{\rk})}}{\effrun{(\rkfst{\rk'})}}$}, we can apply the induction hypothesis on $e_1$ to get:
+We can apply the induction hypothesis as the first-instant behavior of $e_1$, i.e. $\rkfst{\rk}$, is smaller than the first-instant behavior of $\erun{e}$. Indeed, we have:
+\[ \rkfst{\effrun{(\effor{\rk}{\rk'})}} = \effor{\effrun{(\rkfst{\rk})}}{\effrun{(\rkfst{\rk'})}} \]
+
+The induction hypothesis allows to conclude that:
 \[  \inferrule{\Pi_1}{ \bigstep{N_2}{e_1}{e'_1} {E_1}{b}{S} } \]
 which enables us to build the complete derivation of $\erun{e}$:
 \[
@@ -777,14 +780,14 @@ Like in the first case, we have:
 The typing rule is as follows:
 \[ 
 \inferrule%[Present]
-  { \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\rk} \\
+  { \tyju{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effany} \\
     \tyju{\tyenv}{e_1}{\rt}{\rk_1}  \\
     \tyju{\tyenv}{e_2}{\rt}{\rk_2}  }
   { \tyju{\tyenv} { \epres{e}{e_1}{e_2} }{\rt}{ \effor{\rk_1}{(\effcon{\effplus}{\rk_2})} } }
 \]
 The are then two cases depending on the status of $n$:
 \begin{itemize}
-\item If \mbox{$n \in S$}: We can notice that \[ \rkfst{\effor{\rk_1}{(\effcon{\effplus}{\rk_2})}} = \effor{\rkfst{\rk_1}}{\effmin} \] so we can apply the induction hypothesis on $e_1$ and conclude. 
+\item If \mbox{$n \in S$}: We can notice that \[ \rkfst{\effor{\rk_1}{(\effcon{\effplus}{\rk_2})}} = \effor{\rkfst{\rk_1}}{\effmin} \] so we can apply the induction hypothesis on the first-instant behavior of $e_1$ and conclude. 
 \item If $n \not\in S$: The derivation is finite.
 \end{itemize}
 
@@ -832,8 +835,8 @@ We cannot add this rule to the original system as the proof of soundness relies 
 \begin{mathpar}
 %
 \inferrule%*[Left=(Signal)]
-  { \tyjus{\tyenv}{e_1}{\rt_2}{\rk_1}  \\ 
-    \tyjus{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\rk_2} \\\\
+  { \tyjus{\tyenv}{e_1}{\rt_2}{\effany}  \\ 
+    \tyjus{\tyenv}{e_2}{ \rtarrow{\rt_1}{\rtarrow{\rt_2}{\rt_2}} }{\effany} \\\\
     \tyjus{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
   { \tyjus{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \rk} }
 %
@@ -841,7 +844,7 @@ We cannot add this rule to the original system as the proof of soundness relies 
 %
 \inferrule%[When]
   { \tyjus{\tyenv}{e_1}{\rt}{\rk} \\\\
-    \tyjus{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\rk_2} }
+    \tyjus{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effany} }
   { \tyjus{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} {\rk} } 
 %
 \and
@@ -1016,16 +1019,18 @@ As our analysis does not have any special case for recursive processes and only 
 \label{sec:related_work}
 
 
-Our language of behaviors and type system is inspired by the work of~\cite{Amtoft:1999}. Their analysis is done on the \cml~\cite{Reppy:2007} language, which extends ML with message passing primitives. The behavior of a process records every emission and reception on communication channels. The authors use the type system to prove properties on particular examples, not for a general analysis. For instance, they prove that the emission on a given channel always precede the emission on a second channel in a given program. \cite{Boudol:2010}~uses a type-and-effect system to prove termination of functional programs using references, by stratifying memory to avoid recursion through references.\todo{So what ?}
+Our language of behaviors and type system is inspired by the work of~\cite{Amtoft:1999}. Their analysis is done on the \cml~\cite{Reppy:2007} language, which extends ML with message passing primitives. The behavior of a process records every emission and reception on communication channels. The authors use the type system to prove properties on particular examples, not for a general analysis. For instance, they prove that the emission on a given channel always precede the emission on a second channel in a given program. The idea to use a type-and-effect system for checking reactivity or termination is not new. \cite{Boudol:2010}~uses a type-and-effect system to prove termination of functional programs using references, by stratifying memory to avoid recursion through references.
 
+\todo{Esterel: raectivite = causalite}
 Reactivity analysis is a classic topic in synchronous languages. In \esterel~\cite{Berry:1997}, the first imperative synchronous language, reactivity can be checked easily as the language is first order without recursion. Closer to \rml, the reactivity analysis of \funloft~\cite{Amadio:2007b} not only checks that instants terminate, but also give a bound on the duration of the instants trough a value analysis. The analysis is also restricted to the first-order setting. In \ulm~\cite{Boudol:2004}, each recursive call induces an implicit pause. Hence, it is impossible to have instantaneous recursions, at the expense of expressivity. For instance, in the `server` example of Section~\ref{sec:intuition}, a message could be lost between receiving a message on `add` and awaiting a new message.
 
-On a related subject, the causality analysis of \lucy~\cite{Cuoq:2001} is a type-and-effect system using row types. It is based on the exception analysis done in~\cite{Leroy:2000}. Both are a more direct application of row types~\cite{Remy:1993}, whereas our system differs in the absence of labels in rows.
+Reactivity can also be related to causality in synchronous languages. For instance, the causality analysis of \lucy~\cite{Cuoq:2001} is a type-and-effect system using row types. It is based on the exception analysis done in~\cite{Leroy:2000}. Both are a more direct application of row types~\cite{Remy:1993}, whereas our system differs in the absence of labels in rows.
 
+\todo{These de Gimenez}
 
 \section{Conclusion}
 
-We have presented a reactivity analysis on the \rml language. The idea of the analysis is to abstract processes into a simpler language called behaviors using a type-and-effect system. Checking reactivity of behaviors is then straightforward. We have proven the soundness of our analysis, that is, a well-typed program is reactive. Thanks in particular to the syntactic separation between functions and processes, the analysis does not detect too much false positives in practice and has been proven very useful for avoiding reactivity bugs.
+We have presented a reactivity analysis on the \rml language. The idea of the analysis is to abstract processes into a simpler language called behaviors using a type-and-effect system. Checking reactivity of behaviors is then straightforward. We have proven the soundness of our analysis, that is, a well-typed program is reactive. Thanks in particular to the syntactic separation between functions and processes, the analysis does not detect too much false positives in practice and has been proven very useful for avoiding reactivity bugs. \todo{S'applique a d'autres modeles: point pour operation qui yield}
 
 An important direction for future work is to study the properties of our type system. In particular, it would be interesting to compare our approach to subeffecting using row polymorphism with traditional solutions and see if it could be applied in a different setting.
 %
@@ -1075,6 +1080,8 @@ An important direction for future work is to study the properties of our type sy
 
 \section{Big-step semantics (continued)}
 \label{sec:big_step_other}
+
+\todo{Rappeler la definition de la bonne formation des expressions}
 
 \subsection{Notations}
 
