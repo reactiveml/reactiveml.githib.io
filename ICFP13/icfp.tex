@@ -32,7 +32,7 @@
 %\renewcommand{\ttdefault}{pcr}
 %\usepackage{beramono}
 %\usepackage{bold-extra}
-%\renewcommand{\ttdefault}{txtt}
+\renewcommand{\ttdefault}{txtt}
 
 \input{syntax}
 
@@ -212,7 +212,7 @@ In the previous example, we have seen the first cause of non-reactivity, that is
 let rec process instantaneous s =
   emit s ();
   run (instantaneous s)
-?W:This expression may produce an instantaneous recursion?
+?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 
 A sufficient condition to ensure that a recursive process is reactive is to have \emph{at least one instant between the instantiation of the process and any recursive call}. The idea of our analysis is to statically check this condition.
@@ -225,12 +225,14 @@ let rec process par_map p l =
   | x :: l -> let x' = run (p x)
               and l' = run (par_map p l) in
               x' :: l'
-?W:This expression may produce an instantaneous recursion?
+?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
-This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). As we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs. As ML functions are always considered instantaneous, they are reactive if and only if they terminate. This is where the syntactic separation between functions and processes helps us: we can restrict our analysis to processes and suppose that functions always terminate.
+This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). As we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs.
+As ML functions are always considered instantaneous, they are reactive if and only if they terminate. %This is where the syntactic separation between functions and processes helps us: 
+We can restrict our analysis to processes and suppose that functions always terminate.
 We thus avoid showing a warning for each recursive function.
-%
-Furthermore, we do not deal with blocking functions, like I/O primitives, that can also make the program non-reactive. Indeed, such functions should \emph{never} be used in the context of cooperative scheduling, so no analysis is necessary.
+
+Furthermore, we do not deal with blocking functions, like I/O primitives, that can also make the program non-reactive. Indeed, such functions should \emph{never} be used in the context of cooperative scheduling. A solution to this problem could be to consider blocking operations as processes and implement them following the ideas in~\cite{Marlow:2004}.
 
 The analysis does not either take into account the presence of signals. It over-approximates the possible behaviors, as in the following example:
 \begin{lstlisting}
@@ -238,7 +240,7 @@ let rec process imprecise =
   signal s default () gather (fun () () -> ()) in
   present s then () else (* implicit pause *) ();
   run imprecise
-?W:This expression may produce an instantaneous recursion?
+?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 %
 The `present/then/else` construct executes instantaneously its first branch if the signal is present or executes the second branch with a delay of one instant if the signal is absent. This delayed reaction to absence, first introduced in~\cite{Boussinot:1991}, avoids inconsistencies in the status of signals. In the example, the signal is absent so the `else` branch is executed. It means that the recursion is not instantaneous and the process is reactive. Our analysis still prints a warning, because if the signal `s` could be present, the recursion would be instantaneous.
@@ -252,6 +254,7 @@ let rec process server add =
 %
 The `server` process receives on a signal `add` both a process `p` and a signal `ack` on which to send back the result. As it creates one new process each time the `add` signal is emitted, this program can execute an arbitrary number of processes at the same time. It is thus not real-time, but it is indeed reactive, as waiting for the value of a signal takes one instant (one has to collect and combine all the values emitted during the instant).
 
+\todo{Mettre syntaxe dans 5 et semantique avec la preuve}
 \section{Big-step Semantics}
 \label{sec:semantics}
 
@@ -322,19 +325,23 @@ $ \effrec{\effvar}{(\effpar{\rk_1}{(\effor{\effrun{(\rk_2)}}{(\effcon{\effplus}{
 ~\mid~ \effcon{\rk}{\rk}  ~\mid~ \effrec{\effvar}{\rk}  ~\mid~ \effrun{\rk}
 \]
 
-Surely non-instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$. The language also includes behavior variables $\effvar$ to represent the behaviors of processes taken as arguments. We denote $\fbv{\rk}$ the set of free behavior variables in $\rk$.
+Surely non-instantaneous actions that takes at least one instant to execute, such as $\epause$, are denoted $\effplus$. Potentially instantaneous ones, like calling a pure ML function or emitting a signal, are denoted $\effmin$. The language also includes behavior variables $\effvar$ to represent the behaviors of processes taken as arguments. 
 
-Behaviors must reflect the structure of the program, starting with parallel composition and alternatives, as shown by the following examples: 
+Behaviors must reflect the structure of the program, starting with parallel composition. This is illustrated by the following example, which defines a combinator that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop: 
 \begin{lstlisting}
 let process par_comb q1 q2 =
   loop (run q1 || run q2) end
-
+\end{lstlisting}
+The synchronous parallel composition terminates when both bran\-ches have terminated. It means that the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous.  That is why behaviors include the parallel composition, simply denoted $||$.
+%
+Similarly, we can define another combinator that runs of its two inputs depending on a condition `c`:
+\begin{lstlisting}
 let process if_comb c q1 q2 =
   loop (if c then run q1 else run q2) end
 \end{lstlisting}
-The synchronous parallel composition terminates when both bran\-ches have terminated. It means that, in the case of the `par_comb` process, the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous. In the case of `if_comb`, both processes must be non-instantaneous. That is why behaviors include the parallel composition, simply denoted $||$, and a non-deterministic choice operator denoted $+$. This shows how  we abstract values: we only keep the different alternatives and forget about the conditions.
+In the case of `if_comb`, both processes must be non-instantaneous. To represent this process, we use a non-deterministic choice operator denoted $+$. This shows how  we abstract values: we only keep the different alternatives and forget about the conditions.
 
-It is also necessary to have a notion of sequence, denoted~$;$ in the language of behaviors, as illustrated by the two following processes:
+It is also necessary to have a notion of sequence, denoted~$;$ in the language of behaviors, as illustrated by the two following processes: 
 \begin{lstlisting}
 let rec process good_rec = 
   pause; run good_rec
@@ -351,7 +358,7 @@ As it is defined recursively, the behavior  $\rk$  associated to the `good_rec` 
 \effrec{\effvar}{\rk} = \rk \text{ if } \effvar \not\in \fbv{\rk}
 \end{mathpar}
 
-It should be noted that there is no operator for representing the behavior of a loop. Indeed, a loop is just a special case of recursion. The behavior of a loop, denoted $\effinf{\rk}$ (where $\rk$ is the behavior of the body of the loop), is thus defined as a recursive behavior by:
+We denote $\fbv{\rk}$ the set of free behavior variables in $\rk$. It should be noted that there is no operator for representing the behavior of a loop. Indeed, a loop is just a special case of recursion. The behavior of a loop, denoted $\effinf{\rk}$ (where $\rk$ is the behavior of the body of the loop), is thus defined as a recursive behavior by:
 \[\effinf{\rk} \deq \effrec{\effvar}{\effcon{\rk}{\effrun{\effvar}}} \]
 
 %\begin{figure}[t]
@@ -931,7 +938,7 @@ let rec process p =
 \end{lstlisting}
 `q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
 
-The analysis can also handle combinators. We define here a combinator that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop:
+The analysis can also handle combinators. We define here a combinator that takes as inputs two processes `q1` and `q2` and runs them in parallel in a loop: \todo{Start from example of section...}
 \begin{lstlisting}
 let process par_comb q1 q2 =
   loop
