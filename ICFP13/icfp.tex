@@ -282,7 +282,7 @@ let process par_comb q1 q2 =
 \end{lstlisting}
 The synchronous parallel composition terminates when both bran\-ches have terminated. It means that the loop is non-instantaneous if either `q1` or `q2` is non-instantaneous.  That is why behaviors include the parallel composition, simply denoted $||$.
 %
-Similarly, we can define another combinator that runs of its two inputs depending on a condition `c`:
+Similarly, we can define another combinator that runs one of its two inputs depending on a condition `c`:
 \begin{lstlisting}
 let process if_comb c q1 q2 =
   loop (if c then run q1 else run q2) end
@@ -847,8 +847,8 @@ We cannot add this rule to the original system as the proof of soundness relies 
 \and
 %
 \inferrule%[Loop]
-  { \tyju{\tyenv}{e}{\rt}{\rk} }
-  { \tyju{\tyenv}{\eloop{e}}{\unit}{\effinf{\rk}} }
+  { \tyjus{\tyenv}{e}{\rt}{\rk} }
+  { \tyjus{\tyenv}{\eloop{e}}{\unit}{\effinf{\rk}} }
 %
 \end{mathpar}
 
@@ -924,7 +924,7 @@ let rec process p =
   let q = (fun x -> x) p in
   run q 
 ?val p : 'a process[rec 'r. (run 'r + ..)]?
-?W:This expression may produce an instantaneous recursion?
+?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 `q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
 
@@ -948,8 +948,8 @@ However, if the two processes are instantaneous, then the loop becomes instantan
 \begin{lstlisting}
 let process p2 = 
   run (par_comb (process ()) (process ()))
-?val p2: unit process[run(rec 'r.(run 0||run 0);'r)+..)]
-W:This expression may produce an instantaneous recursion?
+?val p2: unit process[run(rec 'r.(run 0||run 0);'r) + ..)]
+W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 
 Here is another more complex example using higher-order functions and processes. We define a function `h_o` that takes as input a combinator `f`. It then creates a recursive process that applies `f` on itself and runs the result:
@@ -975,7 +975,7 @@ let process pb =
   run (h_o (fun x -> process (run x)))
 ?val pb : 
      'a process[run (run (rec 'r1. run (run 'r1))) + ..]
-W:This expression may produce an instantaneous recursion?
+W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 
 Another interesting process that can be analyzed is a fix-point operator. It takes as input a function expecting a continuation, and applies it with itself as the continuation. This fix-point operator can be used to create a recursive process, which reactivity is checked by our analysis:
@@ -990,7 +990,7 @@ let process main =
   in
   run (fix p 0)
 ?val main : 'a process[(run (rec 'r. run 'r)) + ..]
-W:This expression may produce an instantaneous recursion?
+W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 
 \subsection{Adding references}
@@ -1004,7 +1004,7 @@ let landin () =
   !f
 ?val landin : unit -> 
         unit process[0 + (rec 'r1. run (0 + 'r1)) + ..]?
-?W:This expression may produce an instantaneous recursion?
+?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 %
 %?val landin : unit -> 
