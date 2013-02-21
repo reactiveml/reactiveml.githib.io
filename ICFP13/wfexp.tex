@@ -16,7 +16,7 @@
 %
 \inferrule
   { \wfexp{0}{e} }
-  { \wfexp{k}{e} }
+  { \wfexp{k}{\elam{x}{e}} }
 %
 \and
 %
@@ -86,7 +86,7 @@
 %
 \inferrule
   { \wfexp{1}{e_1} \\ \wfexp{0}{e} \\ \wfexp{1}{e_2} }
-  { \wfexp{1}{\euntil{e_1}{x}{e}{e_2}} }
+  { \wfexp{1}{\euntil{e_1}{e}{x}{e_2}} }
 %
 \and
 %

@@ -135,7 +135,7 @@ Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extensi
 The contributions of this paper are the following:
 \begin{itemize}
 \item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Section~\ref{sec:type_system}. The computed effects are called \emph{behaviors}~\cite{Amtoft:1999} and are introduced in Section~\ref{sec:behaviors}. They represent the reactive behaviors of processes, by abstracting away values but keeping some part of the structure of the program. Exposing concurrency in the language makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library.
-\item A novel approach to \emph{subeffecting}~\cite{Nielson:1999}, that is, subtyping on effects, based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}.
+\item A novel approach to \emph{subeffecting}~\cite{Nielson:1999}, that is, subtyping on effects, based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}. It allows a simple integration into any existing ML type inference implementation.
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
 
@@ -512,7 +512,7 @@ The rules are given in Figure~\ref{fig:rules}. If all the behaviors are erased, 
       \tyju{\tyenv}{\eletpar{\_}{e_1}{\_}{\evoid}{e_2}}{\rt_2}{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } 
       } 
   }
-  { \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt}{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } } 
+  { \tyju{\tyenv}{\eseq{e_1}{e_2}}{\rt_2}{ \effcon{(\effpar{\rk_1}{\effmin})}{\rk_2} } } 
 % \\
 % \inferrule
 %   { \effeq{\effpar{\rk_1}{\effmin}}{\rk_1}  \\ \effeq{\rk_2}{\rk_2} }
@@ -643,10 +643,10 @@ The \emph{first-instant} of a behavior, denoted $\rkfst{\rk}$ is the part of the
 \rkfst{\effpar{\rk_1}{\rk_2}} =&\, \effpar{\rkfst{\rk_1}}{\rkfst{\rk_2}} \\
 \rkfst{\effor{\rk_1}{\rk_2}} =&\, \effor{\rkfst{\rk_1}}{\rkfst{\rk_2}} \\
 \rkfst{\effcon{\rk_1}{\rk_2}} =&\, 
-		\left\{ \begin{array}{ll}  
-				\rkfst{\rk_1} & \text{if } \noinst{\rk_1} \\
-				\effcon{\rkfst{\rk_1}}{\rkfst{\rk_2}} &\text{otherwise} 
-		\end{array}\right. \\
+		\begin{cases}
+			\rkfst{\rk_1} & \text{if } \noinst{\rk_1} \\
+			\effcon{\rkfst{\rk_1}}{\rkfst{\rk_2}} &\text{otherwise} 
+		\end{cases} \\
 \rkfst{\effrec{\effvar}{\rk}} =&\, \rkfst{\rk[\effvar \leftarrow \effrec{\effvar}{\rk}]}
 \end{align*}
 \end{definition}
@@ -843,8 +843,8 @@ We cannot add this rule to the original system as the proof of soundness relies 
 %
 \inferrule%[When]
   { \tyjus{\tyenv}{e_1}{\rt}{\rk} \\\\
-    \tyjus{\tyenv}{e_2}{\rtsig{\rt_1}{\rt_2}}{\effany} }
-  { \tyjus{\tyenv}{ \ewhen{e_1}{e_2} } {\rt} {\rk} } 
+    \tyjus{\tyenv}{e}{\rtsig{\rt_1}{\rt_2}}{\effany} }
+  { \tyjus{\tyenv}{ \ewhen{e_1}{e} } {\rt} {\rk} } 
 %
 \and
 %
@@ -1091,9 +1091,9 @@ An important direction for future work is to study the properties of our type sy
 \section{Well-formation of expressions}
 \label{sec:wfexp}
 
-In order to separate pure ML expressions from reactive expressions, we define a well-formation predicate denoted $\wfexp{k}{e}$ with $k \in \{0, 1\}$. An expression $e$ is necessarily instantaneous (or combinatorial) if $\wfexp{0}{e}$. It is reactive (or sequential in classic circuit terminology) if $\wfexp{1}{e}$. The rules defining this predicate are given in Figure~\ref{fig:wfexp}.
+In order to separate pure ML expressions from reactive expressions, we define a well-formation predicate denoted $\wfexp{k}{e}$ with $k \in \{0, 1\}$. An expression $e$ is necessarily instantaneous (or combinatorial) if $\wfexp{0}{e}$. It is reactive (or sequential in classic circuit terminology) if $\wfexp{1}{e}$. The rules defining this predicate are given in Figure~\ref{fig:wfexp}. The design choices of this analysis, like the fact that pairs must be instantaneous, are discussed in~\cite{Mandel:2005}.
 
-$\wfexp{k}{e}$ means that $\wfexp{1}{e}$ and $\wfexp{0}{e}$. It means that $e$ can be used in any context. This is true of any instantaneous expressions, as there is no rule with $\wfexp{0}{e}$ in the conclusion. The body of functions must be instantaneous, while the body of a process may be reactive.
+$\wfexp{k}{e}$ means that $\wfexp{1}{e}$ and $\wfexp{0}{e}$. It means that $e$ can be used in any context. This is true of any instantaneous expressions, as there is no rule with $\wfexp{0}{e}$ in the conclusion. The important point is that the body of functions must be instantaneous, while the body of a process may be reactive.
 
 
 \section{Big-step semantics (continued)}
@@ -1116,7 +1116,7 @@ m_i : \rt_2 \mathid{multiset}
 \end{mathpar}
 We denote $S^d(n_i) = d_i$, $S^g(n_i) = g_i$ and $S^m(n_i) = m_i$. We also define $S^v(n_i) = \mathit{fold}\; g_i\; m_i\; d_i$ where:
 \begin{align*}
-\mathit{fold}\; f\; (\{ v_1 \} \uplus m)\; v_2 &= \mathit{fold}\; f\; m\; (f v_1 v_2) \\
+\mathit{fold}\; f\; (\{ v_1 \} \uplus m)\; v_2 &= \mathit{fold}\; f\; m\; (f\; v_1\; v_2) \\
 \mathit{fold}\; f\; \emptyset\; v_2 &= v
 \end{align*}
 We denote $n \in S$ when the signal $n$ is present, that is, when $S^m(n) \neq \emptyset$, and $n \not\in S$ otherwise.
@@ -1156,8 +1156,8 @@ where
 
 The rules defining the relation are given in Figure~\ref{fig:big_step} and Figure~\ref{fig:big_step_other}:
 \begin{itemize}
-\item $\eemit{e_1}{e_2}$ evaluates $e_1$ into s signal name $n$ and adds the result of the evaluation of $e_2$ to the multi-set of emitted values on $n$.
-\item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting $x$ with a fresh signal name $n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for how to do this).
+\item $\eemit{e_1}{e_2}$ evaluates $e_1$ into a signal name~$n$ and adds the result of the evaluation of $e_2$ to the multi-set of values emitted on $n$.
+\item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting the variable~$x$ with a fresh signal name~$n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for how to do this).
 \item The preemption in \rml is weak, that is, a process can only be preempted at the end of the instant. This is reflected by the fact that $e_1$ is always evaluated, regardless of the status of the signal~$n$. It also means that, when the signal is present, $e_2$ is executed at the next instant.
 \end{itemize}
 

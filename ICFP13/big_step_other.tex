@@ -52,7 +52,7 @@
 \inferrule
   { \bigstep{N}{e}{n} {E}{\strue}{S} \\ n \in S \\
     \bigstep{N_1}{e_1}{e'_1} {E_1}{\sfalse}{S}  }
-  { \bigstep{N \cdotp N_1}{ \euntil{e_1}{e}{x}{e_2} }{e_2[x \leftarrow S^v(n)]}  {E \sqcup E_1}{\strue}{S} }
+  { \bigstep{N \cdotp N_1}{ \euntil{e_1}{e}{x}{e_2} }{e_2[x \leftarrow S^v(n)]}  {E \sqcup E_1}{\sfalse}{S} }
 %
 \and
 %

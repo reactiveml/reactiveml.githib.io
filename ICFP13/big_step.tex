@@ -95,8 +95,8 @@
 %
 \rulename{Loop-Unroll}
 \inferrule 
-  {  \bigstep{N_1}{e}{v} {E_1}{\strue}{S} \\ \bigstep{N_2}{\eloop{e}}{e'} {E_2}{\sfalse}{S}  }
-  { \bigstep{N_1 \cdotp N_2}{\eloop{e}}{e'} {E_1 \sqcup E_2}{\sfalse}{S}  }
+  {  \bigstep{N_1}{e}{v} {E_1}{\strue}{S} \\ \bigstep{N_2}{\eloop{e}}{e'} {E_2}{b}{S}  }
+  { \bigstep{N_1 \cdotp N_2}{\eloop{e}}{e'} {E_1 \sqcup E_2}{b}{S}  }
 %
 \end{mathpar}
 
