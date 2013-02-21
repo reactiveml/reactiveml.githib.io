@@ -1156,7 +1156,7 @@ where
 
 The rules defining the relation are given in Figure~\ref{fig:big_step} and Figure~\ref{fig:big_step_other}:
 \begin{itemize}
-\item $\eemit{e_1}{e_2}$ evaluates $e_1$ into a signal name~$n$ and adds the result of the evaluation of $e_2$ to the multi-set of values emitted on $n$.
+\item $\eemit{e_1}{e_2}$ evaluates $e_1$ into a signal name~ $n$ and adds the result of the evaluation of $e_2$ to the multi-set of values emitted on $n$.
 \item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting the variable~$x$ with a fresh signal name~$n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for how to do this).
 \item The preemption in \rml is weak, that is, a process can only be preempted at the end of the instant. This is reflected by the fact that $e_1$ is always evaluated, regardless of the status of the signal~$n$. It also means that, when the signal is present, $e_2$ is executed at the next instant.
 \end{itemize}
