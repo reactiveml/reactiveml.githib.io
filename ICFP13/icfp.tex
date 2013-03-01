@@ -75,7 +75,7 @@
 \begin{abstract}
 Cooperative scheduling enables efficient sequential implementation of concurrency. It is widely used to provide light-threads facilities in functional languages. However, it is up to the programmer to actually cooperate to ensure the reactivity of the program. 
 
-We present a static analysis that checks the reactivity of programs by abstracting them into so-called \emph{behaviors} using a type-and-effect system. Our work is applied and implemented in the functional synchronous language \rml. We prove the soundness of our analysis with respect to the big-step semantics: a well-typed program is reactive. \todo{Consequences}
+We present a static analysis that checks the reactivity of programs by abstracting them into so-called \emph{behaviors} using a type-and-effect system. Our work is applied and implemented in the functional synchronous language \rml. We prove the soundness of our analysis with respect to the big-step semantics: a well-typed program is reactive. Our analysis does not show too much false positives and has proven very useful for avoiding reactivity bugs. Furthermore, it is easy to implement and generic enough to be applicable to other models of concurrency.
 \end{abstract}
 
 \category{D.3.2}{Language Classifications}{Applicative (functional) languages; Concurrent, distributed, and parallel languages}
@@ -121,7 +121,7 @@ The solution to the latter is pretty simple: never use blocking functions inside
 
 The goal of this paper is to design a static analysis, called \emph{reactivity analysis}, to remedy the first problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
 %
-Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} informally introduces the language and its semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}.  Synchrony gives us a simple definition for reactivity: a reactive \rml program is one where logical instants progress. It also gives us a simple condition for reactivity: a program is reactive if all processes cooperate at each instant. Doing a similar analysis with another model of concurrency would require assumptions on the fairness of the scheduler. %(\todo{Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step ??})
+Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} informally introduces the language and its semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}.  Synchrony gives us a simple definition for reactivity: a reactive \rml program is one where logical instants progress. It also gives us a simple condition for reactivity: a program is reactive if all processes cooperate at each instant.  %(\todo{Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step ??})
 
 
 
@@ -134,7 +134,7 @@ Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extensi
 
 The contributions of this paper are the following:
 \begin{itemize}
-\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Section~\ref{sec:type_system}. The computed effects are called \emph{behaviors}~\cite{Amtoft:1999} and are introduced in Section~\ref{sec:behaviors}. They represent the reactive behaviors of processes, by abstracting away values but keeping some part of the structure of the program. Exposing concurrency in the language makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library.
+\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Section~\ref{sec:type_system}. The computed effects are called \emph{behaviors}~\cite{Amtoft:1999} and are introduced in Section~\ref{sec:behaviors}. They represent the reactive behaviors of processes, by abstracting away values but keeping some part of the structure of the program. Exposing concurrency in the language makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library. We believe this approach is generic enough to be applied to other models of concurrency (Section~\ref{sec:other_concurrency}).
 \item A novel approach to \emph{subeffecting}~\cite{Nielson:1999}, that is, subtyping on effects, based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}. It allows a simple integration of the analysis into any existing ML type inference implementation.
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
@@ -1018,6 +1018,15 @@ let landin () =
 %                         }{\effrun{(\effor{\effmin}{\effvar})}}}}{\effvar'}$] ?
 As our analysis does not have any special case for recursive processes and only relies on unification, it is able to detect the reactivity issue even though there is no explicit recursion.
 
+\subsection{Other models of concurrency}
+\label{sec:other_concurrency}
+
+We believe this work could be applied to other models of concurrency. One just need to give the behavior $\effplus$ to operations that cooperate with the scheduler, like \texttt{yield}. The distinction between processes and functions is important to avoid showing a warning for all recursive function definitions.
+
+In a synchronous world, the fact that each process cooperates at each instant implies the reactivity of the whole program, as processes are executed in lock-step. In another model, it may require assumptions on the fairness of the scheduler, that are already made in most systems like in \conhaskell~\cite{Jones:1996}.
+
+
+
 \section{Related work}
 \label{sec:related_work}
 
@@ -1033,9 +1042,7 @@ The causality analysis of \lucy~\cite{Cuoq:2001} is a type-and-effect system usi
 
 \section{Conclusion}
 
-We have presented a reactivity analysis on the \rml language. The idea of the analysis is to abstract processes into a simpler language called behaviors using a type-and-effect system. Checking reactivity of behaviors is then straightforward. We have proven the soundness of our analysis, that is, a well-typed program is reactive. Thanks in particular to the syntactic separation between functions and processes, the analysis does not detect too much false positives in practice and has been proven very useful for avoiding reactivity bugs. 
-
-We believe this work could be applied to other models of concurrency. One just need to give the behavior $\effplus$ to operations that cooperate with the scheduler, like \texttt{yield}.
+We have presented a reactivity analysis on the \rml language. The idea of the analysis is to abstract processes into a simpler language called behaviors using a type-and-effect system. Checking reactivity of behaviors is then straightforward. We have proven the soundness of our analysis, that is, a well-typed program is reactive. Thanks in particular to the syntactic separation between functions and processes, the analysis does not detect too much false positives in practice. A previous version of this analysis was implemented in the \rml compiler several years ago and it has been proven very useful for avoiding reactivity bugs. 
 
 An important direction for future work is to study the properties of our type system. In particular, it would be interesting to compare our approach to subeffecting using row polymorphism with traditional solutions and see if it could be applied in a different setting.
 %
