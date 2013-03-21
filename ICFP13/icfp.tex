@@ -146,7 +146,7 @@ The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) 
 \section{Problem statement}
 \label{sec:problem}
 
-Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity.\footnote{This example is taken from an email sent by a \rml programmer asking for help. It motivated the reflexion that lead to this work.} Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
+Let us first introduce \rml{} syntax and informal semantics using a simple program that highlights the problem of non-reactivity.\footnote{This example is taken from an email sent by a \rml programmer asking for help. It motivated the reflexion that led to this work.} Then we will discuss the design choices and limitations of our reactivity analysis using a few other examples.
 
 \subsection{A first example}
 \label{sec:first_example}
@@ -178,7 +178,7 @@ The problem is that the body of the loop is instantaneous. It means that this pr
 \end{rmlcl}
 
 The second part of the program is a process that prints \verb+`top'+ every time a signal `s` is emitted. 
-The `do/when` construct executes its body only when the signal `s` is present (i.e. it is emitted). It terminates by returning the value of its body instantaneously after the termination of the body. Processes have a consistent view of a signal during an instant. It is either present or absent and its status cannot change during the instant.
+The `do/when` construct executes its body only when the signal `s` is present (i.e. it is emitted). It terminates by returning the value of its body instantaneously after the termination of the body. Processes have a consistent view of a signal's status during an instant. It is either present or absent and its status cannot change during the instant.
 %
 \begin{rmlcl}[10]
 let process print_clock s =
@@ -227,9 +227,8 @@ let rec process par_map p l =
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
 This process does instantaneous recursive calls, but it is reactive because the recursion is finite (if the list `l` is finite). As we don't want to prove the termination of such processes, our analysis only prints warnings and does not reject programs.
-As ML functions are always considered instantaneous, they are reactive if and only if they terminate. %This is where the syntactic separation between functions and processes helps us: 
-We can restrict our analysis to processes and suppose that functions always terminate.
-We thus avoid showing a warning for each recursive function.
+As ML functions are always instantaneous, they are reactive if and only if they terminate. %This is where the syntactic separation between functions and processes helps us: 
+We thus restrict our analysis to processes and suppose that functions always terminate, in order to avoid showing a warning for each recursive function.
 
 Furthermore, we do not deal with blocking functions, like I/O primitives, that can also make the program non-reactive. Indeed, such functions should \emph{never} be used in the context of cooperative scheduling. A solution to this problem could be to consider blocking operations as processes and implement them following the ideas in~\cite{Marlow:2004}.
 
@@ -423,7 +422,7 @@ For instance, it is easy to show that:
 \section{The type-and-effect system}
 \label{sec:type_system}
 
-The link between processes and behaviors is done by a type-and-effect system~\cite{Lucassen:1988}, following the work of Amtoft et al.~\cite{Amtoft:1999}. The behavior of a process is the effect computed using the type system. A type system is a simple and efficient way to implement a higher-order static analysis.
+The link between processes and behaviors is done by a type-and-effect system~\cite{Lucassen:1988}, following the work of Amtoft et al.~\cite{Amtoft:1999}. The behavior of a process is its effect computed using the type system. A type system is a simple and efficient way to implement a higher-order static analysis.
 
 \subsection{Abstract syntax}
 
@@ -487,11 +486,11 @@ The rules defining the type system are given in Figure~\ref{fig:rules}. If all t
 
 \begin{itemize}
 
-\item A design choice of \rml{} is to separate pure ML expressions, that are surely instantaneous, from processes. For instance, it is impossible to call $\epause$ within the body of a function, that must be instantaneous. A static analysis done before typing checks this well-formation of expressions, denoted $k \vdash e$ in~\cite{Mandel:2005} and reminded in Appendix~\ref{sec:wfexp}. That is why our type system ignores the behavior of expressions that must be ML expressions, like the body of a function. We could prove that their behavior is always equivalent to the instantaneous behavior $\effmin$.
+\item A design choice made in \rml{} is to separate pure ML expressions, that are surely instantaneous, from processes. For instance, it is impossible to call $\epause$ within the body of a function, that must be instantaneous. A static analysis done before typing checks this well-formation of expressions, denoted $k \vdash e$ in~\cite{Mandel:2005} and reminded in Appendix~\ref{sec:wfexp}. That is why our type system ignores the behavior of expressions that must be ML expressions, like the body of a function. We could prove that their behavior is always equivalent to the instantaneous behavior $\effmin$.
 
 % It should be noted that ML expressions, such that $0 \vdash e$, always verify $\tyju{\tyenv}{e}{\rt}{\effmin}$. This is why many rules enforce the behavior of some expressions to be equal to $\effmin$. This does not add any new condition with respect to the well-formation analysis. The converse is false as the $\effmin$ behavior is associated to \emph{potentially} instantaneous processes whereas $0 \vdash e$ means that $e$ is \emph{necessarily} instantaneous.
 
-\item We do not try to prove the termination of pure ML functions without any reactive behavior: the rule of application shows that we suppose that function calls always terminate instantaneously. That is why there is no behavior associated to functions, that is, there is no behaviors on arrows unlike traditional type-and-effect systems.
+\item We do not try to prove the termination of pure ML functions without any reactive behavior. The \textsc{App} rule shows that we suppose that function calls always terminate instantaneously. That is why there is no behavior associated to functions, that is, there is no behaviors on arrows unlike traditional type-and-effect systems.
 
 \item As explained earlier, in the case of $\epres{e}{e_1}{e_2}$, the first branch $e_1$ is executed immediately if the signal $e$ is present and the second branch $e_2$ is executed at the next instant if it is absent. This is reflected by the behavior associated to the expression. Similarly, for $\euntil{e_1}{e}{x}{e_2}$, $e_2$ is executed at the instant following the presence of $e$.
 
@@ -714,7 +713,7 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 
 \subsection{Soundness}
 
-As we said earlier, we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the rule for application (Figure~\ref{fig:rules}) by the fact that the behavior of the application is always the instantaneous behavior $\effmin$. This hypothesis is made possible by the syntactic distinction between functions and processes. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
+As we said earlier, we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the \textsc{App} rule of Figure~\ref{fig:rules} by the fact that the behavior of the application is always the instantaneous behavior~$\effmin$. This hypothesis is made possible by the syntactic distinction between functions and processes. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
 
 \begin{hypothesis}[Function calls always terminate]
 \label{hyp:fun_terminate} 
@@ -823,7 +822,7 @@ The behaviors computed by the type system of Section~\ref{sec:type_system} are v
 \[ \effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})} \] 
 This behavior is unnecessarily detailed and almost as big (if not bigger) than the source program. However, we can notice that this behavior is equivalent to $\effinf{\effmin}$.
 
-We would like to use this equivalence relation on behaviors defined in Section~\ref{sec:equiv_behaviors} in our type system to reduce the size of the computed behaviors. We must  make sure that this does not break the proof of soundness of Section~\ref{sec:soundness}. This is ensured by the fact that the equivalence relation preserves reactivity (Property~\ref{prop:equiv_reactivty}), which is the only condition requested by the proof.
+We would like to use the equivalence relation on behaviors (defined in Section~\ref{sec:equiv_behaviors}) in our type system to reduce the size of the computed behaviors. We must  make sure that this does not break the proof of soundness of Section~\ref{sec:soundness}. This is ensured by the fact that the equivalence relation preserves reactivity (Property~\ref{prop:equiv_reactivty}), which is the only condition requested by the proof.
 
 We can thus define a variant of the type system, which is the one implemented in the compiler, with a new typing judgment $\tyjus{\tyenv}{e}{\rt}{\rk}$. It is defined by the rules given in Figure~\ref{fig:rules} with one additional rule, that allows to simplify behaviors at any time using the equivalence relation:
 \[
@@ -1023,7 +1022,7 @@ As our analysis does not have any special case for recursive processes and only 
 
 We believe this work could be applied to other models of concurrency. One just need to give the behavior $\effplus$ to operations that cooperate with the scheduler, like \texttt{yield}. The distinction between processes and functions is important to avoid showing a warning for all recursive function definitions.
 
-In a synchronous world, the fact that each process cooperates at each instant implies the reactivity of the whole program, as processes are executed in lock-step. In another model, it may require assumptions on the fairness of the scheduler, that are already made in most systems like in \conhaskell~\cite{Jones:1996}.
+In a synchronous world, the fact that each process cooperates at each instant implies the reactivity of the whole program, as processes are executed in lock-step. In another model, it may require assumptions on the fairness of the scheduler. This should not be a problem, as these hypotheses are already made in most systems, e.g. in \conhaskell~\cite{Jones:1996}.
 
 
 
@@ -1168,7 +1167,7 @@ where
 The rules defining the relation are given in Figure~\ref{fig:big_step} and Figure~\ref{fig:big_step_other}:
 \begin{itemize}
 \item $\eemit{e_1}{e_2}$ evaluates $e_1$ into a signal name~ $n$ and adds the result of the evaluation of $e_2$ to the multi-set of values emitted on $n$.
-\item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting the variable~$x$ with a fresh signal name~$n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for how to do this).
+\item The declaration of a signal evaluates the default value and combination function, and then evaluates the body after substituting the variable~$x$ with a fresh signal name~$n$. In this paper, we have kept implicit the sets of signal names that are used to ensure the freshness of this name (see \cite{Mandel:2005} for the details).
 \item The preemption in \rml is weak, that is, a process can only be preempted at the end of the instant. This is reflected by the fact that $e_1$ is always evaluated, regardless of the status of the signal~$n$. It also means that, when the signal is present, $e_2$ is executed at the next instant.
 \end{itemize}
 
