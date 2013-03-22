@@ -230,7 +230,7 @@ This process does instantaneous recursive calls, but it is reactive because the 
 As ML functions are always instantaneous, they are reactive if and only if they terminate. %This is where the syntactic separation between functions and processes helps us: 
 We thus restrict our analysis to processes and suppose that functions always terminate, in order to avoid showing a warning for each recursive function.
 
-Furthermore, we do not deal with blocking functions, like I/O primitives, that can also make the program non-reactive. Indeed, such functions should \emph{never} be used in the context of cooperative scheduling. A solution to this problem could be to consider blocking operations as processes and implement them following the ideas in~\cite{Marlow:2004}.
+Furthermore, we do not deal with blocking functions, like I/O primitives, that can also make the program non-reactive. Indeed, such functions should \emph{never} be used in the context of cooperative scheduling. A solution to this problem could be to implement a cooperative IO library following the ideas in~\cite{Marlow:2004}.
 
 The analysis does not either take into account the presence of signals. It over-approximates the possible behaviors, as in the following example:
 \begin{lstlisting}
@@ -412,7 +412,7 @@ The~$\effeq{}{}$~relation is an equivalence relation, i.e. it is reflexive, symm
 %\effeq{\effrun{\effplus}}{\effplus}
 \end{mathpar}
 
-For instance, it is easy to show that:
+We can define the~$\effeq{}{}$ relation as the smallest relation that verifies all these properties.  For instance, it is easy to show that:
 \[
 \effeq
  { \effrec{\effvar}{(\effcon{(\effpar{\effplus}{\effmin})}{(\effor{\effrun{\effvar}}{\effrun{\effvar}})})} }
@@ -451,7 +451,7 @@ Types and behaviors are defined by:
 \rs \sdeq &\; \rt \mid \forall \effvar.\, \rs \mid \forall \rtvar.\, \rs && \text{(type schemes)} \\
 \tyenv \sdeq&\; \emptyset \mid \tyenv \tyconcat x : \rs && \text{(environments)}
 \end{align*}
-A type is either a type variable $\rtvar$, a base type $T$ (like $\mathtt{bool}$ or $\mathtt{unit}$), a product, a function, a process or a signal. The type of a process is parametrized by its return type and its behavior. The type of a signal is parametrized by the type of emitted values and the type of the read value.
+A type is either a type variable $\rtvar$, a base type $T$ (like $\mathtt{bool}$ or $\mathtt{unit}$), a product, a function, a process or a signal. The type of a process is parametrized by its return type and its behavior. The type~$\rtsig{\rt_1}{\rt_2}$ of a signal is parametrized by the type~$\rt_1$ of emitted values and the type~$\rt_2$ of the read value.
 
 Types schemes quantify universally over type variables $\rtvar$ and behavior variables $\effvar$. We denote $\ftv{\rt}$ (resp. $\fbv{\rt}$) the set of type~(resp. behavior) variables free in $\rt$ and:
 \[ \fv{\rt} = \ftv{\rt}, \fbv{\rt} \] 
@@ -468,6 +468,8 @@ Instantiation and generalization are defined in a classic way:
   & \text{ where }  \bar{\rtvar}, \bar{\effvar} = \fv{\rt} \setminus \fv{\tyenv}  
 \end{align*}
 As for references in ML, we have to be careful to not generalize expressions that allocate signals. We use the syntactic criterion of expansive and non-expansive expressions~\cite{Tofte:1990}.
+
+The notions of reactivity and equivalence are lifted from behaviors to types. A type is reactive if it contains only reactive behaviors. Two types are equivalent, also denoted $\tyeq{\rt_1}{\rt_2}$, if they have the same structure and their behaviors are equivalent.
 
 \subsection{Typing rules}
 
@@ -536,10 +538,10 @@ By applying the rules here, we have that:
 \[ loop: \forall \effvar.\, \rtarrow{\rtproc{\rtvar}{\effvar}}
                 { \rtproc{\rtvar'}{\effrec{\effvar'}{\effcon{\effrun{\effvar}}{\effrun{\effvar'}}}}} \]
 %
-
+%
 If we suppose that \mbox{$\tyju{\tyenv}{e}{\rt}{\rk}$}, then the behavior of this encoding is:
-  \[ \effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})} \]
-It is not equivalent to $\effinf{\rk}$ in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is reactive, as the $\mathtt{run}$ operator does not influence reactivity. It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis.
+ $\effrun{(\effrec{\effvar'}{\effcon{\effrun{\rk}}{\effrun{\effvar'}}})}$.
+It is not equivalent to $\effinf{\rk}$ in the sense of Section~\ref{sec:equiv_behaviors}, but it is reactive iff $\effinf{\rk}$ is reactive, as the $\mathtt{run}$ operator does not influence reactivity (see Definition~\ref{def:reactive_behavior}). It means that we could have removed $\mathtt{loop}$ from our kernel without any influence on the result of the reactivity analysis. The reason why the behavior associated with a loop is not equal to $\effinf{\rk}$ as expected will be explained during the proof of soundness in Section~\ref{sec:soundness}.
 
 \item As for \texttt{loop}, the $\mathtt{pause}$ operator can also be encoded by:
 %
@@ -555,12 +557,18 @@ We have chosen to completely abstract values. As in the `imprecise` example of S
 \subsection{Subeffecting with row polymorphism}
 \label{sec:subeffecting_row}
 
-The typing rule for the creation of processes intuitively mean that a process has \emph{at least} the behavior of its body. This subtyping restricted to effects is often referred to as \emph{subeffecting}~\cite{Nielson:1999}: we can always replace an effect with a bigger, i.e. less precise, one. It allows the type system to be a conservative extension of \rml{} type system, that is, we are able to give a behavior to any correct \rml{} program.
+The typing rule for the creation of processes intuitively mean that a process has \emph{at least} the behavior of its body. This subtyping restricted to effects is often referred to as \emph{subeffecting}~\cite{Nielson:1999}: we can always replace an effect with a bigger, i.e. less precise, one. It allows the type system to be a conservative extension of \rml{} type system, that is, we are able to give a behavior to any correct \rml{} program. For instance, we can give a type to the following expression:
+\begin{lstlisting}
+let l = [process (); process (pause)]
+?val l : unit process[0 + * + 'r]?
+\end{lstlisting}
+If the behavior of a process had been equal to the behavior of its body, this expression would have been rejected by the type system.
 
 \subsubsection*{Subeffecting}
 
-Subeffecting~\cite{Talpin:1992a,Nielson:1999} is usually expressed as a non-syntax directed rule (we reuse the notations of our type system for better comparison):
+Subeffecting~\cite{Talpin:1992a,Nielson:1999} is usually expressed as a non-syntax directed rule (we reuse the notations of our type system for comparison):
 %
+\vspace{-1ex}
 \[
 \inferrule
   { \tyju{\tyenv}{e}{\rt}{\rk} \\ \rk \sqsubseteq \rk' }
@@ -584,7 +592,7 @@ A similar approach is used in~\cite{Amtoft:1999}. It enforces effects to be \emp
   {  \tyju{\tyenv, C \cup \{ \rk \sqsubseteq \effvar \} }{ \eproc{e} }{\rtproc{\rt}{\effvar}}{\effmin} }
 \]
 
-These three formulations appear to be equivalent. Indeed, our system and the one of~\cite{Amtoft:1999} are just syntax-directed versions of the first one, where the subtyping relation is applied only for lambda abstractions (or processes in our case).
+These two formulations and our version appear to be equivalent. Indeed, our system and the one of~\cite{Amtoft:1999} are just syntax-directed versions of the first one, where the subtyping relation is applied only for lambda abstractions (or processes in our case).
 
 \subsubsection*{Implementing subeffecting with row polymorphism}
 
@@ -593,6 +601,7 @@ The consequence of the typing rule for processes is that the principal type of a
 During unification, the behavior of a process is always either a behavior variable~$\effvar$, a row~$\effor{\rk}{\effvar}$ or a recursive row~$\effrec{\effvar}{(\effor{\rk}{\effvar'})}$. We could have made this fact more visible by having two different kinds of behaviors: behaviors and rows of behaviors. We chose here to stick with a more simple syntax. We can reuse any existing inference algorithm, like algorithm $\mW$ or $\mM$~\cite{Lee:1998a} and only use the following algorithm $\mU_{\rk}$ for unification of behaviors. It takes as input two behaviors and returns a substitution that maps behavior variables to behaviors, that we denote $[\effvar_1 \mapsto \rk_1; \effvar_2 \mapsto \rk_2; \dots]$. It is defined as follows:
 %
 %\begin{small}
+\allowdisplaybreaks
 \begin{align*}
 \mU_{\rk}(\rk, \rk) =&\, [] \\
 \mU_{\rk}(\effvar, \rk) = \mU_{\rk}(\rk, \effvar) =
@@ -709,16 +718,16 @@ Figure~\ref{fig:big_step} shows part of the rules defining the relation. The rem
 \item The unconditional loop keeps executing its body until it awaits the next instant, that is, its termination status $b$ becomes false. In particular, an expression like $\eloop{\evoid{}}$, where the body always terminates instantaneously, does not have a semantics as it would require an infinite derivation tree.
 \end{itemize}
 
-\vfill
+%\vfill
 
 \subsection{Soundness}
 
-As we said earlier, we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the \textsc{App} rule of Figure~\ref{fig:rules} by the fact that the behavior of the application is always the instantaneous behavior~$\effmin$. This hypothesis is made possible by the syntactic distinction between functions and processes. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics.
+As we said earlier, we do not try to prove that functions terminate and only care about processes. We suppose that all functions terminate, which is reflected in the \textsc{App} rule of Figure~\ref{fig:rules} by the fact that the behavior of the application is always the instantaneous behavior~$\effmin$. This hypothesis is made possible by the syntactic distinction between functions and processes. Before going further with the proof of soundness, we have to express this hypothesis more formally with respect to the big-step semantics. For that, we use the predicate $0 \vdash e$ defined in Appendix~\ref{sec:wfexp} and meaning that the expression $e$ is surely instantaneous, that is, an ML expression
 
 \begin{hypothesis}[Function calls always terminate]
 \label{hyp:fun_terminate} 
-For any ML expression $e$, i.e. such that $0 \vdash e$ (see Appendix~\ref{sec:wfexp}), there exists a finite derivation $\Pi$ and a value $v$ such that:
-\[ \inferrule{\Pi}{ \quad \bigstep{N}{e}{v} {E}{b}{S} \quad } \] 
+For any expression $e$ such that $0 \vdash e$, there exists a finite derivation $\Pi$ and a value $v$ such that:
+\[ \inferrule{\Pi}{ \quad \bigstep{N}{e}{v} {E}{\strue}{S} \quad } \] 
 \end{hypothesis}
 
 We first need to prove the soundness of our definition of non-instantaneous behavior, as expressed in the following lemma:
@@ -727,7 +736,7 @@ We first need to prove the soundness of our definition of non-instantaneous beha
 An expression whose behavior is not instantaneous never reduces instantaneously.
 \[
 \left( \tyju{\tyenv}{e}{\rt}{\rk}
- \ \land\  \noinst{\rk} \ \land\  \bigstep{N}{e}{e'} {E}{b}{S}  \right) \ \Rightarrow\  b = \sfalse \]
+ \ \ \land\ \  \noinst{\rk} \ \ \land\ \  \bigstep{N}{e}{e'} {E}{b}{S}  \right) \ \Rightarrow\  b = \sfalse \]
 \end{lemma}
 \begin{proof}
 By induction on the derivation of the big-step semantics.
@@ -840,7 +849,8 @@ We cannot add this rule to the original system as the proof of soundness relies 
     \tyjus{\tyenv \tyconcat x : \rtsig{\rt_1}{\rt_2}} {e} {\rt}{\rk}  }
   { \tyjus{\tyenv}{ \esig{x}{e_1}{e_2}{e} } {\rt}{ \rk} }
 %
-\and
+\end{mathpar}
+\begin{mathpar}
 %
 \inferrule%[When]
   { \tyjus{\tyenv}{e_1}{\rt}{\rk} \\\\
@@ -864,7 +874,6 @@ If $\tyjus{\tyenv}{e}{\rt}{\rk}$, then $\tyju{\tyenv}{e}{\rt'}{\rk'}$ with $\eff
 Straightforward by induction on the typing rules
 \end{proof}
 %
-The notions of reactivity and equivalence are lifted from behaviors to types. A type is reactive if it contains only reactive behaviors. Two types are equivalent, also denoted $\tyeq{\rt_1}{\rt_2}$, if they have the same structure and their behaviors are equivalent.
 
 We can then express the soundness theorem in terms of the variant of the type system:
 \begin{theorem}[Soundness (variant)]
