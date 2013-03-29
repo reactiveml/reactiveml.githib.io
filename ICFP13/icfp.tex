@@ -940,7 +940,7 @@ The type inference algorithm of \rml has been extended to compute the behaviors 
 %
 %The behavior computed for the `timer` example of Section~\ref{sec:first_example} is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}, which is equivalent to $\effinf{\effmin}$ and not reactive. After the fix, the behavior becomes \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{\effcon{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})}{\effplus}})}$} (equivalent to $\effinf{\effplus}$), which is now reactive. Similarly, the `instantaneous` process defined in Section~\ref{sec:intuition} has a behavior equal to $\effrec{\effvar}{\effcon{\effmin}{\effrun{\effvar}}}$, that is obviously non reactive.
 
-Using a type-based analysis makes it easy to deal with cases of aliasing, like in the following example:\footnote{The toplevel available at \url{http://reactiveml.org/icfp13/tryrml} can be used to try these examples online}
+Using a type-based analysis makes it easy to deal with cases of aliasing, like in the following example:\footnote{These examples can be downloaded or tried in the online toplevel available at \url{http://reactiveml.org/icfp13}.}
 \begin{lstlisting}
 let rec process p =
   let q = (fun x -> x) p in
