@@ -82,9 +82,11 @@ We present a static analysis that checks the reactivity of programs by abstracti
 \category{D.3.4}{Processors}{Compilers}
 %\category{F.3.2}{Semantics of Programming Languages}{Operational semantics}
 
+\vspace{-0.8ex}
 \terms
 Languages, Theory
 
+\vspace{-0.8ex}
 \keywords
 Synchronous languages; Functional languages;  Semantics; Type systems; Cooperative scheduling
 
@@ -109,8 +111,8 @@ The downside of cooperative scheduling is that it is necessary to make sure that
 \end{itemize}
 
 %\item Solution to the latter: never use these functions. Libraries implement cooperative alternatives, use them instead. See \cite{Marlow:2004} for an overview on how to implement these blocking operations safely.
-
-The solution to the latter is pretty simple: never use blocking functions inside cooperative threads. All the facilities mentioned earlier provide either I/O libraries compatible with cooperative scheduling or means to safely call blocking functions. See \cite{Marlow:2004} for an overview on how to implement blocking operations safely in this context.
+%
+The solution to the latter is pretty simple: never use blocking functions inside cooperative threads. All the facilities mentioned earlier provide either I/O libraries compatible with cooperative scheduling or means to safely call blocking functions. See \cite{Marlow:2004} for an overview on how to implement such libraries.
 
 %\item In this paper we tackle the first issue: not forget to cooperate with the scheduler.
 %\item Analysis applied to the \rml language~\cite{Mandel:2005}: a reactive extension of ML, i.e. ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Divide the execution in logical time steps. Communication and computations instantaneous. Deterministic concurrency. Advantage of \rml for reactivity analysis:
@@ -119,7 +121,13 @@ The solution to the latter is pretty simple: never use blocking functions inside
 %\item Synchrony gives a simple meaning to reactivity: a program is reactive if logical instants progress. So a program is reactive if all process cooperate at each instant. The analysis could be applied to other concurrency model, but require some hypothesis of fairness from the scheduler. Synchrony is Very strong fairness hypothesis: processes execute in lock-step.
 %\end{itemize}
 
-The goal of this paper is to design a static analysis, called \emph{reactivity analysis}, to remedy the first problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
+Dealing with the first issue is usually the responsibility of the programmer. For instance, in the \lwt manual, one can find:
+\vspace{-1ex}
+\begin{quote}
+[...] do not write function that may takes time to complete without using \lwt [...]
+\end{quote}
+\vspace{-1ex}
+The goal of this paper is to design a static analysis, called \emph{reactivity analysis}, to statically remedy this problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
 %
 Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} informally introduces the language and its semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}.  Synchrony gives us a simple definition for reactivity: a reactive \rml program is one where logical instants progress. It also gives us a simple condition for reactivity: a program is reactive if all processes cooperate at each instant.  %(\todo{Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step ??})
 
@@ -134,7 +142,7 @@ Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extensi
 
 The contributions of this paper are the following:
 \begin{itemize}
-\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Section~\ref{sec:type_system}. The computed effects are called \emph{behaviors}~\cite{Amtoft:1999} and are introduced in Section~\ref{sec:behaviors}. They represent the reactive behaviors of processes, by abstracting away values but keeping some part of the structure of the program. Exposing concurrency in the language makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library. We believe this approach is generic enough to be applied to other models of concurrency (Section~\ref{sec:other_concurrency}).
+\item A reactivity analysis presented as a type-and-effect system~\cite{Lucassen:1988} in Section~\ref{sec:type_system}. The computed effects are called \emph{behaviors}~\cite{Amtoft:1999} and are introduced in Section~\ref{sec:behaviors}. They represent the reactive behaviors of processes, by abstracting away values but keeping part of the structure of the program. Exposing concurrency in the language makes it possible to express the analysis easily, which would not have been the case if concurrency had been implemented as a library. We believe this approach is generic enough to be applied to other models of concurrency~(Section~\ref{sec:other_concurrency}).
 \item A novel approach to \emph{subeffecting}~\cite{Nielson:1999}, that is, subtyping on effects, based on row polymorphism~\cite{Remy:1993} in Section~\ref{sec:subeffecting_row}. It allows a simple integration of the analysis into any existing ML type inference implementation.
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
