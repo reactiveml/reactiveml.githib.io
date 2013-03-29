@@ -193,7 +193,7 @@ let process print_clock s =
 ?W: This expression may be an instantaneous loop?
 \end{lstlisting}
 %
-Once again, this loop can be instantaneous, but this time it depends on the presence of the signal. While the signal `s` is absent, the process cooperates. When it is present, the body of the `do/when` executes and terminates instantaneously. So the body of the loop also terminates instantaneously, and a new iteration of the loop is started in the same logical instant. Since the signal is still present, the body of the `do/when` executes one more time, and so on. This process can also be fixed by a call to `pause`.
+Once again, this loop can be instantaneous, but this time it depends on the presence of the signal. While the signal `s` is absent, the process cooperates. When it is present, the body of the `do/when` executes and terminates instantaneously. So the body of the loop also terminates instantaneously, and a new iteration of the loop is started in the same logical instant. Since the signal is still present, the body of the `do/when` executes one more time, and so on. This process can also be fixed by adding a `pause` statement.
 
 We can then put these two processes in parallel, after declaring a local signal `s`. The result is a program that prints \verb+`top'+ every second:
 \begin{rmlcl}[17]
@@ -265,7 +265,7 @@ The algebra of behaviors is given by:
 \footnote{The order of precedence of operators is the following (from highest to lowest): $\mathtt{run}$, $;$, $+$, $||$ and finally $\mu$. For instance: \\
 $ \effrec{\effvar}{\effpar{\rk_1}{\effor{\effrun{\rk_2}}{\effcon{\effplus}{\rk_3}}}} $
 means
-$ \effrec{\effvar}{(\effpar{\rk_1}{(\effor{\effrun{(\rk_2)}}{(\effcon{\effplus}{\rk_3})})})} $
+$ \effrec{\effvar}{(\effpar{\rk_1}{(\effor{(\effrun{\rk_2})}{(\effcon{\effplus}{\rk_3})})})} $
 }
 %
 \[
@@ -297,7 +297,7 @@ let rec process good_rec = pause; run good_rec
 \begin{lstlisting}
 let rec process bad_rec = run bad_rec; pause
 \end{lstlisting}
-The order between the recursive call and the call to `pause` is crucial as the `good_rec` process is reactive while `bad_rec` loops instantaneously.
+The order between the recursive call and the `pause` statement is crucial as the `good_rec` process is reactive while `bad_rec` loops instantaneously.
 %
 As it is defined recursively, the behavior  $\rk$  associated to the `good_rec` process must verify that~\mbox{$ \rk = \effcon{\effplus}{\effrun{\rk}}$}. The $\mathtt{run}$ operator is associated to running a process and is necessary to solve technical problems in the type system, that will be discussed in Section~\ref{sec:run}. This equation can be solved by introducing an explicit recursion operator $\mu$ so that $\rk = \effrec{\effvar}{\effcon{\effplus}{\effrun{\effvar}}}$. Recursive behaviors verify the usual properties:
 \begin{mathpar}
@@ -690,7 +690,7 @@ A behavior is \emph{finite}, denoted $\rkfinite{\rk}$, if it does not contain an
 We can now express the important property of reactive behaviors, that is, the first instant of a reactive behavior is finite.
 \begin{property}
 If $\rk$ is  reactive, then $\rkfst{\rk}$ is a finite behavior, i.e.:
-\[ \wf{\emptyset}{\rk} \ \Rightarrow\  \rkfinite{\rkfst{\rk}} \]
+\[ \wf{\emptyset}{\rk} \quad\Rightarrow\quad \rkfinite{\rkfst{\rk}} \]
 \end{property}
 \begin{proof}
 By induction on the structure of behaviors.
@@ -829,7 +829,7 @@ As the behavior $\effinf{(\effcon{\effmin}{\rk})}$ is reactive, we know that $\n
 
 The behaviors computed by the type system of Section~\ref{sec:type_system} are very big. For instance, the behavior associated to the `timer` example is 
 \[ \effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})} \] 
-This behavior is unnecessarily detailed and almost as big (if not bigger) than the source program. However, we can notice that this behavior is equivalent to $\effinf{\effmin}$.
+This behavior is unnecessarily detailed and almost as big than the source program. However, we can notice that this behavior is equivalent to $\effinf{\effmin}$.
 
 We would like to use the equivalence relation on behaviors (defined in Section~\ref{sec:equiv_behaviors}) in our type system to reduce the size of the computed behaviors. We must  make sure that this does not break the proof of soundness of Section~\ref{sec:soundness}. This is ensured by the fact that the equivalence relation preserves reactivity (Property~\ref{prop:equiv_reactivty}), which is the only condition requested by the proof.
 
@@ -940,7 +940,7 @@ let rec process p =
 ?val p : 'a process[rec 'r. (run 'r + ..)]?
 ?W: This expression may produce an instantaneous recursion?
 \end{lstlisting}
-`q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
+The process `q` has the same type as `p`, and thus the same behavior, so the instantaneous recursion is easily detected. As for objects in \ocaml~\cite{Vouillon:2008}, row variables that appear only once are printed \verb+`..'+.
 
 The analysis can also handle combinators. For instance, the type system computes the following behavior for the `par_comb` example of Section~\ref{sec:intuition}:
 \begin{lstlisting}
