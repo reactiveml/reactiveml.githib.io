@@ -121,12 +121,12 @@ The solution to the latter is pretty simple: never use blocking functions inside
 %\item Synchrony gives a simple meaning to reactivity: a program is reactive if logical instants progress. So a program is reactive if all process cooperate at each instant. The analysis could be applied to other concurrency model, but require some hypothesis of fairness from the scheduler. Synchrony is Very strong fairness hypothesis: processes execute in lock-step.
 %\end{itemize}
 
-Dealing with the first issue is usually the responsibility of the programmer. For instance, in the \lwt manual, one can find:
-\vspace{-1ex}
+Dealing with the first issue is usually the responsibility of the programmer. For instance, in the \lwt manual~\cite{lwt_manual}, one can find:
+\vspace{-0.5ex}
 \begin{quote}
 [...] do not write function that may takes time to complete without using \lwt [...]
 \end{quote}
-\vspace{-1ex}
+\vspace{-0.5ex}
 The goal of this paper is to design a static analysis, called \emph{reactivity analysis}, to statically remedy this problem. The analysis checks that the programmer does not forget to cooperate with the scheduler.
 %
 Our work is applied on the \rml language~\cite{Mandel:2005}, which is an extension of ML with a synchronous model of concurrency~\cite{Benveniste:2003}. Section~\ref{sec:problem} informally introduces the language and its semantics. The idea of synchronous languages is to divide the execution of a program into discrete logical instants, where computations and communications are considered instantaneous. This results in a deterministic model of concurrency that is compatible with the dynamic creation of processes~\cite{Boussinot:1991}.  Synchrony gives us a simple definition for reactivity: a reactive \rml program is one where logical instants progress. It also gives us a simple condition for reactivity: a program is reactive if all processes cooperate at each instant.  %(\todo{Synchrony is actually a very strong fairness hypothesis: processes execute in lock-step ??})
@@ -147,7 +147,7 @@ The contributions of this paper are the following:
 \item A proof of the soundness of the analysis (Section~\ref{sec:soundness}) with respect to the big-step semantics of \rml (Section~\ref{sec:semantics}): \emph{a well-typed program is reactive}.
 \end{itemize}
 
-The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) and related work~(Section~\ref{sec:related_work}). The work presented here is implemented in the \rml compiler.\footnote{It is available at \url{http://reactiveml.org/icfp13}}
+The paper ends with some discussion and examples~(Section~\ref{sec:discussion}) and related work~(Section~\ref{sec:related_work}). The work presented here is implemented in the \rml compiler.\footnote{\url{http://www.reactiveml.org}}
 
 \clearpage
 
@@ -940,7 +940,7 @@ The type inference algorithm of \rml has been extended to compute the behaviors 
 %
 %The behavior computed for the `timer` example of Section~\ref{sec:first_example} is \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})})}$}, which is equivalent to $\effinf{\effmin}$ and not reactive. After the fix, the behavior becomes \mbox{$\effinf{(\effcon{(\effpar{\effmin}{\effmin})}{\effcon{(\effor{\effmin}{(\effcon{\effmin}{\effmin})})}{\effplus}})}$} (equivalent to $\effinf{\effplus}$), which is now reactive. Similarly, the `instantaneous` process defined in Section~\ref{sec:intuition} has a behavior equal to $\effrec{\effvar}{\effcon{\effmin}{\effrun{\effvar}}}$, that is obviously non reactive.
 
-Using a type-based analysis makes it easy to deal with cases of aliasing, like in the following example:
+Using a type-based analysis makes it easy to deal with cases of aliasing, like in the following example:\footnote{The toplevel available at \url{http://reactiveml.org/icfp13/tryrml} can be used to try these examples online}
 \begin{lstlisting}
 let rec process p =
   let q = (fun x -> x) p in
