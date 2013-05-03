@@ -5,7 +5,11 @@ GENERATED=index.html \
 	examples.html \
 	videos.html \
 	publications.html \
-	contacts.html
+	contacts.html \
+	examples/physics/index.html \
+	examples/cellular_automata/index.html \
+	examples/simulator_elip/index.html
+
 
 all: $(GENERATED)
 
@@ -28,8 +32,19 @@ contacts.html: header.html footer.html contacts.src.html
 	$(SRC2HTML) "." "ReactiveML Contacts" "Contacts" contacts.src.html > $@
 
 
+examples/physics/index.html: header.html footer.html examples/physics/index.src.html
+	$(SRC2HTML) "../.." "ReactiveML Example" "XXX" examples/physics/index.src.html > $@
+
+examples/cellular_automata/index.html: header.html footer.html examples/cellular_automata/index.src.html
+	$(SRC2HTML) "../.." "ReactiveML Example" "XXX" examples/cellular_automata/index.src.html > $@
+
+examples/simulator_elip/index.html: header.html footer.html examples/simulator_elip/index.src.html
+	$(SRC2HTML) "../.." "ReactiveML Example" "XXX" examples/simulator_elip/index.src.html > $@
+
+
+
 
 clean:
 
 cleanall: clean
-	rm -f $(GENERATED) *~ */*~
+	rm -f $(GENERATED) *~ */*~ */*/*~ */*/*/*~
