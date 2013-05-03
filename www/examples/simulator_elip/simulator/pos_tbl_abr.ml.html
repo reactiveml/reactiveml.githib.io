@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.27 in css mode. -->
+<html>
+  <head>
+    <title>pos_tbl_abr.ml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name">Position</span>
+
+<span class="type">module</span> <span class="function-name">Order</span> =
+  <span class="keyword">struct</span>
+    <span class="type">type</span> t = int
+    <span class="type">let</span> compare = compare
+  <span class="keyword">end</span>
+
+<span class="type">module</span> <span class="function-name">My_map</span> = <span class="function-name">Map</span>.<span class="function-name">Make</span>( <span class="function-name">Order</span>)
+
+
+<span class="type">type</span> t = (position * int) <span class="function-name">My_map</span>.t ref
+
+<span class="type">let</span> no_info = -10000
+
+<span class="type">let</span> make size = ref <span class="function-name">My_map</span>.empty
+
+<span class="type">let</span> get tbl id = 
+  <span class="constant">try</span>
+    <span class="function-name">My_map</span>.find id !tbl 
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span> ({x=0; y=0}, no_info)
+
+
+<span class="type">let</span> set tbl id pos date = 
+  tbl := <span class="function-name">My_map</span>.add id (pos,date) !tbl
+
+
+<span class="type">let</span> update tbl id pos date = 
+  <span class="constant">try</span>
+    <span class="type">let</span> _, date_tbl = <span class="function-name">My_map</span>.find id !tbl <span class="type">in</span>
+    <span class="constant">if</span> date &gt; date_tbl <span class="constant">then</span> tbl := <span class="function-name">My_map</span>.add id (pos,date) !tbl
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span> tbl := <span class="function-name">My_map</span>.add id (pos,date) !tbl
+
+
+</pre>
+  </body>
+</html>

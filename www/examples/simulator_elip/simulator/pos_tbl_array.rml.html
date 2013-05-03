@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.27 in css mode. -->
+<html>
+  <head>
+    <title>pos_tbl_array.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name">Position</span>
+
+<span class="type">type</span> t = (position * int) array 
+
+<span class="type">let</span> no_info = -10000
+
+<span class="type">let</span> make size = <span class="function-name">Array</span>.make size ({x=0; y=0}, no_info)
+
+<span class="type">let</span> get tbl id = tbl.(id)
+
+<span class="type">let</span> set tbl id pos date = 
+  tbl.(id) &lt;- (pos,date)
+
+<span class="type">let</span> update tbl id pos date = 
+  <span class="type">let</span> _, date_tbl = tbl.(id) <span class="type">in</span>
+  <span class="constant">if</span> date &gt; date_tbl <span class="constant">then</span>
+    tbl.(id) &lt;- (pos,date)
+</pre>
+  </body>
+</html>
