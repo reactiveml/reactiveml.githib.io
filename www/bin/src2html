@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if [ $# -ne 4 ]; then
+    echo "Usage: $0 rootdir title menu file.src.html"
+fi
+
+ROOTDIR=$1
+TITLE=$2
+MENU=$3
+FILE=$4
+OCAML_VERSION=`ocamlc -version`
+RML_VERSION=`rmlc -version`
+DATE=`date "+%Y-%m-%d"`
+
+
+
+## Header
+cat $ROOTDIR/header.html | \
+sed -e "s/<#ROOTDIR>/$ROOTDIR/g" | \
+sed -e "s/<#TITLE>/$TITLE/g" | \
+sed -e "/$MENU/ s/<li>/<li class=\"active\">/g"
+
+## Body
+cat $FILE | \
+sed -e "s/<#OCAML_VERSION>/$OCAML_VERSION/g" | \
+sed -e "s/<#RML_VERSION>/$RML_VERSION/g" | \
+sed -e "s/<#DATE>/$DATE/g"
+
+## Footer
+cat $ROOTDIR/footer.html | \
+sed -e "s/<#DATE>/$DATE/g"
