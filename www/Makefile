@@ -16,7 +16,7 @@ GENERATED=index.html \
 all: $(GENERATED)
 
 index.html: header.html footer.html index.src.html
-	$(SRC2HTML) "." "ReactiveML" "ReactiveML" index.src.html > $@
+	$(SRC2HTML) "." "ReactiveML" "Home" index.src.html > $@
 
 documentation.html: header.html footer.html documentation.src.html
 	$(SRC2HTML) "." "ReactiveML Documentation" "Documentation" documentation.src.html > $@
