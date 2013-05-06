@@ -1,55 +1,135 @@
-<div class="jumbotron">
-  <p class="lead">You can find here research projects developped in ReactiveML</p>
-</div>
-
-<hr>
-
-<div class="row-fluid">
+<div class="row-fluid row">
   <div class="span3">
-    <h3>N-body problem</h3>
-    <p>The classical N-body problem where the number of objects can change during the execution. </p>
-    <p><a class="btn" href="examples/physics/index.html">View details &raquo;</a></p>
+    <div class="well sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+	<li class="nav-header">Try ReactiveML</li>
+	<li><a href="http://rml.lri.fr/tryrml/"><i class="icon-globe icon-black"></i> Try it online</a></li>
+	<li><a href="http://rml.lri.fr/distrib/rml-1.08.04-2013-02-03.tar.gz"><i class="icon-globe icon-black"></i> Download</a></li>
+
+	<li class="nav-header">Examples</li>
+        <li><a href="#hello"><i class="icon-chevron-right"></i> Hello World!</a></li>
+        <li><a href="#breadth"><i class="icon-chevron-right"></i> Breadth first traversal</a></li>
+
+	<li class="nav-header">Projects</li>
+        <li><a href="#nbody"><i class="icon-chevron-right"></i> N-body</a></li>
+        <li><a href="#cell"><i class="icon-chevron-right"></i> Cellular automata</a></li>
+        <li><a href="#network"><i class="icon-chevron-right"></i> Network simulation</a></li>
+        <li><a href="#glonemo"><i class="icon-chevron-right"></i> Glonemo</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="span9">
+
+    <!--
+	<div class="jumbotron">
+	  <p class="lead">You can find here research projects developped in ReactiveML</p>
+	</div>
+
+	<hr>
+
+	-->
+
+    <center>
+      <h1>Examples</h1>
+    </center>
+    <hr>
+
+    <link href="./rml.css" rel="stylesheet">
+    <section id="hello">
+      <h3>Hello World!</h3>
+      Here goes some explanations...<br><br>
+
+      <pre>
+	<Span class="comment-delimiter">(* </span><span class="comment">The famous "Hello World!" written using two parallel
+	  processes and an internal communication. </span><span class="comment-delimiter">*)</span>
+	<span class="type">let</span> <span class="type">process</span> hello_word =
+	<span class="type">signal</span> s <span class="type">in</span>
+	<span class="type">await</span> s; print_string <span class="string">"World!"</span>
+	<span class="constant">||</span>
+	print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
+    </section>
+    <hr>
+
+    <section id="breadth">
+    <h3>Breadth First Traversal</h3>
+    Here goes some explanations...<br><br>
+    <pre>
+      <span class="comment-delimiter">(* </span><span class="comment">Definition the type of binary trees. </span><span class="comment-delimiter">*)</span>
+      <span class="type">type</span> 'a tree =
+      <span class="constant">|</span> <span class="function-name">Empty</span>
+      <span class="constant">|</span> <span class="function-name">Node</span> <span class="type">of</span> 'a * 'a tree * 'a tree
+
+      <span class="comment-delimiter">(* </span><span class="comment">Breadth first traveral using parallel composition (||)
+	and synchronization of logical time (pause). </span><span class="comment-delimiter">*)</span>
+      <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> iter_breadth f t =
+      <span class="constant">match</span> t <span class="constant">with</span>
+      <span class="constant">|</span> <span class="function-name">Empty</span> <span class="constant">-&gt;</span> ()
+      <span class="constant">|</span> <span class="function-name">Node</span> (x, l, r) <span class="constant">-&gt;</span>
+      f x;
+      <span class="builtin">pause</span>;
+      <span class="builtin">run</span> (iter_breadth f l) <span class="constant">||</span> <span class="builtin">run</span> (iter_breadth f r)
+    </pre>
+    </section>
+    <br><br><br><br>
+
+     <center>
+      <h1>Projects</h1>
+    </center>
+    <hr>
+
+
+    <center>
+      <div class="row-fluid">
+	<div class="span6">
+	  <section id="nbody">
+	    <h3>N-body problem</h3>
+	    <p>The classical N-body problem where the number of objects can change during the execution. </p>
+	    <p><a class="btn" href="examples/physics/index.html">View details &raquo;</a></p>
+	  </section>
+	  <hr>
+
+	  <section id="cell">
+	    <h3>Cellular automata</h3>
+	    <p>Implementation of cellular automata made from the one of Frédéric Boussinot in Loft.</p>
+	    <p><a class="btn" href="examples/cellular_automata/index.html">View details &raquo;</a></p>
+	  </section>
+	</div>
+
+	<div class="span6">
+	  <section id="network">
+	    <h3>Network simulator</h3>
+	    <p>Simulation of a complex network routing protocol for mobile ad hoc networks.</p>
+	    <p><a class="btn" href="examples/simulator_elip/index.html">View details &raquo;</a></p>
+	  </section>
+	  <hr>
+
+	  <section id="glonemo">
+	    <h3>Glonemo</h3>
+	    <p>Glonemo (for Global network model) is a simulation tool for sensor networks.</p>
+	    <p><a class="btn" href="http://rml.lri.fr/glonemo/">View details &raquo;</a></p>
+	  </section>
+	</div>
+      </div>
+    </center>
   </div>
-  <div class="span3">
-    <h3>Cellular automata</h3>
-    <p>Implementation of cellular automata made from the one of Frédéric Boussinot in Loft.</p>
-    <p><a class="btn" href="examples/cellular_automata/index.html">View details &raquo;</a></p>
-  </div>
-  <div class="span3">
-    <h3>Network simulator</h3>
-    <p>Simulation of a complex network routing protocol for mobile ad hoc networks.</p>
-    <p><a class="btn" href="examples/simulator_elip/index.html">View details &raquo;</a></p>
-  </div>
-  <div class="span3">
-    <h3>Glonemo</h3>
-    <p>Glonemo (for Global network model) is a simulation tool for sensor networks.</p>
-    <p><a class="btn" href="http://rml.lri.fr/glonemo/">View details &raquo;</a></p>
-  </div>
 
-<hr>
+  <!-- <hr> -->
+  <!-- <h3>Getting ReactiveML</h3> -->
 
-<div>
+  <!-- <blockquote> -->
 
-  <h3>Getting ReactiveML</h3>
-
-  <blockquote>
-
-    <!-- Source and bytecode distributions are available: -->
-    Source distribution is available:
-    <ul>
-      <li><a href="distrib/rml-<#RML_VERSION>-<#DATE>.tar.gz">rml-<#RML_VERSION>-<#DATE>.tar.gz</a>
-      </li>
-      <!--   <li><a href="distrib/rml-<#RML_VERSION>.byte.tar.gz">rml-<#RML_VERSION>.byte.tar.gz</a> -->
-      <!--   - need <b>Objective Caml</b> <#OCAML_VERSION>  -->
-      <!--   </li> -->
-    </ul>
-    or <a href="tryrml">try ReactiveML online!</a>
-    <br>
-    <br>
-    Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a>
-  </blockquote>
-
-</div>
-
-
-</div>
+  <!--   <\!-- Source and bytecode distributions are available: -\-> -->
+  <!--   Source distribution is available: -->
+  <!--   <ul> -->
+  <!--     <li><a href="distrib/rml-<#RML_VERSION>-<#DATE>.tar.gz">rml-<#RML_VERSION>-<#DATE>.tar.gz</a> -->
+  <!--     </li> -->
+  <!--     <\!--   <li><a href="distrib/rml-<#RML_VERSION>.byte.tar.gz">rml-<#RML_VERSION>.byte.tar.gz</a> -\-> -->
+  <!--     <\!--   - need <b>Objective Caml</b> <#OCAML_VERSION>  -\-> -->
+  <!--     <\!--   </li> -\-> -->
+  <!--   </ul> -->
+  <!--   or <a href="tryrml">try ReactiveML online!</a> -->
+  <!--   <br> -->
+  <!--   <br> -->
+  <!--   Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+  <!-- </blockquote> -->
