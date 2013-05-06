@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../../style.css" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+
+
+ <div class="masthead">
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+	<div class="container">
+
+	  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </a>
+
+	  <a class="brand" href="./index.html">ReactiveML</a>
+
+	  <div class="nav-collapse collapse">
+	    <ul class="nav">
+	      <li><a href="../../index.html">Home</a></li>
+              <li><a href="../../documentation.html">Documentation</a></li>
+              <li><a href="../../examples.html">Examples</a></li>
+              <li><a href="../../videos.html">Videos</a></li>
+              <li><a href="../../publications.html">Publications</a></li>
+              <li><a href="../../contacts.html">Contacts</a></li>
+	    </ul>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+<h3>Simulation of Mobile Ad hoc Network Protocols in ReactiveML</h3>
+
+<p>
+<center>
+<table>
+<tr>
+<td><img src="screenshot_voisinage.png" alt="voisinage"></td>
+<td><img src="screenshot_routage.png" alt="routage"></td>
+</tr>
+</table>
+</center>
+
+
+<blockquote>
+This paper presents a programming experiment of a complex network
+routing protocol for mobile ad hoc networks within the ReactiveML language.
+<br>
+Mobile ad hoc networks are highly dynamic networks characterized by
+the absence of physical infrastructure. In such networks, nodes are
+able to move, evolve concurrently and synchronize continuously with
+their neighbors.  Due to mobility, connections in the network can
+change dynamically and nodes can be added or removed at any time.  All
+these characteristics -- concurrency with many communications and the
+need of complex data-structure -- combined to our routing protocol
+specifications make the use of standard simulation tools (e.g., NS,
+OPNET) inadequate and network protocols appear to be very hard to
+program efficiently in conventional programming languages.
+<br>
+In this paper, we show that the synchronous reactive model, as
+introduced in the pioneering work of Boussinot, matters for
+programming such systems. This model provides adequate programming
+constructs -- namely synchronous parallel composition, broadcast
+communication and dynamic creation -- which allow for a natural
+implementation of the hard part of the simulation.
+<br>
+The implementation has been done in ReactiveML, an embedding of the reactive
+model inside a statically typed, strict functional language. ReactiveML
+provides reactive programming constructions with most of the features
+of OCaml. Moreover, it provides an efficient execution scheme for
+reactive constructs which made the simulation of real-size examples
+feasible. Experimental results show that the ReactiveML implementation is
+two orders of magnitude faster than the original C version; it was
+able to simulate more than 1000 nodes where the original C version
+failed (after 200 nodes) and compares favorably with the version programmed
+in NAB.
+</blockquote>
+
+<!-- <hr>  ************************************************************* -->
+
+<h4>Simulator</h4>
+
+This sources works with ReactiveML version 1.04:
+
+<blockquote>
+<ul>
+  <li><a href="simulator">Sources in HTML</a>
+  </li>
+  <li><a href="simulator.tgz">simulator.tgz for ReactiveML 1.04</a>
+  </li>
+  <li><a href="http://ReactiveML.org/distrib">ReactiveML distribution with the simulator working with the current version of the compiler (example/elip_v2)</a>
+  </li>
+</ul>
+</blockquote>
+
+<!-- <hr>  ************************************************************* -->
+
+<h4>Papers</h4>
+<blockquote>
+<ul>
+   <li>Louis Mandel and Farid Benbadis.
+       <b>Simulation of Mobile Ad hoc Network Protocols in ReactiveML</b>.
+       <i>Synchronous Languages, Applications, and Programming 2005</i>
+       <a href="http://ReactiveML.org/papers/MandelBenbadis-SLAP-2005.pdf">[pdf]</a>
+   </li>
+   <li>Louis Mandel and Marc Pouzet.
+       <b>ReactiveML, a Reactive Extension to ML</b>.
+       <a href="http://ReactiveML.org/papers/MandelPouzet-PPDP-2005.pdf">[pdf]</a>
+   </li>
+</ul>
+</blockquote>
+
+<!--
+<p><a href="http://validator.w3.org/check/referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01!" height="31" width="88"></a></p>
+-->
+
+<hr>
+<div class="footer">
+  <p>&copy; Test Version: 2013-05-06</p>
+</div>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</div> <!-- /container -->
+
+<script type="text/javascript" src="<#ROOTDIR>/bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="<#ROOTDIR>/bootstrap/js/bootstrap.js"></script>
+
+</body>
+</html>
