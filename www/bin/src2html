@@ -2,6 +2,7 @@
 
 if [ $# -ne 4 ]; then
     echo "Usage: $0 rootdir title menu file.src.html"
+    exit 1
 fi
 
 ROOTDIR=$1
@@ -11,8 +12,6 @@ FILE=$4
 OCAML_VERSION=`ocamlc -version`
 RML_VERSION=`rmlc -version`
 DATE=`date "+%Y-%m-%d"`
-
-
 
 ## Header
 cat header.html | \
