@@ -1,0 +1,104 @@
+<link href="<#ROOTDIR>/tryrml/tryrml.css" rel="stylesheet">
+
+<div class="row-fluid row">
+  <div class="span6">
+    <div id="sidebar">
+      <div id="intro">
+	<h3>Try ReactiveML</h3>
+	<p>
+	  <b>ReactiveML</b> is a programming language similar to
+	  OCaml extended with the synchronous reactive model. It is
+	  dedicated to the implementation of interactive systems as
+	  found in graphical user interfaces, video games and
+	  simulation problems.
+	</p>
+	<br />
+
+	<p>For more details about OCaml programming you can
+	  try <a href="http://try.ocamlpro.com">TryOcaml</a>.
+	</p>
+
+	<hr />
+
+	<table class="zebra-striped">
+	  <thead>
+	    <tr>
+              <th id="text-commands">Commands</th>
+              <th id="text-effects">Effects</th>
+	    </tr>
+	  </thead>
+	  <tr>
+	    <td id="text-enter">Enter</td>
+	    <td id="text-submit">Submit code</td>
+	  </tr>
+	  <tr>
+	    <td id="text-arrows">Up / Down</td>
+	    <td id="text-history">Cycle through history</td>
+	  </tr>
+	  <tr>
+	    <td id="text-newline">Shift + Enter</td>
+	    <td id="text-multiline">Multiline edition</td>
+	  </tr>
+	</table>
+
+	<hr />
+
+	<p>
+	  To test the toplevel, you can copy the following code or
+	  simply click on it.
+	</p>
+	<p><pre class="code">print_endline "Hello world!" ;;</pre></p>
+	<p>
+	  You can also drag and drop a ReactiveML file into the
+	  toplevel window if you want to evaluate it. Here is an
+	  example to download and drag and
+	  drop: <a href="lessons/planets.rml" target="_blank">planets.rml</a> (or
+	  <a class="code-file">lessons/planets.rml</a>).
+	</p>
+	<br />
+
+	<p>
+	  An interactive tutorial is also available.
+	</p>
+
+      </div>
+
+      <div id="info">
+      </div>
+
+      <div id="tutorial">
+      </div>
+
+      <div id="navbar">
+      </div>
+    </div>
+  </div>
+
+  <div class="span6">
+    <div id="ocaml">
+      <div id="toplevel-container">
+	<pre id="output"></pre>
+	<div id="sharp">#</div>
+	<div id="toplevel"></div>
+      </div>
+      <div id="buttons-left"></div>
+      <div id="buttons-right"></div>
+    </div>
+
+  </div>
+
+  <div id="graphics">
+    <div id="graphicstitle">Graphics window</div>
+    <canvas id="canvas" width="300" height="300"></canvas>
+  </div>
+
+</div>
+
+<script type="text/javascript"
+	src="scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript"
+	src="scripts/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript"
+	src="scripts/graphics_init.js"></script>
+<script type="text/javascript"
+	src="toplevel.js"></script>
