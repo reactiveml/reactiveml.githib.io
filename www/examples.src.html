@@ -30,52 +30,47 @@
 
 	-->
 
-    <center>
-      <h1>Examples</h1>
-    </center>
+    <h1>Examples</h1>
     <hr>
 
-    <link href="./rml.css" rel="stylesheet">
     <section id="hello">
       <h3>Hello World!</h3>
       Here goes some explanations...<br><br>
 
-      <pre>
-	<Span class="comment-delimiter">(* </span><span class="comment">The famous "Hello World!" written using two parallel
-	  processes and an internal communication. </span><span class="comment-delimiter">*)</span>
-	<span class="type">let</span> <span class="type">process</span> hello_word =
-	<span class="type">signal</span> s <span class="type">in</span>
-	<span class="type">await</span> s; print_string <span class="string">"World!"</span>
-	<span class="constant">||</span>
-	print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
+       <pre>
+<span class="comment-delimiter">(* </span><span class="comment">The famous "Hello World!" written using two parallel
+   processes and an internal communication. </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> hello_word =
+  <span class="type">signal</span> s <span class="type">in</span>
+  <span class="type">await</span> s; print_string <span class="string">"World!"</span>
+  <span class="constant">||</span>
+  print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
     </section>
     <hr>
 
     <section id="breadth">
-    <h3>Breadth First Traversal</h3>
-    Here goes some explanations...<br><br>
-    <pre>
-      <span class="comment-delimiter">(* </span><span class="comment">Definition the type of binary trees. </span><span class="comment-delimiter">*)</span>
-      <span class="type">type</span> 'a tree =
-      <span class="constant">|</span> <span class="function-name">Empty</span>
-      <span class="constant">|</span> <span class="function-name">Node</span> <span class="type">of</span> 'a * 'a tree * 'a tree
+      <h3>Breadth First Traversal</h3>
+      Here goes some explanations...<br><br>
 
-      <span class="comment-delimiter">(* </span><span class="comment">Breadth first traveral using parallel composition (||)
-	and synchronization of logical time (pause). </span><span class="comment-delimiter">*)</span>
-      <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> iter_breadth f t =
-      <span class="constant">match</span> t <span class="constant">with</span>
-      <span class="constant">|</span> <span class="function-name">Empty</span> <span class="constant">-&gt;</span> ()
-      <span class="constant">|</span> <span class="function-name">Node</span> (x, l, r) <span class="constant">-&gt;</span>
+      <pre>
+<span class="comment-delimiter">(* </span><span class="comment">Definition the type of binary trees. </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> 'a tree =
+  <span class="constant">|</span> <span class="function-name">Empty</span>
+  <span class="constant">|</span> <span class="function-name">Node</span> <span class="type">of</span> 'a * 'a tree * 'a tree
+
+<span class="comment-delimiter">(* </span><span class="comment">Breadth first traveral using parallel composition (||)
+   and synchronization of logical time (pause). </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> iter_breadth f t =
+  <span class="constant">match</span> t <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Empty</span> <span class="constant">-&gt;</span> ()
+  <span class="constant">|</span> <span class="function-name">Node</span> (x, l, r) <span class="constant">-&gt;</span>
       f x;
       <span class="builtin">pause</span>;
-      <span class="builtin">run</span> (iter_breadth f l) <span class="constant">||</span> <span class="builtin">run</span> (iter_breadth f r)
-    </pre>
+      <span class="builtin">run</span> (iter_breadth f l) <span class="constant">||</span> <span class="builtin">run</span> (iter_breadth f r)</pre>
     </section>
     <br><br><br><br>
 
-     <center>
-      <h1>Projects</h1>
-    </center>
+    <h1>Projects</h1>
     <hr>
 
 

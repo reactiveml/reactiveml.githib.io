@@ -7,6 +7,7 @@ GENERATED=index.html \
 	videos.html \
 	publications.html \
 	contacts.html \
+	tryrml.html \
 	examples/physics/index.html \
 	examples/cellular_automata/index.html \
 	examples/simulator_elip/index.html \
@@ -32,6 +33,9 @@ publications.html: header.html footer.html publications.src.html
 
 contacts.html: header.html footer.html contacts.src.html
 	$(SRC2HTML) "." "ReactiveML Contacts" "Contacts" contacts.src.html > $@
+
+tryrml.html: header.html footer.html tryrml.src.html
+	$(SRC2HTML) "." "ReactiveML TryRML" "TryRML" tryrml.src.html > $@
 
 
 examples/physics/index.html: header.html footer.html examples/physics/index.src.html
