@@ -21,10 +21,14 @@ sed -e "/$MENU/ s+<li>+<li class=\"active\">+g"
 
 ## Body
 cat $FILE | \
+sed -e "s+<#ROOTDIR>+$ROOTDIR+g" | \
 sed -e "s+<#OCAML_VERSION>+$OCAML_VERSION+g" | \
 sed -e "s+<#RML_VERSION>+$RML_VERSION+g" | \
 sed -e "s+<#DATE>+$DATE+g"
 
 ## Footer
 cat footer.html | \
+sed -e "s+<#ROOTDIR>+$ROOTDIR+g" | \
+sed -e "s+<#OCAML_VERSION>+$OCAML_VERSION+g" | \
+sed -e "s+<#RML_VERSION>+$RML_VERSION+g" | \
 sed -e "s+<#DATE>+$DATE+g"
