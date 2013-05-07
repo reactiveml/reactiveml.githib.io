@@ -49,13 +49,13 @@
     <section id="process">
       <h3>Process Definition</h3>
       <font face="courier">
-	<pre>
-	  let process <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> in <i>&lt;expr&gt;</i>
-	  process <i>&lt;expr&gt;</i></pre>
+<pre>
+  let process <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> in <i>&lt;expr&gt;</i>
+  process <i>&lt;expr&gt;</i></pre>
       </font>
       <br>
       <p>
-	Process definition are introduced by the <font face="courier">process</font> keyword>.<br>
+	Process definition are introduced by the <font face="courier">process</font> keyword.<br>
         A process can be named (<font face="courier">let process id ... </font>) or anonymous
         (<font face="courier">process <i>&lt;expr&gt;</i></font>).
       </p>
@@ -65,11 +65,11 @@
     <section id="statements">
       <h3>Basic statements</h3>
       <font face="courier">
-	<pre>
-	  nothing
-	  pause
-	  halt
-	  run <i>&lt;process&gt;</i></pre>
+<pre>
+  nothing
+  pause
+  halt
+  run <i>&lt;process&gt;</i></pre>
       </font>
       <br>
       <p>
@@ -86,10 +86,11 @@
     <section id="composition">
       <h3>Composition</h3>
       <font face="courier">
-	<pre>
-	  <i>&lt;expr&gt;</i> ; <i>&lt;expr&gt;</i>
-	  <i>&lt;expr&gt;</i> || <i>&lt;expr&gt;</i>
-	  let <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; {</i> and <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; }</i> in <i>&lt;expr&gt;</i></pre>
+<pre>
+  <i>&lt;expr&gt;</i> ; <i>&lt;expr&gt;</i>
+  <i>&lt;expr&gt;</i> || <i>&lt;expr&gt;</i>
+  let <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; {</i> and <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; }</i> in <i>&lt;expr&gt;</i>
+  <i>&lt;expr&gt;</i> |> <i>&lt;expr&gt;</i></pre>
       </font>
       <br>
       <p>
@@ -105,7 +106,8 @@
         parallel, but at each
         instant <font face="courier"><i>e1</i></font> is
         executed
-        before <font face="courier"><i>e1</i></font>.
+        before <font face="courier"><i>e1</i></font>
+	(this construct is not supported in all runtime).
       </p>
     </section>
     <hr>
@@ -113,11 +115,11 @@
     <section id="iterators">
       <h3>Iterators</h3>
       <font face="courier">
-	<pre>
-          loop <i>&lt;expr&gt;</i> end
-          while <i>&lt;expr&gt;</i> do <i>&lt;expr&gt;</i> done
-          for <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> to <i> | </i> downto <i>) </i> do <i>&lt;expr&gt;</i> done
-          for <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> to <i> | </i> downto <i>)</i> dopar <i>&lt;expr&gt;</i> done</pre>
+<pre>
+  loop <i>&lt;expr&gt;</i> end
+  while <i>&lt;expr&gt;</i> do <i>&lt;expr&gt;</i> done
+  for <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> to <i> | </i> downto <i>) </i> do <i>&lt;expr&gt;</i> done
+  for <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> to <i> | </i> downto <i>)</i> dopar <i>&lt;expr&gt;</i> done</pre>
       </font><br>
       <p>
         <font face="courier">loop</font> is an infinite loop. <font face="courier">while</font>
@@ -133,9 +135,9 @@
     <section id="signalDecl">
       <h3>Signal declaration</h3>
       <font face="courier">
-	<pre>
-	  signal <i>&lt;id&gt; {</i> , <i>&lt;id&gt; }</i> in  <i>&lt;expr&gt;</i>
-	  signal <i>&lt;id&gt;</i> default <i>&lt;value&gt;</i> gather <i>&lt;function&gt;</i> in  <i>&lt;expr&gt;</i></pre>
+<pre>
+  signal <i>&lt;id&gt; {</i> , <i>&lt;id&gt; }</i> in  <i>&lt;expr&gt;</i>
+  signal <i>&lt;id&gt;</i> default <i>&lt;value&gt;</i> gather <i>&lt;function&gt;</i> in  <i>&lt;expr&gt;</i></pre>
       </font>
       <br>
       <p>
@@ -153,8 +155,8 @@
     <section id="signalEm">
       <h3>Signal emission</h3>
       <font face="courier">
-	<pre>
-	  emit <i>&lt;signal&gt; [ &lt;value&gt; ]</i></pre>
+<pre>
+  emit <i>&lt;signal&gt; [ &lt;value&gt; ]</i></pre>
       </font>
       <br>
       <p>
@@ -170,12 +172,12 @@
     <section id="signalSt">
       <h3>Signal status</h3>
       <font face="courier">
-	<pre>
-	  present <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i>&lt;expr&gt; ]</i> in <i>&lt;expr&gt;</i>
-	  await <i>[</i> immediate <i>]</i> one <i>&lt;signal&gt (&lt;variable&gt)</i> in <i>&lt;expr&gt;</i>
-	  pre ?<i>&lt;signal&gt;</i>
-	  last ?<i>&lt;signal&gt;</i>
-	  default ?<i>&lt;signal&gt;</i></pre>
+<pre>
+  present <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i>&lt;expr&gt; ]</i> in <i>&lt;expr&gt;</i>
+  await <i>[</i> immediate <i>]</i> one <i>&lt;signal&gt (&lt;variable&gt)</i> in <i>&lt;expr&gt;</i>
+  pre ?<i>&lt;signal&gt;</i>
+  last ?<i>&lt;signal&gt;</i>
+  default ?<i>&lt;signal&gt;</i></pre>
       </font>
       <br>
       <p>
@@ -222,11 +224,10 @@
 
     <section id="control">
       <font face="courier">
-	<pre>
-          do <i>&lt;expr&gt;</i> when <i>&lt;signal&gt;</i> done
-          control <i>&lt;expr&gt;</i> with <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ]</i> done
-          do <i>&lt;expr&gt;</i> until <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ]
-	    [</i> -> <i> &lt;expr&gt; ] ]</i> done</pre>
+<pre>
+  do <i>&lt;expr&gt;</i> when <i>&lt;signal&gt;</i> done
+  control <i>&lt;expr&gt;</i> with <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ]</i> done
+  do <i>&lt;expr&gt;</i> until <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ] [</i> -> <i> &lt;expr&gt; ] ]</i> done</pre>
       </font><br>
       <p>
 	<font face="courier">do/when</font> and <font face="courier">control/with</font>
