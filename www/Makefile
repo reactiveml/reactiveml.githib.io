@@ -11,6 +11,8 @@ GENERATED=index.html \
 	examples/physics/index.html \
 	examples/cellular_automata/index.html \
 	examples/simulator_elip/index.html \
+	publications/header.html \
+	publications/footer.html \
 	publications/index.html
 
 
@@ -63,8 +65,15 @@ publications/rml.html: publications/rml.bib
 		-nf url2 extended.pdf -nf webpage "more details" \
 		 publications/rml.bib
 
-publications/index.html: header.html footer.html publications/rml.html
-	$(SRC2HTML) ".." "ReactiveML Publications" "XXX" header.html footer.html \
+publications/header.html: header.html publications/header.src.html
+	cat header.html publications/header.src.html > $@
+
+publications/footer.html: footer.html publications/footer.src.html
+	cat publications/footer.src.html footer.html > $@
+
+publications/index.html: publications/header.html publications/footer.html publications/rml.html
+	$(SRC2HTML) ".." "ReactiveML Publications" "XXX" \
+		publications/header.html publications/footer.html \
 		publications/index.src.html > $@
 
 
