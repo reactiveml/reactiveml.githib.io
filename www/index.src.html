@@ -1,3 +1,5 @@
+<link href="./rml.css" rel="stylesheet">
+
 <!-- Jumbotron -->
 <div class="jumbotron">
   <h1>ReactiveML</h1>
@@ -27,15 +29,34 @@
   </div>
 </div>
 
+
 <hr>
 
-<p>
-  <b>ReactiveML</b> is based on
-  the <a href="http://www-sop.inria.fr/mimosa/rp/generalPresentation/index.html">synchronous
-    reactive model</a> of Boussinot embedded in an ML language
-  (here <a href="http://caml.inria.fr">OCaml</a>).
-  The synchronous reactive model provides synchronous parallel
-  composition and dynamic features like the dynamic creation
-  of processes. In <b>ReactiveML</b>, the reactive model is
-  integrated at the language level (not as a library) which
-  leads to safer and more natural programming. </p>
+<div class="row-fluid">
+  <div class="span6">
+    <p>
+      <b>ReactiveML</b> is based on
+      the <a href="http://www-sop.inria.fr/mimosa/rp/generalPresentation/index.html">synchronous
+	reactive model</a> of Boussinot embedded in an ML language
+      (here <a href="http://caml.inria.fr">OCaml</a>).
+      The synchronous reactive model provides synchronous parallel
+      composition and dynamic features like the dynamic creation
+      of processes. In <b>ReactiveML</b>, the reactive model is
+      integrated at the language level (not as a library) which
+      leads to safer and more natural programming. </p>
+  </div>
+
+  <div class="span6">
+
+    <pre>
+<span class="comment-delimiter">(* </span><span class="comment">The famous "Hello World!" written using two parallel
+   processes and an internal communication.
+</span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> hello_word =
+  <span class="type">signal</span> s <span class="type">in</span>
+  <span class="type">await</span> s; print_string <span class="string">"World!"</span>
+  <span class="constant">||</span>
+  print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
+
+</div>
+</div>
