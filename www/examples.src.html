@@ -9,10 +9,10 @@
 	<li class="nav-header">Examples</li>
         <li><a href="#hello"><i class="icon-chevron-right"></i> Hello World!</a></li>
         <li><a href="#breadth"><i class="icon-chevron-right"></i> Breadth first traversal</a></li>
-
-	<li class="nav-header">Projects</li>
         <li><a href="#nbody"><i class="icon-chevron-right"></i> N-body</a></li>
         <li><a href="#cell"><i class="icon-chevron-right"></i> Cellular automata</a></li>
+
+	<li class="nav-header">Projects</li>
         <li><a href="#network"><i class="icon-chevron-right"></i> Network simulation</a></li>
         <li><a href="#glonemo"><i class="icon-chevron-right"></i> Glonemo</a></li>
       </ul>
@@ -37,14 +37,14 @@
       <h3>Hello World!</h3>
       Here goes some explanations...<br><br>
 
-       <pre>
-<span class="comment-delimiter">(* </span><span class="comment">The famous "Hello World!" written using two parallel
-   processes and an internal communication. </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> hello_word =
-  <span class="type">signal</span> s <span class="type">in</span>
-  <span class="type">await</span> s; print_string <span class="string">"World!"</span>
-  <span class="constant">||</span>
-  print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
+      <pre>
+	<span class="comment-delimiter">(* </span><span class="comment">The famous "Hello World!" written using two parallel
+	  processes and an internal communication. </span><span class="comment-delimiter">*)</span>
+	<span class="type">let</span> <span class="type">process</span> hello_word =
+	<span class="type">signal</span> s <span class="type">in</span>
+	<span class="type">await</span> s; print_string <span class="string">"World!"</span>
+	<span class="constant">||</span>
+	print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
     </section>
     <hr>
 
@@ -53,44 +53,116 @@
       Here goes some explanations...<br><br>
 
       <pre>
-<span class="comment-delimiter">(* </span><span class="comment">Definition the type of binary trees. </span><span class="comment-delimiter">*)</span>
-<span class="type">type</span> 'a tree =
-  <span class="constant">|</span> <span class="function-name">Empty</span>
-  <span class="constant">|</span> <span class="function-name">Node</span> <span class="type">of</span> 'a * 'a tree * 'a tree
+	<span class="comment-delimiter">(* </span><span class="comment">Definition the type of binary trees. </span><span class="comment-delimiter">*)</span>
+	<span class="type">type</span> 'a tree =
+	<span class="constant">|</span> <span class="function-name">Empty</span>
+	<span class="constant">|</span> <span class="function-name">Node</span> <span class="type">of</span> 'a * 'a tree * 'a tree
 
-<span class="comment-delimiter">(* </span><span class="comment">Breadth first traveral using parallel composition (||)
-   and synchronization of logical time (pause). </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> iter_breadth f t =
-  <span class="constant">match</span> t <span class="constant">with</span>
-  <span class="constant">|</span> <span class="function-name">Empty</span> <span class="constant">-&gt;</span> ()
-  <span class="constant">|</span> <span class="function-name">Node</span> (x, l, r) <span class="constant">-&gt;</span>
-      f x;
-      <span class="builtin">pause</span>;
-      <span class="builtin">run</span> (iter_breadth f l) <span class="constant">||</span> <span class="builtin">run</span> (iter_breadth f r)</pre>
+	<span class="comment-delimiter">(* </span><span class="comment">Breadth first traveral using parallel composition (||)
+	  and synchronization of logical time (pause). </span><span class="comment-delimiter">*)</span>
+	<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> iter_breadth f t =
+	<span class="constant">match</span> t <span class="constant">with</span>
+	<span class="constant">|</span> <span class="function-name">Empty</span> <span class="constant">-&gt;</span> ()
+	<span class="constant">|</span> <span class="function-name">Node</span> (x, l, r) <span class="constant">-&gt;</span>
+	f x;
+	<span class="builtin">pause</span>;
+	<span class="builtin">run</span> (iter_breadth f l) <span class="constant">||</span> <span class="builtin">run</span> (iter_breadth f r)</pre>
     </section>
+    <hr>
+
+    <section id="nbody">
+      <h3>Dynamic Planets</h3>
+
+      <!-- <a href="examples/physics/planets.png"><img src="examples/physics/thumb_planets.png" alt="Planets"></a> -->
+
+
+      <center>
+	<div class="row-fluid">
+          <ul class="thumbnails">
+            <li class="span4">
+            </li>
+            <li class="span4">
+	      <div class="thumbnail">
+		<img src="examples/physics/thumb_planets.png" alt="Planets">
+		<div class="caption">
+                  <p>N-body</p>
+                </div>
+	      </div>
+            </li>
+            <li class="span4">
+            </li>
+          </ul>
+        </div>
+      </center>
+
+
+      <p>
+	This example is the classical N-body problem where the number of objects
+	can change during the execution.
+	<br>
+	A new planet is created when the mouse
+	button is pressed.
+	The key 'k' removes the planets in the order of creation
+	and 's' removes the sun.
+	The execution can be suspended and resumed with the key 'p'.
+	<br>
+	This example has been used in a tutorial for the
+	ReactiveML toplevel.
+      </p>
+      <p><a class="btn" href="../../rmltop">View details &raquo;</a></p>
+    </section>
+    <hr>
+
+    <section id="cell">
+      <h3>Implementation of Cellular Automata</h3>
+      <p>
+	This implementation has been made from the one of
+	Fr&eacute;d&eacute;ric Boussinot in
+	<a href="http://www-sop.inria.fr/mimosa/rp/LOFT">Loft</a>
+	that can be found
+	<a href="http://www-sop.inria.fr/mimosa/rp/CellularAutomata">here</a>.
+      <p>
+	<br>
+	<center>
+	  <div class="row-fluid">
+            <ul class="thumbnails">
+              <li class="span4">
+		<div class="thumbnail">
+		  <img src="examples/cellular_automata/thumb_gol.png" alt="game of life">
+                  <div class="caption">
+                    <p>John Conway's Game of Life</p>
+                  </div>
+		</div>
+              </li>
+              <li class="span4">
+		<div class="thumbnail">
+		  <img src="examples/cellular_automata/thumb_fredkin.png" alt="fredkin">
+                  <div class="caption">
+                    <p>Fredkin's automaton</p>
+                  </div>
+		</div>
+              </li>
+              <li class="span4">
+		<div class="thumbnail">
+		  <img src="examples/cellular_automata/thumb_fire.png" alt="fire">
+                  <div class="caption">
+                    <p>"Forest fire" automaton</p>
+                  </div>
+		</div>
+              </li>
+            </ul>
+          </div>
+	</center>
+    </section>
+    <hr>
+
     <br><br><br><br>
 
     <h1>Projects</h1>
     <hr>
 
-
     <center>
       <div class="row-fluid">
-	<div class="span6">
-	  <section id="nbody">
-	    <h3>N-body problem</h3>
-	    <p>The classical N-body problem where the number of objects can change during the execution. </p>
-	    <p><a class="btn" href="examples/physics/index.html">View details &raquo;</a></p>
-	  </section>
-	  <hr>
-
-	  <section id="cell">
-	    <h3>Cellular automata</h3>
-	    <p>Implementation of cellular automata made from the one of Frédéric Boussinot in Loft.</p>
-	    <p><a class="btn" href="examples/cellular_automata/index.html">View details &raquo;</a></p>
-	  </section>
-	</div>
-
 	<div class="span6">
 	  <section id="network">
 	    <h3>Network simulator</h3>
@@ -98,7 +170,9 @@
 	    <p><a class="btn" href="examples/simulator_elip/index.html">View details &raquo;</a></p>
 	  </section>
 	  <hr>
+	</div>
 
+	<div class="span6">
 	  <section id="glonemo">
 	    <h3>Glonemo</h3>
 	    <p>Glonemo (for Global network model) is a simulation tool for sensor networks.</p>
