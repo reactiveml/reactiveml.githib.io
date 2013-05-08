@@ -12,7 +12,8 @@ body {
 }
 
 .navbar .btn-navbar {
-  float: left;
+    float: left;
+    color: inherit;
 }
 
 .sidebar-nav-fixed {
@@ -99,3 +100,9 @@ video {
     padding: 14px 24px;
 }
 */
+
+/* Footer */
+
+.footer p {
+    text-align: right;
+}
