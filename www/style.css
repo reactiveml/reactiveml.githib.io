@@ -3,6 +3,9 @@ body {
     padding-bottom: 0px;
 }
 
+p {
+    text-align: justify;
+}
 
 /* Customize the navbar links to be fill the entire space of the .navbar */
 
@@ -88,6 +91,10 @@ video {
     .jumbotron h1 {
         font-size: 45pt;
     }
+}
+
+.jumbotron p {
+    text-align: center;
 }
 
 /*
