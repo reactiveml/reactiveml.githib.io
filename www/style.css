@@ -11,6 +11,10 @@ body {
   font-weight: bold;
 }
 
+.navbar .btn-navbar {
+  float: left;
+}
+
 .sidebar-nav-fixed {
     position:fixed;
 }
