@@ -96,6 +96,13 @@ video {
     line-height: 1;
 }
 
+@media (max-width: 767px) {
+    .jumbotron h1 {
+        max-width:100%;
+    }
+}
+
+
 @media (max-width: 979px) {
     .jumbotron h1 {
         font-size: 45pt;
