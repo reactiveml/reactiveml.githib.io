@@ -7,6 +7,15 @@ p {
     text-align: justify;
 }
 
+.footer p {
+    text-align: right;
+}
+
+.thumbnail .caption p {
+    text-align: center;
+}
+
+
 /* Customize the navbar links to be fill the entire space of the .navbar */
 
 .navbar .brand {
@@ -107,9 +116,3 @@ video {
     padding: 14px 24px;
 }
 */
-
-/* Footer */
-
-.footer p {
-    text-align: right;
-}
