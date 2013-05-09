@@ -43,7 +43,7 @@ contact.html: header.html footer.html contact.src.html
 		header.html footer.html contact.src.html > $@
 
 tryrml/tryrml.html: header.html tryrml/tryrml.src.html
-	$(SRC2HTML) ".." "ReactiveML TryRML" "TryRML" \
+	$(SRC2HTML) ".." "ReactiveML Try online" "Try online" \
 		header.html tryrml/footer.html tryrml/tryrml.src.html > $@
 
 
