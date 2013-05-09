@@ -25,8 +25,56 @@
   </div><!--/span-->
 
   <div class="span9">
-    <h1>Summary of ReactiveML Expressions</h1>
+    <h1>ReactiveML Manual</h1>
     <hr>
+    <h2>Compiling ReactiveML Programs</h1>
+<p>
+Let <code>hello.rml</code> be a file containing the following program:
+</p>
+<pre>
+  let process main = print_endline "Hello World!"
+</pre>
+<p>
+To produce an executable, the file must be first compiled into pure
+OCaml code using the following command&nbsp;(the <code>-s</code>
+option allows to define the main process):
+</p>
+<pre>
+  rmlc -s main hello.rml
+</pre>
+<p>
+Then, the generated OCaml file (<code>hello.ml</code>) can compiled
+and linked with the ReactiveML runtime as follows:
+</p>
+<pre>
+  ocamlopt -o hello -I `rmlc -where` unix.cmxa rmllib.cmxa hello.ml
+</pre>
+<p>
+It produces an executable file <code>hello</code> which
+displays <code>Hello World!</code>.
+</p>
+
+<p>
+You can also automate the compilation of ReactiveML programs
+using <code>rmlbuild</code>. To do that, first define a
+file <code>hello.rmlsim</code> which containts the main process:
+</p>
+<pre>
+  sim: main
+</pre>
+<p>
+Then you can compile the ReactiveML file and the generated OCaml file
+in one command:
+</p>
+<pre>
+  rmlbuild hello.rml.native
+</pre>
+<p>
+This tool is based on <code>ocamlbuild</code>.
+</p>
+<br>
+
+    <h2>Summary of ReactiveML Expressions</h1>
     <p>
       Terminal symbols are set
       in <font face="courier">typewriter font</font>.
@@ -129,6 +177,7 @@
         executes its body several times in parallel.
       </p>
     </section>
+    <hr>
     <!-- </div> -->
 
     <!-- <div class="span6"> -->
