@@ -12,10 +12,11 @@
         <li><a href="#composition"><i class="icon-chevron-right"></i> Composition</a></li>
         <li><a href="#iterators"><i class="icon-chevron-right"></i> Iterators</a></li>
 
-	<li class="nav-header">Signals</li>
+	<li class="nav-header">Communication</li>
         <li><a href="#signalDecl"><i class="icon-chevron-right"></i> Signal declaration</a></li>
         <li><a href="#signalEm"><i class="icon-chevron-right"></i> Signal emission</a></li>
         <li><a href="#signalSt"><i class="icon-chevron-right"></i> Signal status</a></li>
+        <li><a href="#signalVal"><i class="icon-chevron-right"></i> Signal value</a></li>
 
 
 	<li class="nav-header">Control</li>
@@ -143,19 +144,18 @@ This tool is based on <code>ocamlbuild</code>.
       <br>
       <p>
         In ReactiveML, expressions can be composed in
-        sequence or in
-        parallel. The <font face="courier">let/and/in</font>
-        construct computes several expressions in parallel
-        and gets their values, then it computes the body.<br><br>
-        The expression <font face="courier"><i>e1</i>
-	  |> <i>e2</i></font>
+        sequence&nbsp;(<font face="courier">;</font>) or in
+        parallel&nbsp;(<font face="courier">||</font>).
+        The <font face="courier">let/and/in</font> construct computes
+        several expressions in parallel and gets their values, then it
+        computes the right of
+        the <font face="courier">in</font>.<br><br>  The
+        expression <font face="courier"><i>e1</i> |> <i>e2</i></font>
         executes <font face="courier"><i>e1</i></font>
-        and <font face="courier"><i>e2</i></font> in
-        parallel, but at each
-        instant <font face="courier"><i>e1</i></font> is
-        executed
-        before <font face="courier"><i>e1</i></font>
-	(this construct is not supported in all runtime).
+        and <font face="courier"><i>e2</i></font> in parallel, but at
+        each instant <font face="courier"><i>e1</i></font> is executed
+        before <font face="courier"><i>e1</i></font> (this construct
+        is not supported in all runtime).
       </p>
     </section>
     <hr>
@@ -222,7 +222,48 @@ This tool is based on <code>ocamlbuild</code>.
       <h3>Signal status</h3>
       <font face="courier">
 <pre>
-  present <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i>&lt;expr&gt; ]</i> in <i>&lt;expr&gt;</i>
+  present <i>&lt;signal&gt;</i> then <i>&lt;expr&gt;</i> else <i>&lt;expr&gt;</i>
+  await <i>[</i> immediate <i>]</i> <i>&lt;signal&gt;</i>
+  pre <i>&lt;signal&gt;</i></pre>
+      </font>
+      <br>
+<p>
+  The expression <font face="courier">present</font> tests the status
+  of a signal. If the signal is present,
+  the <font face="courier">then</font> branch is executed
+  instantaneously, otherwise the <font face="courier">else</font>
+  branch is executed at the following instant.
+  <br><br>
+
+  The expression <font face="courier">await s</font>
+  waits <font face="courier">s</font> to be emitted and terminates at
+  the following instant. Whereas the expression
+  <font face="courier">await immediate s</font> waits <font face="courier">s</font> to be emitted and
+  terminates instantaneously.
+  <br><br>
+
+
+  Like in Esterel, the non-immediate version
+  of <font face="courier">await</font> is the default one such
+  that <font face="courier">await s; await s</font> waits two
+  occurrences of <font face="courier">s</font>, while
+  <font face="courier">await immediate s; await immediate s</font> is
+  equivalent to <font face="courier">await immediate s</font>.
+  <br><br>
+
+  The expression <font face="courier">pre s</font> evaluates
+  to <font face="courier">true</font> if the signal
+  <font face="courier">s</font> has been emitted at the preceding
+  instant. Otherwise, it evaluates to <font face="courier">false</font>.
+</p>
+
+    <hr>
+
+    <section id="signalVal">
+      <h3>Signal value</h3>
+      <font face="courier">
+<pre>
+  await <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i>&lt;expr&gt; ]</i> in <i>&lt;expr&gt;</i>
   await <i>[</i> immediate <i>]</i> one <i>&lt;signal&gt (&lt;variable&gt)</i> in <i>&lt;expr&gt;</i>
   pre ?<i>&lt;signal&gt;</i>
   last ?<i>&lt;signal&gt;</i>
