@@ -81,12 +81,16 @@
 
 pre {
     line-height: 125%;
+    font-size: 12px;
 }
 
 pre.code {
     border: 1px #000 solid;
     background-color: #99ccff;
     /* background-color: #ffff66; */
+    font-size: 12px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 #help {
