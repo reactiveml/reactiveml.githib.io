@@ -13,7 +13,8 @@ GENERATED=index.html \
 	examples/simulator_elip/index.html \
 	publications/header.html \
 	publications/footer.html \
-	publications/index.html
+	publications/index.html \
+	navigation.html
 
 
 all: $(GENERATED)
@@ -76,6 +77,9 @@ publications/index.html: publications/header.html publications/footer.html publi
 		publications/header.html publications/footer.html \
 		publications/index.src.html > $@
 
+navigation.html: header.html footer.html navigation.src.html
+	$(SRC2HTML) "." "ReactiveML Navigation" "XXX" \
+		header.html footer.html navigation.src.html > $@
 
 clean:
 
