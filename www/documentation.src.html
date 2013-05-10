@@ -6,6 +6,10 @@
 	<li><a href="<#ROOTDIR>/tryrml/tryrml.html"><i class="icon-globe icon-black"></i> Try it online</a></li>
 	<li><a href="<#ROOTDIR>/distrib/rml-<#RML_VERSION>-<#DATE>.tar.gz"><i class="icon-globe icon-black"></i> Download</a></li>
 
+        <li class="nav-header">Compilation</li>
+        <li><a href="#rmlc"><i class="icon-chevron-right"></i> rmlc</a></li>
+        <li><a href="#rmlbuild"><i class="icon-chevron-right"></i> rmlbuild</a></li>
+
         <li class="nav-header">Process</li>
         <li><a href="#process"><i class="icon-chevron-right"></i> Process definition</a></li>
         <li><a href="#statements"><i class="icon-chevron-right"></i> Basic statement</a></li>
@@ -28,7 +32,9 @@
   <div class="span9">
     <h1>ReactiveML Manual</h1>
     <hr>
-    <h2>Compiling ReactiveML Programs</h2>
+<section id="rmlc">
+<h3></h3>
+<h2>Compiling ReactiveML Programs</h2>
 <p>
 Let <code>hello.rml</code> be a file containing the following program:
 </p>
@@ -54,7 +60,10 @@ and linked with the ReactiveML runtime as follows:
 It produces an executable file <code>hello</code> which
 displays <code>Hello World!</code>.
 </p>
+</section>
 
+<section id="rmlbuild">
+<h3></h3>
 <p>
 You can also automate the compilation of ReactiveML programs
 using <code>rmlbuild</code>. To do that, first define a
@@ -73,6 +82,7 @@ in one command:
 <p>
 This tool is based on <code>ocamlbuild</code>.
 </p>
+</section>
 <br>
 
     <h2>Summary of ReactiveML Expressions</h2>

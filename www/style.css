@@ -15,6 +15,10 @@ p {
     text-align: center;
 }
 
+blockquote p {
+    font-size: 10pt;
+}
+
 
 /* Customize the navbar links to be fill the entire space of the .navbar */
 
@@ -98,7 +102,7 @@ video {
 
 @media (max-width: 767px) {
     .jumbotron h1 {
-        max-width:100%;
+        max-width:40pt;
     }
 }
 
