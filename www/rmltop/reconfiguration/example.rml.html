@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.37 in css mode. -->
+<html>
+  <head>
+    <title>example.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .builtin {
+        /* font-lock-builtin-face */
+        color: #da70d6;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .comment-delimiter {
+        /* font-lock-comment-delimiter-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #bc8f8f;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="comment-delimiter">(*  </span><span class="comment">rmltop graphics.cma rmltop_stdlib.cmo  </span><span class="comment-delimiter">*)</span>
+
+<span class="type">let</span> <span class="type">process</span> window = 
+  <span class="function-name">Graphics</span>.open_graph <span class="string">""</span>;
+  <span class="function-name">Graphics</span>.auto_synchronize false;
+  <span class="keyword">loop</span>
+    <span class="function-name">Graphics</span>.synchronize();
+    <span class="function-name">Graphics</span>.clear_graph();
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+;;
+
+<span class="constant">#</span><span class="builtin">run</span> window;;
+
+<span class="type">let</span> color_of_int = <span class="type">function</span>
+  <span class="constant">|</span> 0 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.yellow
+  <span class="constant">|</span> 1 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.blue
+  <span class="constant">|</span> 2 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.green
+  <span class="constant">|</span> 3 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.red
+  <span class="constant">|</span> 4 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.cyan
+  <span class="constant">|</span> 5 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.black
+  <span class="constant">|</span> 6 <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.magenta
+  <span class="constant">|</span> _ <span class="constant">-&gt;</span> <span class="function-name">Graphics</span>.black
+;;
+
+<span class="type">type</span> state = 
+    { <span class="variable-name">color:</span> int;
+      <span class="type">mutable</span> <span class="variable-name">x:</span> float; 
+      <span class="type">mutable</span> <span class="variable-name">y:</span> float; }
+
+<span class="type">let</span> new_state =
+  <span class="type">let</span> color = ref 0 <span class="type">in</span>
+  <span class="type">fun</span> () <span class="constant">-&gt;</span> 
+    color := (!color + 1) mod 7;
+    { color = !color; 
+      x = 0.;
+      y = float(<span class="function-name">Graphics</span>.size_y () / 2); }
+
+
+<span class="type">let</span> <span class="type">process</span> draw state =
+  <span class="keyword">loop</span>
+    <span class="function-name">Graphics</span>.set_color (color_of_int state.color);
+    <span class="function-name">Graphics</span>.fill_circle 
+      ((int_of_float state.x) mod (<span class="function-name">Graphics</span>.size_x()))
+      (int_of_float state.y) 
+      5;
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+;;
+
+<span class="type">let</span> <span class="type">process</span> move_x state speed =
+  <span class="keyword">loop</span>
+    state.x &lt;- state.x +. speed;
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+;;
+
+<span class="type">let</span> <span class="type">process</span> sinus state =
+  <span class="type">let</span> alpha = ref 0.0 <span class="type">in</span>
+  <span class="keyword">loop</span>
+    alpha := !alpha +. 0.05;
+    state.y &lt;- state.y +. 7.5 *. cos !alpha;
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+;;
+
+<span class="type">let</span> <span class="type">process</span> move_x_y state =
+  <span class="builtin">run</span> (move_x state 2.5) <span class="constant">||</span> <span class="builtin">run</span> (sinus state)
+;;
+
+<span class="type">let</span> <span class="type">process</span> moving_point state =
+  <span class="builtin">run</span> (draw state) <span class="constant">||</span> <span class="builtin">run</span> (move_x state 2.5)
+;;
+
+<span class="type">let</span> <span class="type">process</span> sin_moving_point state =
+  <span class="builtin">run</span> (draw state) <span class="constant">||</span> <span class="builtin">run</span> (move_x state 2.5) <span class="constant">||</span> <span class="builtin">run</span> (sinus state)
+;;
+
+
+<span class="constant">#</span><span class="builtin">run</span> (<span class="function-name">Rmltop_stdlib</span>.killable 
+        (moving_point (new_state())));;
+
+<span class="constant">#</span><span class="builtin">run</span> (<span class="function-name">Rmltop_stdlib</span>.killable
+        ((<span class="type">fun</span> state <span class="constant">-&gt;</span> 
+          <span class="type">process</span>
+            (<span class="builtin">run</span> (draw state) 
+             <span class="constant">||</span> 
+             <span class="builtin">run</span> (<span class="function-name">Rmltop_stdlib</span>.suspendable (move_x_y state))))
+         (new_state())));;
+
+<span class="function-name">Rmltop_stdlib</span>.ps ();;
+
+<span class="builtin">emit</span> <span class="function-name">Rmltop_stdlib</span>.to_suspend_resume 3;;
+
+<span class="builtin">emit</span> <span class="function-name">Rmltop_stdlib</span>.to_kill 1;;
+
+<span class="builtin">emit</span> <span class="function-name">Rmltop_stdlib</span>.to_suspend_resume 3;;
+
+</pre>
+  </body>
+</html>
