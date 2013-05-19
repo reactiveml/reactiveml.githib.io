@@ -61,10 +61,12 @@ examples/simulator_elip/index.html: header.html footer.html examples/simulator_e
 		header.html footer.html examples/simulator_elip/index.src.html > $@
 
 publications/rml.html: publications/rml.bib
-	$(BIBTEX2HTML) -o publications/rml \
+	(cd publications; \
+	 $(BIBTEX2HTML) \
 		-linebreak -noheader -nofooter \
 		-nf url2 extended.pdf -nf webpage "more details" \
-		 publications/rml.bib
+		 rml.bib)
+
 
 publications/header.html: header.html publications/header.src.html
 	cat header.html publications/header.src.html > $@
