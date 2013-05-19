@@ -19,6 +19,8 @@ GENERATED=index.html \
 
 all: $(GENERATED)
 
+.PHONY: $(GENERATED)
+
 index.html: header.html footer.html index.src.html
 	$(SRC2HTML) "." "ReactiveML" "Home" \
 		header.html footer.html index.src.html > $@
