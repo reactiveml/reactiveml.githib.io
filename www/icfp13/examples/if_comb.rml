@@ -1,0 +1,4 @@
+let process if_comb c q1 q2 =
+  loop
+    if c then run q1 else run q2
+  end

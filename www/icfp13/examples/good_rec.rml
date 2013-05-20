@@ -1,0 +1,2 @@
+let rec process good_rec =
+  pause; run good_rec

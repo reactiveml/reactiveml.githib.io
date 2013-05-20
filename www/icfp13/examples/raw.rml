@@ -1,0 +1,3 @@
+let process p = pause
+let process q = ()
+let l = [p; q]

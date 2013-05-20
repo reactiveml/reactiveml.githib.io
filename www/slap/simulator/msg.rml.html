@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.16 in css mode. -->
+<html>
+  <head>
+    <title>msg.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name">Global</span>
+
+<span class="type">let</span> make src =
+  <span class="constant">if</span> (<span class="function-name">Random</span>.float 100.0) &lt; msg_proba <span class="constant">then</span> 
+    <span class="type">let</span> msg = ref [] <span class="type">in</span>
+    <span class="type">let</span> dest = <span class="function-name">Random</span>.int nb_nodes <span class="type">in</span>
+    <span class="type">let</span> len = (<span class="function-name">Random</span>.int msg_len) + 1 <span class="type">in</span>
+    <span class="constant">for</span> i = 1 <span class="constant">to</span> len <span class="constant">do</span>
+      msg := dest::!msg
+    <span class="constant">done</span>;
+    !msg
+  <span class="constant">else</span>
+    []
+</pre>
+  </body>
+</html>

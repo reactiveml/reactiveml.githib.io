@@ -1,0 +1,4 @@
+let landin () =
+  let f = ref (process ()) in
+  f := process (print_endline "Coucou"; run !f);
+  !f

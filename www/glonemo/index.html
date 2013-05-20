@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+    <html>
+      <head>
+	<meta http-equiv="content-language" content="en">
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+	<meta name="author" content="Ludovic Samper">
+	<meta name="keywords" content="Ludovic Samper sensor networks Glonemo Glonémo">
+	<link rel="stylesheet" href="style.css" type="text/css">
+	<title>Glonemo</title>
+      </head>
+
+    <body bgcolor="#ffffff">
+
+
+
+
+     <table border="0" width="100%">
+      <tr>
+        <td align="center">
+          <a href="http://www.francetelecom.com/en/">
+            <img border="0" src="images/logo_francetelecom.gif" alt="France Télécom R&amp;D" />
+          </a>
+        </td>
+        <td align="center">
+
+          <a href="http://www-verimag.imag.fr/">
+            <img border="0" src="images/logo.verimag.png" alt="Verimag" />
+          </a>
+        </td>
+      </tr>
+    </table>
+    
+
+<center>  
+  <h1>Glonemo</h1>
+</center>
+
+<blockquote>
+
+<b>Glonemo</b> for <b>Glo</b>bal <b>net</b>work <b>mo</b>del is a simulation tool for sensor networks. 
+It is <b>global</b> because it takes into account all the following
+aspects: 
+<ul>
+  <li>A precise modeling of the hardware</li>
+  <li>The protocol layers (MAC and routing)</li>
+  <li>The application code</li>
+  <li>An abstract model of the physical environment as viewed by the sensors.</li>
+</ul>
+
+Taking all these aspects into account, it can provide an accurate modeling of the <b>energy consumption</b>.<br>
+
+<b>Glonemo</b> is written in <a href="http://www.ReactiveML.org"> ReactiveML</a>. <br>
+
+The environment is modeled using <a href="http://www-verimag.imag.fr/~synchron/index.php?page=lurette/lucky"> 
+Lucky</a>, an abstract machine for the simulation of non-deterministic reactive code.
+<br>
+Using the graphic window of ocaml, <b>Glonemo</b> can display the
+simulation progress. See the example section.
+
+
+<h2>Publications</h2>
+<b>Modélisations et Analyses de Réseaux de Capteurs.</b>
+<i>Ludovic Samper. Thèse de doctorat de l'INPG. Soutenue publiquement le 7 avril 2008 à Grenoble.</i>
+[ <a href="PAPERS/bibtex.html#Samper08">bib</a> | <a  href="PAPERS/Samper-these.pdf">.pdf</a> | <a href="SLIDES/Samper-these-slide.pdf">slides.pdf</a>  ] <br>
+<br>
+<b>On the Importance of Modeling the Environment when Analyzing Sensor Networks.</b>
+<i>Ludovic Samper, Florence Maraninchi, Laurent Mounier, Erwan Jahier and Pascal Raymond. 3rd International Workshop on Wireless Ad-hoc and Sensor Networks (IWWAN'06), June 2006, New York, USA.</i>
+[ <a href="PAPERS/bibtex.html#SMMJR06">bib</a> | <a href="PAPERS/SamperIwwan06.pdf">.pdf</a> ]<br>
+<br>
+<b>GLONEMO: Global and Accurate Formal Models for the Analysis of Ad- Hoc Sensor Networks.</b>
+<i>Ludovic Samper, Florence Maraninchi, Laurent Mounier and Louis Mandel. InterSense: First International Conference on Integrated Internet Ad hoc and Sensor Networks. May 2006, Nice, France.</i> 
+[ <a href="PAPERS/bibtex.html#SamperMaraninchiMounierMandelInterSense2006">bib</a> | <a href="PAPERS/GlonemoIntersense06.pdf">.pdf</a> | <a href="SLIDES/GlonemoIntersense06Slides.pdf">slides.pdf</a> ]
+<br>
+
+<h2>Last features</h2>
+    March 2006 - A "<b>fan</b>" has been implemented in order to control the cloud!<br>
+    March 2006 - The sensors that have no more energy disappear. <br>
+    February 2006 - Now, the routing protocol <a href="http://www.isi.edu/scadds/projects/diffusion.html">directed diffusion</a> has been implemented.
+
+<h2>Example</h2>
+
+<h3>Description of the example</h3>
+
+The goal of the network is to detect a radioactive cloud. The cloud, modeled in Lucky is a disk.
+<br>
+The routing layer is directed diffusion.
+<br>
+The MAC layer is a preamble sampling mac protocol.
+<br>
+We simulate here, one hundred nodes.
+<br>
+
+<h3>Screenshots of Glonemo simulations</h3>
+
+
+The color of the nodes indicates in which mode (sleep, idle, ...) is their radio.
+<br>
+A node is represented by a black disk when its battery ran out of
+energy. <br>
+The number of circles corresponds to the number of collisions suffered by the sensor.
+<br>
+The cloud is the red disk.
+<br>
+     <table border="0" width="50%">
+      <tr>
+        <td> <a href="images/GlonemoPicture1.png">
+            <img border="0" src="images/GlonemoPicture1_thumb.png" alt="Screenshot Glonemo" />
+         </a></td>
+      <td><a href="images/GlonemoPicture2.png">
+            <img border="0" src="images/GlonemoPicture2_thumb.png" alt="Screenshot Glonemo" />
+        </a></td>
+     </tr>
+    </table>
+
+ In the first picture, the constraints on the cloud maintained it in the down-right
+zone. <br>
+In the second one, which is from on other simulation, the Lucky
+constraints prevent the cloud to go near the sink.
+<br>
+
+<h2>Contact</h2>
+
+Ludovic Samper
+<!-- <a href="http://www-verimag.imag.fr/~samper">Ludovic Samper</a> -->
+
+<h2>Acknowledgement</h2>
+
+Many thanks to <a href="http://www.lri.fr/~mandel/">Louis Mandel</a> for the ReactiveML hotline!
+
+<hr>
+<p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-html401"
+        alt="Valid HTML 4.01 Transitional" height="31" width="88" border=0></a>
+  </p>
+  
+</blockquote>
+    </body>
+    </html>
+

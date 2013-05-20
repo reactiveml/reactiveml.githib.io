@@ -1,0 +1,5 @@
+let rec process false_warning n =
+  if n < 0 then ()
+  else run (false_warning (n-1))
+
+let process main = run (false_warning 10) || run (false_warning 5)

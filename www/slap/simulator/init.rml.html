@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.16 in css mode. -->
+<html>
+  <head>
+    <title>init.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #bc8f8f;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="type">let</span> nb_instants = ref (-1)
+
+<span class="comment">(* simulation space *)</span>
+<span class="type">let</span> max_x = ref 1000
+<span class="type">let</span> max_y = ref 1000
+
+<span class="type">let</span> area_size_x = ref 100
+<span class="type">let</span> area_size_y = ref 100
+
+<span class="comment">(* nodes *)</span>
+<span class="type">let</span> nb_nodes = ref 500 
+<span class="type">let</span> coverage_range = ref 100
+<span class="type">let</span> speed = ref 1
+
+<span class="comment">(* packets *)</span>
+<span class="type">let</span> elip_proba = ref 100.0
+<span class="type">let</span> elip_forecast = ref 0
+
+<span class="type">let</span> msg_proba = ref 50.0
+<span class="type">let</span> msg_len = ref 1
+
+
+<span class="comment">(* outputs *)</span>
+<span class="type">let</span> with_graphics = ref true
+
+<span class="comment">(* Set functions *)</span>
+<span class="type">let</span> option_set r v = r := <span class="function-name">Some</span> v
+
+<span class="type">let</span> set_option r v_opt =
+  <span class="constant">match</span> v_opt <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> ()
+  <span class="constant">|</span> <span class="function-name">Some</span> v <span class="constant">-&gt;</span> r := v
+
+
+<span class="type">let</span> set_size t =
+  set_option max_x t;
+  set_option max_y t
+
+
+<span class="type">let</span> set_density d =
+  <span class="type">let</span> surface = float_of_int (!max_x * !max_y) <span class="type">in</span>
+  <span class="type">let</span> range =
+    int_of_float 
+      (sqrt(d *. surface /. (3.14 *. float_of_int(!nb_nodes))))
+  <span class="type">in</span>
+  coverage_range := range
+
+<span class="type">let</span> set_with_graphics r v_opt =
+  <span class="constant">match</span> v_opt <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> ()
+  <span class="constant">|</span> <span class="function-name">Some</span> v <span class="constant">-&gt;</span> r := not v
+
+
+<span class="type">let</span> set_area t_opt =
+  <span class="constant">match</span> t_opt <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span>
+      area_size_x := 2 * !coverage_range;
+      area_size_y := 2 * !coverage_range
+  <span class="constant">|</span> <span class="function-name">Some</span> t <span class="constant">-&gt;</span>
+      area_size_x := t;
+      area_size_y := t
+
+<span class="comment">(* Configuration function *)</span>
+<span class="type">let</span> configure () = 
+  <span class="type">let</span> doc = <span class="string">""</span>
+  <span class="type">and</span> doc_N = <span class="string">"&lt;nb&gt; nombre d'instant de smulation"</span>
+  <span class="type">and</span> doc_D = <span class="string">"&lt;density&gt; densit&#233; par zone de couverture"</span>
+  <span class="type">and</span> doc_n = <span class="string">"&lt;nb&gt; nombre de noeuds dans la topologie"</span>
+  <span class="type">and</span> doc_t = <span class="string">"&lt;longueur&gt; longueur d'un cote"</span>
+  <span class="type">and</span> doc_range = <span class="string">"&lt;r&gt; rayon de couverture"</span> 
+  <span class="type">and</span> doc_area = <span class="string">"&lt;longueur&gt; longueur d'un cote d'une area"</span>
+  <span class="type">and</span> doc_o = 
+    <span class="string">"&lt;pref&gt; calcul des stats (&lt;pref&gt; est lepr&#233;fixe des fichiers de sortie)"</span>
+  <span class="type">and</span> doc_msg_proba = <span class="string">"&lt;p&gt; probabilit&#233; d'&#233;mission d'un message"</span>
+  <span class="type">and</span> doc_msg_len = <span class="string">"&lt;n&gt; longueur max d'un message"</span>
+  <span class="type">and</span> doc_elip_proba = <span class="string">"&lt;n&gt; probabilit&#233; d'insertion d'une info de elip"</span>
+  <span class="type">and</span> doc_elip_forecast = <span class="string">"&lt;n&gt; distance de prevision"</span>
+  <span class="type">and</span> doc_nox = <span class="string">" sans mode graphique"</span>
+  <span class="type">and</span> doc_node = <span class="string">"&lt;n&gt; numero du noeud observ&#233;"</span>
+  <span class="type">and</span> errmsg = <span class="string">"Options are:"</span>
+  <span class="type">in</span>
+  <span class="type">let</span> var_N = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_D = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_n = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_t = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_range = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_area = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_o = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_msg_proba = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_msg_len = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_elip_proba = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_elip_forecast = ref <span class="function-name">None</span>
+  <span class="type">and</span> var_node = ref <span class="function-name">None</span>
+  <span class="type">in</span>
+  <span class="function-name">Arg</span>.parse
+    [ (<span class="string">"-N"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_N), doc_N);
+      (<span class="string">"-n"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_n), doc_n);
+      (<span class="string">"-t"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_t), doc_t);
+      (<span class="string">"-range"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_range), doc_range);
+      (<span class="string">"-D"</span>, <span class="function-name">Arg</span>.<span class="function-name">Float</span> (option_set var_D), doc_D);
+      (<span class="string">"-area"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_area), doc_area);
+      (<span class="string">"-msg_proba"</span>, <span class="function-name">Arg</span>.<span class="function-name">Float</span> (option_set var_msg_proba), doc_msg_proba);
+      (<span class="string">"-msg_len"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_msg_len), doc_msg_len);
+      (<span class="string">"-elip_proba"</span>, <span class="function-name">Arg</span>.<span class="function-name">Float</span> (option_set var_elip_proba), doc_elip_proba);
+<span class="comment">(*      ("-o", Arg.String (option_set var_o), doc_o);*)</span>
+      (<span class="string">"-nox"</span>, <span class="function-name">Arg</span>.<span class="function-name">Clear</span> with_graphics, doc_nox); 
+      (<span class="string">"-node"</span>, <span class="function-name">Arg</span>.<span class="function-name">Int</span> (option_set var_node), doc_node);
+    ]
+    (<span class="type">fun</span> s <span class="constant">-&gt;</span> <span class="comment">raise</span> (<span class="function-name">Invalid_argument</span> s))
+    errmsg;
+
+  <span class="constant">if</span> (!var_D &lt;&gt; <span class="function-name">None</span>) <span class="constant">&amp;&amp;</span> (!var_range &lt;&gt; <span class="function-name">None</span>) <span class="constant">then</span> 
+    failwith <span class="string">"-D and -range are not compatible"</span>;
+  set_option nb_instants !var_N;
+  set_option nb_nodes !var_n;
+  set_size !var_t;
+  set_option coverage_range !var_range;
+  <span class="keyword">begin</span> <span class="constant">match</span> !var_D <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> ()
+  <span class="constant">|</span> <span class="function-name">Some</span> d <span class="constant">-&gt;</span> set_density d
+  <span class="keyword">end</span>;
+  set_area !var_area;
+  set_option elip_proba !var_elip_proba;
+  set_option msg_proba !var_msg_proba;
+  set_option msg_len !var_msg_len
+
+</pre>
+  </body>
+</html>

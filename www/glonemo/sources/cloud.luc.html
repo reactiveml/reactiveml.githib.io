@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.20 in css mode. -->
+<html>
+  <head>
+    <title>cloud.luc</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #bc8f8f;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="function-name">inputs</span> <span class="function-name">{</span>
+wind_x <span class="function-name">:</span> <span class="variable-name">float</span><span class="function-name">;</span>
+wind_y <span class="function-name">:</span> <span class="variable-name">float</span><span class="function-name">;</span>
+<span class="function-name">}</span>
+
+<span class="function-name">outputs</span> <span class="function-name">{</span>
+cloud_x<span class="function-name">:</span> <span class="variable-name">float</span><span class="function-name">;</span>
+cloud_y<span class="function-name">:</span> <span class="variable-name">float</span><span class="function-name">;</span>
+<span class="function-name">}</span>
+
+<span class="function-name">locals</span> <span class="function-name">{</span> <span class="function-name">}</span>
+
+<span class="function-name">nodes</span> <span class="function-name">{</span>
+  init <span class="function-name">:</span> <span class="function-name">stable;</span>
+  perm <span class="function-name">:</span> <span class="function-name">stable;</span>
+<span class="function-name">}</span>
+
+<span class="function-name">start_node</span> <span class="function-name">{</span> init <span class="function-name">}</span>
+
+<span class="function-name">transitions</span> <span class="function-name">{</span>  
+   init <span class="function-name">-&gt;</span> perm
+     <span class="function-name">~</span><span class="string">cond</span>
+      cloud_x <span class="function-name">=</span> 0.0
+      <span class="constant">and</span>
+      cloud_y <span class="function-name">=</span> 0.0 <span class="function-name">;</span>
+     
+   perm <span class="function-name">-&gt;</span> perm
+     <span class="function-name">~</span><span class="string">cond</span> 
+      <span class="function-name">(</span><span class="constant">if</span> <span class="constant">pre</span> wind_y <span class="function-name">&gt;=</span> 0.0 <span class="constant">then</span> <span class="function-name">((</span>cloud_y <span class="function-name">-</span> <span class="constant">pre</span> cloud_y<span class="function-name">)</span> <span class="function-name">&gt;=</span> 0.0<span class="function-name">)</span> <span class="constant">and</span> 
+                                  <span class="function-name">(</span>cloud_y <span class="function-name">-</span> <span class="constant">pre</span> cloud_y<span class="function-name">)</span> <span class="function-name">&lt;=</span> <span class="function-name">(</span>0.00001 <span class="function-name">*</span> <span class="function-name">(</span><span class="constant">pre</span> wind_y<span class="function-name">))</span>
+                            <span class="constant">else</span> <span class="function-name">((</span>cloud_y <span class="function-name">-</span> <span class="constant">pre</span> cloud_y<span class="function-name">)</span> <span class="function-name">&lt;=</span> 0.0 <span class="constant">and</span> 
+                                  <span class="function-name">(</span>cloud_y <span class="function-name">-</span> <span class="constant">pre</span> cloud_y<span class="function-name">)</span> <span class="function-name">&gt;=</span> <span class="function-name">(</span>0.00001 <span class="function-name">*</span> <span class="function-name">(</span><span class="constant">pre</span> wind_y<span class="function-name">))))</span>
+      <span class="constant">and</span>
+      <span class="function-name">(</span><span class="constant">if</span> <span class="constant">pre</span> wind_x <span class="function-name">&gt;=</span> 0.0 <span class="constant">then</span> <span class="function-name">((</span>cloud_x <span class="function-name">-</span> <span class="constant">pre</span> cloud_x<span class="function-name">)</span> <span class="function-name">&lt;=</span> <span class="function-name">(</span>0.00001 <span class="function-name">*</span> <span class="function-name">(</span><span class="constant">pre</span> wind_x<span class="function-name">))</span> <span class="constant">and</span> 
+                                  <span class="function-name">(</span>cloud_x <span class="function-name">-</span> <span class="constant">pre</span> cloud_x<span class="function-name">)</span> <span class="function-name">&gt;=</span> 0.0<span class="function-name">)</span>
+                            <span class="constant">else</span> <span class="function-name">((</span>cloud_x <span class="function-name">-</span> <span class="constant">pre</span> cloud_x<span class="function-name">)</span> <span class="function-name">&lt;=</span> 0.0 <span class="constant">and</span> 
+                                  <span class="function-name">(</span>cloud_x <span class="function-name">-</span> <span class="constant">pre</span> cloud_x<span class="function-name">)</span> <span class="function-name">&gt;=</span> <span class="function-name">(</span>0.00001 <span class="function-name">*</span> <span class="function-name">(</span><span class="constant">pre</span> wind_x<span class="function-name">))))</span>
+<span class="function-name">}</span>
+</pre>
+  </body>
+</html>

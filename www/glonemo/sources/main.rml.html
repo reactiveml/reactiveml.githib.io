@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.20 in css mode. -->
+<html>
+  <head>
+    <title>main.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .builtin {
+        /* font-lock-builtin-face */
+        color: #da70d6;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name">Definitions</span>
+<span class="variable-name">open</span> <span class="function-name">Print</span>
+<span class="variable-name">open</span> <span class="function-name">Mac</span>
+<span class="variable-name">open</span> <span class="function-name">Routing</span>
+<span class="variable-name">open</span> <span class="function-name">Energy</span>
+<span class="variable-name">open</span> <span class="function-name">Graphic</span>
+<span class="variable-name">open</span> <span class="function-name">Application</span>
+<span class="variable-name">open</span> <span class="function-name">Environment</span>
+
+
+<span class="type">let</span> <span class="type">process</span> check_energy self kill_node =
+  <span class="keyword">loop</span>
+    <span class="constant">if</span> self.node_energy &lt;= 0.0 <span class="constant">then</span> <span class="builtin">emit</span> kill_node;
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+
+<span class="type">let</span> <span class="type">process</span> mac_node self =
+  <span class="builtin">run</span> (alternation self)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> (wait self)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> (mac_ctrl self)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> (consume_energy self)
+
+
+<span class="type">let</span> <span class="type">process</span> network_node self =
+  <span class="builtin">run</span> (receive_interest self)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> (send_interest self)
+
+
+<span class="type">let</span> which_nodes (node_tab : node array) =
+  ... <span class="comment">(**List of the nodes concerned by the interest*)</span>...
+
+<span class="type">let</span> nodes = 
+  <span class="function-name">Array</span>.init number_of_nodes (<span class="type">fun</span> i <span class="constant">-&gt;</span> make_node i (random_pos()))
+
+<span class="type">let</span> init =
+  compute_neighbors nodes;
+  sink_of_node nodes.(1);
+  make_interest (nodes.(1)) (which_nodes nodes);;
+
+
+<span class="type">let</span> <span class="type">process</span> main =
+  <span class="type">signal</span> cloud_x, cloud_y <span class="type">default</span> 0.0 <span class="type">gather</span> (+.) <span class="type">in</span>
+  <span class="type">signal</span> wind_x, wind_y <span class="type">default</span> 0.0 <span class="type">gather</span> (+.) <span class="type">in</span>
+  <span class="type">signal</span> kill_node <span class="type">in</span>
+  <span class="type">signal</span> kill_cloud <span class="type">in</span>
+  <span class="keyword">begin</span>
+    ...
+        <span class="builtin">run</span> (wind () (wind_x, wind_y))
+        <span class="constant">||</span>
+        <span class="builtin">run</span> (cloud (wind_x, wind_y) (cloud_x, cloud_y))
+    ...
+  <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="constant">for</span> i = 0 <span class="constant">to</span> <span class="function-name">Array</span>.length nodes - 1 dopar
+    <span class="type">signal</span> kill_node <span class="type">in</span>
+    <span class="constant">do</span>
+      <span class="builtin">run</span> (mac_node nodes.(i))
+      <span class="constant">||</span>
+      <span class="builtin">run</span> (network_node nodes.(i))
+      <span class="constant">||</span>
+      <span class="builtin">run</span> (check_energy nodes.(i) kill_node)
+      <span class="constant">||</span>
+      <span class="builtin">run</span> (application_interest nodes.(i) cloud_x cloud_y)
+    <span class="constant">until</span> kill_node <span class="constant">done</span>
+    <span class="constant">done</span>
+  <span class="constant">||</span>
+  <span class="builtin">run</span> (time_process)
+  <span class="constant">||</span>
+  <span class="constant">if</span> !<span class="function-name">Init</span>.with_graphics <span class="constant">then</span>
+    <span class="keyword">begin</span>
+      draw_init ();
+      <span class="keyword">loop</span>
+        draw_all nodes {x = <span class="builtin">pre</span> <span class="variable-name">?cloud_x</span>; y = <span class="builtin">pre</span> <span class="variable-name">?cloud_y</span>};
+        <span class="builtin">pause</span>;
+      <span class="keyword">end</span>
+      <span class="constant">||</span>
+      <span class="builtin">run</span> (fan wind_x wind_y kill_cloud)
+    <span class="keyword">end</span>
+
+
+
+</pre>
+  </body>
+</html>

@@ -1,0 +1,3 @@
+let rec process intantaneous s =
+  emit s ();
+  run (intantaneous s)

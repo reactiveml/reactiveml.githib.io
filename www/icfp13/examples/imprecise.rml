@@ -1,0 +1,4 @@
+let rec process imprecise =
+  signal s default () gather (fun () () -> ()) in
+  present s then () else ();
+  run imprecise

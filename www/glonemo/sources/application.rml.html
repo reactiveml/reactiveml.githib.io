@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.20 in css mode. -->
+<html>
+  <head>
+    <title>application.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .builtin {
+        /* font-lock-builtin-face */
+        color: #da70d6;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name">Definitions</span>
+<span class="variable-name">open</span> <span class="function-name">Routing</span>
+
+
+
+
+<span class="comment">(**When the node has an interest, it tests the cloud presence*)</span>
+<span class="comment">(**If it detects it and it has not detected it the instant before, it sends an alarm.*)</span>
+
+<span class="type">let</span> present_cloud self cloud_pos =
+  (distance2 self.node_pos cloud_pos) &lt; cloud_range2 
+;;
+
+
+<span class="type">let</span> send_alarm self cloud_pos my_interest =
+  <span class="constant">if</span> (present_cloud self cloud_pos) <span class="constant">then</span>
+    (<span class="constant">if</span> (not self.node_pre_present_cloud) <span class="constant">then</span>
+      (response self my_interest;
+       self.node_pre_present_cloud &lt;- true;
+      )
+    )
+  <span class="constant">else</span> self.node_pre_present_cloud &lt;- false;;
+
+
+
+<span class="type">let</span> <span class="type">process</span> application_interest self cloud_x cloud_y =
+  <span class="keyword">loop</span>
+    <span class="keyword">begin</span> <span class="constant">try</span>
+      <span class="type">let</span> my_interest =
+        <span class="function-name">List</span>.find (<span class="type">fun</span> x <span class="constant">-&gt;</span> x.for_me) self.node_network.interest_list 
+      <span class="type">in</span>
+      ... what the node has <span class="constant">to</span> <span class="constant">do</span>, here send_alarm...;
+    <span class="constant">with</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span> () 
+    <span class="keyword">end</span>;
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+;;
+
+
+<span class="comment">(**Process that sends a new interest*)</span>
+<span class="comment">(**nodesConcernedList, the target nodes list*)</span>
+<span class="comment">(**self is supposed to be a sink*)</span>
+<span class="type">let</span> make_interest self (nodesConcernedList : node list) =
+  <span class="type">let</span> ir = {
+    interest_id_req = get_id_int();
+    concerned = nodesConcernedList;
+  }
+  <span class="type">in</span>
+  <span class="type">let</span> p3 = {
+    header3 = <span class="function-name">Interest_request</span> ir;
+    ...
+  } 
+  <span class="type">in</span>
+  <span class="builtin">emit</span> self.application_to_routing (p3);
+</pre>
+  </body>
+</html>
