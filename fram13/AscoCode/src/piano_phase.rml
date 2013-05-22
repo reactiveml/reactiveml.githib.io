@@ -1,0 +1,119 @@
+open Ascolive
+open Types
+open Utils
+
+(* Graphic Mess *)
+type pos = Right | Left | Full
+
+let draw_rect pos color =
+  let wx = Graphics.size_x () in
+  let wy = Graphics.size_y () in
+  Graphics.set_color color;
+  begin match pos with
+  | Right ->
+      Graphics.fill_rect (wx/2) 0 (wx/2) wy
+  | Left ->
+      Graphics.fill_rect 0 0 (wx/2) wy
+  | Full ->
+      Graphics.fill_rect 0 0 wx wy
+  end
+
+let process draw_sig s pos color env =
+  loop
+    await s;
+    draw_rect pos color;
+    run (env.wait 0.2);
+    draw_rect pos Graphics.background
+  end
+
+let process draw_desync s1 s2 env =
+  run (draw_sig s1 Right Graphics.blue env) ||
+  run (draw_sig s2 Left Graphics.red env)
+
+let process draw_sync s env =
+  loop
+    draw_rect Full Graphics.green;
+    run (env.wait 0.2);
+    Graphics.clear_graph ();
+    await s
+  end
+
+(* Compare the date of the last emision of two signal *)
+(* and emit signal resync if |d1-d2| < eps *)
+let process compare s1 s2 resync eps env =
+  let process stamps s f =
+    loop
+      await s;
+      await immediate one env.date(d) in
+      emit f d
+    end
+  in
+
+  let process spy f1 f2 resync eps =
+    loop
+      await (f1 \/ f2);
+      let t1 = last ?f1
+      and t2 = last ?f2 in
+      if abs_float (t1 -. t2) < eps then
+	emit resync
+    end
+  in
+
+  signal f1 default 0.0 gather (fun x y -> x) in
+  signal f2 default 1.0 gather (fun x y -> x) in
+  run (stamps s1 f1) ||
+  run (stamps s2 f2) ||
+  run (spy f1 f2 resync eps)
+
+(* Track the instrumental event cpt mod 12 *)
+let process track cpt sync_instr env =
+  loop
+    await env.listen ([ev]) when (ev.index mod 12 = cpt) in
+    emit sync_instr
+  end
+
+let process main =
+  Graphics.open_graph " 600x300";
+
+  let _, instr_score = parse_score "examples/piano_phase.asco" in
+  let env = create_env instr_score 100. 7400 5151 in
+
+  signal resync in
+  signal sync_elec in
+  signal sync_instr in
+
+  (* Define the 12 notes loop with an emission of signal *)
+  (* sync_elec at the begining of every sequence*)
+  let process play_sequence sync i n delay =
+    let a = asco_signal sync_elec in
+    let midi_base = [F3'; B4; C4'; D4; F3'; E3; C4'; B4; F3'; D4; C4'] in
+    let seq = List.map (fun x -> max_note delay (note_to_midi x)) midi_base in
+    let seq = (max_note delay (note_to_midi E3))::(0.0, a)::seq in
+    let g = asco_group sync partial seq in
+    run (exec_loop n i (-.delay) g env)
+  in
+
+  (* Piano Phase sync -> desync -> sync...*)
+  let rec process piano_phase delay cpt env =
+    signal kill in
+    let i = max 1 (last_one env.listen).index in
+    do
+      pause;
+      run (draw_sync sync_elec env) ||
+      (run (play_sequence tight i 4 0.25); emit kill) ||
+      run (track (cpt-1) sync_instr env)
+    until kill done;
+    do
+      let i = (last_one env.listen).index in
+      run (draw_desync sync_instr sync_elec env) ||
+      run (play_sequence loose (i+1) 50 delay) ||
+      run (compare sync_elec sync_instr resync 0.05 env) ||
+      run (track cpt sync_instr env)
+    until resync
+      -> run (piano_phase delay ((cpt + 1) mod 12) env)
+    done
+  in
+
+  run (init_env env);
+  (run (live env) ||
+  run (piano_phase 0.2542 2 env))

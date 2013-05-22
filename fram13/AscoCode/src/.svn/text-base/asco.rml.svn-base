@@ -1,0 +1,73 @@
+(***************************************************************)
+(*                        Reactive Asco                        *)
+(*                                                             *)
+(*                                                             *)
+(* Main file for Reactive Asco                                 *)
+(* Read a score and optionally a simulation file and launch    *)
+(* The sequencer.                                              *)
+(***************************************************************)
+
+open Types
+
+(* Parse the score and simulation files *)
+let parse file p =
+  let f = open_in file in
+  let buf = Lexing.from_channel f in
+  try
+      let res = p Lexer.make_token buf in
+      close_in f;
+      res
+  with
+    Lexer.Lexing_error s ->
+      Utils.localisation (Lexing.lexeme_start_p buf) file;
+      prerr_endline ("Syntax error: "^file);
+      exit 1
+  | Parsing.Parse_error ->
+      Utils.localisation (Lexing.lexeme_start_p buf) file;
+      prerr_endline ("Syntax error: "^file);
+      exit 1
+
+
+let process main =
+  (* Read arguments of the command line *)
+  let scorefile, input, verbose, errors, tempo, freq, client_port, server_port =
+    Config.read_args ()
+  in
+
+  (* Parsing *)
+  let score, instr_score = parse scorefile Parser.make_score in
+
+  (* Environment *)
+  let n = Array.length instr_score in
+  let events = Array.init (n + 1) (fun i -> signal s in s) in
+  signal listen in
+  signal date in
+  signal perf in
+
+  (* Initialize the signal listen *)
+  emit listen {index = 0; bps = (tempo /. 60.)};
+  pause;
+
+  (* Build the execution machine *)
+  let scheduler, wait = Time.make_scheduler date in
+  let play_score = Motor.make_player instr_score events listen wait perf in
+
+  (* Run! *)
+  run (Time.metronome listen freq date) ||
+  run scheduler ||
+  run (play_score score)
+  ||
+  begin match input with
+  | Config.Udp ->
+      run (Input.udp server_port listen events)
+  | Config.File f ->
+      let simu = parse f Parser.make_simu in
+      run (Input.simulator simu errors freq listen events)
+  | Config.Score ->
+      let simu = Utils.extract_instr instr_score tempo in
+      run (Input.simulator simu errors freq listen events)
+  end
+  ||
+  run (Output.udp client_port perf)
+  ||
+  if verbose then run (Utils.verbose listen perf)

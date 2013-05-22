@@ -1,0 +1,3 @@
+<Core> or <IO> or <Lib>: include
+<*.native>:use_str, use_graphics
+<*.byte>:use_str, use_graphics
