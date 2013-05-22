@@ -1,0 +1,50 @@
+\ProvidesPackage{decade}
+
+\RequirePackage{listings}
+
+\lstdefinelanguage{lustre}{
+morekeywords={
+node, returns, var, allocate, mutable, let, tel, const, pre, last,fby,
+merge, at, if, then, else, when},
+otherkeywords={=, [, ], :, ;, <<, >>, <-},
+sensitive=true,
+morecomment=[n]{(*}{*)},
+morestring=[b]",
+morestring=[b]'
+}
+
+\lstdefinelanguage{rml}{
+morekeywords={
+mutable, let, await, process, run, rec, node, do, and, automaton, begin, end, done, for, downto, loop, to, immediate, one,
+if, then, else, when, pause, match, with, type, of, pre, last, emit, signal, default, gather, until, in, when, present, val, while},
+%otherkeywords={=, [, ], :, ;, ||, <-},
+sensitive=true,
+morecomment=[n]{(*}{*)},
+morestring=[b]",
+morestring=[b]'
+}  
+
+\lstdefinelanguage{decade}{
+morekeywords={
+node,returns,var,let,tel,const,pre,last,do,reset, every,fby,at,
+type,merge,when,automaton,end,switch,case,state,until,if,then,else,
+map,with,default,mapfold,fold,new,int,float,init,fun,split,for},
+otherkeywords={},
+sensitive=true,
+morecomment=[n]{(*}{*)},
+morestring=[b]",
+morestring=[b]'
+}
+
+\lstdefinelanguage{obc}{
+morekeywords={
+machine,registers,instances,switch,step,float,int,var,case,mutable,for,to,const,do,this},
+otherkeywords={},
+sensitive=true,
+morecomment=[n]{(*}{*)},
+morestring=[b]",
+morestring=[b]'
+}
+
+
+\lstset{language=decade}
