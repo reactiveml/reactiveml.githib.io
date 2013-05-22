@@ -39,12 +39,23 @@ let make_player instr_score events listen wait perf =
     await immediate one events.(se.event) (status) in
     match status with
     | Detected ->
-	(* rule (Detect) *)
-	run (exec_seq (detected se.event) 0.0 se.seq)
+  	(* rule (Detect) *)
+  	run (exec_seq (detected se.event) 0.0 se.seq)
     | Missed(j) ->
-	(* rule (Missed) *)
-	run (exec_seq (missed se.event j) 0.0 se.seq)
+  	(* rule (Missed) *)
+  	run (exec_seq (missed se.event j) 0.0 se.seq)
 
+  (* and process exec_score_event2 se = *)
+  (*   signal s in *)
+  (*   emit add_sig (s,-se.event); *)
+  (*   await s (status) in *)
+  (*   match status with *)
+  (*   | Detected -> *)
+  (* 	(\* rule (Detect) *\) *)
+  (* 	run (exec_seq (detected se.event) 0.0 se.seq) *)
+  (*   | Missed(j) -> *)
+  (* 	(\* rule (Missed) *\) *)
+  (* 	run (exec_seq (missed se.event j) 0.0 se.seq) *)
 
   and process detected i delta ae =
     match ae with
