@@ -43,9 +43,9 @@ let localisation pos file =
 let extract_instr is tempo =
   let n = Array.length is in
   let res = ref [] in
-  for i = (n - 1) downto 0 do
+  for i = (n - 1) downto 1 do
     let date = is.(i) *. 60. /. tempo in
-    res := (i + 1, date, tempo) :: !res
+    res := (i, date, tempo) :: !res
   done;
   !res
 

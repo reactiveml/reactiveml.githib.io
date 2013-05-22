@@ -1,6 +1,5 @@
 (************** Basic queue organized with delays *************)
-
-type 'a queue = Empty | Node of float * 'a * 'a queue * 'a queue
+type ('a, 'b) queue = Empty | Node of 'a * 'b * ('a, 'b) queue * ('a, 'b) queue
 
 let rec q_push queue (delay, elt) =
   match queue with
@@ -26,19 +25,19 @@ let q_pop = function
   | Empty -> None
   | Node(delay, elt, _, _) as queue -> Some(delay, elt, q_remove_top queue)
 
-type 'a action =
-  | Push of float * 'a
+type ('a, 'b) action =
+  | Push of 'a * 'b
   | Remove
-  | Sustain of 'a queue
+  | Sustain of ('a, 'b) queue
 
-type 'a kind =
-  | Not_yet of ((float * 'a) list * int * 'a queue option)
-  | Current of 'a queue
+type ('a,'b) kind =
+  | Not_yet of (('a * 'b) list * int * ('a,'b) queue option)
+  | Current of ('a,'b) queue
 
 
-type 'a body = {mutable state : 'a kind}
+type ('a, 'b) body = {mutable state : ('a, 'b) kind}
 
-type 'a state = 'a body option
+type ('a, 'b) state = ('a, 'b) body option
 
 let rec fold f n acc =
   match n with
@@ -120,7 +119,7 @@ let make_queue () =
 	  | None -> l
 	  | Some(d', s', qq') ->
 	      if d >= d' then
-	        (emit state Remove; aux (s'::l) qq')
+	        (emit state Remove; aux ((d', s')::l) qq')
 	      else l
 	  end
     in

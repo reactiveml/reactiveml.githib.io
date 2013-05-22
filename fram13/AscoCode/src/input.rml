@@ -32,6 +32,38 @@ let process server listen events =
   in
   run (track 0)
 
+
+(* let process server listen add_sig = *)
+(*   let process send listen queue_pop = *)
+(*     let rec detect_missed i sl = *)
+(*        match sl with *)
+(*       | [] -> () *)
+(*       | (h, sh)::q -> *)
+(* 	  if (- h) = i then *)
+(* 	    (emit sh Detected; detected_missed q) *)
+(* 	  else *)
+(* 	    (emit sh (Missed i)) *)
+(*     in *)
+(*     loop *)
+(*       await immediate one listen (ev) in *)
+(*       let sl = queue_pop (- ev.index) in *)
+(*       detect_missed ev.index sl *)
+(*     end *)
+(*   in *)
+
+(*   let process update add_sig queue_push = *)
+(*     loop *)
+(*       await add_sig (v) in *)
+(*       List.iter (fun x -> queue_push x) v *)
+(*     end   *)
+(* in *)
+
+(*   let queue, queue_push, queue_pop = Rqueue.make_queue () in *)
+(*   run queue || *)
+(*   run (send listen queue_pop) || *)
+(*   run (update add_queue queue_push) *)
+
+
 (* Receive message from Max via UDP and send them to the motor. *)
 let process udp server_port listen events =
   let maxlen = 1024 in

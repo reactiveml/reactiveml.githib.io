@@ -61,7 +61,7 @@ let process schedule date add_queue =
     loop
       await immediate one date (d) in
       let sl = queue_pop d in
-      List.iter (fun s -> emit s) sl;
+      List.iter (fun (_, s) -> emit s) sl;
       pause
     end
   in
