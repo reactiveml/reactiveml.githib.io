@@ -71,11 +71,17 @@ let make_player instr_score wait wait_event perf =
 	    let gs = Groups.slice instr_score i delta g  in
 	    run (exec gs)
 	end
-    (* | Until(u) -> *)
-    (* 	(\* Preemption Construct *\) *)
-    (*     do *)
-    (* 	  run (exec_seq (detected i) delta u.until_seq) *)
-    (*     until events.(u.until_event) done *)
+    | Until(u) ->
+    	(* Preemption Construct *)
+	signal kill in
+	begin
+	  let _ = wait_event u.until_event in
+	  emit kill
+	end
+	||
+        do
+    	  run (exec_seq (detected i) delta u.until_seq)
+        until kill done
 
 
   and process missed i j delta ae =
@@ -115,11 +121,16 @@ let make_player instr_score wait wait_event perf =
 	    (run (exec_seq (missed i j) delta past) ||
 	    run (detected j 0.0 gfuture))
 	end
-    (* | Until(u) -> *)
-    (* 	(\* Preemption Construct *\) *)
-    (* 	do *)
-    (* 	  run (exec_seq (missed i j) delta u.until_seq) *)
-    (* 	until events.(u.until_event) done *)
+    | Until(u) ->
+	signal kill in
+	begin
+	  let _ = wait_event u.until_event in
+	  emit kill
+	end
+	||
+        do
+    	  run (exec_seq (detected i) delta u.until_seq)
+        until kill done
   in
 
   (* Launch the already past part of a dynamically loaded score *)

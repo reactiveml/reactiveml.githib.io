@@ -105,17 +105,25 @@ let process exec_group i delta g env =
 	     seq = [delta,g]} in
   run (exec se env)
 
-let process exec_loop n i delta g env =
+let rec process exec_loop n i delta g env =
   match g with
   | Group(g') ->
+      let j = (Utils.last_one env.listen).index + 1  in
+      let di = env.instr_score.(i) in
+      let dj = env.instr_score.(j) in
       let period = sequence_duration g'.group_seq in
-      for cpt = 0 to (n-1) do
-	let c = float_of_int cpt in
-	let d = delta +. c *. period in
-	let j = Utils.last_one env.listen in
-	run (exec_group i d g env);
-	pause
-      done
+
+      if di >= dj then
+	for cpt = 0 to (n-1) do
+	  let c = float_of_int cpt in
+	  let d = delta +. c *. period in
+	  run (exec_group i d g env);
+	  pause
+	done
+      else
+	let n' = int_of_float ((dj -. di -. delta) /. period) in
+	let delta' = -. (mod_float (dj -. di +. delta) period) in
+	run (exec_loop (n - n') j delta' g env)
   | _ -> assert false
 
 (*Chord parameter (major or minor)*)
