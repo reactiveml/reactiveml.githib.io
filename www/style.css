@@ -92,22 +92,24 @@ video {
 
 
 .jumbotron h1 {
-    font-size: 70pt;
+    font-size: 75pt;
     line-height: 1;
 }
 
-@media (max-width: 767px) {
-    .jumbotron h1 {
-        max-width:40pt;
-    }
-}
-
-
 @media (max-width: 979px) {
     .jumbotron h1 {
-        font-size: 45pt;
+        font-size: 50pt;
     }
 }
+
+@media (max-width: 500px) {
+    .jumbotron h1 {
+        font-size:35pt;
+    }
+}
+
+
+
 
 .jumbotron p {
     text-align: center;
