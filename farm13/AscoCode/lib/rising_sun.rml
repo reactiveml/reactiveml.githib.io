@@ -20,7 +20,7 @@ let bass style =
      2.0, A3, Min; 2.0, E2, Maj; 2.0, A3, Min; 2.0, A3, Min;]
   in
   (* Apply a style of accompaniment *)
-  List.map (fun (d, n, c) -> (d, (style (note_to_midi n) c))) base;;
+  List.map (fun (delay, note, color) -> (delay, (style (note_to_midi note) color))) base;;
 
 
 (* Only the bass *)

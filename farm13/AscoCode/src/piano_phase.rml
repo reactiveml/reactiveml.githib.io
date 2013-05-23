@@ -26,16 +26,22 @@ let process draw_sig s pos color env =
     draw_rect pos Graphics.background
   end
 
-let process draw_desync s1 s2 env =
-  run (draw_sig s1 Right Graphics.blue env) ||
-  run (draw_sig s2 Left Graphics.red env)
-
-let process draw_sync s env =
+let rec process graphic_listener s1 s2 desync resync env =
   loop
-    draw_rect Full Graphics.green;
-    run (env.wait 0.2);
-    Graphics.clear_graph ();
-    await s
+    do
+      Graphics.clear_graph ();
+      begin
+	emit s1 ||
+	run (draw_sig s1 Full Graphics.green env)
+      end
+    until desync done;
+    do
+      Graphics.clear_graph ();
+      begin
+	run (draw_sig s1 Left Graphics.blue env) ||
+	run (draw_sig s2 Right Graphics.red env)
+      end
+    until resync done
   end
 
 (* Compare the date of the last emision of two signal *)
@@ -79,6 +85,7 @@ let process main =
   let env = create_env instr_score 100. 7400 5151 in
 
   signal resync in
+  signal desync in
   signal sync_elec in
   signal sync_instr in
 
@@ -86,7 +93,7 @@ let process main =
   (* sync_elec at the begining of every sequence*)
   let process play_sequence sync i n delay =
     let a = asco_signal sync_elec in
-    let midi_base = [F3'; B4; C4'; D4; F3'; E3; C4'; B4; F3'; D4; C4'] in
+    let midi_base = [F3d; B4; C4d; D4; F3d; E3; C4d; B4; F3d; D4; C4d] in
     let seq = List.map (fun x -> max_note delay (note_to_midi x)) midi_base in
     let seq = (max_note delay (note_to_midi E3))::(0.0, a)::seq in
     let g = asco_group sync partial seq in
@@ -95,17 +102,11 @@ let process main =
 
   (* Piano Phase sync -> desync -> sync...*)
   let rec process piano_phase delay cpt env =
-    signal kill in
     let i = max 1 (last_one env.listen).index in
-    do
-      pause;
-      run (draw_sync sync_elec env) ||
-      (run (play_sequence tight i 4 0.25); emit kill) ||
-      run (track (cpt-1) sync_instr env)
-    until kill done;
+    run (play_sequence tight i 4 0.25);
+    emit desync;
     do
       let i = (last_one env.listen).index in
-      run (draw_desync sync_instr sync_elec env) ||
       run (play_sequence loose (i+1) 50 delay) ||
       run (compare sync_elec sync_instr resync 0.05 env) ||
       run (track cpt sync_instr env)
@@ -115,5 +116,8 @@ let process main =
   in
 
   run (init_env env);
-  (run (live env) ||
-  run (piano_phase 0.2542 2 env))
+  begin
+    run (live env) ||
+    run (piano_phase 0.2542 2 env) ||
+    run (graphic_listener sync_elec sync_instr desync resync env)
+  end
