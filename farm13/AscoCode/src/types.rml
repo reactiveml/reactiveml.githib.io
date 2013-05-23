@@ -60,9 +60,6 @@ type instr_event =
 (* Status for an event *)
 type status = Detected | Missed of label
 
-(* Table of signals for instrumental events *)
-type events = (status, status list) event array
-
 (* Performance element *)
 type perf_elem = label * delay * action
 

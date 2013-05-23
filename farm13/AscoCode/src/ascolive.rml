@@ -25,9 +25,10 @@ let parse_score s = parse s Parser.make_score
 
 type env =
     { instr_score : instr_score;
-      events : events;
+      event_handler : unit process;
       scheduler : unit process;
       wait : delay -> unit process;
+      wait_event : label -> status process;
       listen : (instr_event, instr_event list) event;
       date : (delay, delay list) event;
       perf : (perf_elem, perf_elem list) event;
@@ -39,14 +40,16 @@ let create_env instr_score freq client_port server_port =
   signal listen  in
   signal date in
   signal perf in
-  let n = Array.length instr_score in
-  let events = Array.init (n+1) (fun i -> signal s in s) in
+  (* let n = Array.length instr_score in *)
+  (* let events = Array.init (n+1) (fun i -> signal s in s) in *)
   let scheduler, wait = Time.make_scheduler date in
+  let event_handler, wait_event = Input.make_handler listen in
   let env =
     { instr_score = instr_score;
-      events = events;
+      event_handler = event_handler;
       scheduler = scheduler;
       wait = wait;
+      wait_event = wait_event;
       listen = listen;
       date = date;
       perf = perf;
@@ -62,7 +65,7 @@ let process init_env env =
 let process live env =
   run (Time.metronome env.listen env.freq env.date) ||
   run env.scheduler ||
-  run (Input.udp env.server_port env.listen env.events) ||
+  run (Input.udp env.server_port env.listen) ||
   run (Output.udp env.client_port env.perf)
 
 
@@ -91,7 +94,7 @@ let asco_group synchro error seq =
 
 let exec se env =
   let play_score =
-    Motor.make_player env.instr_score env.events env.listen env.wait env.perf
+    Motor.make_player env.instr_score env.listen env.wait env.wait_event env.perf
   in
   play_score [se]
 

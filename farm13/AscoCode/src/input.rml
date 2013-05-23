@@ -15,57 +15,75 @@ open Utils
 (* Receive a event on channel 'listen' and emit the corresponding
    signals in the table events.
 *)
-let process server listen events =
-  let n = Array.length events in
-  let rec process track pev_index =
-    await immediate one listen (ev) in
-    if not (0 <= ev.index && ev.index < n) then begin
-      prerr_endline "Error: the musician do not play the right score!";
-      exit 1
-    end;
-    for i = pev_index + 1 to ev.index - 1 do
-      emit events.(i) (Missed ev.index)
-    done;
-    emit events.(ev.index) Detected;
-    pause;
-    run (track ev.index)
-  in
-  run (track 0)
+(* let process server listen events = *)
+(*   let n = Array.length events in *)
+(*   let rec process track pev_index = *)
+(*     await immediate one listen (ev) in *)
+(*     if not (0 <= ev.index && ev.index < n) then begin *)
+(*       prerr_endline "Error: the musician do not play the right score!"; *)
+(*       exit 1 *)
+(*     end; *)
+(*     for i = pev_index + 1 to ev.index - 1 do *)
+(*       emit events.(i) (Missed ev.index) *)
+(*     done; *)
+(*     emit events.(ev.index) Detected; *)
+(*     pause; *)
+(*     run (track ev.index) *)
+(*   in *)
+(*   run (track 0) *)
 
 
-let process server_ev listen add_sig =
+let process handler listen add_event =
   let process send listen queue_pop =
     let rec detect_miss i sl =
        match sl with
       | [] -> ()
       | (h, sh)::q ->
-	  if (- h) = i then
+	  if h = i then
 	    (emit sh Detected; detect_miss i q)
 	  else
 	    (emit sh (Missed i); detect_miss i q)
     in
     loop
       await immediate one listen (ev) in
-      let sl = queue_pop (- ev.index) in
-      detect_miss ev.index sl
+      let sl = queue_pop (ev.index) in
+      detect_miss ev.index sl;
+      pause
     end
   in
 
-  let process update add_sig queue_push =
+  let process update add_event queue_push =
     loop
-      await add_sig (v) in
-      List.iter (fun x -> queue_push x) v
+      await add_event (v) in
+      List.iter (fun x -> queue_push x) v;
     end
-in
+  in
 
   let queue, queue_push, queue_pop = Rqueue.make_queue () in
   run queue ||
   run (send listen queue_pop) ||
-  run (update add_sig queue_push)
+  run (update add_event queue_push)
+
+
+let process wait_event i add_event listen =
+  await immediate one listen (ev) in
+  if ev.index = i then
+    Detected
+  else
+    signal s in
+    emit add_event (i, s);
+    await immediate one s (status) in
+    status
+
+let make_handler listen =
+  signal add_event in
+  let wait_event i = wait_event i add_event listen in
+  let event_handler = handler listen add_event in
+  event_handler, wait_event
 
 
 (* Receive message from Max via UDP and send them to the motor. *)
-let process udp server_port listen events =
+let process udp server_port listen =
   let maxlen = 1024 in
   let sock_event = Network.init_server server_port in
   print_endline ("waiting on port : "^(string_of_int server_port));
@@ -83,13 +101,12 @@ let process udp server_port listen events =
     pause;
     run max_server
   in
-  run max_server ||
-  run (server listen events)
+  run max_server
 
 (* Send messages on signal events corresponding to the simulation with
    'errors' the probability of error
 *)
-let process simulator simu errors freq listen events =
+let process simulator simu errors freq listen =
   signal clock in
   signal t in
   let period = 1. /. freq in
@@ -125,5 +142,4 @@ let process simulator simu errors freq listen events =
 
   do run time when clock done ||
   run (Time.emit_clock clock freq) ||
-  run (play simu) ||
-  run (server listen events)
+  run (play simu)

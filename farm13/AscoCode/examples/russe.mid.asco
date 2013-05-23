@@ -1,5 +1,4 @@
 NOTE 79 3.5
-UNTIL 100 {
 GROUP  @loose @partial
 {
 0.0 'mnote 60 127'
@@ -621,7 +620,6 @@ GROUP  @loose @partial
 0.0 'mnote 65 127'
 0.0 'mnote 67 127'
 0.0 'mnote 71 127'
-}
 }
 GROUP  @tight @partial
 {
