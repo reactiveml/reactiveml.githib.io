@@ -64,6 +64,7 @@ let process init_env env =
 
 let process live env =
   run (Time.metronome env.listen env.freq env.date) ||
+  run env.event_handler ||
   run env.scheduler ||
   run (Input.udp env.server_port env.listen) ||
   run (Output.udp env.client_port env.perf)
@@ -92,11 +93,12 @@ let asco_group synchro error seq =
 	 group_error = error;
 	 group_seq = seq;})
 
-let exec se env =
+let process exec se env =
   let play_score =
-    Motor.make_player env.instr_score env.listen env.wait env.wait_event env.perf
+    Motor.make_player env.instr_score env.wait env.wait_event env.perf
   in
-  play_score [se]
+  await immediate one env.listen (ev) in
+  run (play_score [se] ev.index)
 
 let process exec_group i delta g env =
   let se =  {event = i;

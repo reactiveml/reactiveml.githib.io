@@ -13,11 +13,11 @@ open Utils
 
 (* Create a process player that takes as argument an electronic score
    'score' and executes it. The player depends on the instrumental
-   score 'instr_score' with its associated events 'events', it follows
-   the position in the instrumental score using the signal 'listen'
-   and the tempo with the process 'wait'.
+   score 'instr_score', it follows the position in the instrumental
+   score using the process wait_event, and the tempo with the process
+   'wait'.
 *)
-let make_player instr_score listen wait wait_event perf =
+let make_player instr_score wait wait_event perf =
 
   let rec process exec_seq generic delta seq =
     match seq with
@@ -132,11 +132,10 @@ let make_player instr_score listen wait wait_event perf =
   in
 
   (* Launch a score that could start after the beginning of the performance *)
-  let process play_score score =
-    await immediate one listen (ev) in
-    let past, future = List.partition (fun se -> se.event < ev.index) score in
+  let process play_score score i =
+    let past, future = List.partition (fun se -> se.event < i) score in
     run (exec future) ||
-    run (exec_past past ev.index)
+    run (exec_past past i)
   in
 
   (* Return the process wich play an electronic score *)

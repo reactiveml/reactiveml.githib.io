@@ -51,13 +51,12 @@ let process main =
   (* Build the execution machine *)
   let event_handler, wait_event = Input.make_handler listen in
   let scheduler, wait = Time.make_scheduler date in
-  let play_score = Motor.make_player instr_score listen wait wait_event perf in
+  let play_score = Motor.make_player instr_score wait wait_event perf in
 
   (* Run! *)
   run (Time.metronome listen freq date) ||
   run event_handler ||
-  run scheduler ||
-  run (play_score score)
+  run scheduler
   ||
   begin match input with
   | Config.Udp ->
@@ -68,6 +67,11 @@ let process main =
   | Config.Score ->
       let simu = Utils.extract_instr instr_score tempo in
       run (Input.simulator simu errors freq listen)
+  end
+  ||
+  begin
+    await immediate one listen (ev) in
+    run (play_score score ev.index)
   end
   ||
   run (Output.udp client_port perf)

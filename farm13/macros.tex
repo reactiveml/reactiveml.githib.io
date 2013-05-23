@@ -1,0 +1,135 @@
+%%%%%%%%%%%%%%%%%%%%%%% Commands %%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  columns=fullflexible,
+  language=rml,
+  showstringspaces=false,
+  keywordstyle={\bfseries\color{blue}}
+}
+
+\newenvironment{example}%
+{\vspace{1em}
+{\noindent
+ \bf Example.}
+ \it}%
+{\vspace{1em}}
+
+\newcommand{\ie}{i.e.,\xspace}
+\newcommand{\eg}{e.g.,\xspace}
+\newcommand{\tight}{{\tt{tight}}\xspace}
+\newcommand{\loose}{{\tt{loose}}\xspace}
+\renewcommand{\partial}{{\tt{partial}}\xspace}
+\newcommand{\causal}{{\tt{causal}}\xspace}
+\newcommand{\local}{{\tt{local}}\xspace}
+\newcommand{\globl}{{\tt{global}}\xspace}
+\newcommand{\group}{{\tt{group}}\xspace}
+\newcommand{\event}{{\tt{event}}\xspace}
+
+\newcommand{\alt}{\;|\;}
+
+\newcommand{\Antescofo}{\textsc{Antescofo}\xspace}
+\newcommand{\ReactiveML}{\textsc{ReactiveML}\xspace}
+\newcommand{\Ocaml}{\textsc{OCaml}\xspace}
+\newcommand{\Haskell}{\textsc{Haskell}\xspace}
+\newcommand{\Lustre}{\textsc{Lustre}\xspace}
+\newcommand{\Esterel}{\textsc{Esterel}\xspace}
+
+\renewcommand{\k}[1]{{\bf \color{blue}{\ttfamily #1}}}
+\newcommand{\f}[1]{{\footnotesize{\ensuremath{\mathtt{#1}}}}}
+\newcommand{\ti}[1]{{\tiny{\ensuremath{\mathtt{#1}}}}}
+\renewcommand{\ll}[1]{{{\ensuremath{\mathtt{#1}}}}}
+\newcommand{\p}{\textbar \xspace}
+\newcommand{\m}[1]{{{\mbox{\emph{#1}}}}}
+\renewcommand{\l}[1]{\lstinline[basicstyle=\normalsize\ttfamily]{#1}}
+
+
+
+
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Extract}{\m{\textup{Extract}}}
+\newcommand{\Split}{\m{\textup{Split}}}
+\newcommand{\Slice}{\m{\textup{Slice}}}
+\newcommand{\seq}{\ensuremath\mathit{seq}}
+
+% %%%%%%%%%%%%%%%%%%%%% vdash for inference rules %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mvdash}[1]{\mbox{\setlength{\unitlength}{0.1em}%
+ \begin{picture}(27,10)%
+ \put(0,-3){\line(0,1){11}}%
+ \put(0,3){\line(1,0){27}}%
+\put(11,8){%
+  \makebox(0,0)[t]{\tiny #1}}%
+ \end{picture}%
+ }%
+ }
+
+\newcommand{\svdash}[1]{\mbox{\setlength{\unitlength}{0.1em}%
+ \begin{picture}(20,10)%
+ \put(0,-3){\line(0,1){11}}%
+ \put(0,3){\line(1,0){20}}%
+\put(11,8){%
+  \makebox(0,0)[t]{\tiny #1}}%
+ \end{picture}%
+ }%
+ }
+
+%%%%% Inference Macros %%%%%
+%% \newcommand{\context}{i,\delta}
+%% \newcommand{\rularrow}[4]{{#1}~\mvdash{#2}~{#3}\rightarrow{#4}}
+%% \newcommand{\ruliter}[4]{{#1}~\mvdash{#2}~{#3}\Rightarrow{#4}}
+%% \newcommandx*{\rdetect}[4][2=~~detected]{\rularrow{#1}{#2}{#3}{#4}}
+%% \newcommandx*{\rmissed}[4][2=missed]{\rularrow{#1}{#2}{#3}{#4}}
+%% \newcommandx*{\rgeneric}[4][2=~generic]{\rularrow{#1}{#2}{#3}{#4}}
+%% \newcommandx*{\ritergeneric}[4][2=~generic]{\ruliter{#1}{#2}{#3}{#4}}
+%% \newcommandx*{\riterdetect}[4][2=~~detected]{\ruliter{#1}{#2}{#3}{#4}}
+%% \newcommandx*{\ritermissed}[4][2=missed]{\ruliter{#1}{#2}{#3}{#4}}
+%% \newcommand{\rexec}[3]{#1 ~\svdash{exec\phantom{d}}~#2\rightarrow#3}
+\newcommand{\context}{i,\delta}
+
+% Version de Marc
+%% \newcommand{\rularrow}[4]
+%% {{#1}\stackrel{\mathit{#2}}{\vdash}{#3}\rightarrow{#4}}
+%% \newcommand{\ruliter}[4]
+%%            {{#1}\stackrel{\mathit{#2}}{\vdash}{#3}\Rightarrow{#4}}
+
+
+\newcommand{\rularrow}[4]{{#1}~\sststile{}{\mathit{#2}}~{#3}\rightarrow{#4}}
+\newcommand{\ruliter}[4]{{#1}~\sststile{}{\mathit{#2}}~{#3}\Rightarrow{#4}}
+
+%% \newcommand{\rularrow}[4]{{#1}~\vdash~{#3}\xrightarrow{ \mbox{\tiny $\mathit{#2}$}}{#4}}
+%% \newcommand{\ruliter}[4]{{#1}~\vdash~{#3}\xRightarrow{\mathit{#2}}{#4}}
+
+
+\newcommandx*{\rdetect}[4][2=detected]{\rularrow{#1}{#2}{#3}{#4}}
+\newcommandx*{\rmissed}[4][2=missed]{\rularrow{#1}{#2}{#3}{#4}}
+\newcommandx*{\rgeneric}[4][2=generic]{\rularrow{#1}{#2}{#3}{#4}}
+\newcommandx*{\ritergeneric}[4][2=generic]{\ruliter{#1}{#2}{#3}{#4}}
+\newcommandx*{\riterdetect}[4][2=detected]{\ruliter{#1}{#2}{#3}{#4}}
+\newcommandx*{\ritermissed}[4][2=missed]{\ruliter{#1}{#2}{#3}{#4}}
+%% \newcommand{\rexec}[3]
+%%   {{#1}\stackrel{\mathit{exec}}{\vdash}{#2} \rightarrow {#3}}
+
+\newcommandx*{\rexec}[4][2=exec]{\rularrow{#1}{#2}{#3}{#4}}
+\newcommandx*{\riterexec}[4][2=exec]{\ruliter{#1}{#2}{#3}{#4}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Liens vers le code
+\newcommand{\webdir}{https://sites.google.com/site/reactiveasco/}
+\newcommand{\rmldev}[1]{{\href{\webdir#1}{\ensuremath{^\bigstar}}}}
+\newcommand{\video}[1]{{\href{\webdir videos/#1}{\twonotes}}}
+
+%annexes
+\newcommand{\refappendix}[1]{
+\ifthenelse{\boolean{extended}}
+{\ref{#1}}
+{\ref{#1} of the extended version}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% add personnal comments
+\newcommand{\Marc}[1]{{\sl \textcolor{red}{\textbf{MP:} {#1}\xspace}}}
+%\renewcommand{\Marc}[1]{}
+\newcommand{\Florent}[1]{[{\sl\small \textcolor{red}{\textbf{F:} #1}}]\xspace}
+%\newcommand{\Florent}[1]{}
+\newcommand{\Guillaume}[1]{[{\sl\small \textcolor{green}{\textbf{G:} #1}}]\xspace}
