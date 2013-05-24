@@ -26,7 +26,7 @@ let process draw_sig s pos color env =
     draw_rect pos Graphics.background
   end
 
-let rec process graphic_listener s1 s2 desync resync env =
+let process graphic_listener s1 s2 desync resync env =
   loop
     do
       Graphics.clear_graph ();
@@ -110,8 +110,8 @@ let process main =
       run (play_sequence loose (i+1) 50 delay) ||
       run (compare sync_elec sync_instr resync 0.05 env) ||
       run (track cpt sync_instr env)
-    until resync
-      -> run (piano_phase delay ((cpt + 1) mod 12) env)
+    until resync ->
+      run (piano_phase delay ((cpt + 1) mod 12) env)
     done
   in
 

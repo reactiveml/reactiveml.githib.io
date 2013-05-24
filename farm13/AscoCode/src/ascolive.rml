@@ -25,29 +25,32 @@ let parse_score s = parse s Parser.make_score
 
 type env =
     { instr_score : instr_score;
-      event_handler : unit process;
-      scheduler : unit process;
+      runtime : unit process;
       wait : delay -> unit process;
       wait_event : label -> status process;
       listen : (instr_event, instr_event list) event;
       date : (delay, delay list) event;
-      perf : (perf_elem, perf_elem list) event;
       freq : float;
+      perf : (perf_elem, perf_elem list) event;
       client_port : int;
       server_port : int; }
 
 let create_env instr_score freq client_port server_port =
-  signal listen  in
+  signal listen in
   signal date in
   signal perf in
   (* let n = Array.length instr_score in *)
   (* let events = Array.init (n+1) (fun i -> signal s in s) in *)
   let scheduler, wait = Time.make_scheduler date in
   let event_handler, wait_event = Input.make_handler listen in
+  let process runtime =
+    run (Time.metronome listen freq date) ||
+    run event_handler ||
+    run scheduler
+  in
   let env =
     { instr_score = instr_score;
-      event_handler = event_handler;
-      scheduler = scheduler;
+      runtime = runtime;
       wait = wait;
       wait_event = wait_event;
       listen = listen;
@@ -63,9 +66,7 @@ let process init_env env =
   pause
 
 let process live env =
-  run (Time.metronome env.listen env.freq env.date) ||
-  run env.event_handler ||
-  run env.scheduler ||
+  run env.runtime ||
   run (Input.udp env.server_port env.listen) ||
   run (Output.udp env.client_port env.perf)
 
