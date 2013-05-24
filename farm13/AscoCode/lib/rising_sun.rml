@@ -28,7 +28,7 @@ let simple fond color =
   asco_group tight local [max_note 0.0 fond];;
 
 (* Define accompaniment strategies (tight, partial) and the style *)
-let acc = asco_group tight partial (bass simple);;
+let acc = asco_group tight global (bass simple);;
 
 (* Play the bass in a loop *)
 signal kill_bass;;
@@ -59,7 +59,7 @@ let waltz fond color  =
 
 let acc = asco_group tight partial (bass waltz);;
 
-#exec (do run (exec_loop 10 1 (-1.5) acc env) until kill_bass done);;
+#exec (do run (exec_loop 100 1 (-1.5) acc env) until kill_bass done);;
 emit kill_bass;;
 
 
