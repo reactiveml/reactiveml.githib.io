@@ -127,3 +127,26 @@ let make_queue () =
   in
 
   hold, push, pop
+
+
+(* let process runtime deadline sending adding = *)
+(*   let process send queue_pop = *)
+(*       loop *)
+(* 	await immediate one deadline (d) in *)
+(* 	let p = queue_pop (d) in *)
+(* 	sending p; *)
+(* 	pause *)
+(*       end *)
+(*   in *)
+
+(*   let process update queue_push = *)
+(*     loop *)
+(*       await adding (v) in *)
+(*       List.iter (fun x -> queue_push x) v; *)
+(*     end *)
+(*   in *)
+
+(*   let queue, queue_push, queue_pop = make_queue () in *)
+(*   run queue || *)
+(*   run (send queue_pop) || *)
+(*   run (update queue_push) *)

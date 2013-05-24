@@ -93,7 +93,9 @@ let process metronome listen freq date =
    waitings.
 *)
 let make_scheduler date =
-  signal add_queue in
-  let wait = wait date add_queue in
-  let scheduler = schedule date add_queue in
-  scheduler, wait
+  signal adding in
+  let sending = List.iter (fun (_, s) -> emit s) in
+  let wait = wait date adding in
+  let action_scheduler = schedule date adding in
+  (* let action_scheduler = Rqueue.runtime date sending adding in *)
+  action_scheduler, wait

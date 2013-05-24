@@ -12,27 +12,6 @@ open Types
 open Utils
 
 
-(* Receive a event on channel 'listen' and emit the corresponding
-   signals in the table events.
-*)
-(* let process server listen events = *)
-(*   let n = Array.length events in *)
-(*   let rec process track pev_index = *)
-(*     await immediate one listen (ev) in *)
-(*     if not (0 <= ev.index && ev.index < n) then begin *)
-(*       prerr_endline "Error: the musician do not play the right score!"; *)
-(*       exit 1 *)
-(*     end; *)
-(*     for i = pev_index + 1 to ev.index - 1 do *)
-(*       emit events.(i) (Missed ev.index) *)
-(*     done; *)
-(*     emit events.(ev.index) Detected; *)
-(*     pause; *)
-(*     run (track ev.index) *)
-(*   in *)
-(*   run (track 0) *)
-
-
 let process handler listen add_event =
   let process send listen queue_pop =
     let rec detect_miss i sl =

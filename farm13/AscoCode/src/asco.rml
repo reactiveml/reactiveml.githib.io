@@ -24,6 +24,8 @@ let process main =
   (* Initialize the signal listen *)
   run (init_env tempo env);
 
+  (* Build the execution machine *)
+  let exec_score score = exec_score score env in
 
   (* Run! *)
   begin match input with
@@ -31,13 +33,16 @@ let process main =
       run (Input.udp server_port env.listen)
   | Config.File f ->
       let simu = parse f Parser.make_simu in
-      run (Input.simulator simu errors env.freq env.listen)
+      run (Input.simulator simu errors freq env.listen)
   | Config.Score ->
-      let simu = Utils.extract_instr env.instr_score tempo in
-      run (Input.simulator simu errors env.freq env.listen)
+      let simu = Utils.extract_instr instr_score tempo in
+      run (Input.simulator simu errors freq env.listen)
   end
   ||
-  run runtime ||
-  run (exec_score score env) ||
-  run (Output.udp client_port env.perf) ||
+  run runtime
+  ||
+  run (exec_score score)
+  ||
+  run (Output.udp client_port env.perf)
+  ||
   if verbose then run (Utils.verbose env.listen env.perf)
