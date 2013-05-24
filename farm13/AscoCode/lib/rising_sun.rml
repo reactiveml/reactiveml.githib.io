@@ -6,8 +6,8 @@ open Ascolive
 let _,instr_score = parse_score "rising_sun.asco";;
 
 (* Create, initialize and launch the live environment *)
-let env = create_env instr_score 100. 7400 5151;;
-#exec(run (init_env env); run (live env));;
+let runtime, env = create_env instr_score 100.;;
+#exec(run (init_env 120. env); run (max_live runtime env));;
 
 
 (* Build the bass *)
@@ -48,14 +48,14 @@ let waltz fond color  =
   match color with
   | Min ->
       asco_group loose local
-	[max_note 0.0 fond;
-	 max_note 0.66 (fond+3); max_note 0.0 (fond+7);
-	 max_note 0.66 (fond+3); max_note 0.0 (fond+7);]
+	[asco_note 0.0 fond;
+	 asco_note 0.66 (fond+3); asco_note 0.0 (fond+7);
+	 asco_note 0.66 (fond+3); asco_note 0.0 (fond+7);]
   | Maj ->
       asco_group loose local
-	[max_note 0.0 fond;
-	 max_note 0.66 (fond+4); max_note 0.0 (fond+7);
-	 max_note 0.66 (fond+4); max_note 0.0 (fond+7);];;
+	[asco_note 0.0 fond;
+	 asco_note 0.66 (fond+4); asco_note 0.0 (fond+7);
+	 asco_note 0.66 (fond+4); asco_note 0.0 (fond+7);];;
 
 let acc = asco_group tight partial (bass waltz);;
 
@@ -71,16 +71,16 @@ let arpege fond color =
   match color with
   | Min ->
       asco_group loose local
-	[max_note 0.0 fond; max_note 0.625 (fond + 3);
-	 max_note 0.125 (fond + 7); max_note 0.125 (fond + 12);
-	 max_note 0.125 (fond + 15); max_note 0.33 (fond + 12);
-	 max_note 0.33 (fond + 7);]
+	[asco_note 0.0 fond; asco_note 0.625 (fond + 3);
+	 asco_note 0.125 (fond + 7); asco_note 0.125 (fond + 12);
+	 asco_note 0.125 (fond + 15); asco_note 0.33 (fond + 12);
+	 asco_note 0.33 (fond + 7);]
   | Maj ->
       asco_group loose local
-	[max_note 0.0 fond; max_note 0.625 (fond + 4);
-	 max_note 0.125 (fond + 7); max_note 0.125 (fond + 12);
-	 max_note 0.125 (fond + 16); max_note 0.33 (fond + 12);
-	 max_note 0.33 (fond + 7);];;
+	[asco_note 0.0 fond; asco_note 0.625 (fond + 4);
+	 asco_note 0.125 (fond + 7); asco_note 0.125 (fond + 12);
+	 asco_note 0.125 (fond + 16); asco_note 0.33 (fond + 12);
+	 asco_note 0.33 (fond + 7);];;
 
 let acc = asco_group tight partial (bass arpege);;
 

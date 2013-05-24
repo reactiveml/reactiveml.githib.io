@@ -7,26 +7,7 @@
 (* The sequencer.                                              *)
 (***************************************************************)
 
-open Types
-
-(* Parse the score and simulation files *)
-let parse file p =
-  let f = open_in file in
-  let buf = Lexing.from_channel f in
-  try
-      let res = p Lexer.make_token buf in
-      close_in f;
-      res
-  with
-    Lexer.Lexing_error s ->
-      Utils.localisation (Lexing.lexeme_start_p buf) file;
-      prerr_endline ("Syntax error: "^file);
-      exit 1
-  | Parsing.Parse_error ->
-      Utils.localisation (Lexing.lexeme_start_p buf) file;
-      prerr_endline ("Syntax error: "^file);
-      exit 1
-
+open Ascolib
 
 let process main =
   (* Read arguments of the command line *)
@@ -38,42 +19,25 @@ let process main =
   let score, instr_score = parse scorefile Parser.make_score in
 
   (* Environment *)
-  (* let n = Array.length instr_score in *)
-  (* let events = Array.init (n + 1) (fun i -> signal s in s) in *)
-  signal listen in
-  signal date in
-  signal perf in
+  let runtime, env = create_env instr_score freq in
 
   (* Initialize the signal listen *)
-  emit listen {index = 0; bps = (tempo /. 60.)};
-  pause;
+  run (init_env tempo env);
 
-  (* Build the execution machine *)
-  let event_handler, wait_event = Input.make_handler listen in
-  let scheduler, wait = Time.make_scheduler date in
-  let play_score = Motor.make_player instr_score wait wait_event perf in
 
   (* Run! *)
-  run (Time.metronome listen freq date) ||
-  run event_handler ||
-  run scheduler
-  ||
   begin match input with
   | Config.Udp ->
-      run (Input.udp server_port listen)
+      run (Input.udp server_port env.listen)
   | Config.File f ->
       let simu = parse f Parser.make_simu in
-      run (Input.simulator simu errors freq listen)
+      run (Input.simulator simu errors env.freq env.listen)
   | Config.Score ->
-      let simu = Utils.extract_instr instr_score tempo in
-      run (Input.simulator simu errors freq listen)
+      let simu = Utils.extract_instr env.instr_score tempo in
+      run (Input.simulator simu errors env.freq env.listen)
   end
   ||
-  begin
-    await immediate one listen (ev) in
-    run (play_score score ev.index)
-  end
-  ||
-  run (Output.udp client_port perf)
-  ||
-  if verbose then run (Utils.verbose listen perf)
+  run runtime ||
+  run (exec_score score env) ||
+  run (Output.udp client_port env.perf) ||
+  if verbose then run (Utils.verbose env.listen env.perf)

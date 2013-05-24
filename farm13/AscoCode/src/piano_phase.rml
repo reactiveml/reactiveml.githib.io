@@ -1,4 +1,4 @@
-open Ascolive
+open Ascolib
 open Types
 open Utils
 
@@ -82,7 +82,7 @@ let process main =
   Graphics.open_graph " 600x300";
 
   let _, instr_score = parse_score "examples/piano_phase.asco" in
-  let env = create_env instr_score 100. 7400 5151 in
+  let runtime, env = create_env instr_score 100. in
 
   signal resync in
   signal desync in
@@ -94,8 +94,8 @@ let process main =
   let process play_sequence sync i n delay =
     let a = asco_signal sync_elec in
     let midi_base = [F3d; B4; C4d; D4; F3d; E3; C4d; B4; F3d; D4; C4d] in
-    let seq = List.map (fun x -> max_note delay (note_to_midi x)) midi_base in
-    let seq = (max_note delay (note_to_midi E3))::(0.0, a)::seq in
+    let seq = List.map (fun x -> asco_note delay (note_to_midi x)) midi_base in
+    let seq = (asco_note delay (note_to_midi E3))::(0.0, a)::seq in
     let g = asco_group sync partial seq in
     run (exec_loop n i (-.delay) g env)
   in
@@ -115,9 +115,9 @@ let process main =
     done
   in
 
-  run (init_env env);
+  run (init_env 120. env);
   begin
-    run (live env) ||
+    run (max_live runtime env) ||
     run (piano_phase 0.2542 2 env) ||
     run (graphic_listener sync_elec sync_instr desync resync env)
   end

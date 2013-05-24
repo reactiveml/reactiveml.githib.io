@@ -13,7 +13,7 @@ piano_phase.rml.$(TARGET):
 	cp _build/$@ ..
 
 # Ascolive
-lib: ascolive.cmo parser.cmo
+lib: ascolib.cmo parser.cmo
 	ocamlc -c -I `rmlc -where`/toplevel a.ml
 	ocamlc -a str.cma unix.cma \
 		_build/types.cmo _build/rqueue.cmo \
@@ -22,15 +22,15 @@ lib: ascolive.cmo parser.cmo
 		_build/lexer.cmo \
 		_build/time.cmo _build/input.cmo \
 		_build/groups.cmo _build/motor.cmo \
-		_build/ascolive.cmo a.cmo -o ascolive.cma
+		_build/ascolib.cmo a.cmo -o ascolib.cma
 	rm *.cmo *.cmi
 	cp _build/*.rzi _build/*.cmi ../lib
-	mv ascolive.cma ../lib
+	mv ascolib.cma ../lib
 
 parser.cmo:
 	$(RMLBUILD) $@
 
-ascolive.cmo:
+ascolib.cmo:
 	$(RMLBUILD) $@
 
 clean:
