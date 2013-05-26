@@ -23,9 +23,7 @@ let process main =
 
   (* Initialize the signal listen *)
   run (init_env tempo env);
-
-  (* Build the execution machine *)
-  let exec_score score = exec_score score env in
+  let _ = () in
 
   (* Run! *)
   begin match input with
@@ -41,7 +39,7 @@ let process main =
   ||
   run runtime
   ||
-  run (exec_score score)
+  run (exec_score score env)
   ||
   run (Output.udp client_port env.perf)
   ||
