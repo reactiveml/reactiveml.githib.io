@@ -1,43 +1,45 @@
 (************** Basic queue organized with delays *************)
-type ('a, 'b) queue = Empty | Node of 'a * 'b * ('a, 'b) queue * ('a, 'b) queue
+type ('prio, 'a) queue =
+  | Empty
+  | Node of 'prio * 'a * ('prio, 'a) queue * ('prio, 'a) queue
 
-let rec q_push queue (delay, elt) =
+let rec push queue (delay, elt) =
   match queue with
   | Empty -> Node(delay, elt, Empty, Empty)
   | Node(d, e, left, right) ->
       if delay <= d
-      then Node(delay, elt, q_push right (d, e), left)
-      else Node(d, e, q_push right (delay, elt), left)
+      then Node(delay, elt, push right (d, e), left)
+      else Node(d, e, push right (delay, elt), left)
 
 exception Queue_is_empty
 
-let rec q_remove_top = function
+let rec remove_top = function
   | Empty -> raise Queue_is_empty
   | Node(delay, elt, left, Empty) -> left
   | Node(delay, elt, Empty, right) -> right
   | Node(delay, elt, (Node(ldelay, lelt, _, _) as left),
          (Node(rdelay, relt, _, _) as right)) ->
            if ldelay <= rdelay
-           then Node(ldelay, lelt, q_remove_top left, right)
-           else Node(rdelay, relt, left, q_remove_top right)
+           then Node(ldelay, lelt, remove_top left, right)
+           else Node(rdelay, relt, left, remove_top right)
 
-let q_pop = function
+let pop = function
   | Empty -> None
-  | Node(delay, elt, _, _) as queue -> Some(delay, elt, q_remove_top queue)
+  | Node(delay, elt, _, _) as queue -> Some(delay, elt, remove_top queue)
 
-type ('a, 'b) action =
-  | Push of 'a * 'b
+type ('prio, 'a) action =
+  | Push of 'prio * 'a
   | Remove
-  | Sustain of ('a, 'b) queue
+  | Sustain of ('prio, 'a) queue
 
-type ('a,'b) kind =
-  | Not_yet of (('a * 'b) list * int * ('a,'b) queue option)
-  | Current of ('a,'b) queue
+type ('prio,'a) kind =
+  | Not_yet of (('prio * 'a) list * int * ('prio,'a) queue option)
+  | Current of ('prio,'a) queue
 
 
-type ('a, 'b) body = {mutable state : ('a, 'b) kind}
+type ('prio, 'a) body = {mutable state : ('prio, 'a) kind}
 
-type ('a, 'b) state = ('a, 'b) body option
+type ('prio, 'a) state = ('prio, 'a) body option
 
 let rec fold f n acc =
   match n with
@@ -48,8 +50,8 @@ let apply_actions ads rms q =
   match q with
   | None -> assert false
   | Some q ->
-      let q' = fold q_remove_top rms q in
-      List.fold_left (fun q  x -> q_push q x) q' ads
+      let q' = fold remove_top rms q in
+      List.fold_left (fun q  x -> push q x) q' ads
 
 
 let add_action x st =
@@ -115,7 +117,7 @@ let make_queue () =
       match qq with
       | Empty -> l
       | _ ->
-	  begin match q_pop qq with
+	  begin match pop qq with
 	  | None -> l
 	  | Some(d', s', qq') ->
 	      if d >= d' then
@@ -129,24 +131,25 @@ let make_queue () =
   hold, push, pop
 
 
-(* let process runtime deadline sending adding = *)
-(*   let process send queue_pop = *)
-(*       loop *)
-(* 	await immediate one deadline (d) in *)
-(* 	let p = queue_pop (d) in *)
-(* 	sending p; *)
-(* 	pause *)
-(*       end *)
-(*   in *)
+let process runtime deadline sending adding =
+  let process send queue_pop =
+    pause;
+    loop
+      await immediate one deadline (d) in
+      let p = queue_pop (d) in
+      sending d p;
+      pause
+    end
+  in
 
-(*   let process update queue_push = *)
-(*     loop *)
-(*       await adding (v) in *)
-(*       List.iter (fun x -> queue_push x) v; *)
-(*     end *)
-(*   in *)
+  let process update queue_push =
+    loop
+      await adding (v) in
+      List.iter (fun x -> queue_push x) v;
+    end
+  in
 
-(*   let queue, queue_push, queue_pop = make_queue () in *)
-(*   run queue || *)
-(*   run (send queue_pop) || *)
-(*   run (update queue_push) *)
+  let queue, queue_push, queue_pop = make_queue () in
+  run queue ||
+  run (send queue_pop) ||
+  run (update queue_push)

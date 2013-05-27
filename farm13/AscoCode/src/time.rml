@@ -45,40 +45,11 @@ let process elapsed listen clock freq date =
    behavior we just need to register on the scheduler queue with the
    'queue' signal. 'date' is the current value of 'elapsed'.
 *)
-let process wait date add_queue dur =
+let process wait date adding dur =
   signal s in
   await immediate one date(e) in
-  emit add_queue ((dur +. e),s);
+  emit adding ((dur +. e),s);
   await immediate s
-
-(* Scheduler for the waiting process. Take as input the result of the
-   integrator 'date' and the signal 'add_queue' to build the priority
-   queue.
-*)
-let process schedule date add_queue =
-  (* Send messages with deadlines greater than the current date*)
-  let process send date queue_pop =
-    loop
-      await immediate one date (d) in
-      let sl = queue_pop d in
-      List.iter (fun (_, s) -> emit s) sl;
-      pause
-    end
-  in
-
-  (* Update the queue if new elements are emitted on 'add_queue' *)
-  let process update add_queue queue_push =
-    loop
-      await add_queue (v) in
-      List.iter (fun x -> queue_push x) v
-    end
-  in
-
-  (* the process 'hold' holds the queue implemented as a signal *)
-  let queue, queue_push, queue_pop = Rqueue.make_queue () in
-  run queue ||
-  run (send date queue_pop) ||
-  run (update add_queue queue_push)
 
 (* Run the processes tick and elapsed and return date *)
 let process metronome listen freq date =
@@ -87,15 +58,21 @@ let process metronome listen freq date =
   run (elapsed listen clock freq date)
 
 
+let process metronome listen freq date =
+  signal clock in
+  run (emit_clock clock freq) ||
+  run (elapsed listen clock freq date)
+
+
+
 (* Create a pair of processes '(scheduler, wait)'. The 'wait' process
    suspends the execution for a duration 'dur' relative to the tempo
    given by the signal 'date'. The 'scheduler' process manages the
    waitings.
 *)
-let make_scheduler date =
+let make_action_scheduler date =
   signal adding in
-  let sending = List.iter (fun (_, s) -> emit s) in
+  let sending d sl = List.iter (fun (_, s) -> emit s) sl in
   let wait = wait date adding in
-  let action_scheduler = schedule date adding in
-  (* let action_scheduler = Rqueue.runtime date sending adding in *)
+  let action_scheduler = Rqueue.runtime date sending adding in
   action_scheduler, wait

@@ -49,6 +49,12 @@ type score_event =
 (* Instrumental score, play the role of function E *)
 type instr_score = delay array
 
+type instr_score_map =
+    { map : (label, delay) Rmap.t;
+      find : label -> unit;
+      remove : label -> unit;
+      add : label -> delay -> unit; }
+
 (* Electronic score *)
 type score = score_event list * instr_score
 

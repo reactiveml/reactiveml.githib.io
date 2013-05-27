@@ -11,37 +11,27 @@
 open Types
 open Utils
 
-
-let process handler listen add_event =
-  let process send listen queue_pop =
-    let rec detect_miss i sl =
-       match sl with
-      | [] -> ()
-      | (h, sh)::q ->
-	  if h = i then
-	    (emit sh Detected; detect_miss i q)
-	  else
-	    (emit sh (Missed i); detect_miss i q)
-    in
+let process event_scheduler listen adding =
+  let process spy listen deadline =
     loop
       await immediate one listen (ev) in
-      let sl = queue_pop (ev.index) in
-      detect_miss ev.index sl;
+      emit deadline ev.index;
       pause
     end
   in
-
-  let process update add_event queue_push =
-    loop
-      await add_event (v) in
-      List.iter (fun x -> queue_push x) v;
-    end
+  let rec sending i sl =
+    match sl with
+    | [] -> ()
+    | (h, sh)::q ->
+	if h = i then
+	  (emit sh Detected; sending i q)
+	else
+	  (emit sh (Missed i); sending i q)
   in
+  signal deadline in
+  run (Rqueue.runtime deadline sending adding) ||
+  run (spy listen deadline)
 
-  let queue, queue_push, queue_pop = Rqueue.make_queue () in
-  run queue ||
-  run (send listen queue_pop) ||
-  run (update add_event queue_push)
 
 let process wait_event i add_event listen =
   await immediate one listen (ev) in
@@ -53,11 +43,11 @@ let process wait_event i add_event listen =
     await immediate one s (status) in
     status
 
-let make_handler listen =
+let make_event_scheduler listen =
   signal add_event in
   let wait_event i = wait_event i add_event listen in
-  let event_handler = handler listen add_event in
-  event_handler, wait_event
+  let event_scheduler = event_scheduler listen add_event in
+  event_scheduler, wait_event
 
 
 (* Receive message from Max via UDP and send them to the motor. *)

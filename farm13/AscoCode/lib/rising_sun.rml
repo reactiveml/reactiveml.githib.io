@@ -7,7 +7,8 @@ let _,instr_score = parse_score "rising_sun.asco";;
 
 (* Create, initialize and launch the live environment *)
 let runtime, env = create_env instr_score 100.;;
-#exec(run (init_env 120. env); run (max_live runtime env));;
+#exec(run (init_env 120. env);
+      run (live 5151 7400 runtime env));;
 
 
 (* Build the bass *)

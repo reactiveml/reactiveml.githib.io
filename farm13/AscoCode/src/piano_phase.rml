@@ -117,7 +117,7 @@ let process main =
 
   run (init_env 120. env);
   begin
-    run (max_live runtime env) ||
+    run (live 5151 7400 runtime env) ||
     run (piano_phase 0.2542 2 env) ||
     run (graphic_listener sync_elec sync_instr desync resync env)
   end
