@@ -384,4 +384,10 @@ let make_map () =
     find k tt
   in
 
-  hold, add, remove, find
+  let nearest date =
+    let tt = get_last state in
+    let i,d = max_binding (filter (fun i d' -> d' < date) tt) in
+    i, (date -. d)
+  in
+
+  hold, add, remove, find, nearest

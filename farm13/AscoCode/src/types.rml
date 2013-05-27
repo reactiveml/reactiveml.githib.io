@@ -50,10 +50,10 @@ type score_event =
 type instr_score = delay array
 
 type instr_score_map =
-    { map : (label, delay) Rmap.t;
-      find : label -> unit;
+    { nearest : delay -> label * delay;
+      find : label -> delay;
       remove : label -> unit;
-      add : label -> delay -> unit; }
+      add : label * delay -> unit; }
 
 (* Electronic score *)
 type score = score_event list * instr_score

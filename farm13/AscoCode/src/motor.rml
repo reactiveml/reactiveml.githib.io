@@ -25,8 +25,7 @@ let make_player instr_score wait wait_event perf =
     | (dae, ae)::s ->
         (* rule (Exec Sequence) *)
         run (generic (delta +. dae) ae) ||
-        run (exec_seq generic (delta +. dae) s)
-  in
+        run (exec_seq generic (delta +. dae) s) in
 
   let rec process exec score =
     match score with
@@ -73,8 +72,8 @@ let make_player instr_score wait wait_event perf =
 
 
   and process missed i j delta ae =
-    let dj = instr_score.(j) in
-    let di = instr_score.(i) in
+    let dj = instr_score.find j in
+    let di = instr_score.find i in
     match ae with
     | Action(a) ->
         (* rule (Missed Action) *)

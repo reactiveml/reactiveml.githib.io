@@ -23,25 +23,36 @@ let parse file p =
 
 let parse_score s = parse s Parser.make_score
 
+let make_instr_score () =
+  let hold,add,remove,find,nearest = Rmap.make_map () in
+  let instr_score =
+    { nearest = nearest;
+      find = find;
+      remove = remove;
+      add = add; } in
+  hold, instr_score
+
 type env =
-    { instr_score : instr_score;
+    { instr_score : instr_score_map;
       player : score_event list -> unit process;
       wait : delay -> unit process;
       listen : (instr_event, instr_event list) event;
       date : (delay, delay list) event;
       perf : (perf_elem, perf_elem list) event; }
 
-let create_env instr_score freq =
+let create_env freq =
   signal listen in
   signal date in
   signal perf in
-  let scheduler, wait = Time.make_action_scheduler date in
-  let event_handler, wait_event = Input.make_event_scheduler listen in
+  let action_scheduler, wait = Time.make_action_scheduler date in
+  let event_scheduler, wait_event = Input.make_event_scheduler listen in
+  let hold_instr_score, instr_score = make_instr_score () in
 
   let process runtime =
+    run hold_instr_score ||
     run (Time.metronome listen freq date) ||
-    run event_handler ||
-    run scheduler
+    run event_scheduler ||
+    run action_scheduler
   in
 
   let process player score =
@@ -52,6 +63,7 @@ let create_env instr_score freq =
     run (play_score score ev.index)
   in
 
+
   let env =
     { instr_score = instr_score;
       player = player;
@@ -61,8 +73,9 @@ let create_env instr_score freq =
       perf = perf; } in
   runtime, env
 
-let process init_env tempo env =
+let process init_env tempo isc env =
   emit env.listen {index = 0; bps = ( tempo /. 60.)};
+  Array.iteri (fun i d -> env.instr_score.add (i,d)) isc;
   pause
 
 let process live in_port out_port runtime env =
@@ -104,8 +117,8 @@ let process exec_loop n i delta g env =
   match g with
   | Group(g') ->
       let j = (Utils.last_one env.listen).index + 1 in
-      let di = env.instr_score.(i) in
-      let dj = env.instr_score.(j) in
+      let di = env.instr_score.find i in
+      let dj = env.instr_score.find j in
       let period = sequence_duration g'.group_seq in
       let process looop n i delta g =
 	for cpt = 0 to (n-1) do

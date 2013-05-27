@@ -19,7 +19,7 @@ let process main =
   let score, instr_score = parse scorefile Parser.make_score in
 
 
-  let hold,add,remove,find = Rmap.make_map () in
+  let hold,add,remove,find,nearest = Rmap.make_map () in
   let n = Array.length instr_score in
   run hold
   ||
@@ -29,11 +29,11 @@ let process main =
   ||
   begin
     pause;
-    for i = (n-1) downto 1 do
-      let d = find i in
-      print_float d;
-      print_newline ()
-    done
+    let j,d = nearest 7.0 in
+    print_int j;
+    print_string ",";
+    print_float d;
+    print_newline ()
   end
 
 
