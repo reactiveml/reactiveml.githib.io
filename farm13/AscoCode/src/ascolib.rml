@@ -78,7 +78,17 @@ let process init_env tempo env =
   pause
 
 let process load_instr_score isc env =
-  Array.iteri (fun i d -> env.instr_score.add (i,d)) isc;
+  let rec aux i l =
+    match l with
+    | [] -> ()
+    | h::t ->
+	begin
+	  env.instr_score.add (i,h);
+	  aux (i + 1) t
+	end
+  in
+
+  aux 1 isc;
   pause
 
 let process live in_port out_port runtime env =
@@ -102,11 +112,9 @@ let asco_score_event i seq =
   { event = i;
     seq = seq; }
 
-let process exec_score score env =
-  run (env.player score)
 
 let process exec_score_event se env =
-  run (exec_score [se] env)
+  run (env.player [se])
 
 let process exec_group i delta g env =
   let se =  {event = i;

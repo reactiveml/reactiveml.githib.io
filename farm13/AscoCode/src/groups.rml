@@ -37,8 +37,9 @@ let slice instr_score i delta g =
     match l with
     |[] -> []
     |(da, ae)::t ->
-	let r, d = instr_score.nearest (de +. da) in
-	(r, d, da, ae)::asso_nearest (de +. da) t
+	let date = de +. da in
+	let r, d = instr_score.nearest date in
+	(r, (date -. d), da, ae)::asso_nearest date t
   in
   let rec build_groups l =
     match l with

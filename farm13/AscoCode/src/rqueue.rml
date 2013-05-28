@@ -85,6 +85,10 @@ let get_last st =
 	  q'
       end
 
+type ('prio, 'a) rqueue =
+    { push : 'prio * 'a -> unit;
+      pop : 'prio -> ('prio * 'a) list; }
+
 let make_queue () =
   let combine x st =
     match st with
@@ -127,7 +131,10 @@ let make_queue () =
     aux [] qq
   in
 
-  hold, push, pop
+  hold,
+  {push = push;
+   pop = pop; }
+
 
 
 let process runtime deadline sending adding =
@@ -148,7 +155,7 @@ let process runtime deadline sending adding =
     end
   in
 
-  let queue, queue_push, queue_pop = make_queue () in
-  run queue ||
-  run (send queue_pop) ||
-  run (update queue_push)
+  let hold, queue = make_queue () in
+  run hold ||
+  run (send queue.pop) ||
+  run (update queue.push)

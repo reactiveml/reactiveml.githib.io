@@ -42,7 +42,7 @@ let process main =
     ||
     begin
       run (load_instr_score instr_score env);
-      run (exec_score score env)
+      run (env.player score)
     end
     ||
     run (Output.udp client_port env.perf)

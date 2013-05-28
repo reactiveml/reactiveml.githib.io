@@ -350,6 +350,12 @@ let get_last st =
 	  t'
       end
 
+type ('key, 'a) rmap =
+    { add : 'key * 'a -> unit;
+      remove : 'key -> unit;
+      find : 'key -> 'a;
+      nearest : 'a -> 'key * 'a; }
+
 let make_map () =
   let combine x st =
     match st with
@@ -384,10 +390,10 @@ let make_map () =
     find k tt
   in
 
-  let nearest date =
+  let nearest c =
     let tt = get_last state in
-    let i,d = max_binding (filter (fun i d' -> d' <= date) tt) in
-    i, (date -. d)
+    let i,d = max_binding (filter (fun i d' -> d' <= c) tt) in
+    i,c
   in
 
   hold, add, remove, find, nearest

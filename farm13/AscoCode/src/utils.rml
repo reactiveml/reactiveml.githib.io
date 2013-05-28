@@ -41,14 +41,12 @@ let localisation pos file =
    instr_score 'is'.
 *)
 let extract_instr is tempo =
-  let n = Array.length is in
-  let res = ref [] in
-  for i = (n - 1) downto 1 do
-    let date = is.(i) *. 60. /. tempo in
-    res := (i, date, tempo) :: !res
-  done;
-  !res
-
+  let rec aux i l =
+    match l with
+    | [] -> []
+    | h::t -> (i, h *. 60. /. tempo, tempo)::(aux (i + 1) t)
+  in
+  aux 1 is
 
 let process verbose listen perf =
   loop

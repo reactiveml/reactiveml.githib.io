@@ -41,7 +41,7 @@ let event_counter = ref 0
 make_score:
   | score Token_EOS
       { let es, is = $1 in
-        let nis = Array.of_list (-1.::Utils.delay_to_date is) in
+        let nis = Utils.delay_to_date is in
         (es, nis) }
 
 score:

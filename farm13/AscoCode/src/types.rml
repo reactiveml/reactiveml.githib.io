@@ -47,7 +47,7 @@ type score_event =
       seq : sequence; }
 
 (* Instrumental score, play the role of function E *)
-type instr_score = delay array
+type instr_score = delay list
 
 type instr_score_map =
     { nearest : delay -> label * delay;
