@@ -386,7 +386,7 @@ let make_map () =
 
   let nearest date =
     let tt = get_last state in
-    let i,d = max_binding (filter (fun i d' -> d' < date) tt) in
+    let i,d = max_binding (filter (fun i d' -> d' <= date) tt) in
     i, (date -. d)
   in
 

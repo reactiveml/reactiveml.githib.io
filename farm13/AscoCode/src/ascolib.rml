@@ -73,8 +73,11 @@ let create_env freq =
       perf = perf; } in
   runtime, env
 
-let process init_env tempo isc env =
+let process init_env tempo env =
   emit env.listen {index = 0; bps = ( tempo /. 60.)};
+  pause
+
+let process load_instr_score isc env =
   Array.iteri (fun i d -> env.instr_score.add (i,d)) isc;
   pause
 

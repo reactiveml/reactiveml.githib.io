@@ -82,7 +82,7 @@ let process main =
   Graphics.open_graph " 600x300";
 
   let _, instr_score = parse_score "examples/piano_phase.asco" in
-  let runtime, env = create_env instr_score 100. in
+  let runtime, env = create_env 100. in
 
   signal resync in
   signal desync in
@@ -117,7 +117,12 @@ let process main =
 
   run (init_env 120. env);
   begin
-    run (live 5151 7400 runtime env) ||
-    run (piano_phase 0.2542 2 env) ||
+    run (live 5151 7400 runtime env)
+    ||
+    begin
+      run (load_instr_score instr_score env);
+      run (piano_phase 0.2542 2 env)
+    end
+    ||
     run (graphic_listener sync_elec sync_instr desync resync env)
   end
