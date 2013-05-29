@@ -1,0 +1,50 @@
+val parse_score : string -> Types.score  *  Types.instr_score
+val parse_simu : string -> Types.simulation
+
+type env =
+    { perf: (Types.perf_elem ,  Types.perf_elem list) event;
+      date: (Types.delay ,  Types.delay list) event;
+      listen: (Types.instr_event ,  Types.instr_event list) event;
+      wait: Types.delay -> unit process;
+      player: Types.score -> unit process;
+      instr_score: (Types.label ,  Types.delay) Reactive_map.rmap; }
+
+val create_env : float -> unit process  *  env
+val init_env : float -> env -> unit process
+val load_instr_score : Types.delay list -> env -> unit process
+val live : int -> int -> 'a process -> env -> unit process
+
+val tight : Types.sync
+val loose : Types.sync
+val partial : Types.err
+val causal : Types.err
+val global : Types.err
+val local : Types.err
+
+val note : int -> Types.asco_event
+val rml_signal : (unit ,  unit list) event -> Types.asco_event
+val group : Types.sync -> Types.err -> Types.sequence -> Types.asco_event
+val score_event : Types.label -> Types.sequence -> Types.score_event
+
+val ( >> ) : 'a list -> 'a list -> 'a list
+val ( // ) : Types.sequence -> Types.sequence -> (float  *  Types.asco_event) list
+
+val sequence_duration : (float  *  'a) list -> float
+val exec_sequence : (float  *  Types.asco_event) list -> env -> unit process
+val exec_asco_sequence : Types.label -> Types.sequence -> env -> unit process
+val exec_group : float -> Types.asco_event -> env -> unit process
+val exec_asco_group : Types.label -> Types.delay -> Types.asco_event -> env -> unit process
+val exec_loop : int -> float -> Types.asco_event -> env -> unit process
+val exec_asco_loop : int -> Types.label -> float -> Types.asco_event -> env -> unit process
+
+type color = | Min | Maj
+type note =
+  | G4d | G3d | G2d | G4 | G3 | G2
+  | F4d | F3d | F2d | F4 | F3 | F2
+  | E4 | E3 | E2
+  | D4d | D3d | D2d | D4 | D3 | D2
+  | C4d | C3d | C2d | C4 | C3 | C2
+  | B4 | B3 | B2
+  | A4d | A3d | A2d | A4 | A3 | A2
+
+val note_to_midi : note -> int

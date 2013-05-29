@@ -17,7 +17,7 @@ let process main =
   in
 
   (* Parsing *)
-  let score, instr_score = parse scorefile Parser.make_score in
+  let score, instr_score = parse_score scorefile in
 
   (* Environment *)
   let runtime, env = create_env freq in
@@ -33,7 +33,7 @@ let process main =
     | Config.Udp ->
     	run (Input.udp server_port env.listen)
     | Config.File f ->
-    	let simu = parse f Parser.make_simu in
+    	let simu = parse_simu f in
     	run (Input.simulator simu errors freq env.listen)
     | Config.Score ->
     	let simu = Utils.extract_instr instr_score tempo in

@@ -22,7 +22,9 @@ type sync = Tight | Loose
 (* Error handling strategies *)
 type err = Local | Global | Causal | Partial
 
-type sequence =  (delay * asco_event) list
+type atom = delay * asco_event
+and sequence =  atom list
+and melody = Atom of atom | Sequence of sequence
 
 (* Generic asco event *)
 and asco_event =
@@ -52,7 +54,7 @@ type instr_score = delay list
 (* type instr_score_map = (label, delay) Reactive_map.t *)
 
 (* Electronic score *)
-type score = score_event list * instr_score
+type score = score_event list
 
 (* Instrumental event *)
 type instr_event =

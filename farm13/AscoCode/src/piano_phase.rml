@@ -92,12 +92,12 @@ let process main =
   (* Define the 12 notes loop with an emission of signal *)
   (* sync_elec at the begining of every sequence*)
   let process play_sequence sync i n delay =
-    let a = asco_signal sync_elec in
+    let a = rml_signal sync_elec in
     let midi_base = [F3d; B4; C4d; D4; F3d; E3; C4d; B4; F3d; D4; C4d] in
-    let seq = List.map (fun x -> asco_note delay (note_to_midi x)) midi_base in
-    let seq = (asco_note delay (note_to_midi E3))::(0.0, a)::seq in
-    let g = asco_group sync partial seq in
-    run (exec_loop n i (-.delay) g env)
+    let seq = List.map (fun x -> delay, note (note_to_midi x)) midi_base in
+    let seq = (delay, note (note_to_midi E3))::(0.0, a)::seq in
+    let g = group sync partial seq in
+    run (exec_asco_loop n i (-.delay) g env)
   in
 
   (* Piano Phase sync -> desync -> sync...*)

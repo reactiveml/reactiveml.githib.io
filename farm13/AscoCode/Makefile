@@ -6,5 +6,5 @@ clean:
 
 cleanall:
 	cd src; make cleanall
-	rm *.native
-	rm *.byte
+	rm -rf *.native
+	rm -rf *.byte

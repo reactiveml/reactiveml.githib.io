@@ -34,7 +34,7 @@ let event_counter = ref 0
 %start make_score             /* Entry point */
 %start make_simu
 
-%type  <Types.score> make_score
+%type  <Types.score * Types.instr_score> make_score
 %type <Types.simulation> make_simu
 %%
 
