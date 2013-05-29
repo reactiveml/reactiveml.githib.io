@@ -1,6 +1,6 @@
 RMLBUILD=rmlbuild -classic-display -tag annot
 
-TARGET=byte
+TARGET=native
 
 all: asco.rml.$(TARGET) piano_phase.rml.$(TARGET) lib
 

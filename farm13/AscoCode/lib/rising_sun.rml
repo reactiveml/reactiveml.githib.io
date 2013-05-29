@@ -3,6 +3,7 @@ open Ascolib
 
 
 (* Create, initialize and launch the live environment *)
+
 let runtime, env = create_env 100.;;
 #exec(run (init_env 120. env);
       run (live 5151 7400 runtime env));;
@@ -26,10 +27,10 @@ let bass style =
 
 (* Only the bass *)
 let simple fond color =
-  asco_group loose local [asco_note 0.0 fond];;
+  asco_group tight local [asco_note 0.0 fond];;
 
 (* Define accompaniment strategies (tight, partial) and the style *)
-let acc = asco_group tight partial (bass simple);;
+let acc = asco_group loose partial (bass simple);;
 
 (* Play the bass in a loop *)
 signal kill_bass;;

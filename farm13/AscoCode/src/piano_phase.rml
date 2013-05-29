@@ -101,17 +101,17 @@ let process main =
   in
 
   (* Piano Phase sync -> desync -> sync...*)
-  let rec process piano_phase delay cpt env =
+  let rec process piano_phase d1 d2 cpt env =
     let i = max 1 (last_one env.listen).index in
-    run (play_sequence tight i 4 0.25);
+    run (play_sequence tight i 4 d1);
     emit desync;
     do
       let i = (last_one env.listen).index in
-      run (play_sequence loose (i+1) 50 delay) ||
+      run (play_sequence loose (i+1) 50 d2) ||
       run (compare sync_elec sync_instr resync 0.05 env) ||
       run (track cpt sync_instr env)
     until resync ->
-      run (piano_phase delay ((cpt + 1) mod 12) env)
+      run (piano_phase d1 d2 ((cpt + 1) mod 12) env)
     done
   in
 
@@ -121,7 +121,7 @@ let process main =
     ||
     begin
       run (load_instr_score instr_score env);
-      run (piano_phase 0.2542 2 env)
+      run (piano_phase 0.25 0.2542 2 env)
     end
     ||
     run (graphic_listener sync_elec sync_instr desync resync env)

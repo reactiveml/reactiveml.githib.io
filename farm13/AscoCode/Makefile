@@ -7,3 +7,4 @@ clean:
 cleanall:
 	cd src; make cleanall
 	rm *.native
+	rm *.byte

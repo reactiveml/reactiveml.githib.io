@@ -25,7 +25,7 @@ let parse file p =
 let parse_score s = parse s Parser.make_score
 
 type env =
-    { instr_score : instr_score_map;
+    { instr_score : (label, delay) map;
       player : score_event list -> unit process;
       wait : delay -> unit process;
       listen : (instr_event, instr_event list) event;
@@ -38,7 +38,7 @@ let create_env freq =
   signal perf in
   let action_scheduler, wait = Time.make_action_scheduler date in
   let event_scheduler, wait_event = Input.make_event_scheduler listen in
-  let hold_instr_score, instr_score = Reactive_map.make_map () in
+  let hold_instr_score, instr_score = make_map () in
 
   let process runtime =
     run hold_instr_score ||
@@ -103,6 +103,7 @@ let asco_group synchro error seq =
 let asco_score_event i seq =
   { event = i;
     seq = seq; }
+
 
 
 let process exec_score_event se env =
