@@ -96,7 +96,7 @@ let make_map () =
   let nearest c =
     let tt = get_last state in
     let i,d = max_binding (filter (fun i d' -> d' <= c) tt) in
-    i,c
+    i,d
   in
 
   hold,

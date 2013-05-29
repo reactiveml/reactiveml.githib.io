@@ -84,7 +84,8 @@ let process load_instr_score isc env =
 let process live in_port out_port runtime env =
   run (Input.udp in_port env.listen) ||
   run runtime ||
-  run (Output.udp out_port env.perf)
+  run (Output.udp out_port env.perf) (* || *)
+  (* run (Utils.verbose env.listen env.perf) *)
 
 
 let asco_note d n =

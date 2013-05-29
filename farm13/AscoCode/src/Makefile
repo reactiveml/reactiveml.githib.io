@@ -1,6 +1,6 @@
 RMLBUILD=rmlbuild -classic-display -tag annot
 
-TARGET=native
+TARGET=byte
 
 all: asco.rml.$(TARGET) piano_phase.rml.$(TARGET) lib
 
@@ -12,12 +12,13 @@ piano_phase.rml.$(TARGET):
 	$(RMLBUILD) $@
 	cp _build/$@ ..
 
-# Ascolive
-lib: ascolib.cmo parser.cmo
+# Ascolib
+lib: ascolib.cmo parser.cmo caml_queue.cmo caml_map.cmo
 	ocamlc -c -I `rmlc -where`/toplevel a.ml
 	ocamlc -a str.cma unix.cma \
-		_build/types.cmo _build/reactive_queue.cmo \
-		_build/reactive_map.cmo \
+		_build/types.cmo \
+		_build/caml_queue.cmo _build/reactive_queue.cmo \
+		_build/caml_map.cmo _build/reactive_map.cmo \
 		_build/network.cmo _build/output.cmo \
 		_build/utils.cmo _build/parser.cmo \
 		_build/lexer.cmo \
@@ -28,10 +29,9 @@ lib: ascolib.cmo parser.cmo
 	cp _build/*.rzi _build/*.cmi ../lib
 	mv ascolib.cma ../lib
 
-parser.cmo:
-	$(RMLBUILD) $@
+.SUFFIXES: .rml .rmli .ml .mli .rzi .cmo .cmi
 
-ascolib.cmo:
+%.cmo:
 	$(RMLBUILD) $@
 
 clean:

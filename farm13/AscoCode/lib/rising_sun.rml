@@ -1,15 +1,15 @@
 (*Load the library for live coding*)
-open Ascolive
+open Ascolib
 
-
-(* Load the instrumental score *)
-let _,instr_score = parse_score "rising_sun.asco";;
 
 (* Create, initialize and launch the live environment *)
-let runtime, env = create_env instr_score 100.;;
+let runtime, env = create_env 100.;;
 #exec(run (init_env 120. env);
       run (live 5151 7400 runtime env));;
 
+(* Load the instrumental score *)
+let _,instr_score = parse_score "rising_sun.asco";;
+#run (load_instr_score instr_score env);;
 
 (* Build the bass *)
 let bass style =
@@ -26,16 +26,16 @@ let bass style =
 
 (* Only the bass *)
 let simple fond color =
-  asco_group tight local [max_note 0.0 fond];;
+  asco_group loose local [asco_note 0.0 fond];;
 
 (* Define accompaniment strategies (tight, partial) and the style *)
-let acc = asco_group tight global (bass simple);;
+let acc = asco_group tight partial (bass simple);;
 
 (* Play the bass in a loop *)
 signal kill_bass;;
 
 (* The bass is attached to the first event with a delay of -1.5 *)
-#exec (do run (exec_loop 10 1 (-1.5) acc env) until kill_bass done);;
+#exec (do run (exec_loop 100 1 (-1.5) acc env) until kill_bass done);;
 
 (* Stop the accompaniment *)
 emit kill_bass;;
