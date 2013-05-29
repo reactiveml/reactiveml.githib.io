@@ -8,6 +8,10 @@ let runtime, env = create_env 100.;;
 #exec(run (init_env 120. env);
       run (live 5151 7400 runtime env));;
 
+let _,instr_score = parse_score "lune.asco";;
+#run (load_instr_score instr_score env);;
+
+
 let s1 = [ 0.0, note 60;
 	   1.0, note 61;
 	   1.0, note 62;];;
@@ -15,7 +19,7 @@ let s1 = [ 0.0, note 60;
 let s2 =  [1.0, note 80;
 	   1.0, note 81];;
 
-#run (exec_asco_sequence 5 (s1 // s2) env);;
+#run (exec_asco_sequence 1 (s1 // s2) env);;
 
 (* Load the instrumental score *)
 let _,instr_score = parse_score "rising_sun.asco";;
@@ -36,7 +40,7 @@ let bass style =
 
 (* Only the bass *)
 let simple fond color =
-  group tight local [note 0.0 fond];;
+  group tight local [0.0, note fond];;
 
 (* Define accompaniment strategies (tight, partial) and the style *)
 let acc = group loose partial (bass simple);;
@@ -45,7 +49,7 @@ let acc = group loose partial (bass simple);;
 signal kill_bass;;
 
 (* The bass is attached to the first event with a delay of -1.5 *)
-#exec (do run (exec_loop 100 1 (-1.5) acc env) until kill_bass done);;
+#exec (do run (exec_asco_loop 100 1 (-1.5) acc env) until kill_bass done);;
 
 (* Stop the accompaniment *)
 emit kill_bass;;
@@ -59,18 +63,18 @@ let waltz fond color  =
   match color with
   | Min ->
       group loose local
-	[note 0.0 fond;
-	 note 0.66 (fond+3); note 0.0 (fond+7);
-	 note 0.66 (fond+3); note 0.0 (fond+7);]
+	[0.0, note fond;
+	 0.66, note (fond+3); 0.0, note (fond+7);
+	 0.66, note (fond+3); 0.0, note (fond+7);]
   | Maj ->
       group loose local
-	[note 0.0 fond;
-	 note 0.66 (fond+4); note 0.0 (fond+7);
-	 note 0.66 (fond+4); note 0.0 (fond+7);];;
+	[0.0, note fond;
+	 0.66, note (fond+4); 0.0, note (fond+7);
+	 0.66, note (fond+4); 0.0, note (fond+7);];;
 
 let acc = group tight partial (bass waltz);;
 
-#exec (do run (exec_loop 100 1 (-1.5) acc env) until kill_bass done);;
+#exec (do run (exec_asco_loop 100 1 (-1.5) acc env) until kill_bass done);;
 emit kill_bass;;
 
 
@@ -82,18 +86,18 @@ let arpege fond color =
   match color with
   | Min ->
       group loose local
-	[note 0.0 fond; note 0.625 (fond + 3);
-	 note 0.125 (fond + 7); note 0.125 (fond + 12);
-	 note 0.125 (fond + 15); note 0.33 (fond + 12);
-	 note 0.33 (fond + 7);]
+	[0.0, note fond; 0.625, note (fond + 3);
+	 0.125, note (fond + 7); 0.125, note (fond + 12);
+	 0.125, note (fond + 15); 0.33, note (fond + 12);
+	 0.33, note (fond + 7);]
   | Maj ->
       group loose local
-	[note 0.0 fond; note 0.625 (fond + 4);
-	 note 0.125 (fond + 7); note 0.125 (fond + 12);
-	 note 0.125 (fond + 16); note 0.33 (fond + 12);
-	 note 0.33 (fond + 7);];;
+	[0.0, note fond; 0.625, note (fond + 4);
+	 0.125, note (fond + 7); 0.125, note (fond + 12);
+	 0.125, note (fond + 16); 0.33, note (fond + 12);
+	 0.33, note (fond + 7);];;
 
 let acc = group tight partial (bass arpege);;
 
-#exec (do run (exec_loop 100 1 (-1.5) acc env) until kill_bass done);;
+#exec (do run (exec_asco_loop 100 1 (-1.5) acc env) until kill_bass done);;
 emit kill_bass;;

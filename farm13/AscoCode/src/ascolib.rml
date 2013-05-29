@@ -1,8 +1,6 @@
 open Types
 open Reactive_map
-open Parser
-open Lexer
-open Network
+open Utils
 
 (* Parse the score and simulation files *)
 let parse file p =
@@ -81,6 +79,8 @@ let process load_instr_score isc env =
 	end
   in
   aux 1 isc;
+  let bps = (last_one env.listen).bps in
+  emit env.listen {index = 0; bps = bps};
   pause
 
 let process live in_port out_port runtime env =
