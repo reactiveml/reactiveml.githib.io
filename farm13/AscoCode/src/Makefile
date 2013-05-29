@@ -16,7 +16,8 @@ piano_phase.rml.$(TARGET):
 lib: ascolib.cmo parser.cmo
 	ocamlc -c -I `rmlc -where`/toplevel a.ml
 	ocamlc -a str.cma unix.cma \
-		_build/types.cmo _build/rqueue.cmo \
+		_build/types.cmo _build/reactive_queue.cmo \
+		_build/reactive_map.cmo \
 		_build/network.cmo _build/output.cmo \
 		_build/utils.cmo _build/parser.cmo \
 		_build/lexer.cmo \

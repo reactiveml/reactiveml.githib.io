@@ -85,7 +85,7 @@ let rec mem x = function
       false
   | Node(l, v, d, r, _) ->
       let c = compare x v in
-      c = 0 or mem x (if c < 0 then l else r)
+      c = 0 || mem x (if c < 0 then l else r)
 
 let rec min_binding = function
     Empty -> raise Not_found
@@ -157,7 +157,7 @@ let rec for_all p = function
 
 let rec exists p = function
     Empty -> false
-  | Node(l, v, d, r, _) -> p v d or exists p l or exists p r
+  | Node(l, v, d, r, _) -> p v d || exists p l || exists p r
 
 (* Beware: those two functions assume that the added k is *strictly*
    smaller (or bigger) than all the present keys in the tree; it
@@ -249,9 +249,7 @@ let rec partition p = function
       then (join lt v d rt, concat lf rf)
       else (concat lt rt, join lf v d rf)
 
-type ('key, 'a) enumeration =
-  | End
-  | More of 'key * 'a * ('key, 'a) t * ('key, 'a) enumeration
+type ('key, 'a) enumeration = End | More of 'key * 'a * ('key, 'a) t * ('key, 'a) enumeration
 
 let rec cons_enum m e =
   match m with
@@ -295,105 +293,3 @@ let bindings s =
   bindings_aux [] s
 
 let choose = min_binding
-
-
-type ('key, 'a) action =
-  | Add of 'key * 'a
-  | Remove of 'key
-  | Sustain of ('key, 'a) t
-
-type ('key,'a) kind =
-  | Not_yet of (('key * 'a) list * 'key list * ('key,'a) t option)
-  | Current of ('key,'a) t
-
-type ('key, 'a) body = {mutable state : ('key, 'a) kind}
-
-type ('key, 'a) state = ('key, 'a) body option
-
-let apply_actions ads rms t =
-  match t with
-  | None -> assert false
-  | Some t ->
-      let t' =  List.fold_left (fun t  x -> remove x t) t rms in
-      List.fold_left (fun t  (k,a) -> add k a t) t' ads
-
-
-let add_action x st =
-  match x with
-  | Remove k ->
-      begin match st with
-      | Not_yet (ads, rms, t) -> Not_yet (ads, k::rms, t)
-      | Current t -> assert false
-      end
-  | Add e ->
-      begin match st with
-      | Not_yet (ads, rms, t) -> Not_yet (e::ads, rms, t)
-      | Current t -> assert false
-      end
-  | Sustain t ->
-      begin match st with
-      | Not_yet (ads, rms, None) -> Not_yet (ads, rms, Some t)
-      | Not_yet (ads, rms, Some _) -> assert false
-      | Current t -> assert false
-      end
-
-
-let get_last st =
-  match (last ?st) with
-  | None -> assert false
-  | Some st' ->
-      begin match st'.state with
-      | Current t -> t
-      | Not_yet(ads, rms, t) ->
-	  let t' = apply_actions ads rms t in
-	  st'.state <- Current t';
-	  t'
-      end
-
-type ('key, 'a) rmap =
-    { add : 'key * 'a -> unit;
-      remove : 'key -> unit;
-      find : 'key -> 'a;
-      nearest : 'a -> 'key * 'a; }
-
-let make_map () =
-  let combine x st =
-    match st with
-    | None ->
-	let st' = {state = add_action x (Not_yet ([],[],None))} in
-	Some st'
-    | Some st' ->
-	st'.state <- add_action x st'.state;
-	Some st'
-  in
-  signal state default None gather combine in
-  let process hold  =
-    emit state (Sustain Empty);
-    loop
-      pause;
-      await immediate state;
-      let t = get_last state in
-      emit state (Sustain t) ;
-    end
-  in
-
-  let add v =
-    emit state (Add v)
-  in
-
-  let remove k =
-   emit state (Remove k)
-  in
-
-  let find k =
-    let tt = get_last state in
-    find k tt
-  in
-
-  let nearest c =
-    let tt = get_last state in
-    let i,d = max_binding (filter (fun i d' -> d' <= c) tt) in
-    i,c
-  in
-
-  hold, add, remove, find, nearest

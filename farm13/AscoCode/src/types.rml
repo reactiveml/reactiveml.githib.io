@@ -49,11 +49,7 @@ type score_event =
 (* Instrumental score, play the role of function E *)
 type instr_score = delay list
 
-type instr_score_map =
-    { nearest : delay -> label * delay;
-      find : label -> delay;
-      remove : label -> unit;
-      add : label * delay -> unit; }
+type instr_score_map = (label, delay) Reactive_map.t
 
 (* Electronic score *)
 type score = score_event list * instr_score

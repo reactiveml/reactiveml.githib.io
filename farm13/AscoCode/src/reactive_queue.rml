@@ -1,30 +1,4 @@
-type ('prio, 'a) queue =
-  | Empty
-  | Node of 'prio * 'a * ('prio, 'a) queue * ('prio, 'a) queue
-
-let rec push queue (delay, elt) =
-  match queue with
-  | Empty -> Node(delay, elt, Empty, Empty)
-  | Node(d, e, left, right) ->
-      if delay <= d
-      then Node(delay, elt, push right (d, e), left)
-      else Node(d, e, push right (delay, elt), left)
-
-exception Queue_is_empty
-
-let rec remove_top = function
-  | Empty -> raise Queue_is_empty
-  | Node(delay, elt, left, Empty) -> left
-  | Node(delay, elt, Empty, right) -> right
-  | Node(delay, elt, (Node(ldelay, lelt, _, _) as left),
-         (Node(rdelay, relt, _, _) as right)) ->
-           if ldelay <= rdelay
-           then Node(ldelay, lelt, remove_top left, right)
-           else Node(rdelay, relt, left, remove_top right)
-
-let pop = function
-  | Empty -> None
-  | Node(delay, elt, _, _) as queue -> Some(delay, elt, remove_top queue)
+open Caml_queue
 
 type ('prio, 'a) action =
   | Push of 'prio * 'a
@@ -101,7 +75,7 @@ let make_queue () =
   in
   signal state default None gather combine in
   let process hold  =
-    emit state (Sustain Empty);
+    emit state (Sustain empty);
     loop
       pause;
       await immediate state;
@@ -117,16 +91,15 @@ let make_queue () =
   let pop d =
     let qq = get_last state in
     let rec aux l qq =
-      match qq with
-      | Empty -> l
-      | _ ->
-	  begin match pop qq with
-	  | None -> l
-	  | Some(d', s', qq') ->
-	      if d >= d' then
-	        (emit state Remove; aux ((d', s')::l) qq')
-	      else l
-	  end
+      if is_empty qq then l
+      else
+	begin match pop qq with
+	| None -> l
+	| Some(d', s', qq') ->
+	    if d >= d' then
+	      (emit state Remove; aux ((d', s')::l) qq')
+	    else l
+	end
     in
     aux [] qq
   in

@@ -1,4 +1,5 @@
 open Types
+open Reactive_map
 open Parser
 open Lexer
 open Network
@@ -23,15 +24,6 @@ let parse file p =
 
 let parse_score s = parse s Parser.make_score
 
-let make_instr_score () =
-  let hold,add,remove,find,nearest = Rmap.make_map () in
-  let instr_score =
-    { nearest = nearest;
-      find = find;
-      remove = remove;
-      add = add; } in
-  hold, instr_score
-
 type env =
     { instr_score : instr_score_map;
       player : score_event list -> unit process;
@@ -46,7 +38,7 @@ let create_env freq =
   signal perf in
   let action_scheduler, wait = Time.make_action_scheduler date in
   let event_scheduler, wait_event = Input.make_event_scheduler listen in
-  let hold_instr_score, instr_score = make_instr_score () in
+  let hold_instr_score, instr_score = Reactive_map.make_map () in
 
   let process runtime =
     run hold_instr_score ||
@@ -62,7 +54,6 @@ let create_env freq =
     await immediate one listen (ev) in
     run (play_score score ev.index)
   in
-
 
   let env =
     { instr_score = instr_score;
@@ -87,7 +78,6 @@ let process load_instr_score isc env =
 	  aux (i + 1) t
 	end
   in
-
   aux 1 isc;
   pause
 
@@ -95,6 +85,7 @@ let process live in_port out_port runtime env =
   run (Input.udp in_port env.listen) ||
   run runtime ||
   run (Output.udp out_port env.perf)
+
 
 let asco_note d n =
   let s = "mnote "^(string_of_int n)^" 127" in

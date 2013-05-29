@@ -29,7 +29,7 @@ let process event_scheduler listen adding =
 	  (emit sh (Missed i); sending i q)
   in
   signal deadline in
-  run (Rqueue.runtime deadline sending adding) ||
+  run (Reactive_queue.runtime deadline sending adding) ||
   run (spy listen deadline)
 
 

@@ -74,5 +74,5 @@ let make_action_scheduler date =
   signal adding in
   let sending d sl = List.iter (fun (_, s) -> emit s) sl in
   let wait = wait date adding in
-  let action_scheduler = Rqueue.runtime date sending adding in
+  let action_scheduler = Reactive_queue.runtime date sending adding in
   action_scheduler, wait

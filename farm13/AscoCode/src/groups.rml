@@ -7,6 +7,7 @@
 
 open Types
 open Utils
+open Reactive_map
 
 (* Return the pair (label,delta) of the nearest event of 'd' in
    'instr_score' and the remaining delay 'delta'.

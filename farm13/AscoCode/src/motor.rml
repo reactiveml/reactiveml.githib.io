@@ -9,6 +9,7 @@
 
 
 open Types
+open Reactive_map
 open Utils
 
 (* Create a process player that takes as argument an electronic score
