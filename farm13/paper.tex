@@ -40,8 +40,36 @@
 \begin{document}
 \maketitle
 
+\begin{abstract}
+  La musique mixte consiste en des performances qui mélangent des
+  musiciens humains et des actions contrôlées par ordinateur. Dans cet
+  article, nous montrons comment bénéficier de l'expressivité des
+  langages fonctionnels et du modèle de concurrence synchrone pour
+  programmer de tels systèmes.
+  %
+  % Nous plongeons le langage d'\Antescofo dans le langage fonctionnel
+  % \rml.
+\end{abstract}
+
+\section{Introduction}
+
+\Antescofo~\cite{antescofo} est un logiciel de musique mixte. Il est
+composé d'un moteur d'écoute qui permet de détecter la position d'un
+musicien dans une partition instrumentale et d'un séquenceur qui va
+déclencher des actions électroniques selon le tempo du musicien et ses
+éventuelles erreurs. Ce logiciel propose un langage pour décrire la
+partie électronique d'une partition et comment attacher ces événements
+à la partie instrumentale. La figure~\ref{fig:asco_score} présent en
+exemple simple de partition.
+
+Dans cet article, nous montrons comment en plongeant le langage
+d'\Antescofo dans un langage fonctionnel on peut augmenter son
+expressivité. Nous avons de réaliser le plongement dans \rml car ce
+langage intègre un modèle de concurrence qui facilite ainsi la
+description des comportements musicaux parallèle.
+
 \section{A Language for Mixed Music}
-\label{sec:antescofo}
+\label{sec:antescofo}~\ref{fig:asco_score}
 
 We now describe the kernel of the \Antescofo language, a language
 dedicated to the writing of mixed music
