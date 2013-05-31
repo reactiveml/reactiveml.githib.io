@@ -1,5 +1,0 @@
-let rec process server add =
-  await add(p, ack) in
-  run (server add)
-  ||
-  let v = run p in emit ack v

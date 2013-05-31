@@ -1,0 +1,9 @@
+let higher_order f =
+ let rec process p =
+   let q = f p in
+   run q
+ in
+ p
+
+let process good = run (higher_order (fun x -> process (pause; run x)))
+let process pb = run (higher_order (fun x -> process (run x)))

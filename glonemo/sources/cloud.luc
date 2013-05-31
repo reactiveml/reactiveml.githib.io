@@ -1,0 +1,38 @@
+inputs {
+wind_x : float;
+wind_y : float;
+}
+
+outputs {
+cloud_x: float;
+cloud_y: float;
+}
+
+locals { }
+
+nodes {
+  init : stable;
+  perm : stable;
+}
+
+start_node { init }
+
+transitions {  
+   init -> perm
+     ~cond
+      cloud_x = 0.0
+      and
+      cloud_y = 0.0 ;
+     
+   perm -> perm
+     ~cond 
+      (if pre wind_y >= 0.0 then ((cloud_y - pre cloud_y) >= 0.0) and 
+                                  (cloud_y - pre cloud_y) <= (0.00001 * (pre wind_y))
+                            else ((cloud_y - pre cloud_y) <= 0.0 and 
+                                  (cloud_y - pre cloud_y) >= (0.00001 * (pre wind_y))))
+      and
+      (if pre wind_x >= 0.0 then ((cloud_x - pre cloud_x) <= (0.00001 * (pre wind_x)) and 
+                                  (cloud_x - pre cloud_x) >= 0.0)
+                            else ((cloud_x - pre cloud_x) <= 0.0 and 
+                                  (cloud_x - pre cloud_x) >= (0.00001 * (pre wind_x))))
+}

@@ -1,2 +1,0 @@
-let rec process bad_rec =
-  run bad_rec; pause

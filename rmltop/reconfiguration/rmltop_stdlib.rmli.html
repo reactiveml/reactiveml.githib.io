@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.37 in css mode. -->
+<html>
+  <head>
+    <title>rmltop_stdlib.rmli</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="type">type</span> ident
+
+<span class="type">val</span> <span class="variable-name">ps:</span> unit <span class="constant">-&gt;</span> unit
+
+<span class="type">val</span> <span class="variable-name">to_kill:</span> (int , ident list) event
+<span class="type">val</span> <span class="variable-name">killable:</span> 'a <span class="type">process</span> <span class="constant">-&gt;</span> 'a option <span class="type">process</span>
+
+<span class="type">val</span> <span class="variable-name">to_suspend_resume:</span> (int , ident list) event
+<span class="type">val</span> <span class="variable-name">suspendable:</span> 'a <span class="type">process</span> <span class="constant">-&gt;</span> 'a <span class="type">process</span>
+
+<span class="type">val</span> to_reset : (int , ident list) event
+<span class="type">val</span> resettable : 'a <span class="type">process</span> <span class="constant">-&gt;</span> 'a <span class="type">process</span>
+
+<span class="type">val</span> to_replace : (int * unit <span class="type">process</span>,  (ident * unit <span class="type">process</span>) list) event
+<span class="type">val</span> replaceable : unit <span class="type">process</span> <span class="constant">-&gt;</span> unit <span class="type">process</span>
+
+<span class="type">val</span> to_add : (int * unit <span class="type">process</span>,  (ident * unit <span class="type">process</span>) list) event
+<span class="type">val</span> extensible : unit <span class="type">process</span> <span class="constant">-&gt;</span> unit <span class="type">process</span> 
+
+<span class="type">val</span> replaceable_s :
+  (int * ('state <span class="constant">-&gt;</span> unit <span class="type">process</span>), 
+   (ident * ('state <span class="constant">-&gt;</span> unit <span class="type">process</span>)) list) event <span class="constant">-&gt;</span>
+     ('state <span class="constant">-&gt;</span> unit <span class="type">process</span>) <span class="constant">-&gt;</span> 'state <span class="constant">-&gt;</span> unit <span class="type">process</span>
+
+<span class="type">val</span> <span class="variable-name">extensible_s:</span> 
+  (int * ('state <span class="constant">-&gt;</span> unit <span class="type">process</span>), 
+   (ident * ('state <span class="constant">-&gt;</span> unit <span class="type">process</span>)) list) event <span class="constant">-&gt;</span>
+     ('state <span class="constant">-&gt;</span> unit <span class="type">process</span>) <span class="constant">-&gt;</span> 'state <span class="constant">-&gt;</span> unit <span class="type">process</span>
+ 
+</pre>
+  </body>
+</html>

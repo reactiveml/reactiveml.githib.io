@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.27 in css mode. -->
+<html>
+  <head>
+    <title>pos_tbl_array_dynamic.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #bc8f8f;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name">Position</span>
+
+<span class="type">type</span> t = (position * int) array ref
+
+<span class="type">let</span> no_info = -10000
+
+<span class="type">let</span> make size = ref (<span class="function-name">Array</span>.make size ({x=0; y=0}, no_info))
+
+<span class="type">let</span> extend tbl size = 
+  <span class="type">let</span> tab = <span class="function-name">Array</span>.make size ({x=0; y=0}, no_info) <span class="type">in</span>
+  <span class="constant">for</span> i = 0 <span class="constant">to</span> <span class="function-name">Array</span>.length tbl - 1 <span class="constant">do</span>
+    tab.(i) &lt;- tbl.(i)
+  <span class="constant">done</span>;
+  tab
+    
+
+<span class="type">let</span> get tbl id = 
+  <span class="constant">try</span>
+    !tbl.(id)
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Invalid_argument</span> <span class="string">"index out of bounds"</span> <span class="constant">-&gt;</span>
+      tbl := extend !tbl (id+1);
+      !tbl.(id)
+
+<span class="type">let</span> set tbl id pos date = 
+  <span class="constant">try</span> 
+    !tbl.(id) &lt;- (pos,date)
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Invalid_argument</span> <span class="string">"index out of bounds"</span> <span class="constant">-&gt;</span>
+      tbl := extend !tbl (id+1);
+      !tbl.(id) &lt;- (pos,date)
+
+<span class="type">let</span> update tbl id pos date = 
+  <span class="constant">try</span> 
+    <span class="type">let</span> _, date_tbl = !tbl.(id) <span class="type">in</span>
+    <span class="constant">if</span> date &gt; date_tbl <span class="constant">then</span>
+      !tbl.(id) &lt;- (pos,date)
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Invalid_argument</span> <span class="string">"index out of bounds"</span> <span class="constant">-&gt;</span>
+      tbl := extend !tbl (id+1);
+      !tbl.(id) &lt;- (pos,date)
+</pre>
+  </body>
+</html>

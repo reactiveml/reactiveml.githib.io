@@ -1,6 +1,0 @@
-let rec process par_map p l =
-  match l with
-  | [] -> []
-  | x :: l -> let x' = run (p x)
-              and l' = run (par_map p l) in
-              x' :: l'

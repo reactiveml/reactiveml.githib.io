@@ -1,0 +1,7 @@
+let rec process p =
+  let q = p in
+  run q
+
+let rec process p =
+  let q = (fun x -> x) p in
+  run q

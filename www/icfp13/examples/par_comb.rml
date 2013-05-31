@@ -1,7 +1,0 @@
-let process par_comb q1 q2 =
-  loop
-    run q1 || run q2
-  end
-
-let process p1 = run (par_comb (process ()) (process (pause)))
-let process p2 = run (par_comb (process ()) (process ()))

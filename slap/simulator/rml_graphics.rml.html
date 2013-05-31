@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.16 in css mode. -->
+<html>
+  <head>
+    <title>rml_graphics.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .builtin {
+        /* font-lock-builtin-face */
+        color: #da70d6;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #5f9ea0;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="type">let</span> <span class="type">process</span> read_click click =
+  <span class="keyword">loop</span> 
+    <span class="constant">if</span> <span class="function-name">Graphics</span>.button_down() <span class="constant">then</span> <span class="builtin">emit</span> click (<span class="function-name">Graphics</span>.mouse_pos());
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+
+<span class="type">let</span> <span class="type">process</span> read_key key =
+  <span class="keyword">loop</span>
+    <span class="constant">if</span> <span class="function-name">Graphics</span>.key_pressed() <span class="constant">then</span> <span class="builtin">emit</span> key (<span class="function-name">Graphics</span>.read_key());
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+
+</pre>
+  </body>
+</html>
