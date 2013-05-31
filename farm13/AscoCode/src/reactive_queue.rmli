@@ -1,7 +1,0 @@
-type ('a,'b) rqueue =
-    { pop: 'a -> ('a * 'b) list;
-      push: 'a * 'b -> unit }
-val make_queue : unit -> unit process * ('a, 'b) rqueue
-val runtime :
-  ('a, 'a list) event ->
-  ('a -> ('a * 'b) list -> 'c) -> ('d, ('a * 'b) list) event -> unit process
