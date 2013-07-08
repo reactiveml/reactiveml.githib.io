@@ -16,8 +16,16 @@ GENERATED=index.html \
 	publications/index.html \
 	rmltop/index.html \
 	distrib/index.html \
-	navigation.html
-
+	navigation.html \
+	emsoft13/index.html \
+	emsoft13/videos.html \
+	emsoft13/source.html \
+	emsoft13/code/types.html \
+	emsoft13/code/time.html \
+	emsoft13/code/motor.html \
+	emsoft13/code/groups.html \
+	emsoft13/code/input.html \
+	emsoft13/code/output.html
 
 all: $(GENERATED)
 
@@ -63,6 +71,44 @@ examples/cellular_automata/index.html: header.html footer.html examples/cellular
 examples/simulator_elip/index.html: header.html footer.html examples/simulator_elip/index.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Example" "XXX" \
 		header.html footer.html examples/simulator_elip/index.src.html > $@
+
+
+emsoft13/index.html: header.html footer.html emsoft13/index.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html footer.html emsoft13/index.src.html > $@
+
+emsoft13/videos.html: header.html footer.html emsoft13/videos.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html footer.html emsoft13/videos.src.html > $@
+
+emsoft13/source.html: header.html footer.html emsoft13/source.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html footer.html emsoft13/source.src.html > $@
+
+emsoft13/code/types.html: emsoft13/code/types.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/types.src.html > $@
+
+emsoft13/code/time.html: emsoft13/code/time.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/time.src.html > $@
+
+emsoft13/code/motor.html: emsoft13/code/motor.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/motor.src.html > $@
+
+emsoft13/code/groups.html: emsoft13/code/groups.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/groups.src.html > $@
+
+emsoft13/code/input.html: emsoft13/code/input.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/input.src.html > $@
+
+emsoft13/code/output.html: emsoft13/code/output.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/output.src.html > $@
+
 
 publications/rml.html: publications/rml.bib
 	(cd publications; \
