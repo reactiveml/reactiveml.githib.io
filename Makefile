@@ -25,7 +25,8 @@ GENERATED=index.html \
 	emsoft13/code/motor.html \
 	emsoft13/code/groups.html \
 	emsoft13/code/input.html \
-	emsoft13/code/output.html
+	emsoft13/code/output.html \
+	emsoft13/code/syntax.html
 
 all: $(GENERATED)
 
@@ -109,6 +110,9 @@ emsoft13/code/output.html: emsoft13/code/output.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/output.src.html > $@
 
+emsoft13/code/syntax.html: emsoft13/code/syntax.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/code/footer.html emsoft13/code/syntax.src.html > $@
 
 publications/rml.html: publications/rml.bib
 	(cd publications; \
