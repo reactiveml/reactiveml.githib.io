@@ -1,4 +1,7 @@
-SRC2HTML=./bin/src2html
+OCAML_VERSION=`ocamlc -version`
+RML_VERSION=`rmlc -version`
+DATE=`date "+%Y-%m-%d"`
+SRC2HTML=./bin/src2html $(OCAML_VERSION) $(RML_VERSION) $(DATE) 
 BIBTEX2HTML=bibtex2html
 
 GENERATED=index.html \

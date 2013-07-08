@@ -1,19 +1,19 @@
 #!/bin/sh
 
-if [ $# -ne 6 ]; then
-    echo "Usage: $0 rootdir title menu header.html footer.html file.src.html"
+if [ $# -ne 9 ]; then
+    echo "Usage: $0 ocaml-version rml-version date rootdir title menu header.html footer.html file.src.html"
     exit 1
 fi
 
-ROOTDIR=$1
-TITLE=$2
-MENU=$3
-HEADER=$4
-FOOTER=$5
-FILE=$6
-OCAML_VERSION=`ocamlc -version`
-RML_VERSION=`rmlc -version`
-DATE=`date "+%Y-%m-%d"`
+OCAML_VERSION=$1
+RML_VERSION=$2
+DATE=$3
+ROOTDIR=$4
+TITLE=$5
+MENU=$6
+HEADER=$7
+FOOTER=$8
+FILE=$9
 
 ## Header
 cat $HEADER | \
