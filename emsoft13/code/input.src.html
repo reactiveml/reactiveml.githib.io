@@ -1,4 +1,4 @@
-  <pre>
+    <pre>
 <span class="comment-delimiter">(***************************************************************)</span>
 <span class="comment-delimiter">(*                        </span><span class="comment">Reactive Asco                        </span><span class="comment-delimiter">*)</span>
 <span class="comment-delimiter">(*                                                             *)</span>
@@ -12,32 +12,56 @@
 <span class="variable-name">open</span> <span class="function-name">Types</span>
 <span class="variable-name">open</span> <span class="function-name">Utils</span>
 
-
-<span class="comment-delimiter">(* </span><span class="comment">Receive a event on channel 'listen' and emit the corresponding
-   signals in the table events.
-</span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> server listen events =
-  <span class="type">let</span> n = <span class="function-name">Array</span>.length events <span class="type">in</span>
-  <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> track pev_index =
-    <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> listen (ev) <span class="type">in</span>
-    <span class="constant">if</span> not (0 &lt;= ev.index <span class="constant">&amp;&amp;</span> ev.index &lt; n) <span class="constant">then</span> <span class="keyword">begin</span>
-      prerr_endline <span class="string">"Error: the musician do not play the right score!"</span>;
-      exit 1
-    <span class="keyword">end</span>;
-    <span class="constant">for</span> i = pev_index + 1 <span class="constant">to</span> ev.index - 1 <span class="constant">do</span>
-      <span class="builtin">emit</span> events.(i) (<span class="function-name">Missed</span> ev.index)
-    <span class="constant">done</span>;
-    <span class="builtin">emit</span> events.(ev.index) <span class="function-name">Detected</span>;
-    <span class="builtin">pause</span>;
-    <span class="builtin">run</span> (track ev.index)
+<span class="comment-delimiter">(* </span><span class="comment">Manage input from the listening machine with a priority queue</span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> event_scheduler listen adding =
+  <span class="type">let</span> <span class="type">process</span> spy listen deadline =
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> listen (ev) <span class="type">in</span>
+      <span class="builtin">emit</span> deadline ev.index;
+      <span class="builtin">pause</span>
+    <span class="keyword">end</span>
   <span class="type">in</span>
-  <span class="builtin">run</span> (track 0)
+  <span class="type">let</span> <span class="type">rec</span> sending i sl =
+    <span class="constant">match</span> sl <span class="constant">with</span>
+    <span class="constant">|</span> [] <span class="constant">-&gt;</span> ()
+    <span class="constant">|</span> (h, sh)::q <span class="constant">-&gt;</span>
+        <span class="constant">if</span> h = i <span class="constant">then</span>
+          (<span class="builtin">emit</span> sh <span class="function-name">Detected</span>; sending i q)
+        <span class="constant">else</span>
+          (<span class="builtin">emit</span> sh (<span class="function-name">Missed</span> i); sending i q)
+  <span class="type">in</span>
+  <span class="type">signal</span> deadline <span class="type">in</span>
+  <span class="builtin">run</span> (<span class="function-name">Reactive_queue</span>.scheduler deadline sending adding) <span class="constant">||</span>
+  <span class="builtin">run</span> (spy listen deadline)
+
+<span class="comment-delimiter">(* </span><span class="comment">Wait for an instrumental event and return its status (detected or missed) </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> wait_event i add_event listen =
+  <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> listen (ev) <span class="type">in</span>
+  <span class="constant">if</span> ev.index = i <span class="constant">then</span>
+    <span class="function-name">Detected</span>
+  <span class="constant">else</span> <span class="constant">if</span> ev.index &lt; i <span class="constant">then</span>
+    <span class="function-name">Missed</span> i
+  <span class="constant">else</span>
+    <span class="type">signal</span> s <span class="type">in</span>
+    <span class="builtin">emit</span> add_event (i, s);
+    <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> s (status) <span class="type">in</span>
+    status
+
+<span class="comment-delimiter">(* </span><span class="comment">Create a scheduler for instrumental event and the corresponding
+   waiting process
+</span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> make_event_scheduler listen =
+  <span class="type">signal</span> add_event <span class="type">in</span>
+  <span class="type">let</span> wait_event i = wait_event i add_event listen <span class="type">in</span>
+  <span class="type">let</span> event_scheduler = event_scheduler listen add_event <span class="type">in</span>
+  event_scheduler, wait_event
+
 
 <span class="comment-delimiter">(* </span><span class="comment">Receive message from Max via UDP and send them to the motor. </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> udp server_port listen events =
+<span class="type">let</span> <span class="type">process</span> udp in_port listen =
   <span class="type">let</span> maxlen = 1024 <span class="type">in</span>
-  <span class="type">let</span> sock_event = <span class="function-name">Network</span>.init_server server_port <span class="type">in</span>
-  print_endline (<span class="string">"waiting on port : "</span>^(string_of_int server_port));
+  <span class="type">let</span> sock_event = <span class="function-name">Network</span>.init_server in_port <span class="type">in</span>
+  print_endline (<span class="string">"waiting on port : "</span>^(string_of_int in_port));
   <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> max_server =
     <span class="type">let</span> newmsg = <span class="function-name">String</span>.create maxlen <span class="type">in</span>
     <span class="keyword">begin</span> <span class="constant">try</span>
@@ -52,13 +76,12 @@
     <span class="builtin">pause</span>;
     <span class="builtin">run</span> max_server
   <span class="type">in</span>
-  <span class="builtin">run</span> max_server <span class="constant">||</span>
-  <span class="builtin">run</span> (server listen events)
+  <span class="builtin">run</span> max_server
 
 <span class="comment-delimiter">(* </span><span class="comment">Send messages on signal events corresponding to the simulation with
    'errors' the probability of error
 </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> simulator simu errors freq listen events =
+<span class="type">let</span> <span class="type">process</span> simulator simu errors freq listen =
   <span class="type">signal</span> clock <span class="type">in</span>
   <span class="type">signal</span> t <span class="type">in</span>
   <span class="type">let</span> period = 1. /. freq <span class="type">in</span>
@@ -94,6 +117,5 @@
 
   <span class="constant">do</span> <span class="builtin">run</span> time <span class="constant">when</span> clock <span class="constant">done</span> <span class="constant">||</span>
   <span class="builtin">run</span> (<span class="function-name">Time</span>.emit_clock clock freq) <span class="constant">||</span>
-  <span class="builtin">run</span> (play simu) <span class="constant">||</span>
-  <span class="builtin">run</span> (server listen events)
+  <span class="builtin">run</span> (play simu)
 </pre>

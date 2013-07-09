@@ -10,7 +10,6 @@
 <span class="type">type</span> delay = float
 <span class="type">type</span> label = int
 <span class="type">type</span> tempo = float
-<span class="type">type</span> point = float
 
 <span class="comment-delimiter">(* </span><span class="comment">Atomic action </span><span class="comment-delimiter">*)</span>
 <span class="type">type</span> action =
@@ -23,7 +22,13 @@
 <span class="comment-delimiter">(* </span><span class="comment">Error handling strategies </span><span class="comment-delimiter">*)</span>
 <span class="type">type</span> err = <span class="function-name">Local</span> <span class="constant">|</span> <span class="function-name">Global</span> <span class="constant">|</span> <span class="function-name">Causal</span> <span class="constant">|</span> <span class="function-name">Partial</span>
 
-<span class="type">type</span> sequence =  (delay * asco_event) list
+
+<span class="comment-delimiter">(* </span><span class="comment">Electronic score event </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> score_event =
+    { event : label;
+      seq : sequence; }
+
+<span class="type">and</span> sequence =  (delay * asco_event) list
 
 <span class="comment-delimiter">(* </span><span class="comment">Generic asco event </span><span class="comment-delimiter">*)</span>
 <span class="type">and</span> asco_event =
@@ -42,16 +47,15 @@
     { until_seq : sequence;
       until_event : label; }
 
-<span class="comment-delimiter">(* </span><span class="comment">Electronic score event </span><span class="comment-delimiter">*)</span>
-<span class="type">type</span> score_event =
-    { event : label;
-      seq : sequence; }
+
 
 <span class="comment-delimiter">(* </span><span class="comment">Instrumental score, play the role of function E </span><span class="comment-delimiter">*)</span>
-<span class="type">type</span> instr_score = delay array
+<span class="type">type</span> instr_score = delay list
+
+<span class="comment-delimiter">(* </span><span class="comment">type instr_score_map = (label, delay) Reactive_map.t </span><span class="comment-delimiter">*)</span>
 
 <span class="comment-delimiter">(* </span><span class="comment">Electronic score </span><span class="comment-delimiter">*)</span>
-<span class="type">type</span> score = score_event list * instr_score
+<span class="type">type</span> score = score_event list
 
 <span class="comment-delimiter">(* </span><span class="comment">Instrumental event </span><span class="comment-delimiter">*)</span>
 <span class="type">type</span> instr_event =
@@ -61,12 +65,15 @@
 <span class="comment-delimiter">(* </span><span class="comment">Status for an event </span><span class="comment-delimiter">*)</span>
 <span class="type">type</span> status = <span class="function-name">Detected</span> <span class="constant">|</span> <span class="function-name">Missed</span> <span class="type">of</span> label
 
-<span class="comment-delimiter">(* </span><span class="comment">Table of signals for instrumental events </span><span class="comment-delimiter">*)</span>
-<span class="type">type</span> events = (status, status list) event array
-
 <span class="comment-delimiter">(* </span><span class="comment">Performance element </span><span class="comment-delimiter">*)</span>
 <span class="type">type</span> perf_elem = label * delay * action
 
 <span class="comment-delimiter">(* </span><span class="comment">Simulation of the listening machine </span><span class="comment-delimiter">*)</span>
 <span class="type">type</span> simulation = (label * delay * tempo) list
+
+<span class="comment-delimiter">(* </span><span class="comment">Type of input </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> input_mode =
+  <span class="constant">|</span> <span class="function-name">Udp</span>
+  <span class="constant">|</span> <span class="function-name">File</span> <span class="type">of</span> string
+  <span class="constant">|</span> <span class="function-name">Score</span>
 </pre>

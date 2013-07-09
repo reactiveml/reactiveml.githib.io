@@ -10,8 +10,8 @@
 <span class="variable-name">open</span> <span class="function-name">Types</span>
 <span class="variable-name">open</span> <span class="function-name">Utils</span>
 
-<span class="comment-delimiter">(* </span><span class="comment">Generate a regular real-time signal ck of frequence freq. </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> tick clock freq  =
+<span class="comment-delimiter">(* </span><span class="comment">Generate a regular real-time signal clock of frequence freq. </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> emit_clock clock freq  =
   <span class="type">let</span> period = 1. /. freq <span class="type">in</span>
   <span class="type">let</span> next = ref (<span class="function-name">Unix</span>.gettimeofday () +. period) <span class="type">in</span>
   <span class="keyword">loop</span>
@@ -32,59 +32,38 @@
 <span class="type">let</span> <span class="type">process</span> elapsed listen clock freq date =
   <span class="type">let</span> period = 1. /. freq <span class="type">in</span>
   <span class="type">let</span> m = ref 0.0 <span class="type">in</span>
+  <span class="type">let</span> c = ref 0.0 <span class="type">in</span>
+  <span class="builtin">emit</span> date 0.0;
   <span class="constant">do</span>
+    <span class="comment-delimiter">(* </span><span class="comment">use Kahan summation </span><span class="comment-delimiter">*)</span>
     <span class="keyword">loop</span>
       <span class="type">let</span> ev = last_one listen <span class="type">in</span>
-      m := !m +. ev.bps *. period;
-      <span class="builtin">emit</span> date !m;
-      <span class="builtin">pause</span>;
+      <span class="type">let</span> y = ev.bps -. !c <span class="type">in</span>
+      <span class="type">let</span> t = !m +. y <span class="type">in</span>
+      c := (t -. !m) -. y;
+      m := t;
+      <span class="builtin">emit</span> date (!m *. period);
+      <span class="builtin">pause</span>
     <span class="keyword">end</span>
   <span class="constant">when</span> clock <span class="constant">done</span>
+
 
 <span class="comment-delimiter">(* </span><span class="comment">Wait a delay 'dur' relatively to the tempo. The waiting process is
    realized by the scheduler. Thereofore to achieve the desired
    behavior we just need to register on the scheduler queue with the
    'queue' signal. 'date' is the current value of 'elapsed'.
 </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> wait date add_queue dur =
+<span class="type">let</span> <span class="type">process</span> wait date adding dur =
   <span class="type">signal</span> s <span class="type">in</span>
   <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> date(e) <span class="type">in</span>
-  <span class="builtin">emit</span> add_queue ((dur +. e),s);
+  <span class="builtin">emit</span> adding (dur +. e, s);
   <span class="type">await</span> <span class="type">immediate</span> s
 
-<span class="comment-delimiter">(* </span><span class="comment">Scheduler for the waiting process. Take as input the result of the
-   integrator 'date' and the signal 'add_queue' to build the priority
-   queue.
-</span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> <span class="type">process</span> schedule date add_queue =
-  <span class="comment-delimiter">(* </span><span class="comment">Send messages with deadlines greater than the current date</span><span class="comment-delimiter">*)</span>
-  <span class="type">let</span> <span class="type">process</span> send date queue_pop =
-    <span class="keyword">loop</span>
-      <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> date (d) <span class="type">in</span>
-      <span class="type">let</span> sl = queue_pop d <span class="type">in</span>
-      <span class="function-name">List</span>.iter (<span class="type">fun</span> s <span class="constant">-&gt;</span> <span class="builtin">emit</span> s) sl;
-      <span class="builtin">pause</span>
-    <span class="keyword">end</span>
-  <span class="type">in</span>
-
-  <span class="comment-delimiter">(* </span><span class="comment">Update the queue if new elements are emitted on 'add_queue' </span><span class="comment-delimiter">*)</span>
-  <span class="type">let</span> <span class="type">process</span> update add_queue queue_push =
-    <span class="keyword">loop</span>
-      <span class="type">await</span> add_queue (v) <span class="type">in</span>
-      <span class="function-name">List</span>.iter (<span class="type">fun</span> x <span class="constant">-&gt;</span> queue_push x) v
-    <span class="keyword">end</span>
-  <span class="type">in</span>
-
-  <span class="comment-delimiter">(* </span><span class="comment">the process 'hold' holds the queue implemented as a signal </span><span class="comment-delimiter">*)</span>
-  <span class="type">let</span> queue, queue_push, queue_pop = <span class="function-name">Rqueue</span>.make_queue () <span class="type">in</span>
-  <span class="builtin">run</span> queue <span class="constant">||</span>
-  <span class="builtin">run</span> (send date queue_pop) <span class="constant">||</span>
-  <span class="builtin">run</span> (update add_queue queue_push)
 
 <span class="comment-delimiter">(* </span><span class="comment">Run the processes tick and elapsed and return date </span><span class="comment-delimiter">*)</span>
 <span class="type">let</span> <span class="type">process</span> metronome listen freq date =
   <span class="type">signal</span> clock <span class="type">in</span>
-  <span class="builtin">run</span> (tick clock freq) <span class="constant">||</span>
+  <span class="builtin">run</span> (emit_clock clock freq) <span class="constant">||</span>
   <span class="builtin">run</span> (elapsed listen clock freq date)
 
 
@@ -93,9 +72,21 @@
    given by the signal 'date'. The 'scheduler' process manages the
    waitings.
 </span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> make_scheduler date =
-  <span class="type">signal</span> add_queue <span class="type">in</span>
-  <span class="type">let</span> wait = wait date add_queue <span class="type">in</span>
-  <span class="type">let</span> scheduler = schedule date add_queue <span class="type">in</span>
-  scheduler, wait
+<span class="type">let</span> make_action_scheduler date =
+  <span class="type">signal</span> adding <span class="type">in</span>
+  <span class="type">let</span> sending d sl = <span class="function-name">List</span>.iter (<span class="type">fun</span> (_, s) <span class="constant">-&gt;</span> <span class="builtin">emit</span> s) sl <span class="type">in</span>
+  <span class="type">let</span> wait = wait date adding <span class="type">in</span>
+  <span class="type">signal</span> deadline <span class="type">in</span>
+  <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> deadline_generator pre_d =
+    <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> date (d) <span class="type">in</span>
+    <span class="builtin">emit</span> deadline (d +. (d -. pre_d) /. 2.);
+    <span class="builtin">pause</span>;
+    <span class="builtin">run</span> (deadline_generator d)
+  <span class="type">in</span>
+  <span class="type">let</span> <span class="type">process</span> action_scheduler =
+    <span class="builtin">run</span> (<span class="function-name">Reactive_queue</span>.scheduler deadline sending adding)
+    <span class="constant">||</span>
+    <span class="builtin">run</span> (deadline_generator 0.0)
+  <span class="type">in</span>
+  action_scheduler, wait
 </pre>

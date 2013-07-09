@@ -1,4 +1,4 @@
- <pre>
+    <pre>
 <span class="comment-delimiter">(***************************************************************)</span>
 <span class="comment-delimiter">(*                        </span><span class="comment">Reactive Asco                        </span><span class="comment-delimiter">*)</span>
 <span class="comment-delimiter">(*                                                             *)</span>
@@ -8,38 +8,22 @@
 
 <span class="variable-name">open</span> <span class="function-name">Types</span>
 <span class="variable-name">open</span> <span class="function-name">Utils</span>
-
-<span class="comment-delimiter">(* </span><span class="comment">Return the pair (label,delta) of the nearest event of 'd' in
-   'instr_score' and the remaining delay 'delta'.
-</span><span class="comment-delimiter">*)</span>
-<span class="type">let</span> get_nearest_event instr_score d =
-  <span class="type">let</span> <span class="type">rec</span> search i j t =
-    <span class="constant">if</span> t.(j) = d <span class="constant">then</span>
-      j, 0.0
-    <span class="constant">else</span> <span class="constant">if</span> (j-i) = 1 <span class="constant">then</span>
-      i, (d -. t.(i))
-    <span class="constant">else</span>
-      <span class="type">let</span> m = (i + j) / 2 <span class="type">in</span>
-      <span class="constant">if</span> t.(m) &lt; d <span class="constant">then</span>
-        search m j t
-      <span class="constant">else</span>
-        search i m t
-  <span class="type">in</span>
-  <span class="type">let</span> n = <span class="function-name">Array</span>.length instr_score <span class="type">in</span>
-  search 1 (n - 1) instr_score
+<span class="variable-name">open</span> <span class="function-name">Reactive_map</span>
 
 <span class="comment-delimiter">(* </span><span class="comment">Slice the group 'g' associated to the event 'i' after a delay 'delta'.
    Each action in 'g.group_seq' is reassociated to the nearest event.
    Returns a list of score_event.
 </span><span class="comment-delimiter">*)</span>
 <span class="type">let</span> slice instr_score i delta g =
-  <span class="type">let</span> di = instr_score.(i) <span class="type">in</span>
+  <span class="type">let</span> di = instr_score.find i <span class="type">in</span>
   <span class="type">let</span> <span class="type">rec</span> asso_nearest de l =
     <span class="constant">match</span> l <span class="constant">with</span>
     <span class="constant">|</span>[] <span class="constant">-&gt;</span> []
     <span class="constant">|</span>(da, ae)::t <span class="constant">-&gt;</span>
-        <span class="type">let</span> r, d = get_nearest_event instr_score (de +. da) <span class="type">in</span>
-        (r, d, da, ae)::asso_nearest (de +. da) t
+        <span class="type">let</span> date = de +. da <span class="type">in</span>
+        <span class="type">let</span> r, d = instr_score.nearest date <span class="type">in</span>
+        <span class="type">let</span> dn = date -. d <span class="type">in</span>
+        (r, dn, da, ae)::asso_nearest date t
   <span class="type">in</span>
   <span class="type">let</span> <span class="type">rec</span> build_groups l =
     <span class="constant">match</span> l <span class="constant">with</span>
@@ -69,8 +53,8 @@
    list of asco_event for the past.
 </span><span class="comment-delimiter">*)</span>
 <span class="type">let</span> split instr_score i j delta g =
-  <span class="type">let</span> di = instr_score.(i) <span class="type">in</span>
-  <span class="type">let</span> dj = instr_score.(j) <span class="type">in</span>
+  <span class="type">let</span> di = instr_score.find i <span class="type">in</span>
+  <span class="type">let</span> dj = instr_score.find j <span class="type">in</span>
   <span class="type">let</span> <span class="type">rec</span> aux de ael p f df =
     <span class="constant">match</span> ael <span class="constant">with</span>
     <span class="constant">|</span> [] <span class="constant">-&gt;</span> p, f, df
