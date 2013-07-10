@@ -1,0 +1,128 @@
+<div class="row-fluid row">
+  <div class="span3">
+    <div class="well sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+	<li class="nav-header">Reactive Asco</li>
+        <li><a href="./index.html"><i class="icon-chevron-right"></i>Home</a></li>
+        <li><a href="./videos.html"><i class="icon-chevron-right"></i>Videos Demos</a></li>
+        <li><a href="./source.html"><i class="icon-chevron-right"></i>Source
+        Code</a></li>
+	<li class="nav-header">Download</li>
+	<li><a href="./emsoft13.pdf"><i class="icon-file
+					       icon-black"></i> Paper</a></li>
+	<li><a href="./reactive_asco.tar.gz"><i class="icon-file
+						       icon-black"></i> Code</a></li>
+	<li class="nav-header">Videos</li>
+        <li><a href="#presentation"><i class="icon-chevron-right"></i>Presentation</a></li>
+        <li><a href="#piano_phase"><i class="icon-chevron-right"></i>Piano Phase</a></li>
+        <li><a href="#live_coding"><i class="icon-chevron-right"></i>Live Coding</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="span9">
+ <h1>Videos</h1>
+<hr>
+
+<p>
+    You can find here video demos of some applications of Reactive Asco.
+The code corresponding to the examples is
+    available <a href="./source.html">here</a>.
+<br>
+<br>
+
+Our application works in interaction with Max/MSP via UDP sockets. Max
+send the output of the listening machine to our sequencer. Then the
+sequencer uses these information to send control messages in turn to
+Max/MSP. Here, the sequencer controls a simple MIDI synthesizer.
+<br><br>
+The Max/MSP application used in the demos is the following:
+</p>
+<div class="thumbnail">
+  <img src="./interface.jpg" alt="">
+</div>
+
+<hr>
+
+<section id="presentation">
+  <h3>Presentation</h3>
+
+  <div class="flex-video widescreen"><iframe src="http://www.youtube.com/embed/vXnNaYhSM0U?rel=0&cc_load_policy=1" frameborder="0" allowfullscreen=""></iframe></div>
+
+  <br>
+    <p>This first video introduces the operation of our application
+      with a very simple example: a french folk song called "Au clair de la
+      lune".</p>
+<p>
+<a href="./presentation.mov">
+	      <i class="icon-file"></i> mov</a>
+</p>
+</section>
+<hr>
+
+
+<section id="piano_phase">
+<h3>Piano Phase</h3>
+<p>
+<a href="http://en.wikipedia.org/wiki/Piano_Phase">Piano Phase</a> is a piece written in 1967 by the minimalist composer
+Steve Reich. In this piece, two pianist alternate between two modes of
+execution: synchronization and desynchronization.
+<br>
+<br>
+The interface used for this demo is the following:
+<p>
+<div class="thumbnail">
+  <img src="./interface_pianophase.jpg" alt="">
+</div>
+<br>
+<p>
+<ul>
+  <li><b>Synchronization:</b>
+  <ul>
+    <li>green flashes indicate that the first pianist is playing the first note of the sequence.</li>
+  </ul>
+  </li>
+  <li><b>Desynchronization:</b>
+    <ul>
+      <li>red flashes indicate that the first pianist is playing the first note.</li>
+      <li>blue flashes indicate that the second pianist is playing the kth note (first 1 then 2 then 3...).</li>
+    </ul>
+  </li>
+</ul>
+</p>
+<br>
+
+
+<div class="flex-video widescreen"><iframe src="http://www.youtube.com/embed/ItvWuajB2sI?rel=0&cc_load_policy=1" frameborder="0" allowfullscreen=""></iframe></div>
+
+<br>
+<p>
+<a href="./piano_phase.mov">
+	      <i class="icon-file"></i> mov </a>
+</p>
+</section>
+<hr>
+
+<section id="live_coding">
+<h3>Live Coding</h3>
+<p>
+In this demo, we create, correct and modify an accompaniment during the execution of a song:
+<a href="http://en.wikipedia.org/wiki/The_House_of_the_Rising_Sun">The
+house of the rising sun</a>. Here, the instrumental part is simulated
+with Max/MSP, but try to imagine that it is a real musician in a live
+concert...
+</p>
+
+<div class="flex-video widescreen"><iframe src="http://www.youtube.com/embed/PaIFq4kfAe4?rel=0&cc_load_policy=1" frameborder="0" allowfullscreen=""></iframe></div>
+
+<br>
+<p>
+(You can increase the video quality if you have trouble to read the
+code)</p>
+<p>
+<a href="./rising_sun.mov">
+	      <i class="icon-file"></i> mov </a>
+</p>
+
+</div>
+</div>

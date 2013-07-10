@@ -1,0 +1,89 @@
+    <pre>
+<span class="comment-delimiter">(***************************************************************)</span>
+<span class="comment-delimiter">(*                        </span><span class="comment">Reactive Asco                        </span><span class="comment-delimiter">*)</span>
+<span class="comment-delimiter">(*                                                             *)</span>
+<span class="comment-delimiter">(*                                                             *)</span>
+<span class="comment-delimiter">(* </span><span class="comment">Group traitment                                             </span><span class="comment-delimiter">*)</span>
+<span class="comment-delimiter">(***************************************************************)</span>
+
+<span class="variable-name">open</span> <span class="function-name">Types</span>
+<span class="variable-name">open</span> <span class="function-name">Utils</span>
+<span class="variable-name">open</span> <span class="function-name">Reactive_map</span>
+
+<span class="comment-delimiter">(* </span><span class="comment">Slice the group 'g' associated to the event 'i' after a delay 'delta'.
+   Each action in 'g.group_seq' is reassociated to the nearest event.
+   Returns a list of score_event.
+</span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> slice instr_score i delta g =
+  <span class="type">let</span> di = instr_score.find i <span class="type">in</span>
+  <span class="type">let</span> <span class="type">rec</span> asso_nearest de l =
+    <span class="constant">match</span> l <span class="constant">with</span>
+    <span class="constant">|</span>[] <span class="constant">-&gt;</span> []
+    <span class="constant">|</span>(da, ae)::t <span class="constant">-&gt;</span>
+        <span class="type">let</span> date = de +. da <span class="type">in</span>
+        <span class="type">let</span> r, d = instr_score.nearest date <span class="type">in</span>
+        <span class="type">let</span> dn = date -. d <span class="type">in</span>
+        (r, dn, da, ae)::asso_nearest date t
+  <span class="type">in</span>
+  <span class="type">let</span> <span class="type">rec</span> build_groups l =
+    <span class="constant">match</span> l <span class="constant">with</span>
+    <span class="constant">|</span>[] <span class="constant">-&gt;</span> []
+    <span class="constant">|</span>(r, d, da, ae)::t <span class="constant">-&gt;</span>
+        <span class="type">let</span> l1, l2 = <span class="function-name">List</span>.partition (<span class="type">fun</span> (r', _, _, _) <span class="constant">-&gt;</span> (r = r')) t <span class="type">in</span>
+        <span class="type">let</span> tr = <span class="function-name">List</span>.map (<span class="type">fun</span> (_, _, dae, ae) <span class="constant">-&gt;</span> (dae, ae)) l1 <span class="type">in</span>
+        <span class="type">let</span> br = (d, ae)::tr <span class="type">in</span>
+        <span class="type">let</span> g =
+          { group_synchro = <span class="function-name">Loose</span>;
+            group_error = g.group_error;
+            group_seq = br; }
+        <span class="type">in</span>
+        <span class="type">let</span> se =
+          { event = r;
+            seq = [(0.0, <span class="function-name">Group</span>(g))]; }
+        <span class="type">in</span>
+        se::(build_groups l2)
+  <span class="type">in</span>
+  <span class="type">let</span> nl = asso_nearest (di +. delta) g.group_seq <span class="type">in</span>
+  build_groups nl
+
+
+<span class="comment-delimiter">(* </span><span class="comment">Split the group g associated to the event i after a delay 'delta'
+   in two.  actions that should happen before event 'j' and action
+   that should happen after 'j'. Returns a Group for the future and a
+   list of asco_event for the past.
+</span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> split instr_score i j delta g =
+  <span class="type">let</span> di = instr_score.find i <span class="type">in</span>
+  <span class="type">let</span> dj = instr_score.find j <span class="type">in</span>
+  <span class="type">let</span> <span class="type">rec</span> aux de ael p f df =
+    <span class="constant">match</span> ael <span class="constant">with</span>
+    <span class="constant">|</span> [] <span class="constant">-&gt;</span> p, f, df
+    <span class="constant">|</span> (da, ae)::t <span class="constant">-&gt;</span>
+        <span class="constant">if</span> (de +. da) &lt; dj <span class="constant">then</span>
+          aux (de +. da) t ((da, ae)::p) f (de +. da)
+        <span class="constant">else</span>
+          aux (de +. da) t p ((da, ae)::f) df
+  <span class="type">in</span>
+  <span class="type">let</span> p, f, df = aux (di +. delta) g.group_seq [] [] (di +. delta) <span class="type">in</span>
+  <span class="type">let</span> past, future = <span class="function-name">List</span>.rev p, <span class="function-name">List</span>.rev f <span class="type">in</span>
+  <span class="type">let</span> future =
+    <span class="constant">match</span> future <span class="constant">with</span>
+    <span class="constant">|</span> [] <span class="constant">-&gt;</span> []
+    <span class="constant">|</span> (dae, ae)::t <span class="constant">-&gt;</span> ((df +. dae -. dj), ae)::t
+  <span class="type">in</span>
+  past, future
+
+
+<span class="comment-delimiter">(* </span><span class="comment">Extract groups from a list of electronic actions. </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">rec</span> extract_group l =
+  <span class="type">let</span> <span class="type">rec</span> aux d l =
+    <span class="constant">match</span> l <span class="constant">with</span>
+    <span class="constant">|</span> [] <span class="constant">-&gt;</span> []
+    <span class="constant">|</span> (da, ae)::t <span class="constant">-&gt;</span>
+        <span class="keyword">begin</span> <span class="constant">match</span> ae <span class="constant">with</span>
+        <span class="constant">|</span> <span class="function-name">Group</span>(g) <span class="constant">-&gt;</span> (da +. d, ae)::(aux 0.0 t)
+        <span class="constant">|</span> _ <span class="constant">-&gt;</span> aux (da +. d) t
+        <span class="keyword">end</span>
+  <span class="type">in</span>
+  aux 0.0 l
+</pre>

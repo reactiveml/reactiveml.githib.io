@@ -1,0 +1,48 @@
+    <pre>
+<span class="comment-delimiter">(***************************************************************)</span>
+<span class="comment-delimiter">(*                        </span><span class="comment">Reactive Asco                        </span><span class="comment-delimiter">*)</span>
+<span class="comment-delimiter">(*                                                             *)</span>
+<span class="comment-delimiter">(*                                                             *)</span>
+<span class="comment-delimiter">(* </span><span class="comment">Handle output                                               </span><span class="comment-delimiter">*)</span>
+<span class="comment-delimiter">(* </span><span class="comment">Send control messages to Max/MSP via UDP or print in the    </span><span class="comment-delimiter">*)</span>
+<span class="comment-delimiter">(* </span><span class="comment">standart output                                             </span><span class="comment-delimiter">*)</span>
+<span class="comment-delimiter">(***************************************************************)</span>
+
+<span class="variable-name">open</span> <span class="function-name">Types</span>
+
+<span class="comment-delimiter">(* </span><span class="comment">Send control message in UDP or emit a ReactiveML signal </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> udp out_port perf =
+  <span class="type">let</span> send (i,d,a) sock_actions =
+    <span class="constant">match</span> a <span class="constant">with</span>
+    <span class="constant">|</span> <span class="function-name">Message</span> m <span class="constant">-&gt;</span>
+        <span class="function-name">Network</span>.sendUDP m sock_actions out_port ()
+    <span class="constant">|</span> <span class="function-name">Signal</span> s <span class="constant">-&gt;</span>
+        <span class="builtin">emit</span> s
+  <span class="type">in</span>
+  <span class="type">let</span> sock_actions = <span class="function-name">Network</span>.init_client () <span class="type">in</span>
+  print_endline (<span class="string">"playing on port : "</span>^(string_of_int out_port));
+  <span class="keyword">loop</span>
+    <span class="type">await</span> perf (p) <span class="type">in</span>
+    <span class="function-name">List</span>.iter (<span class="type">fun</span> x <span class="constant">-&gt;</span> send x sock_actions) p
+  <span class="keyword">end</span>
+
+<span class="comment-delimiter">(* </span><span class="comment">Print a feedback on the standart output </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> stdout perf =
+  <span class="type">let</span> print (i,d,a) =
+    <span class="constant">match</span> a <span class="constant">with</span>
+    <span class="constant">|</span> <span class="function-name">Message</span> m <span class="constant">-&gt;</span>
+        print_endline (m^<span class="string">"\t\tevent : "</span>^
+                       (string_of_int i)^
+                       <span class="string">" delay : "</span>^
+                       (string_of_float d))
+    <span class="constant">|</span> <span class="function-name">Signal</span> s <span class="constant">-&gt;</span>
+        print_endline (<span class="string">"emit rml signal"</span>^<span class="string">"\t\tevent : "</span>^
+                       (string_of_int i)^
+                       <span class="string">" delay : "</span>^
+                       (string_of_float d))
+  <span class="type">in</span>
+  <span class="keyword">loop</span>
+    <span class="type">await</span> perf (p) <span class="type">in</span>
+    <span class="function-name">List</span>.iter (<span class="type">fun</span> x <span class="constant">-&gt;</span> print x) p
+  <span class="keyword">end</span>
+</pre>
