@@ -150,7 +150,7 @@ navigation.html: header.html footer.html navigation.src.html
 		header.html footer.html navigation.src.html > $@
 
 clean:
+	rm -f $(GENERATED) publications/rml.html publications/rml_bib.html
 
 cleanall: clean
-	rm -f $(GENERATED) publications/rml.html publications/rml_bib.html \
-		*~ */*~ */*/*~ */*/*/*~
+	rm -f *~ */*~ */*/*~ */*/*/*~
