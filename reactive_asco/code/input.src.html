@@ -39,7 +39,7 @@
   <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> listen (ev) <span class="type">in</span>
   <span class="constant">if</span> ev.index = i <span class="constant">then</span>
     <span class="function-name">Detected</span>
-  <span class="constant">else</span> <span class="constant">if</span> ev.index &lt; i <span class="constant">then</span>
+  <span class="constant">else</span> <span class="constant">if</span> ev.index &gt; i <span class="constant">then</span>
     <span class="function-name">Missed</span> i
   <span class="constant">else</span>
     <span class="type">signal</span> s <span class="type">in</span>
