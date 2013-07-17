@@ -29,7 +29,8 @@ GENERATED=index.html \
 	reactive_asco/code/groups.html \
 	reactive_asco/code/input.html \
 	reactive_asco/code/output.html \
-	reactive_asco/code/syntax.html
+	reactive_asco/code/syntax.html \
+	reactive_asco/code/jacques.html
 
 all: $(GENERATED)
 
@@ -116,6 +117,10 @@ reactive_asco/code/output.html: reactive_asco/code/output.src.html
 reactive_asco/code/syntax.html: reactive_asco/code/syntax.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/syntax.src.html > $@
+
+reactive_asco/code/jacques.html: reactive_asco/code/jacques.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		header.html footer.html reactive_asco/code/jacques.src.html > $@
 
 publications/rml.html: publications/rml.bib
 	(cd publications; \
