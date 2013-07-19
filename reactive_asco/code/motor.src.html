@@ -46,7 +46,7 @@
     <span class="constant">|</span> <span class="function-name">Missed</span>(j) <span class="constant">-&gt;</span>
         <span class="comment-delimiter">(* </span><span class="comment">rule (Missed) </span><span class="comment-delimiter">*)</span>
         <span class="builtin">run</span> (exec_seq (missed se.event j) 0.0 se.seq)
-
+<section id="detected"><h3></h3>
   <span class="type">and</span> <span class="type">process</span> detected i delta ae =
     <span class="constant">match</span> ae <span class="constant">with</span>
     <span class="constant">|</span> <span class="function-name">Action</span>(a) <span class="constant">-&gt;</span>
@@ -71,8 +71,8 @@
           <span class="constant">||</span>
           <span class="type">let</span> _ = <span class="builtin">run</span> (wait_event u.until_event) <span class="type">in</span> <span class="builtin">emit</span> kill
         <span class="constant">until</span> kill <span class="constant">done</span>
-
-
+</section>
+<section id="slice"><h3></h3>
   <span class="type">and</span> <span class="type">process</span> missed i j delta ae =
     <span class="type">let</span> dj = instr_score.find j <span class="type">in</span>
     <span class="type">let</span> di = instr_score.find i <span class="type">in</span>
@@ -127,7 +127,7 @@
         <span class="builtin">run</span> (exec_seq (missed se.event j) 0.0 se.seq) <span class="constant">||</span>
         <span class="builtin">run</span> (exec_past sc j)
   <span class="type">in</span>
-
+</section>
   <span class="comment-delimiter">(* </span><span class="comment">Launch a score that could start after the beginning of the performance </span><span class="comment-delimiter">*)</span>
   <span class="type">let</span> <span class="type">process</span> play_score score i =
     <span class="type">let</span> past, future = <span class="function-name">List</span>.partition (<span class="type">fun</span> se <span class="constant">-&gt;</span> se.event &lt; i) score <span class="type">in</span>

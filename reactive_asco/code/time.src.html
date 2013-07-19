@@ -9,7 +9,7 @@
 
 <span class="variable-name">open</span> <span class="function-name">Types</span>
 <span class="variable-name">open</span> <span class="function-name">Utils</span>
-
+<section id="emit_clock"><h3></h3>
 <span class="comment-delimiter">(* </span><span class="comment">Generate a regular real-time signal clock of frequence freq. </span><span class="comment-delimiter">*)</span>
 <span class="type">let</span> <span class="type">process</span> emit_clock clock freq  =
   <span class="type">let</span> period = 1. /. freq <span class="type">in</span>
@@ -24,8 +24,8 @@
       <span class="keyword">end</span>;
     <span class="builtin">pause</span>
   <span class="keyword">end</span>
-
-
+</section>
+<section id="elapsed"><h3></h3
 <span class="comment-delimiter">(* </span><span class="comment">Compute the delay, relative to the tempo, elapsed since the
    beginning of its execution.
 </span><span class="comment-delimiter">*)</span>
@@ -46,8 +46,8 @@
       <span class="builtin">pause</span>
     <span class="keyword">end</span>
   <span class="constant">when</span> clock <span class="constant">done</span>
-
-
+</section>
+<section id="scheduler"><h3></h3
 <span class="comment-delimiter">(* </span><span class="comment">Wait a delay 'dur' relatively to the tempo. The waiting process is
    realized by the scheduler. Thereofore to achieve the desired
    behavior we just need to register on the scheduler queue with the
@@ -58,7 +58,7 @@
   <span class="type">await</span> <span class="type">immediate</span> <span class="type">one</span> date(e) <span class="type">in</span>
   <span class="builtin">emit</span> adding (dur +. e, s);
   <span class="type">await</span> <span class="type">immediate</span> s
-
+</section>
 
 <span class="comment-delimiter">(* </span><span class="comment">Run the processes tick and elapsed and return date </span><span class="comment-delimiter">*)</span>
 <span class="type">let</span> <span class="type">process</span> metronome listen freq date =

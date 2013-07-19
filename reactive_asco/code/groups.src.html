@@ -9,7 +9,7 @@
 <span class="variable-name">open</span> <span class="function-name">Types</span>
 <span class="variable-name">open</span> <span class="function-name">Utils</span>
 <span class="variable-name">open</span> <span class="function-name">Reactive_map</span>
-
+<section id="slice"><h3></h3>
 <span class="comment-delimiter">(* </span><span class="comment">Slice the group 'g' associated to the event 'i' after a delay 'delta'.
    Each action in 'g.group_seq' is reassociated to the nearest event.
    Returns a list of score_event.
@@ -45,8 +45,8 @@
   <span class="type">in</span>
   <span class="type">let</span> nl = asso_nearest (di +. delta) g.group_seq <span class="type">in</span>
   build_groups nl
-
-
+</section>
+<section id="split"><h3></h3>
 <span class="comment-delimiter">(* </span><span class="comment">Split the group g associated to the event i after a delay 'delta'
    in two.  actions that should happen before event 'j' and action
    that should happen after 'j'. Returns a Group for the future and a
@@ -72,8 +72,8 @@
     <span class="constant">|</span> (dae, ae)::t <span class="constant">-&gt;</span> ((df +. dae -. dj), ae)::t
   <span class="type">in</span>
   past, future
-
-
+</section>
+<section id="extract"><h3></h3>
 <span class="comment-delimiter">(* </span><span class="comment">Extract groups from a list of electronic actions. </span><span class="comment-delimiter">*)</span>
 <span class="type">let</span> <span class="type">rec</span> extract_group l =
   <span class="type">let</span> <span class="type">rec</span> aux d l =
