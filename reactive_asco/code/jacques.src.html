@@ -75,7 +75,7 @@
 <span style="color:rgb(34,139,34)">signal</span> clock
 <span style="color:rgb(34,139,34)">let</span> period = 0.01
 
-<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock  =
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock =
   <span style="color:rgb(34,139,34)">let</span> next = ref (<span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () +. period) <span style="color:rgb(34,139,34)">in</span>
   <span style="color:rgb(160,32,240)">loop</span>
     <span style="color:rgb(34,139,34)">let</span> current = <span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () <span style="color:rgb(34,139,34)">in</span>
@@ -163,6 +163,3 @@
   <span style="color:rgb(72,61,139)">run</span> (round 4) <span style="color:rgb(0,139,139)">||</span>
   <span style="color:rgb(72,61,139)">run</span> sender</pre>
 
-
-</div>
-</div>
