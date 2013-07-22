@@ -55,21 +55,20 @@
       Breadth first traveral using parallel composition (<code>||</code>)
       and synchronization of logical time (<code>pause</code>).
       <br><br>
+   <pre>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Definition the type of binary trees. </span><span style="color: #b22222;">*)</span>
+  <span style="color: #228b22;">type</span> 'a tree =
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Empty</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Node</span> <span style="color: #228b22;">of</span> 'a * 'a tree * 'a tree
 
-<pre>
-  <span class="comment-delimiter">(* </span><span class="comment">Definition the type of binary trees. </span><span class="comment-delimiter">*)</span>
-  <span class="type">type</span> 'a tree =
-    <span class="constant">|</span> <span class="function-name">Empty</span>
-    <span class="constant">|</span> <span class="function-name">Node</span> <span class="type">of</span> 'a * 'a tree * 'a tree
-
-  <span class="comment-delimiter">(* </span><span class="comment">Breadth first traveral. </span><span class="comment-delimiter">*)</span>
-  <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> iter_breadth f t =
-    <span class="constant">match</span> t <span class="constant">with</span>
-    <span class="constant">|</span> <span class="function-name">Empty</span> <span class="constant">-&gt;</span> ()
-    <span class="constant">|</span> <span class="function-name">Node</span> (x, l, r) <span class="constant">-&gt;</span>
+  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Breadth first traveral. </span><span style="color: #b22222;">*)</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> <span style="color: #228b22;">process</span> iter_breadth f t =
+    <span style="color: #008b8b;">match</span> t <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Empty</span> <span style="color: #008b8b;">-&gt;</span> ()
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Node</span> (x, l, r) <span style="color: #008b8b;">-&gt;</span>
         f x;
-        <span class="builtin">pause</span>;
-        <span class="builtin">run</span> (iter_breadth f l) <span class="constant">||</span> <span class="builtin">run</span> (iter_breadth f r)</pre>
+        <span style="color: #483d8b;">pause</span>;
+        <span style="color: #483d8b;">run</span> (iter_breadth f l) <span style="color: #008b8b;">||</span> <span style="color: #483d8b;">run</span> (iter_breadth f r)</pre>
       </section>
     <hr>
 
