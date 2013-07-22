@@ -8,8 +8,7 @@
 
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Utils</span>
-<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Reactive_map</span>
-<section id="slice"><h3></h3>
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Reactive_map</span><section id="slice"><h3></h3>
 <span style="color: #b22222;">(* </span><span style="color: #b22222;">Slice the group 'g' associated to the event 'i' after a delay 'delta'.
    Each action in 'g.group_seq' is reassociated to the nearest event.
    Returns a list of score_event.
@@ -45,8 +44,7 @@
   <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">let</span> nl = asso_nearest (di +. delta) g.group_seq <span style="color: #228b22;">in</span>
   build_groups nl
-</section>
-<section id="split"><h3></h3>
+</section><section id="split"><h3></h3>
 <span style="color: #b22222;">(* </span><span style="color: #b22222;">Split the group g associated to the event i after a delay 'delta'
    in two.  actions that should happen before event 'j' and action
    that should happen after 'j'. Returns a Group for the future and a
@@ -72,8 +70,7 @@
     <span style="color: #008b8b;">|</span> (dae, ae)::t <span style="color: #008b8b;">-&gt;</span> ((df +. dae -. dj), ae)::t
   <span style="color: #228b22;">in</span>
   past, future
-</section>
-<section id="extract"><h3></h3>
+</section><section id="extract"><h3></h3>
 <span style="color: #b22222;">(* </span><span style="color: #b22222;">Extract groups from a list of electronic actions. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> extract_group l =
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux d l =
