@@ -92,35 +92,35 @@ reactive_asco/source.html: header.html footer.html reactive_asco/source.src.html
 
 reactive_asco/code/types.html: reactive_asco/code/types.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/types.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/types.src.html > $@
 
 reactive_asco/code/time.html: reactive_asco/code/time.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/time.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/time.src.html > $@
 
 reactive_asco/code/motor.html: reactive_asco/code/motor.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/motor.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/motor.src.html > $@
 
 reactive_asco/code/groups.html: reactive_asco/code/groups.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/groups.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/groups.src.html > $@
 
 reactive_asco/code/input.html: reactive_asco/code/input.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/input.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/input.src.html > $@
 
 reactive_asco/code/output.html: reactive_asco/code/output.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/output.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/output.src.html > $@
 
 reactive_asco/code/syntax.html: reactive_asco/code/syntax.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		reactive_asco/code/header.html reactive_asco/code/footer.html reactive_asco/code/syntax.src.html > $@
+		reactive_asco/code/header.html footer.html reactive_asco/code/syntax.src.html > $@
 
 reactive_asco/code/jacques.html: reactive_asco/code/jacques.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		header.html footer.html reactive_asco/code/jacques.src.html > $@
+		header.html reactive_asco/code/footer.html reactive_asco/code/jacques.src.html > $@
 
 publications/rml.html: publications/rml.bib
 	(cd publications; \
