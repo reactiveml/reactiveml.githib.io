@@ -20,6 +20,7 @@ GENERATED=index.html \
 	rmltop/index.html \
 	distrib/index.html \
 	navigation.html \
+	reactive_asco/code/header.html \
 	reactive_asco/index.html \
 	reactive_asco/videos.html \
 	reactive_asco/source.html \
@@ -30,6 +31,7 @@ GENERATED=index.html \
 	reactive_asco/code/input.html \
 	reactive_asco/code/output.html \
 	reactive_asco/code/syntax.html \
+	emsoft13/code/header.html \
 	emsoft13/index.html \
 	emsoft13/videos.html \
 	emsoft13/source.html \
@@ -40,7 +42,7 @@ GENERATED=index.html \
 	emsoft13/code/input.html \
 	emsoft13/code/output.html \
 	emsoft13/code/syntax.html \
-	reactive_asco/code/jacques.html
+	reactive_asco/code/jacques.html \
 
 all: $(GENERATED)
 
