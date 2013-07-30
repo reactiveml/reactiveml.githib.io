@@ -30,6 +30,16 @@ GENERATED=index.html \
 	reactive_asco/code/input.html \
 	reactive_asco/code/output.html \
 	reactive_asco/code/syntax.html \
+	emsoft13/index.html \
+	emsoft13/videos.html \
+	emsoft13/source.html \
+	emsoft13/code/types.html \
+	emsoft13/code/time.html \
+	emsoft13/code/motor.html \
+	emsoft13/code/groups.html \
+	emsoft13/code/input.html \
+	emsoft13/code/output.html \
+	emsoft13/code/syntax.html \
 	reactive_asco/code/jacques.html
 
 all: $(GENERATED)
@@ -77,6 +87,8 @@ examples/simulator_elip/index.html: header.html footer.html examples/simulator_e
 	$(SRC2HTML) "../.." "ReactiveML - Example" "XXX" \
 		header.html footer.html examples/simulator_elip/index.src.html > $@
 
+reactive_asco/code/header.html: header.html reactive_asco/code/header.src.html
+	cat header.html reactive_asco/code/header.src.html > $@
 
 reactive_asco/index.html: header.html footer.html reactive_asco/index.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
@@ -90,37 +102,81 @@ reactive_asco/source.html: header.html footer.html reactive_asco/source.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
 		header.html footer.html reactive_asco/source.src.html > $@
 
-reactive_asco/code/types.html: reactive_asco/code/types.src.html
+reactive_asco/code/types.html: reactive_asco/code/header.html reactive_asco/code/types.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/types.src.html > $@
 
-reactive_asco/code/time.html: reactive_asco/code/time.src.html
+reactive_asco/code/time.html: reactive_asco/code/header.html reactive_asco/code/time.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/time.src.html > $@
 
-reactive_asco/code/motor.html: reactive_asco/code/motor.src.html
+reactive_asco/code/motor.html: reactive_asco/code/header.html reactive_asco/code/motor.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/motor.src.html > $@
 
-reactive_asco/code/groups.html: reactive_asco/code/groups.src.html
+reactive_asco/code/groups.html: reactive_asco/code/header.html reactive_asco/code/groups.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/groups.src.html > $@
 
-reactive_asco/code/input.html: reactive_asco/code/input.src.html
+reactive_asco/code/input.html: reactive_asco/code/header.html reactive_asco/code/input.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/input.src.html > $@
 
-reactive_asco/code/output.html: reactive_asco/code/output.src.html
+reactive_asco/code/output.html: reactive_asco/code/header.html reactive_asco/code/output.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/output.src.html > $@
 
-reactive_asco/code/syntax.html: reactive_asco/code/syntax.src.html
+reactive_asco/code/syntax.html: reactive_asco/code/header.html reactive_asco/code/syntax.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		reactive_asco/code/header.html footer.html reactive_asco/code/syntax.src.html > $@
 
 reactive_asco/code/jacques.html: reactive_asco/code/jacques.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		header.html reactive_asco/code/footer.html reactive_asco/code/jacques.src.html > $@
+
+emsoft13/code/header.html: header.html emsoft13/code/header.src.html
+	cat header.html emsoft13/code/header.src.html > $@
+
+emsoft13/index.html: header.html footer.html emsoft13/index.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html emsoft13/footer.html emsoft13/index.src.html > $@
+
+emsoft13/videos.html: header.html footer.html emsoft13/videos.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html emsoft13/footer.html emsoft13/videos.src.html > $@
+
+emsoft13/source.html: header.html footer.html emsoft13/source.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html emsoft13/footer.html emsoft13/source.src.html > $@
+
+emsoft13/code/types.html: emsoft13/code/header.html emsoft13/code/types.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/types.src.html > $@
+
+emsoft13/code/time.html:  emsoft13/code/header.html emsoft13/code/time.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/time.src.html > $@
+
+emsoft13/code/motor.html: emsoft13/code/header.html emsoft13/code/motor.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/motor.src.html > $@
+
+emsoft13/code/groups.html: emsoft13/code/header.html emsoft13/code/groups.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/groups.src.html > $@
+
+emsoft13/code/input.html: emsoft13/code/header.html emsoft13/code/input.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/input.src.html > $@
+
+emsoft13/code/output.html: emsoft13/code/header.html emsoft13/code/output.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/output.src.html > $@
+
+emsoft13/code/syntax.html: emsoft13/code/header.html emsoft13/code/syntax.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/syntax.src.html > $@
+
 
 publications/rml.html: publications/rml.bib
 	(cd publications; \

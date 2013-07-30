@@ -1,0 +1,101 @@
+ <pre style="line-height:normal"><span style="color:rgb(178,34,34)">(***************************************************************)</span>
+<span style="color:rgb(178,34,34)">(*                        </span><span style="color:rgb(178,34,34)">Reactive Asco                        </span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(178,34,34)">(*                                                             *)</span>
+<span style="color:rgb(178,34,34)">(*                                                             *)</span>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Implement the wait process (relative to the tempo)          </span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">This is an optimized version using a priority queue.        </span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(178,34,34)">(***************************************************************)</span>
+
+<span style="color:rgb(160,82,45)">open</span> <span style="color:rgb(0,0,255)">Types</span>
+<span style="color:rgb(160,82,45)">open</span> <span style="color:rgb(0,0,255)">Utils</span>
+<section id="emit_clock"><h3></h3>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Generate a regular real-time signal ck of frequence freq. </span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock clock freq  =
+  <span style="color:rgb(34,139,34)">let</span> period = 1. /. freq <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(34,139,34)">let</span> next = ref (<span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () +. period) <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(34,139,34)">let</span> current = <span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () <span style="color:rgb(34,139,34)">in</span>
+    <span style="color:rgb(0,139,139)">if</span> (current &gt;= !next)
+    <span style="color:rgb(0,139,139)">then</span>
+      <span style="color:rgb(160,32,240)">begin</span>
+        <span style="color:rgb(72,61,139)">emit</span> clock ();
+        next := !next +. period
+      <span style="color:rgb(160,32,240)">end</span>;
+    <span style="color:rgb(72,61,139)">pause</span>
+  <span style="color:rgb(160,32,240)">end</span>
+</section><section id="elapsed"><h3></h3>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Compute the delay, relative to the tempo, elapsed since the
+   beginning of its execution.
+</span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> elapsed listen clock freq date =
+  <span style="color:rgb(34,139,34)">let</span> period = 1. /. freq <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(34,139,34)">let</span> m = ref 0.0 <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(0,139,139)">do</span>
+    <span style="color:rgb(160,32,240)">loop</span>
+      <span style="color:rgb(34,139,34)">let</span> ev = last_one listen <span style="color:rgb(34,139,34)">in</span>
+      m := !m +. ev.bps *. period;
+      <span style="color:rgb(72,61,139)">emit</span> date !m;
+      <span style="color:rgb(72,61,139)">pause</span>;
+    <span style="color:rgb(160,32,240)">end</span>
+  <span style="color:rgb(0,139,139)">when</span> clock <span style="color:rgb(0,139,139)">done</span>
+</section><section id="scheduler"><h3></h3>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Wait a delay 'dur' relatively to the tempo. The waiting process is
+   realized by the scheduler. Thereofore to achieve the desired
+   behavior we just need to register on the scheduler queue with the
+   'queue' signal. 'date' is the current value of 'elapsed'.
+</span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> wait date add_queue dur =
+  <span style="color:rgb(34,139,34)">signal</span> s <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(34,139,34)">await</span> <span style="color:rgb(34,139,34)">immediate</span> <span style="color:rgb(34,139,34)">one</span> date(e) <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(72,61,139)">emit</span> add_queue ((dur +. e),s);
+  <span style="color:rgb(34,139,34)">await</span> <span style="color:rgb(34,139,34)">immediate</span> s<br></section>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Scheduler for the waiting process. Take as input the result of the
+   integrator 'date' and the signal 'add_queue' to build the priority
+   queue.
+</span>
+<span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> schedule date add_queue =
+  <span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Send messages with deadlines greater than the current date</span><span style="color:rgb(178,34,34)">*)</span>
+  <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> send date queue_pop =
+    <span style="color:rgb(160,32,240)">loop</span>
+      <span style="color:rgb(34,139,34)">await</span> <span style="color:rgb(34,139,34)">immediate</span> <span style="color:rgb(34,139,34)">one</span> date (d) <span style="color:rgb(34,139,34)">in</span>
+      <span style="color:rgb(34,139,34)">let</span> sl = queue_pop d <span style="color:rgb(34,139,34)">in</span>
+      <span style="color:rgb(0,0,255)">List</span>.iter (<span style="color:rgb(34,139,34)">fun</span> s <span style="color:rgb(0,139,139)">-&gt;</span> <span style="color:rgb(72,61,139)">emit</span> s) sl;
+      <span style="color:rgb(72,61,139)">pause</span>
+    <span style="color:rgb(160,32,240)">end</span>
+  <span style="color:rgb(34,139,34)">in</span>
+
+  <span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Update the queue if new elements are emitted on 'add_queue' </span><span style="color:rgb(178,34,34)">*)</span>
+  <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> update add_queue queue_push =
+    <span style="color:rgb(160,32,240)">loop</span>
+      <span style="color:rgb(34,139,34)">await</span> add_queue (v) <span style="color:rgb(34,139,34)">in</span>
+      <span style="color:rgb(0,0,255)">List</span>.iter (<span style="color:rgb(34,139,34)">fun</span> x <span style="color:rgb(0,139,139)">-&gt;</span> queue_push x) v
+    <span style="color:rgb(160,32,240)">end</span>
+  <span style="color:rgb(34,139,34)">in</span>
+
+  <span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">the process 'hold' holds the queue implemented as a signal </span><span style="color:rgb(178,34,34)">*)</span>
+  <span style="color:rgb(34,139,34)">let</span> queue, queue_push, queue_pop = <span style="color:rgb(0,0,255)">Rqueue</span>.make_queue () <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(72,61,139)">run</span> queue <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (send date queue_pop) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (update add_queue
+  queue_push)<br>
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Run the processes tick and elapsed and return date </span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> metronome listen freq date =
+  <span style="color:rgb(34,139,34)">signal</span> clock <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(72,61,139)">run</span> (tick clock freq) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (elapsed listen clock
+  freq date)
+
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Create a pair of processes '(scheduler, wait)'. The 'wait' process
+   suspends the execution for a duration 'dur' relative to the tempo
+   given by the signal 'date'. The 'scheduler' process manages the
+   waitings.
+</span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> make_scheduler date =
+  <span style="color:rgb(34,139,34)">signal</span> add_queue <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(34,139,34)">let</span> wait = wait date add_queue <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(34,139,34)">let</span> scheduler = schedule date add_queue <span style="color:rgb(34,139,34)">in</span>
+  scheduler, wait
+</pre>
+</div>
+</div>

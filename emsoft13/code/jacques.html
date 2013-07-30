@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ReactiveML - Reactive Asco</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="../../style.css" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../../rml.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <div class="container">
+
+
+      <div class="masthead">
+	<div class="navbar navbar-fixed-top">
+	  <div class="navbar-inner">
+	    <div class="container">
+
+	      <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
+		<!-- <span class="icon-bar"></span> -->
+		<!-- <span class="icon-bar"></span> -->
+		<!-- <span class="icon-bar"></span> -->
+		menu
+	      </a>
+
+	      <a class="brand" href="../../index.html">ReactiveML</a>
+
+	      <div class="nav-collapse collapse">
+		<ul class="nav">
+		  <li><a href="../../index.html">Home</a></li>
+		  <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+		  <li><a href="../../documentation.html">Documentation</a></li>
+		  <li><a href="../../examples.html">Examples</a></li>
+		  <li><a href="../../videos.html">Videos</a></li>
+		  <li><a href="../../publications.html">Publications</a></li>
+		  <li><a href="../../contact.html">Contact</a></li>
+		</ul>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+<div class="row-fluid row">
+  <div class="span3">
+    <div class="well sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+	<li class="nav-header">Try ReactiveML</li>
+	<li><a href="../../tryrml/tryrml.html"><i class="icon-globe icon-black"></i> Try it online</a></li>
+	<li><a href="../../distrib/rml-1.08.06-dev-2013-07-30.tar.gz"><i class="icon-globe icon-black"></i> Download</a></li>
+
+	<li class="nav-header">Examples</li>
+        <li><a href="../../examples.html#hello"><i class="icon-chevron-right"></i> Hello World!</a></li>
+        <li><a href="../../examples.html#breadth"><i class="icon-chevron-right"></i> Breadth first traversal</a></li>
+        <li><a href="../../examples.html#nbody"><i class="icon-chevron-right"></i> N-body</a></li>
+        <li><a href="../../examples.html#cell"><i class="icon-chevron-right"></i> Cellular automata</a></li>
+	<li><a href="../../examples.html#jacques"><i class="icon-chevron-right"></i> Frère Jacques</a></li>
+
+	<li class="nav-header">Projects</li>
+        <li><a href="../../examples.html#network"><i class="icon-chevron-right"></i> Network simulation</a></li>
+        <li><a href="../../examples.html#glonemo"><i class="icon-chevron-right"></i> Glonemo</a></li>
+	<li><a href="../../examples.html#reactiveasco"><i class="icon-chevron-right"></i> Reactive Asco</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="span9">
+
+<h1>Frère Jacques</h1>
+<hr>
+<div class="thumbnail">
+  <img src="../../reactive_asco/resources/score_jacques.png" alt="jacques">
+</div>
+<br><br>
+<h3>Audio</h3>
+     <ul>
+      <li> <p>Theme only</p>
+	<div class="raw-fluid row">
+	  <div class="span6">
+	    <audio controls>
+	      <source src="../../reactive_asco/resources/jacques_alone.mp3"
+		      type="audio/mp3">
+		<source src="../../reactive_asco/resources/jacques_alone.ogg" type="audio/ogg">
+	    </audio>
+	  </div>
+	</div>
+    </li>
+
+      <li><p>Theme doubled one third higher (four semi-tones)</p>
+	<div class="raw-fluid row">
+	  <div class="span6">
+	    <audio controls>
+	      <source src="../../reactive_asco/resources/jacques_double.mp3"
+		      type="audio/mp3">
+		<source src="../../reactive_asco/resources/jacques_double.ogg" type="audio/ogg">
+	    </audio>
+	  </div>
+	</div>
+      </li>
+
+      <li><p>The entire round</p>
+	<div class="raw-fluid row">
+	  <div class="span6">
+	    <audio controls>
+	      <source src="../../reactive_asco/resources/jacques_round.mp3"
+		      type="audio/mp3">
+		<source src="../../reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+	    </audio>
+	  </div>
+	</div>
+      </li>
+     </ul>
+
+<br>
+<h3>Source Code</h3>
+<pre><span style="color:rgb(160,82,45)">open</span> <span style="color:rgb(0,0,255)">Music</span>
+
+<span style="color:rgb(34,139,34)">signal</span> clock
+<span style="color:rgb(34,139,34)">let</span> period = 0.01
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock =
+  <span style="color:rgb(34,139,34)">let</span> next = ref (<span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () +. period) <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(34,139,34)">let</span> current = <span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () <span style="color:rgb(34,139,34)">in</span>
+    <span style="color:rgb(0,139,139)">if</span> (current &gt;= !next)
+    <span style="color:rgb(0,139,139)">then</span>
+      <span style="color:rgb(160,32,240)">begin</span>
+        <span style="color:rgb(72,61,139)">emit</span> clock ();
+        next := !next +. period;
+      <span style="color:rgb(160,32,240)">end</span>;
+    <span style="color:rgb(72,61,139)">pause</span>
+  <span style="color:rgb(160,32,240)">end</span>
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> wait dur =
+  <span style="color:rgb(34,139,34)">let</span> d = int_of_float (dur /. period) <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(0,139,139)">for</span> i = 1 <span style="color:rgb(0,139,139)">to</span> d <span style="color:rgb(0,139,139)">do</span>
+    <span style="color:rgb(34,139,34)">await</span> clock
+  <span style="color:rgb(0,139,139)">done</span>
+
+<span style="color:rgb(34,139,34)">signal</span> perf <span style="color:rgb(34,139,34)">default</span> [] <span style="color:rgb(34,139,34)">gather</span> (<span style="color:rgb(34,139,34)">fun</span> x y <span style="color:rgb(0,139,139)">-&gt;</span> x::y)
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">rec</span> <span style="color:rgb(34,139,34)">process</span> play sequence =
+  <span style="color:rgb(0,139,139)">match</span> sequence <span style="color:rgb(0,139,139)">with</span>
+  <span style="color:rgb(0,139,139)">|</span> [] <span style="color:rgb(0,139,139)">-&gt;</span> ()
+  <span style="color:rgb(0,139,139)">|</span> ((dur, pitch) <span style="color:rgb(34,139,34)">as</span> note) :: s <span style="color:rgb(0,139,139)">-&gt;</span>
+      <span style="color:rgb(72,61,139)">emit</span> perf note;
+      <span style="color:rgb(72,61,139)">run</span> (wait dur);
+      <span style="color:rgb(72,61,139)">run</span> (play s)
+
+<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Send a message to the audio environment via a socket </span><span style="color:rgb(178,34,34)">*)</span>
+<span style="color:rgb(34,139,34)">let</span> send_to_audio sock note =
+  <span style="color:rgb(34,139,34)">let</span> m = string_of_note note <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(0,0,255)">Network</span>.sendUDP m sock 7400 ()
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> sender =
+  <span style="color:rgb(34,139,34)">let</span> sock = <span style="color:rgb(0,0,255)">Network</span>.init_client () <span style="color:rgb(34,139,34)">in</span>
+  print_endline (<span style="color:rgb(139,34,82)">"playing on port : "</span>^(string_of_int 7400));
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(34,139,34)">await</span> perf (notes) <span style="color:rgb(34,139,34)">in</span>
+    <span style="color:rgb(0,0,255)">List</span>.iter (<span style="color:rgb(34,139,34)">fun</span> n <span style="color:rgb(0,139,139)">-&gt;</span> send_to_audio sock n) notes
+  <span style="color:rgb(160,32,240)">end</span>
+
+<span style="color:rgb(34,139,34)">let</span> jacques =
+  [1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
+   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
+   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);]
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> double sequence =
+  <span style="color:rgb(72,61,139)">run</span> (play sequence) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (play (transpose 4 sequence))
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> delayed p dur =
+  <span style="color:rgb(72,61,139)">run</span> (wait dur);
+  <span style="color:rgb(72,61,139)">run</span> p
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> theme =
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(72,61,139)">run</span> (play jacques)
+  <span style="color:rgb(160,32,240)">end</span>
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> round_basic =
+  <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (delayed theme 8.0) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (delayed theme 16.0) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (delayed theme 24.0)
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> round_for =
+  <span style="color:rgb(0,139,139)">for</span> i = 0 <span style="color:rgb(0,139,139)">to</span> 3 <span style="color:rgb(0,139,139)">dopar</span>
+    <span style="color:rgb(72,61,139)">run</span> (delayed theme (float (i * 8)))
+  <span style="color:rgb(0,139,139)">done</span>
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">rec</span> <span style="color:rgb(34,139,34)">process</span> round nb_voices =
+  <span style="color:rgb(0,139,139)">if</span> nb_voices &lt;= 0 <span style="color:rgb(0,139,139)">then</span> ()
+  <span style="color:rgb(0,139,139)">else</span> <span style="color:rgb(160,32,240)">begin</span>
+    <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
+    <span style="color:rgb(72,61,139)">run</span> (delayed (round (nb_voices - 1)) 8.0)
+  <span style="color:rgb(160,32,240)">end</span>
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> main =
+  <span style="color:rgb(72,61,139)">run</span> emit_clock <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (round 4) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> sender</pre>
+
+</div>
+</div>
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+      <p>
+	<small>
+	  <a href="../../navigation.html">navigation</a>
+	</small>
+      </p>
+    </div>
+    <div class="span6">
+      <p style="text-align: right">
+	<small>
+	  <a href="../../distrib/rml-1.08.06-dev-2013-07-30.tar.gz">ReactiveML version 1.08.06-dev</a><br>
+	  2013-07-30 <a href="../../distrib/changes">changes</a>
+	    <!-- <br> -->
+	    <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	</small>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</div> <!-- /container -->
+
+<script type="text/javascript" src="../../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/html5slider.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap-player.js"></script>
+
+</body>
+</html>

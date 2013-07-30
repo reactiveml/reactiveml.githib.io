@@ -1,0 +1,51 @@
+    <pre>
+<span style="color: #b22222;">(***************************************************************)</span>
+<span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Handle output                                               </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Send control messages to Max/MSP via UDP or print in the    </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">standart output                                             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
+
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Send control message in UDP or emit a ReactiveML signal </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> udp out_port perf =
+  <span style="color: #228b22;">let</span> send (i,d,a) sock_actions =
+    <span style="color: #008b8b;">match</span> a <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> m <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #0000ff;">Network</span>.sendUDP m sock_actions out_port ()
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> s <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #483d8b;">emit</span> s
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> sock_actions = <span style="color: #0000ff;">Network</span>.init_client () <span style="color: #228b22;">in</span>
+  print_endline (<span style="color: #8b2252;">"playing on port : "</span>^(string_of_int out_port));
+  <span style="color: #a020f0;">loop</span>
+    <span style="color: #228b22;">await</span> perf (p) <span style="color: #228b22;">in</span>
+    <span style="color: #0000ff;">List</span>.iter (<span style="color: #228b22;">fun</span> x <span style="color: #008b8b;">-&gt;</span> send x sock_actions) p
+  <span style="color: #a020f0;">end</span>
+
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Print a feedback on the standart output </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> stdout perf =
+  <span style="color: #228b22;">let</span> print (i,d,a) =
+    <span style="color: #008b8b;">match</span> a <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> m <span style="color: #008b8b;">-&gt;</span>
+        print_endline (m^<span style="color: #8b2252;">"\t\tevent : "</span>^
+                       (string_of_int i)^
+                       <span style="color: #8b2252;">" delay : "</span>^
+                       (string_of_float d))
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> s <span style="color: #008b8b;">-&gt;</span>
+        print_endline (<span style="color: #8b2252;">"emit rml signal"</span>^<span style="color: #8b2252;">"\t\tevent : "</span>^
+                       (string_of_int i)^
+                       <span style="color: #8b2252;">" delay : "</span>^
+                       (string_of_float d))
+  <span style="color: #228b22;">in</span>
+  <span style="color: #a020f0;">loop</span>
+    <span style="color: #228b22;">await</span> perf (p) <span style="color: #228b22;">in</span>
+    <span style="color: #0000ff;">List</span>.iter (<span style="color: #228b22;">fun</span> x <span style="color: #008b8b;">-&gt;</span> print x) p
+  <span style="color: #a020f0;">end</span>
+</pre>
+
+</div>
+</div>

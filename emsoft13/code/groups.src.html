@@ -1,0 +1,90 @@
+   <pre>
+<span style="color: #b22222;">(***************************************************************)</span>
+<span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Group traitment                                             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Utils</span>
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Reactive_map</span><section id="slice"><h3></h3>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Slice the group 'g' associated to the event 'i' after a delay 'delta'.
+   Each action in 'g.group_seq' is reassociated to the nearest event.
+   Returns a list of score_event.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> slice instr_score i delta g =
+  <span style="color: #228b22;">let</span> di = instr_score.find i <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> asso_nearest de l =
+    <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span>[] <span style="color: #008b8b;">-&gt;</span> []
+    <span style="color: #008b8b;">|</span>(da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #228b22;">let</span> date = de +. da <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> r, d = instr_score.nearest date <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> dn = date -. d <span style="color: #228b22;">in</span>
+        (r, dn, da, ae)::asso_nearest date t
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> build_groups l =
+    <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span>[] <span style="color: #008b8b;">-&gt;</span> []
+    <span style="color: #008b8b;">|</span>(r, d, da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #228b22;">let</span> l1, l2 = <span style="color: #0000ff;">List</span>.partition (<span style="color: #228b22;">fun</span> (r', _, _, _) <span style="color: #008b8b;">-&gt;</span> (r = r')) t <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> tr = <span style="color: #0000ff;">List</span>.map (<span style="color: #228b22;">fun</span> (_, _, dae, ae) <span style="color: #008b8b;">-&gt;</span> (dae, ae)) l1 <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> br = (d, ae)::tr <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> g =
+          { group_synchro = <span style="color: #0000ff;">Loose</span>;
+            group_error = g.group_error;
+            group_seq = br; }
+        <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> se =
+          { event = r;
+            seq = [(0.0, <span style="color: #0000ff;">Group</span>(g))]; }
+        <span style="color: #228b22;">in</span>
+        se::(build_groups l2)
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> nl = asso_nearest (di +. delta) g.group_seq <span style="color: #228b22;">in</span>
+  build_groups nl
+</section><section id="split"><h3></h3>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Split the group g associated to the event i after a delay 'delta'
+   in two.  actions that should happen before event 'j' and action
+   that should happen after 'j'. Returns a Group for the future and a
+   list of asco_event for the past.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> split instr_score i j delta g =
+  <span style="color: #228b22;">let</span> di = instr_score.find i <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> dj = instr_score.find j <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux de ael p f df =
+    <span style="color: #008b8b;">match</span> ael <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> p, f, df
+    <span style="color: #008b8b;">|</span> (da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #008b8b;">if</span> (de +. da) &lt; dj <span style="color: #008b8b;">then</span>
+          aux (de +. da) t ((da, ae)::p) f (de +. da)
+        <span style="color: #008b8b;">else</span>
+          aux (de +. da) t p ((da, ae)::f) df
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> p, f, df = aux (di +. delta) g.group_seq [] [] (di +. delta) <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> past, future = <span style="color: #0000ff;">List</span>.rev p, <span style="color: #0000ff;">List</span>.rev f <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> future =
+    <span style="color: #008b8b;">match</span> future <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> []
+    <span style="color: #008b8b;">|</span> (dae, ae)::t <span style="color: #008b8b;">-&gt;</span> ((df +. dae -. dj), ae)::t
+  <span style="color: #228b22;">in</span>
+  past, future
+</section><section id="extract"><h3></h3>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Extract groups from a list of electronic actions. </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> extract_group l =
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux d l =
+    <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> []
+    <span style="color: #008b8b;">|</span> (da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #a020f0;">begin</span> <span style="color: #008b8b;">match</span> ae <span style="color: #008b8b;">with</span>
+        <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Group</span>(g) <span style="color: #008b8b;">-&gt;</span> (da +. d, ae)::(aux 0.0 t)
+        <span style="color: #008b8b;">|</span> _ <span style="color: #008b8b;">-&gt;</span> aux (da +. d) t
+        <span style="color: #a020f0;">end</span>
+  <span style="color: #228b22;">in</span>
+  aux 0.0 l
+</section>
+</pre>
+
+</div>
+</div>
