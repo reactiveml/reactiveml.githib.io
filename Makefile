@@ -43,6 +43,10 @@ GENERATED=index.html \
 	emsoft13/code/output.html \
 	emsoft13/code/syntax.html \
 	reactive_asco/code/jacques.html \
+	farm13/index.html \
+	farm13/videos.html \
+	farm13/code/jacques.html \
+
 
 all: $(GENERATED)
 
@@ -178,6 +182,19 @@ emsoft13/code/output.html: emsoft13/code/header.html emsoft13/code/output.src.ht
 emsoft13/code/syntax.html: emsoft13/code/header.html emsoft13/code/syntax.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/syntax.src.html > $@
+
+
+farm13/index.html: header.html footer.html farm13/index.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html farm13/footer.html farm13/index.src.html > $@
+
+farm13/videos.html: header.html footer.html farm13/videos.src.html
+	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
+		header.html farm13/footer.html farm13/videos.src.html > $@
+
+farm13/code/jacques.html: farm13/code/jacques.src.html
+	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
+		header.html farm13/code/footer.html farm13/code/jacques.src.html > $@
 
 
 publications/rml.html: publications/rml.bib
