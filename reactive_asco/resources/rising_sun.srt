@@ -1,0 +1,81 @@
+1
+00:00:00,100 --> 00:00:05,000
+In this demo, the instrumental part
+is simulated with Max/MSP
+
+2
+00:00:08,018 --> 00:00:15,018
+We can control the tempo (speed)
+of the simulation
+
+3
+00:00:27,931 --> 00:00:35,931
+Now, let's start the ReactiveML
+Top-Level inside emacs.
+
+4
+00:00:37,658 --> 00:00:43,658
+First, we load the score played
+by the musician
+
+5
+00:00:44,513 --> 00:00:50,513
+Then we create and run the
+live-coding environment
+
+6
+00:00:51,353 --> 00:00:58,353
+Now, let us define the bass line
+of the song
+
+7
+00:01:00,353 --> 00:01:08,353
+We start with a simple accompaniment,
+only the bass
+
+8
+00:01:11,036 --> 00:01:20,036
+We control the bass with a signal
+kill_bass
+
+9
+00:01:29,993 --> 00:01:36,993
+The accompaniment follows the tempo
+
+10
+00:01:41,991 --> 00:01:48,991
+Now, we can try another style
+for the accompaniment
+
+11
+00:01:52,151 --> 00:01:59,151
+Not bad, but it does not feel right...
+
+12
+00:02:00,255 --> 00:02:08,255
+Let's try another one.
+
+13
+00:02:09,168 --> 00:02:22,168
+That's the one!
+
+14
+00:02:23,360 --> 00:02:29,360
+Finally we can dynamically switch
+between accompaniment styles
+
+15
+00:02:30,111 --> 00:02:40,111
+Let us start with the basic one
+
+16
+00:02:42,631 --> 00:02:50,631
+Then the waltz,
+
+17
+00:02:51,086 --> 00:02:59,086
+the arpeggio...
+
+18
+00:03:01,778 --> 00:03:11,778
+... and back to the basic one
