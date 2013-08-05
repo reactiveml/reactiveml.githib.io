@@ -1,75 +1,78 @@
-   <pre>
+    <pre>
 <span style="color: #b22222;">(***************************************************************)</span>
 <span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Type definitions for Asco                                   </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(***************************************************************)</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Alias for readability </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">delay </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> delay = float
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">label of an instrumental event </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> instr_event_label = int
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">tempo </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> tempo = float
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Atomic action </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Atomic action </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> action =
-  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> <span style="color: #228b22;">of</span> string  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Max/MSP control message </span><span style="color: #b22222;">*)</span>
-  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> <span style="color: #228b22;">of</span> (unit,unit list) event <span style="color: #b22222;">(* </span><span style="color: #b22222;">RML signal </span><span style="color: #b22222;">*)</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> <span style="color: #228b22;">of</span> string  <span style="color: #b22222;">(** </span><span style="color: #b22222;">Max/MSP control message </span><span style="color: #b22222;">*)</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> <span style="color: #228b22;">of</span> (unit, unit list) event <span style="color: #b22222;">(** </span><span style="color: #b22222;">ReactiveML signal </span><span style="color: #b22222;">*)</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Synchronization strategies </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Synchronization strategies </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> sync = <span style="color: #0000ff;">Tight</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Loose</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Error handling strategies </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Error handling strategies </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> err = <span style="color: #0000ff;">Local</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Global</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Causal</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Partial</span>
 
-
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Electronic score event </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Electronic score event </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> score_event =
     { event : instr_event_label;
       seq : sequence; }
 
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Sequence of electronic actions </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">and</span> sequence =  (delay * asco_event) list
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Generic asco event </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Generic asco event </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">and</span> asco_event =
   <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Group</span> <span style="color: #228b22;">of</span> group
   <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Action</span> <span style="color: #228b22;">of</span> action
   <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Until</span> <span style="color: #228b22;">of</span> asco_until
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Asco group </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Asco group </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">and</span> group =
       { group_synchro : sync;
         group_error : err;
         group_seq : sequence }
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Preemption construct </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Preemption construct </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">and</span> asco_until =
     { until_seq : sequence;
       until_event : instr_event_label; }
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Instrumental score, play the role of function E </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Instrumental score </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> instr_score = delay list
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">type instr_score_map = (label, delay) Reactive_map.t </span><span style="color: #b22222;">*)</span>
-
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Electronic score </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Electronic score </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> score = score_event list
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Instrumental event </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Instrumental event </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> instr_event =
     { index : instr_event_label;
       bps : float; }
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Status for an event </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Status for an event </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> status = <span style="color: #0000ff;">Detected</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Missed</span> <span style="color: #228b22;">of</span> instr_event_label
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Performance element </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Performance element </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> perf_elem = instr_event_label * delay * action
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Simulation of the listening machine </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Simulation of the listening machine </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> simulation = (instr_event_label * delay * tempo) list
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Type of input </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Type of input </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">type</span> input_mode =
   <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Udp</span>
   <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">File</span> <span style="color: #228b22;">of</span> string

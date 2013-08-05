@@ -1,16 +1,21 @@
     <pre>
 <span style="color: #b22222;">(***************************************************************)</span>
 <span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Handle output                                               </span><span style="color: #b22222;">*)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Send control messages to Max/MSP via UDP or print in the    </span><span style="color: #b22222;">*)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">standart output                                             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Handle output: send control messages to Max/MSP via UDP or print
+    in the standart output.
+</span><span style="color: #b22222;">*)</span>
 
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Send control message in UDP or emit a ReactiveML signal </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Send control message in UDP or emit a ReactiveML signal. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> udp out_port perf =
   <span style="color: #228b22;">let</span> send (i,d,a) sock_actions =
     <span style="color: #008b8b;">match</span> a <span style="color: #008b8b;">with</span>
@@ -26,7 +31,7 @@
     <span style="color: #0000ff;">List</span>.iter (<span style="color: #228b22;">fun</span> x <span style="color: #008b8b;">-&gt;</span> send x sock_actions) p
   <span style="color: #a020f0;">end</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Print a feedback on the standart output </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Print a feedback on the standart output. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> stdout perf =
   <span style="color: #228b22;">let</span> print (i,d,a) =
     <span style="color: #008b8b;">match</span> a <span style="color: #008b8b;">with</span>

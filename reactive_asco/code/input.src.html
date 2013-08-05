@@ -1,18 +1,22 @@
-    <pre>
+     <pre>
 <span style="color: #b22222;">(***************************************************************)</span>
 <span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Handle inputs                                               </span><span style="color: #b22222;">*)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Receive from Max/MSP via UDP or simulate the output of the  </span><span style="color: #b22222;">*)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">listening machine                                           </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(***************************************************************)</span>
 
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Handle inputs received from Max/MSP via UDP or simulate the output
+    of the listening machine.
+</span><span style="color: #b22222;">*)</span>
 
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Utils</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Manage input from the listening machine with a priority queue</span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Manage input from the listening machine with a priority queue. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> event_scheduler listen adding =
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> spy listen deadline =
     <span style="color: #a020f0;">loop</span>
@@ -34,7 +38,9 @@
   <span style="color: #483d8b;">run</span> (<span style="color: #0000ff;">Reactive_queue</span>.scheduler deadline sending adding) <span style="color: #008b8b;">||</span>
   <span style="color: #483d8b;">run</span> (spy listen deadline)
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Wait for an instrumental event and return its status (detected or missed) </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Wait for an instrumental event and return its status (detected or
+    missed).
+</span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> wait_event i add_event listen =
   <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> <span style="color: #228b22;">one</span> listen (ev) <span style="color: #228b22;">in</span>
   <span style="color: #008b8b;">if</span> ev.index = i <span style="color: #008b8b;">then</span>
@@ -47,8 +53,8 @@
     <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> <span style="color: #228b22;">one</span> s (status) <span style="color: #228b22;">in</span>
     status
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Create a scheduler for instrumental event and the corresponding
-   waiting process
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Create a scheduler for instrumental events and the corresponding
+    waiting process.
 </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> make_event_scheduler listen =
   <span style="color: #228b22;">signal</span> add_event <span style="color: #228b22;">in</span>
@@ -56,8 +62,7 @@
   <span style="color: #228b22;">let</span> event_scheduler = event_scheduler listen add_event <span style="color: #228b22;">in</span>
   event_scheduler, wait_event
 
-
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Receive message from Max via UDP and send them to the motor. </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Receive message from Max via UDP and send them to the motor. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> udp in_port listen =
   <span style="color: #228b22;">let</span> maxlen = 1024 <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">let</span> sock_event = <span style="color: #0000ff;">Network</span>.init_server in_port <span style="color: #228b22;">in</span>
@@ -78,14 +83,13 @@
   <span style="color: #228b22;">in</span>
   <span style="color: #483d8b;">run</span> max_server
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Send messages on signal events corresponding to the simulation with
-   'errors' the probability of error
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Send messages on signal events corresponding to the simulation with
+    [errors] the probability of error.
 </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> simulator simu errors freq listen =
   <span style="color: #228b22;">signal</span> clock <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">signal</span> t <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">let</span> period = 1. /. freq <span style="color: #228b22;">in</span>
-
   <span style="color: #b22222;">(* </span><span style="color: #b22222;">Time in seconds (same as elapsed but without the moving tempo) </span><span style="color: #b22222;">*)</span>
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> time =
     <span style="color: #228b22;">let</span> x = ref 0.0 <span style="color: #228b22;">in</span>
@@ -95,10 +99,8 @@
       <span style="color: #483d8b;">pause</span>
     <span style="color: #a020f0;">end</span>
   <span style="color: #228b22;">in</span>
-
   <span style="color: #b22222;">(* </span><span style="color: #b22222;">Play the simulation with a probability of error 'error'
-     for each event
-  </span><span style="color: #b22222;">*)</span>
+     for each event </span><span style="color: #b22222;">*)</span>
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> <span style="color: #228b22;">process</span> play s =
     <span style="color: #008b8b;">match</span> s <span style="color: #008b8b;">with</span>
     <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> ()
@@ -114,11 +116,11 @@
           <span style="color: #008b8b;">else</span>
             (<span style="color: #483d8b;">pause</span>; <span style="color: #483d8b;">run</span> (play s))
   <span style="color: #228b22;">in</span>
-
   <span style="color: #008b8b;">do</span> <span style="color: #483d8b;">run</span> time <span style="color: #008b8b;">when</span> clock <span style="color: #008b8b;">done</span> <span style="color: #008b8b;">||</span>
   <span style="color: #483d8b;">run</span> (<span style="color: #0000ff;">Time</span>.emit_clock clock freq) <span style="color: #008b8b;">||</span>
   <span style="color: #483d8b;">run</span> (play simu)
 </pre>
+
 
 </div>
 </div>

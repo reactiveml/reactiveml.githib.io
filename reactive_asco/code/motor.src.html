@@ -1,23 +1,26 @@
     <pre>
 <span style="color: #b22222;">(***************************************************************)</span>
 <span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(*                                                             *)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">This is the interpreter core.                               </span><span style="color: #b22222;">*)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">It contains the execution process, handle synchronization   </span><span style="color: #b22222;">*)</span>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">and performance errors                                      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
 <span style="color: #b22222;">(***************************************************************)</span>
 
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">This is the interpreter core. It contains the execution process,
+    handle synchronization and performance errors. </span><span style="color: #b22222;">*)</span>
 
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Reactive_map</span>
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Utils</span>
 
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Create a process player that takes as argument an electronic score
-   'score' and executes it. The player depends on the instrumental
-   score 'instr_score', it follows the position in the instrumental
-   score using the process wait_event, and the tempo with the process
-   'wait'.
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Create a process player that takes as argument an electronic score
+    [score] and executes it. The player depends on the instrumental
+    score [instr_score]. It follows the position in the instrumental
+    score using the process [wait_event] and the tempo with the process
+    [wait]. The resulting performance is sent on the signal [perf].
 </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> make_player instr_score wait wait_event perf =
 
@@ -46,8 +49,7 @@
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Missed</span>(j) <span style="color: #008b8b;">-&gt;</span>
         <span style="color: #b22222;">(* </span><span style="color: #b22222;">rule (Missed) </span><span style="color: #b22222;">*)</span>
         <span style="color: #483d8b;">run</span> (exec_seq (missed se.event j) 0.0 se.seq)
-<section id="detected"><h3></h3>
-  <span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> detected i delta ae =
+  <section id="detected"><h3></h3><span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> detected i delta ae =
     <span style="color: #008b8b;">match</span> ae <span style="color: #008b8b;">with</span>
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Action</span>(a) <span style="color: #008b8b;">-&gt;</span>
         <span style="color: #b22222;">(* </span><span style="color: #b22222;">rule (Detected Action) </span><span style="color: #b22222;">*)</span>
@@ -70,9 +72,9 @@
           <span style="color: #483d8b;">run</span> (exec_seq (detected i) delta u.until_seq); <span style="color: #483d8b;">emit</span> kill
           <span style="color: #008b8b;">||</span>
           <span style="color: #228b22;">let</span> _ = <span style="color: #483d8b;">run</span> (wait_event u.until_event) <span style="color: #228b22;">in</span> <span style="color: #483d8b;">emit</span> kill
-        <span style="color: #008b8b;">until</span> kill <span style="color: #008b8b;">done</span>
-</section><section id="missed"><h3></h3>
-  <span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> missed i j delta ae =
+        <span style="color: #008b8b;">until</span>
+        kill <span style="color: #008b8b;">done</span></section>
+<section id="missed"><h3></h3><span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> missed i j delta ae =
     <span style="color: #228b22;">let</span> dj = instr_score.find j <span style="color: #228b22;">in</span>
     <span style="color: #228b22;">let</span> di = instr_score.find i <span style="color: #228b22;">in</span>
     <span style="color: #008b8b;">match</span> ae <span style="color: #008b8b;">with</span>
@@ -97,7 +99,7 @@
                      group_seq = future;})
             <span style="color: #228b22;">in</span>
             (<span style="color: #483d8b;">run</span> (exec_seq (missed i j) delta gpast) <span style="color: #008b8b;">||</span>
-            <span style="color: #483d8b;">run</span> (detected j 0.0 gfuture))
+             <span style="color: #483d8b;">run</span> (detected j 0.0 gfuture))
         <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Causal</span> <span style="color: #008b8b;">-&gt;</span>
             <span style="color: #b22222;">(* </span><span style="color: #b22222;">rule (Missed Causal Group) </span><span style="color: #b22222;">*)</span>
             <span style="color: #228b22;">let</span> past, future = <span style="color: #0000ff;">Groups</span>.split instr_score i j delta g <span style="color: #228b22;">in</span>
@@ -107,7 +109,7 @@
                      group_seq = future;})
             <span style="color: #228b22;">in</span>
             (<span style="color: #483d8b;">run</span> (exec_seq (missed i j) delta past) <span style="color: #008b8b;">||</span>
-            <span style="color: #483d8b;">run</span> (detected j 0.0 gfuture))
+             <span style="color: #483d8b;">run</span> (detected j 0.0 gfuture))
         <span style="color: #a020f0;">end</span>
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Until</span>(u) <span style="color: #008b8b;">-&gt;</span>
         <span style="color: #228b22;">signal</span> kill <span style="color: #228b22;">in</span>
@@ -116,8 +118,7 @@
           <span style="color: #008b8b;">||</span>
           <span style="color: #228b22;">let</span> _ = <span style="color: #483d8b;">run</span> (wait_event u.until_event) <span style="color: #228b22;">in</span> <span style="color: #483d8b;">emit</span> kill
         <span style="color: #008b8b;">until</span> kill <span style="color: #008b8b;">done</span>
-  <span style="color: #228b22;">in</span>
-</section>
+  <span style="color: #228b22;">in</span></section>
   <span style="color: #b22222;">(* </span><span style="color: #b22222;">Launch the already past part of a dynamically loaded score </span><span style="color: #b22222;">*)</span>
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> <span style="color: #228b22;">process</span> exec_past score j =
     <span style="color: #008b8b;">match</span> score <span style="color: #008b8b;">with</span>
@@ -126,15 +127,13 @@
         <span style="color: #483d8b;">run</span> (exec_seq (missed se.event j) 0.0 se.seq) <span style="color: #008b8b;">||</span>
         <span style="color: #483d8b;">run</span> (exec_past sc j)
   <span style="color: #228b22;">in</span>
-
   <span style="color: #b22222;">(* </span><span style="color: #b22222;">Launch a score that could start after the beginning of the performance </span><span style="color: #b22222;">*)</span>
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> play_score score i =
     <span style="color: #228b22;">let</span> past, future = <span style="color: #0000ff;">List</span>.partition (<span style="color: #228b22;">fun</span> se <span style="color: #008b8b;">-&gt;</span> se.event &lt; i) score <span style="color: #228b22;">in</span>
     <span style="color: #483d8b;">run</span> (exec future) <span style="color: #008b8b;">||</span>
     <span style="color: #483d8b;">run</span> (exec_past past i)
   <span style="color: #228b22;">in</span>
-
-  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Return the process wich play an electronic score </span><span style="color: #b22222;">*)</span>
+  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Return the process which play an electronic score </span><span style="color: #b22222;">*)</span>
   play_score
 </pre>
 
