@@ -15,7 +15,7 @@
 <span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Reactive_map</span>
 
 
-<section id="slice"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Slice the group [g] associated to the event [i] after a delay [delta].
+<a name="slice"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Slice the group [g] associated to the event [i] after a delay [delta].
     Each action in [g.group_seq] is reassociated to the nearest event.
     Return a list of score_event.
 </span><span style="color: #b22222;">*)</span>
@@ -56,8 +56,8 @@
         build_groups l2 (se::acc)
   <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">let</span> nl = asso_nearest (di +. delta) g.group_seq [] <span style="color: #228b22;">in</span>
-  build_groups nl [] </section>
-<section id="split"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Split the group [g] associated to the event [i] after a delay [delta]
+  build_groups nl []
+<a name="split"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Split the group [g] associated to the event [i] after a delay [delta]
     in two. Actions that should happen before event [j] and action
     that should happen after [j]. Return two sequences of actions.
 </span><span style="color: #b22222;">*)</span>
@@ -80,8 +80,8 @@
     <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> []
     <span style="color: #008b8b;">|</span> (dae, ae)::t <span style="color: #008b8b;">-&gt;</span> ((df +. dae -. dj), ae)::t
   <span style="color: #228b22;">in</span>
-  past, future</section>
-<section id="extract"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Extract groups from a list of electronic actions. </span><span style="color: #b22222;">*)</span>
+  past, future
+<a name="extract"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Extract groups from a list of electronic actions. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> extract_group l =
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux d l =
     <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
@@ -92,7 +92,7 @@
         <span style="color: #008b8b;">|</span> _ <span style="color: #008b8b;">-&gt;</span> aux (da +. d) t
         <span style="color: #a020f0;">end</span>
   <span style="color: #228b22;">in</span>
-  aux 0.0 l</section>
+  aux 0.0 l
 </pre>
 
 </div>

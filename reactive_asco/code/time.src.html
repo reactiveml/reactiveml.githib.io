@@ -17,7 +17,7 @@
 <span style="color: #a0522d;">open</span> <span style="color:
 						       #0000ff;">Utils</span>
 
-<section id="emit_clock"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Generate a regular real-time signal [clock] of frequency [freq]. </span><span style="color: #b22222;">*)</span>
+<a name="emit_clock"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Generate a regular real-time signal [clock] of frequency [freq]. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> emit_clock clock freq  =
   <span style="color: #228b22;">let</span> period = 1. /. freq <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">let</span> start = <span style="color: #0000ff;">Unix</span>.gettimeofday () <span style="color: #228b22;">in</span>
@@ -33,8 +33,8 @@
         next := start +. (float !cpt) *. period
       <span style="color: #a020f0;">end</span>;
     <span style="color: #483d8b;">pause</span>
-  <span style="color: #a020f0;">end</span></section>
-<section id="elapsed"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Compute the delay, relative to the tempo, elapsed since the
+  <span style="color: #a020f0;">end</span>
+<a name="elapsed"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Compute the delay, relative to the tempo, elapsed since the
     beginning of its execution. The signal [listen] carries the
     estimation of the tempo. The signal [clock] is a signal present at
     a frequency [freq]. And [date] is the output signal.
@@ -55,7 +55,7 @@
       <span style="color: #483d8b;">emit</span> date (!m *. period);
       <span style="color: #483d8b;">pause</span>
     <span style="color: #a020f0;">end</span>
-  <span style="color: #008b8b;">when</span> clock <span style="color: #008b8b;">done</span></section>
+  <span style="color: #008b8b;">when</span> clock <span style="color: #008b8b;">done</span>
 <span style="color: #b22222;">(* </span><span style="color: #b22222;">Run the processes [emit_clock] and [elapsed] and return [date]. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> metronome listen freq date =
   <span style="color: #228b22;">signal</span> clock <span style="color: #228b22;">in</span>
@@ -63,7 +63,7 @@
   <span style="color: #483d8b;">run</span> (elapsed listen clock freq
   date)
 
-<section id="scheduler"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Wait a delay [dur] relatively to the tempo. The waiting process is
+<a name="scheduler"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Wait a delay [dur] relatively to the tempo. The waiting process is
     realized by the scheduler. Therefore to achieve the desired
     behavior we just need to register on the scheduler queue with the
     [adding] signal. The signal [date] carries the current date
@@ -73,7 +73,7 @@
   <span style="color: #228b22;">signal</span> s <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> <span style="color: #228b22;">one</span> date(e) <span style="color: #228b22;">in</span>
   <span style="color: #483d8b;">emit</span> adding (dur +. e, s);
-  <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> s</section>
+  <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> s
 <span style="color: #b22222;">(** </span><span style="color: #b22222;">Create a pair of processes [(scheduler, wait)]. The process [wait]
     suspends the execution for a duration [dur] relative to the tempo
     given by the signal [date]. The process [scheduler] manages the

@@ -7,6 +7,10 @@ p {
     text-align: justify;
 }
 
+code {
+    text-family: courier;
+}
+
 .thumbnail .caption p {
     text-align: center;
 }
@@ -64,6 +68,14 @@ code {
 
 
 h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+h4 {
   text-align: center;
 }
 

@@ -101,17 +101,17 @@ This tool is based on <code>ocamlbuild</code>.
     <h2>Summary of ReactiveML Expressions</h2>
     <p>
       Terminal symbols are set
-      in <font face="courier">typewriter font</font>.
+      in <code>typewriter font</code>.
       Non-terminal symbols are set
-      in <font face="courier"><i>italic font</i></font>.
+      in <code><i>italic font</i></code>.
       Square
-      brackets <i><font face="courier">[]</font></i>
+      brackets <i><code>[]</code></i>
       denote optional components. Curly
-      brackets <i><font face="courier">{}</font></i>
+      brackets <i><code>{}</code></i>
       denote zero, one or several repetitions of the enclosed
-      components. Parentheses <i><font face="courier">()</font></i>
+      components. Parentheses <i><code>()</code></i>
       denote grouping
-      and <font face="courier"><i>|</i></font>
+      and <code><i>|</i></code>
       denotes alternatives.
     </p>
     <br>
@@ -120,64 +120,58 @@ This tool is based on <code>ocamlbuild</code>.
     <!--   <div class="span6"> -->
     <section id="process">
       <h3>Process Definition</h3>
-      <font face="courier">
 <pre>
   let process <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> in <i>&lt;expr&gt;</i>
   process <i>&lt;expr&gt;</i></pre>
-      </font>
       <br>
       <p>
-	Process definition are introduced by the <font face="courier">process</font> keyword.<br>
-        A process can be named (<font face="courier">let process id ... </font>) or anonymous
-        (<font face="courier">process <i>&lt;expr&gt;</i></font>).
+	Process definition are introduced by the <code>process</code> keyword.<br>
+        A process can be named (<code>let process id ... </code>) or anonymous
+        (<code>process <i>&lt;expr&gt;</i></code>).
       </p>
     </section>
     <hr>
 
     <section id="statements">
       <h3>Basic statements</h3>
-      <font face="courier">
 <pre>
   nothing
   pause
   halt
   run <i>&lt;process&gt;</i></pre>
-      </font>
       <br>
       <p>
-        <font face="courier">nothing</font> is equivalent to<font face="courier">()</font>.<br>
-        <font face="courier">pause</font> suspends the
+        <code>nothing</code> is equivalent to<code>()</code>.<br>
+        <code>pause</code> suspends the
         execution until next instant.<br>
-        <font face="courier">halt</font> suspends the
+        <code>halt</code> suspends the
         execution forever.<br>
-        <font face="courier">run</font> executes a process.
+        <code>run</code> executes a process.
       </p>
     </section>
     <hr>
 
     <section id="composition">
       <h3>Composition</h3>
-      <font face="courier">
 <pre>
   <i>&lt;expr&gt;</i> ; <i>&lt;expr&gt;</i>
   <i>&lt;expr&gt;</i> || <i>&lt;expr&gt;</i>
   let <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; {</i> and <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; }</i> in <i>&lt;expr&gt;</i>
   <i>&lt;expr&gt;</i> |> <i>&lt;expr&gt;</i></pre>
-      </font>
       <br>
       <p>
         In ReactiveML, expressions can be composed in
-        sequence&nbsp;(<font face="courier">;</font>) or in
-        parallel&nbsp;(<font face="courier">||</font>).
-        The <font face="courier">let/and/in</font> construct computes
+        sequence&nbsp;(<code>;</code>) or in
+        parallel&nbsp;(<code>||</code>).
+        The <code>let/and/in</code> construct computes
         several expressions in parallel and gets their values, then it
         computes the right of
-        the <font face="courier">in</font>.<br><br>  The
-        expression <font face="courier"><i>e1</i> |> <i>e2</i></font>
-        executes <font face="courier"><i>e1</i></font>
-        and <font face="courier"><i>e2</i></font> in parallel, but at
-        each instant <font face="courier"><i>e1</i></font> is executed
-        before <font face="courier"><i>e1</i></font> (this construct
+        the <code>in</code>.<br><br>  The
+        expression <code><i>e1</i> |> <i>e2</i></code>
+        executes <code><i>e1</i></code>
+        and <code><i>e2</i></code> in parallel, but at
+        each instant <code><i>e1</i></code> is executed
+        before <code><i>e1</i></code> (this construct
         is not supported in all runtime).
       </p>
     </section>
@@ -185,18 +179,17 @@ This tool is based on <code>ocamlbuild</code>.
 
     <section id="iterators">
       <h3>Iterators</h3>
-      <font face="courier">
 <pre>
   loop <i>&lt;expr&gt;</i> end
   while <i>&lt;expr&gt;</i> do <i>&lt;expr&gt;</i> done
   for <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> to <i> | </i> downto <i>) </i> do <i>&lt;expr&gt;</i> done
   for <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> to <i> | </i> downto <i>)</i> dopar <i>&lt;expr&gt;</i> done</pre>
-      </font><br>
+<br>
       <p>
-        <font face="courier">loop</font> is an infinite loop. <font face="courier">while</font>
-        and <font face="courier">for/do</font> are the classical loops. They execute
+        <code>loop</code> is an infinite loop. <code>while</code>
+        and <code>for/do</code> are the classical loops. They execute
         their body several times in
-        sequence. Contrarily, the <font face="courier">for/dopar</font> loop
+        sequence. Contrarily, the <code>for/dopar</code> loop
         executes its body several times in parallel.
       </p>
     </section>
@@ -206,17 +199,15 @@ This tool is based on <code>ocamlbuild</code>.
     <!-- <div class="span6"> -->
     <section id="signalDecl">
       <h3>Signal declaration</h3>
-      <font face="courier">
 <pre>
   signal <i>&lt;id&gt; {</i> , <i>&lt;id&gt; }</i> in  <i>&lt;expr&gt;</i>
   signal <i>&lt;id&gt;</i> default <i>&lt;value&gt;</i> gather <i>&lt;function&gt;</i> in  <i>&lt;expr&gt;</i></pre>
-      </font>
       <br>
       <p>
         These constructs declare new signals. When a
         signal is declared, we can define how to combine
         the values emitted during an instant with the
-        <font face="courier">signal/gather</font> construct. If no combination
+        <code>signal/gather</code> construct. If no combination
         function is given, the behavior of the signal is
         to collect all emitted values in a list.
       </p>
@@ -226,107 +217,102 @@ This tool is based on <code>ocamlbuild</code>.
 
     <section id="signalEm">
       <h3>Signal emission</h3>
-      <font face="courier">
 <pre>
   emit <i>&lt;signal&gt; [ &lt;value&gt; ]</i></pre>
-      </font>
       <br>
       <p>
         Signal emissions are instantaneous
         broadcasting. Hence, a signal is present or absent
         during an instant but it cannot have both
-        status. The notation <font face="courier"> emit <i>&lt;signal&gt;</i></font> is a shortcut
-        for <font face="courier"> emit <i>&lt;signal&gt;</i> ()</font>.
+        status. The notation <code> emit <i>&lt;signal&gt;</i></code> is a shortcut
+        for <code> emit <i>&lt;signal&gt;</i> ()</code>.
       </p>
     </section>
     <hr>
 
     <section id="signalSt">
       <h3>Signal status</h3>
-      <font face="courier">
 <pre>
   present <i>&lt;signal&gt;</i> then <i>&lt;expr&gt;</i> else <i>&lt;expr&gt;</i>
   await <i>[</i> immediate <i>]</i> <i>&lt;signal&gt;</i>
   pre <i>&lt;signal&gt;</i></pre>
-      </font>
       <br>
 <p>
-  The expression <font face="courier">present</font> tests the status
+  The expression <code>present</code> tests the status
   of a signal. If the signal is present,
-  the <font face="courier">then</font> branch is executed
-  instantaneously, otherwise the <font face="courier">else</font>
+  the <code>then</code> branch is executed
+  instantaneously, otherwise the <code>else</code>
   branch is executed at the following instant.
   <br><br>
 
-  The expression <font face="courier">await s</font>
-  waits <font face="courier">s</font> to be emitted and terminates at
+  The expression <code>await s</code>
+  waits <code>s</code> to be emitted and terminates at
   the following instant. Whereas the expression
-  <font face="courier">await immediate s</font> waits <font face="courier">s</font> to be emitted and
+  <code>await immediate s</code> waits <code>s</code> to be emitted and
   terminates instantaneously.
   <br><br>
 
 
   Like in Esterel, the non-immediate version
-  of <font face="courier">await</font> is the default one such
-  that <font face="courier">await s; await s</font> waits two
-  occurrences of <font face="courier">s</font>, while
-  <font face="courier">await immediate s; await immediate s</font> is
-  equivalent to <font face="courier">await immediate s</font>.
+  of <code>await</code> is the default one such
+  that <code>await s; await s</code> waits two
+  occurrences of <code>s</code>, while
+  <code>await immediate s; await immediate s</code> is
+  equivalent to <code>await immediate s</code>.
   <br><br>
 
-  The expression <font face="courier">pre s</font> evaluates
-  to <font face="courier">true</font> if the signal
-  <font face="courier">s</font> has been emitted at the preceding
-  instant. Otherwise, it evaluates to <font face="courier">false</font>.
+  The expression <code>pre s</code> evaluates
+  to <code>true</code> if the signal
+  <code>s</code> has been emitted at the preceding
+  instant. Otherwise, it evaluates to <code>false</code>.
 </p>
+</section>
 
     <hr>
 
     <section id="signalVal">
       <h3>Signal value</h3>
-      <font face="courier">
 <pre>
   await <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i>&lt;expr&gt; ]</i> in <i>&lt;expr&gt;</i>
-  await <i>[</i> immediate <i>]</i> one <i>&lt;signal&gt (&lt;variable&gt)</i> in <i>&lt;expr&gt;</i>
+  await <i>[</i> immediate <i>]</i> one <i>&lt;signal&gt; (&lt;variable&gt;)</i> in <i>&lt;expr&gt;</i>
   pre ?<i>&lt;signal&gt;</i>
   last ?<i>&lt;signal&gt;</i>
   default ?<i>&lt;signal&gt;</i></pre>
-      </font>
       <br>
       <p>
-        The <font face="courier">await/in</font> waits the
+        The <code>await/in</code> waits the
         emission of a signal. At the instant following the
         emission, the body is executed in an environment where
         the pattern is bind to the value of the signal (the
         combination of the values emitted at the preceding
-        instant). Notice that the <font face="courier">await/in</font> keeps waiting when
+        instant). Notice that the <code>await/in</code> keeps waiting when
         the value of the signal does not match the pattern or
         if the condition specified after the when keyword is
         not satisfied.<br><br>
 
-        The <font face="courier">await/one/in</font> construct waits the emission
+        The <code>await/one/in</code> construct waits the emission
         of a signal to bind the pattern with one of
         the emitted values. In case of multiple
         emission during an instant, the choice of the
-        value is not specified. Like <font face="courier">await</font>, the body
+        value is not specified. Like <code>await</code>, the body
         of the expression is executed at the instant
         following the reception of the signal (except
-        if there is the <font face="courier">immediate</font> keyword). To be
+        if there is the <code>immediate</code> keyword). To be
         causal by construction, there is no immediate
-        version of the <font face="courier">await/in</font> construct.<br><br>
+        version of the <code>await/in</code> construct.<br><br>
 
-        The expression <font face="courier">pre ?s</font> evaluates to the value
-        associated to <font face="courier">s</font> at the preceding instant. If <font face="courier">s</font>
+        The expression <code>pre ?s</code> evaluates to the value
+        associated to <code>s</code> at the preceding instant. If <code>s</code>
         has not been emitted at the preceding instant,
-        <font face="courier">pre ?s</font> is equal to the default value given at
-        the declaration point of the signal. <font face="courier">last ?s</font>
+        <code>pre ?s</code> is equal to the default value given at
+        the declaration point of the signal. <code>last ?s</code>
         has a slight different behavior. It evaluates
-        to the last value associated to <font face="courier">s</font> when it was
-        emitted. While <font face="courier">s</font> has never been emitted, <font face="courier">pre
-	  ?s</font> and <font face="courier">last ?s</font> both evaluates to the default
-        value of <font face="courier">s</font>.<br><br>
+        to the last value associated to <code>s</code> when it was
+        emitted. While <code>s</code> has never been emitted, <code>pre
+	  ?s</code> and <code>last ?s</code> both evaluates to the default
+        value of <code>s</code>.<br><br>
 
-        The <font face="courier">default</font> function returns the default value
+        The <code>default</code> function returns the default value
         of a signal.
       </p>
     </section>
@@ -336,27 +322,26 @@ This tool is based on <code>ocamlbuild</code>.
     <h3>Control structures</h3>
 
     <section id="control">
-      <font face="courier">
 <pre>
   do <i>&lt;expr&gt;</i> when <i>&lt;signal&gt;</i> done
   control <i>&lt;expr&gt;</i> with <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ] ]</i> done
   do <i>&lt;expr&gt;</i> until <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ] [</i> -> <i> &lt;expr&gt; ] ]</i> done</pre>
-      </font><br>
+<br>
       <p>
-	<font face="courier">do/when</font> and <font face="courier">control/with</font>
+	<code>do/when</code> and <code>control/with</code>
 	allows to suspend the execution of and
-	expression. The <font face="courier">do/when</font> executes its body only
-	when the signal is present. The <font face="courier">control/with</font>
+	expression. The <code>do/when</code> executes its body only
+	when the signal is present. The <code>control/with</code>
 	switches between an active mode and a
 	suspended one each time that the signal is
 	present.<br><br>
 
-	The preemption construct <font face="courier">do/until</font> stops the
+	The preemption construct <code>do/until</code> stops the
 	execution of its body at the end of instant
 	when the signal is emitted. The second
-	<font face="courier">do/until</font> executes a handler when a preemption
+	<code>do/until</code> executes a handler when a preemption
 	occurs.
       </p>
     </section>
-  </div>
+</div>
 </div>
