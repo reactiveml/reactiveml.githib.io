@@ -200,7 +200,7 @@ farm13/code/jacques.html: farm13/code/jacques.src.html
 publications/rml.html: publications/rml.bib
 	(cd publications; \
 	 $(BIBTEX2HTML) \
-		-linebreak -noheader -nofooter \
+		-linebreak -nofooter \
 		-nf url2 extended.pdf -nf webpage "more details" \
 		 rml.bib)
 
