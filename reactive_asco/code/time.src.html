@@ -34,6 +34,7 @@
       <span style="color: #a020f0;">end</span>;
     <span style="color: #483d8b;">pause</span>
   <span style="color: #a020f0;">end</span>
+
 <a name="elapsed"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Compute the delay, relative to the tempo, elapsed since the
     beginning of its execution. The signal [listen] carries the
     estimation of the tempo. The signal [clock] is a signal present at
@@ -56,6 +57,7 @@
       <span style="color: #483d8b;">pause</span>
     <span style="color: #a020f0;">end</span>
   <span style="color: #008b8b;">when</span> clock <span style="color: #008b8b;">done</span>
+
 <span style="color: #b22222;">(* </span><span style="color: #b22222;">Run the processes [emit_clock] and [elapsed] and return [date]. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> metronome listen freq date =
   <span style="color: #228b22;">signal</span> clock <span style="color: #228b22;">in</span>
@@ -74,6 +76,7 @@
   <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> <span style="color: #228b22;">one</span> date(e) <span style="color: #228b22;">in</span>
   <span style="color: #483d8b;">emit</span> adding (dur +. e, s);
   <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> s
+
 <span style="color: #b22222;">(** </span><span style="color: #b22222;">Create a pair of processes [(scheduler, wait)]. The process [wait]
     suspends the execution for a duration [dur] relative to the tempo
     given by the signal [date]. The process [scheduler] manages the

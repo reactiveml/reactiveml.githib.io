@@ -49,6 +49,7 @@
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Missed</span>(j) <span style="color: #008b8b;">-&gt;</span>
         <span style="color: #b22222;">(* </span><span style="color: #b22222;">rule (Missed) </span><span style="color: #b22222;">*)</span>
         <span style="color: #483d8b;">run</span> (exec_seq (missed se.event j) 0.0 se.seq)
+
   <a name="detected"></a><span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> detected i delta ae =
     <span style="color: #008b8b;">match</span> ae <span style="color: #008b8b;">with</span>
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Action</span>(a) <span style="color: #008b8b;">-&gt;</span>
@@ -74,7 +75,8 @@
           <span style="color: #228b22;">let</span> _ = <span style="color: #483d8b;">run</span> (wait_event u.until_event) <span style="color: #228b22;">in</span> <span style="color: #483d8b;">emit</span> kill
         <span style="color: #008b8b;">until</span>
         kill <span style="color: #008b8b;">done</span>
-<a name="missed"></a><span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> missed i j delta ae =
+
+  <a name="missed"></a><span style="color: #228b22;">and</span> <span style="color: #228b22;">process</span> missed i j delta ae =
     <span style="color: #228b22;">let</span> dj = instr_score.find j <span style="color: #228b22;">in</span>
     <span style="color: #228b22;">let</span> di = instr_score.find i <span style="color: #228b22;">in</span>
     <span style="color: #008b8b;">match</span> ae <span style="color: #008b8b;">with</span>

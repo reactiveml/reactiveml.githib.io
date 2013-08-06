@@ -57,6 +57,7 @@
   <span style="color: #228b22;">in</span>
   <span style="color: #228b22;">let</span> nl = asso_nearest (di +. delta) g.group_seq [] <span style="color: #228b22;">in</span>
   build_groups nl []
+
 <a name="split"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Split the group [g] associated to the event [i] after a delay [delta]
     in two. Actions that should happen before event [j] and action
     that should happen after [j]. Return two sequences of actions.
@@ -81,6 +82,7 @@
     <span style="color: #008b8b;">|</span> (dae, ae)::t <span style="color: #008b8b;">-&gt;</span> ((df +. dae -. dj), ae)::t
   <span style="color: #228b22;">in</span>
   past, future
+
 <a name="extract"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Extract groups from a list of electronic actions. </span><span style="color: #b22222;">*)</span>
 <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> extract_group l =
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux d l =
