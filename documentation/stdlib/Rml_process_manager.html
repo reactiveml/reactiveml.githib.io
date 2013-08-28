@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Rml_list.html">
+<link rel="next" href="Sort.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Arg" rel="Chapter" href="Arg.html">
+<link title="Array" rel="Chapter" href="Array.html">
+<link title="Async" rel="Chapter" href="Async.html">
+<link title="Buffer" rel="Chapter" href="Buffer.html">
+<link title="Callback" rel="Chapter" href="Callback.html">
+<link title="Char" rel="Chapter" href="Char.html">
+<link title="Complex" rel="Chapter" href="Complex.html">
+<link title="Digest" rel="Chapter" href="Digest.html">
+<link title="Filename" rel="Chapter" href="Filename.html">
+<link title="Format" rel="Chapter" href="Format.html">
+<link title="Gc" rel="Chapter" href="Gc.html">
+<link title="Genlex" rel="Chapter" href="Genlex.html">
+<link title="Graphics" rel="Chapter" href="Graphics.html">
+<link title="Hashtbl" rel="Chapter" href="Hashtbl.html">
+<link title="Int32" rel="Chapter" href="Int32.html">
+<link title="Int64" rel="Chapter" href="Int64.html">
+<link title="Lazy" rel="Chapter" href="Lazy.html">
+<link title="Lexing" rel="Chapter" href="Lexing.html">
+<link title="List" rel="Chapter" href="List.html">
+<link title="Luc4ocaml" rel="Chapter" href="Luc4ocaml.html">
+<link title="Luc4ocaml_nolbl" rel="Chapter" href="Luc4ocaml_nolbl.html">
+<link title="Marshal" rel="Chapter" href="Marshal.html">
+<link title="Nativeint" rel="Chapter" href="Nativeint.html">
+<link title="Obj" rel="Chapter" href="Obj.html">
+<link title="Parsing" rel="Chapter" href="Parsing.html">
+<link title="Pervasives" rel="Chapter" href="Pervasives.html">
+<link title="Printexc" rel="Chapter" href="Printexc.html">
+<link title="Printf" rel="Chapter" href="Printf.html">
+<link title="Queue" rel="Chapter" href="Queue.html">
+<link title="Random" rel="Chapter" href="Random.html">
+<link title="Rml_list" rel="Chapter" href="Rml_list.html">
+<link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
+<link title="Sort" rel="Chapter" href="Sort.html">
+<link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Str" rel="Chapter" href="Str.html">
+<link title="Stream" rel="Chapter" href="Stream.html">
+<link title="String" rel="Chapter" href="String.html">
+<link title="Sys" rel="Chapter" href="Sys.html">
+<link title="Unix" rel="Chapter" href="Unix.html">
+<link title="Weak" rel="Chapter" href="Weak.html"><title>Rml_process_manager</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Rml_list.html" title="Rml_list">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Sort.html" title="Sort">Next</a>
+</div>
+<h1>Module <a href="type_Rml_process_manager.html">Rml_process_manager</a></h1>
+<pre><span class="keyword">module</span> Rml_process_manager: <code class="code">sig</code> <a href="Rml_process_manager.html">..</a> <code class="code">end</code></pre><div class="info">
+Process management combinators.<br>
+</div>
+<hr width="100%">
+<br>
+Process management combinators.<br>
+<pre><span id="TYPEident"><span class="keyword">type</span> <code class="type"></code>ident</span> </pre>
+<div class="info">
+Type of the process identifier.<br>
+</div>
+
+<pre><span id="VALps"><span class="keyword">val</span> ps</span> : <code class="type">unit -> unit</code></pre><div class="info">
+Display the list of running processes with their behaviors:<ul>
+<li><code class="code">k</code>: killable</li>
+<li><code class="code">s</code>: suspendable</li>
+<li><code class="code">x</code>: extensible</li>
+</ul>
+<br>
+</div>
+<pre><span id="VALkillable"><span class="keyword">val</span> killable</span> : <code class="type">'a process -> 'a option process</code></pre><div class="info">
+<code class="code">run killable p</code> associates an id to the process <code class="code">p</code> and executes
+    it. The execution of this process can be stopped by the emission
+    of its id on the signal <code class="code">kill</code>. If the execution of <code class="code">p</code> terminates
+    with the value <code class="code">v</code>, then <code class="code">run killable p</code> returns <code class="code">Some v</code>. If If
+    the execution of <code class="code">p</code> is aborted, the value <code class="code">None</code> is returned.<br>
+</div>
+<pre><span id="VALkill"><span class="keyword">val</span> kill</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info">
+Signal gathering the killing orders.<br>
+</div>
+<pre><span id="VALsuspendable"><span class="keyword">val</span> suspendable</span> : <code class="type">'a process -> 'a process</code></pre><div class="info">
+<code class="code">run suspendable p</code> associates an id to the process <code class="code">p</code> and
+    executes it. The execution of this process can be suspended and
+    then resumed by the emission of its id on the signal <code class="code">sr</code>.<br>
+</div>
+<pre><span id="VALsr"><span class="keyword">val</span> sr</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info">
+Signal gathering the suspension and resumption orders.<br>
+</div>
+<pre><span id="VALextensible"><span class="keyword">val</span> extensible</span> : <code class="type">('a, (int * ('state -> unit process)) list) event -><br>       ('state -> unit process) -> 'state -> unit process</code></pre><div class="info">
+<code class="code">run extensible add p state</code> associates an id to the process
+    <code class="code">(p state)</code> and executes it. New processes sharing the state <code class="code">state</code>
+    can be executed in parallel to <code class="code">(p state)</code> by send their
+    definition on the signal <code class="code">add</code>.<br>
+</div>
+</body></html>

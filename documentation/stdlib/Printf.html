@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Printexc.html">
+<link rel="next" href="Queue.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Arg" rel="Chapter" href="Arg.html">
+<link title="Array" rel="Chapter" href="Array.html">
+<link title="Async" rel="Chapter" href="Async.html">
+<link title="Buffer" rel="Chapter" href="Buffer.html">
+<link title="Callback" rel="Chapter" href="Callback.html">
+<link title="Char" rel="Chapter" href="Char.html">
+<link title="Complex" rel="Chapter" href="Complex.html">
+<link title="Digest" rel="Chapter" href="Digest.html">
+<link title="Filename" rel="Chapter" href="Filename.html">
+<link title="Format" rel="Chapter" href="Format.html">
+<link title="Gc" rel="Chapter" href="Gc.html">
+<link title="Genlex" rel="Chapter" href="Genlex.html">
+<link title="Graphics" rel="Chapter" href="Graphics.html">
+<link title="Hashtbl" rel="Chapter" href="Hashtbl.html">
+<link title="Int32" rel="Chapter" href="Int32.html">
+<link title="Int64" rel="Chapter" href="Int64.html">
+<link title="Lazy" rel="Chapter" href="Lazy.html">
+<link title="Lexing" rel="Chapter" href="Lexing.html">
+<link title="List" rel="Chapter" href="List.html">
+<link title="Luc4ocaml" rel="Chapter" href="Luc4ocaml.html">
+<link title="Luc4ocaml_nolbl" rel="Chapter" href="Luc4ocaml_nolbl.html">
+<link title="Marshal" rel="Chapter" href="Marshal.html">
+<link title="Nativeint" rel="Chapter" href="Nativeint.html">
+<link title="Obj" rel="Chapter" href="Obj.html">
+<link title="Parsing" rel="Chapter" href="Parsing.html">
+<link title="Pervasives" rel="Chapter" href="Pervasives.html">
+<link title="Printexc" rel="Chapter" href="Printexc.html">
+<link title="Printf" rel="Chapter" href="Printf.html">
+<link title="Queue" rel="Chapter" href="Queue.html">
+<link title="Random" rel="Chapter" href="Random.html">
+<link title="Rml_list" rel="Chapter" href="Rml_list.html">
+<link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
+<link title="Sort" rel="Chapter" href="Sort.html">
+<link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Str" rel="Chapter" href="Str.html">
+<link title="Stream" rel="Chapter" href="Stream.html">
+<link title="String" rel="Chapter" href="String.html">
+<link title="Sys" rel="Chapter" href="Sys.html">
+<link title="Unix" rel="Chapter" href="Unix.html">
+<link title="Weak" rel="Chapter" href="Weak.html"><title>Printf</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Printexc.html" title="Printexc">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Queue.html" title="Queue">Next</a>
+</div>
+<h1>Module <a href="type_Printf.html">Printf</a></h1>
+<pre><span class="keyword">module</span> Printf: <code class="code">sig</code> <a href="Printf.html">..</a> <code class="code">end</code></pre><div class="info">
+Formatted output functions.<br>
+</div>
+<hr width="100%">
+<br>
+Formatted output functions.<br>
+<pre><span id="VALfprintf"><span class="keyword">val</span> fprintf</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -><br>       ('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+<code class="code">fprintf outchan format arg1 ... argN</code> formats the arguments
+   <code class="code">arg1</code> to <code class="code">argN</code> according to the format string <code class="code">format</code>,
+   and outputs the resulting string on the channel <code class="code">outchan</code>.
+<p>
+
+   The format is a character string which contains two types of
+   objects:  plain  characters, which are simply copied to the
+   output channel, and conversion specifications, each of which
+   causes  conversion and printing of one argument.
+<p>
+
+   Conversion specifications consist in the <code class="code">%</code> character, followed
+   by optional flags and field widths, followed by one or two conversion
+   character. The conversion characters and their meanings are:<ul>
+<li><code class="code">d</code>, <code class="code">i</code>, <code class="code">n</code>, or <code class="code">N</code>: convert an integer argument to signed decimal.</li>
+<li><code class="code">u</code>: convert an integer argument to unsigned decimal.</li>
+<li><code class="code">x</code>: convert an integer argument to unsigned hexadecimal,
+     using lowercase letters.</li>
+<li><code class="code">X</code>: convert an integer argument to unsigned hexadecimal,
+     using uppercase letters.</li>
+<li><code class="code">o</code>: convert an integer argument to unsigned octal.</li>
+<li><code class="code">s</code>: insert a string argument.</li>
+<li><code class="code">S</code>: insert a string argument in Caml syntax (double quotes, escapes).</li>
+<li><code class="code">c</code>: insert a character argument.</li>
+<li><code class="code">C</code>: insert a character argument in Caml syntax (single quotes, escapes).</li>
+<li><code class="code">f</code>: convert a floating-point argument to decimal notation,
+     in the style <code class="code">dddd.ddd</code>.</li>
+<li><code class="code">F</code>: convert a floating-point argument in Caml syntax (<code class="code">dddd.ddd</code>
+     with a mandatory <code class="code">.</code>).</li>
+<li><code class="code">e</code> or <code class="code">E</code>: convert a floating-point argument to decimal notation,
+     in the style <code class="code">d.ddd e+-dd</code> (mantissa and exponent).</li>
+<li><code class="code">g</code> or <code class="code">G</code>: convert a floating-point argument to decimal notation,
+     in style <code class="code">f</code> or <code class="code">e</code>, <code class="code">E</code> (whichever is more compact).</li>
+<li><code class="code">B</code>: convert a boolean argument to the string <code class="code">true</code> or <code class="code">false</code></li>
+<li><code class="code">b</code>: convert a boolean argument (for backward compatibility; do not
+     use in new programs).</li>
+<li><code class="code">ld</code>, <code class="code">li</code>, <code class="code">lu</code>, <code class="code">lx</code>, <code class="code">lX</code>, <code class="code">lo</code>: convert an <code class="code">int32</code> argument to
+     the format specified by the second letter (decimal, hexadecimal, etc).</li>
+<li><code class="code">nd</code>, <code class="code">ni</code>, <code class="code">nu</code>, <code class="code">nx</code>, <code class="code">nX</code>, <code class="code">no</code>: convert a <code class="code">nativeint</code> argument to
+     the format specified by the second letter.</li>
+<li><code class="code">Ld</code>, <code class="code">Li</code>, <code class="code">Lu</code>, <code class="code">Lx</code>, <code class="code">LX</code>, <code class="code">Lo</code>: convert an <code class="code">int64</code> argument to
+     the format specified by the second letter.</li>
+<li><code class="code">a</code>: user-defined printer. Takes two arguments and apply the first
+     one to <code class="code">outchan</code> (the current output channel) and to the second
+     argument. The first argument must therefore have type
+     <code class="code">out_channel -&gt; 'b -&gt; unit</code> and the second <code class="code">'b</code>.
+     The output produced by the function is therefore inserted
+     in the output of <code class="code">fprintf</code> at the current point.</li>
+<li><code class="code">t</code>: same as <code class="code">%a</code>, but takes only one argument (with type
+     <code class="code">out_channel -&gt; unit</code>) and apply it to <code class="code">outchan</code>.</li>
+<li><code class="code">!</code>: take no argument and flush the output.</li>
+<li><code class="code">%</code>: take no argument and output one <code class="code">%</code> character.</li>
+</ul>
+
+   The optional flags include:<ul>
+<li><code class="code">-</code>: left-justify the output (default is right justification).</li>
+<li><code class="code">0</code>: for numerical conversions, pad with zeroes instead of spaces.</li>
+<li><code class="code">+</code>: for numerical conversions, prefix number with a <code class="code">+</code> sign if positive.</li>
+<li>space: for numerical conversions, prefix number with a space if positive.</li>
+<li><code class="code">#</code>: request an alternate formatting style for numbers.</li>
+</ul>
+
+   The field widths are composed of an optional integer literal
+   indicating the minimal width of the result, possibly followed by
+   a dot <code class="code">.</code> and another integer literal indicating how many digits
+   follow the decimal point in the <code class="code">%f</code>, <code class="code">%e</code>, and <code class="code">%E</code> conversions.
+   For instance, <code class="code">%6d</code> prints an integer, prefixing it with spaces to
+   fill at least 6 characters; and <code class="code">%.4f</code> prints a float with 4
+   fractional digits.  Each or both of the integer literals can also be
+   specified as a <code class="code">*</code>, in which case an extra integer argument is taken
+   to specify the corresponding width or precision.
+<p>
+
+   Warning: if too few arguments are provided,
+   for instance because the <code class="code">printf</code> function is partially
+   applied, the format is immediately printed up to
+   the conversion of the first missing argument; printing
+   will then resume when the missing arguments are provided.
+   For example, <code class="code">List.iter (printf "x=%d y=%d " 1) [2;3]</code>
+   prints <code class="code">x=1 y=2 3</code> instead of the expected
+   <code class="code">x=1 y=2 x=1 y=3</code>.  To get the expected behavior, do
+   <code class="code">List.iter (fun y -&gt; printf "x=%d y=%d " 1 y) [2;3]</code>.<br>
+</div>
+<pre><span id="VALprintf"><span class="keyword">val</span> printf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stdout</code>.<br>
+</div>
+<pre><span id="VALeprintf"><span class="keyword">val</span> eprintf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stderr</code>.<br>
+</div>
+<pre><span id="VALsprintf"><span class="keyword">val</span> sprintf</span> : <code class="type">('a, unit, string) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
+   return a string containing the result of formatting
+   the arguments.<br>
+</div>
+<pre><span id="VALbprintf"><span class="keyword">val</span> bprintf</span> : <code class="type"><a href="Buffer.html#TYPEt">Buffer.t</a> -> ('a, <a href="Buffer.html#TYPEt">Buffer.t</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
+   append the formatted arguments to the given extensible buffer
+   (see module <a href="Buffer.html"><code class="code">Buffer</code></a>).<br>
+</div>
+<pre><span id="VALkprintf"><span class="keyword">val</span> kprintf</span> : <code class="type">(string -> 'a) -> ('b, unit, string, 'a) <a href="Pervasives.html#TYPEformat4">Pervasives.format4</a> -> 'b</code></pre><div class="info">
+<code class="code">kprintf k format arguments</code> is the same as <code class="code">sprintf format arguments</code>,
+    except that the resulting string is passed as argument to <code class="code">k</code>; the
+    result of <code class="code">k</code> is then returned as the result of <code class="code">kprintf</code>.<br>
+</div>
+</body></html>
