@@ -11,9 +11,9 @@
         <li><a href="#rmlbuild"><i class="icon-chevron-right"></i> rmlbuild</a></li>
 
         <li class="nav-header">Process</li>
-        <li><a href="#process"><i class="icon-chevron-right"></i> Process definition</a></li>
-        <li><a href="#statements"><i class="icon-chevron-right"></i> Basic statement</a></li>
-        <li><a href="#composition"><i class="icon-chevron-right"></i> Composition</a></li>
+        <li><a href="#process"><i class="icon-chevron-right"></i> Process definitions</a></li>
+        <li><a href="#statements"><i class="icon-chevron-right"></i> Basic statements</a></li>
+        <li><a href="#compositions"><i class="icon-chevron-right"></i> Compositions</a></li>
         <li><a href="#iterators"><i class="icon-chevron-right"></i> Iterators</a></li>
 
 	<li class="nav-header">Communication</li>
@@ -25,6 +25,11 @@
 
 	<li class="nav-header">Control</li>
 	<li><a href="#control"><i class="icon-chevron-right"></i> Control structures</a></li>
+	<li><a href="#config"><i class="icon-chevron-right"></i> Event configurations</a></li>
+
+        <li class="nav-header">Library</li>
+        <li><a href="#stdlib"><i class="icon-chevron-right"></i> Standard library</a></li>
+
       </ul>
     </div>
   </div><!--/span-->
@@ -45,6 +50,12 @@ integrated at the language level (not as a library) which leads to
 safer and more natural programming.
 </p>
 
+<p>
+This page presents how to <a href="#rmlc">compile a ReactiveML program</a>, the <a href="#summary">syntax and
+an intuitive semantics</a> of the language. It terminates with the
+documentation of the <a href="#stdlib">standard library</a>. An <a href="<#ROOTDIR>/tryrml">interactive tutorial</a> is also available.
+</p>
+
 <section id="rmlc">
 <h3></h3>
 <h2>Compiling ReactiveML Programs</h2>
@@ -53,17 +64,17 @@ Let <code>hello.rml</code> be a file containing the following program:
 </p>
 <pre>
   let process main = print_endline "Hello World!"
+  let () = run main
 </pre>
 <p>
 To produce an executable, first the file must be compiled into pure
-OCaml code using the following command&nbsp;(the <code>-s</code>
-option allows to define the main process):
+OCaml code using the following command:
 </p>
 <pre>
-  rmlc -s main hello.rml
+  rmlc hello.rml
 </pre>
 <p>
-Then, the generated OCaml file (<code>hello.ml</code>) can compiled
+Then, the generated OCaml file&nbsp;(<code>hello.ml</code>) can compiled
 and linked with the ReactiveML runtime as follows:
 </p>
 <pre>
@@ -98,6 +109,7 @@ This tool is based on <code>ocamlbuild</code>.
 </section>
 <br>
 
+<section id="summary">
     <h2>Summary of ReactiveML Expressions</h2>
     <p>
       Terminal symbols are set
@@ -119,15 +131,18 @@ This tool is based on <code>ocamlbuild</code>.
     <!-- <div class="row-fluid"> -->
     <!--   <div class="span6"> -->
     <section id="process">
-      <h3>Process Definition</h3>
+      <h3>Process Definitions</h3>
 <pre>
   let process <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> in <i>&lt;expr&gt;</i>
-  process <i>&lt;expr&gt;</i></pre>
+  process <i>&lt;expr&gt;</i>
+  proc <i>&lt;pattern&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> -> <i>&lt;expr&gt;</i>
+</pre>
       <br>
       <p>
 	Process definition are introduced by the <code>process</code> keyword.<br>
-        A process can be named (<code>let process id ... </code>) or anonymous
-        (<code>process <i>&lt;expr&gt;</i></code>).
+        A process can be named (<code>let process <i>&lt;id&gt;</i> ... </code>) or anonymous
+        (<code>process <i>&lt;expr&gt;</i></code>). The notation <code>(proc <i>&lt;pattern&gt;</i> -> <i>&lt;expr&gt;</i>)</code>
+	is a shortcut for <code>(fun <i>&lt;pattern&gt;</i> -> (process <i>&lt;expr&gt;</i>))</code>.
       </p>
     </section>
     <hr>
@@ -151,8 +166,8 @@ This tool is based on <code>ocamlbuild</code>.
     </section>
     <hr>
 
-    <section id="composition">
-      <h3>Composition</h3>
+    <section id="compositions">
+      <h3>Compositions</h3>
 <pre>
   <i>&lt;expr&gt;</i> ; <i>&lt;expr&gt;</i>
   <i>&lt;expr&gt;</i> || <i>&lt;expr&gt;</i>
@@ -325,11 +340,14 @@ This tool is based on <code>ocamlbuild</code>.
 <pre>
   do <i>&lt;expr&gt;</i> when <i>&lt;signal&gt;</i> done
   control <i>&lt;expr&gt;</i> with <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ] ]</i> done
-  do <i>&lt;expr&gt;</i> until <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ] [</i> -> <i> &lt;expr&gt; ] ]</i> done</pre>
+  do <i>&lt;expr&gt;</i> until <i>&lt;signal&gt; [ (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ] [</i> -> <i> &lt;expr&gt; ] ]</i> done
+  do <i>&lt;expr&gt;</i> until <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ]</i> -> <i>&lt;expr&gt;</i>
+              <i>{</i> | <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> when <i> &lt;expr&gt; ]</i> -> <i>&lt;expr&gt;</i> <i>}</i> done
+</pre>
 <br>
       <p>
-	<code>do/when</code> and <code>control/with</code>
-	allows to suspend the execution of and
+	The <code>do/when</code> and <code>control/with</code> constructs
+	allow to suspend the execution of and
 	expression. The <code>do/when</code> executes its body only
 	when the signal is present. The <code>control/with</code>
 	switches between an active mode and a
@@ -337,11 +355,100 @@ This tool is based on <code>ocamlbuild</code>.
 	present.<br><br>
 
 	The preemption construct <code>do/until</code> stops the
-	execution of its body at the end of instant
-	when the signal is emitted. The second
-	<code>do/until</code> executes a handler when a preemption
-	occurs.
+	execution of its body at the end of instant when a signal is
+	emitted (it is not a looping construct). The handler
+	associated to the signal which preempts the execution is
+	executed at the following instant.
       </p>
     </section>
+
+    <hr>
+    <h3>Event configurations</h3>
+
+    <section id="config">
+<pre>
+  present <i>&lt;config&gt;</i> then <i>&lt;expr&gt;</i> else <i>&lt;expr&gt;</i>
+  await <i>[</i> immediate <i>]</i> <i>&lt;config&gt;</i>
+  await <i>&lt;config-patt&gt; [</i> when <i>&lt;expr&gt; ]</i> in <i>&lt;expr&gt;</i>
+  do <i>&lt;expr&gt;</i> when <i>&lt;config&gt;</i> done
+  control <i>&lt;expr&gt;</i> with <i>&lt;config-patt&gt; [</i> when <i> &lt;expr&gt; ]</i> done
+  do <i>&lt;expr&gt;</i> until <i>&lt;config-patt&gt; [</i> when <i> &lt;expr&gt; ]</i> -> <i>&lt;expr&gt;</i>
+              <i>{</i> | <i>&lt;config-patt&gt;) [</i> when <i> &lt;expr&gt; ]</i> -> <i>&lt;expr&gt;</i> <i>}</i> done
+</pre>
+<br>
+      <p>
+	The behavior of these expressions is the same as before except
+	that instead of depending on a signal, they depend on Boolean
+	configuration of signals. The
+	expressions <code><i>&lt;config&gt;</i></code>
+	and <code><i>&lt;config-patt&gt;</i></code> are defined as follows:
+      </p>
+      <table cellspacing=6 cellpadding=0>
+	<tr>
+	  <td align=right nowrap><code><i>&lt;config&gt;</i></code></td>
+	  <td align=center nowrap>::=</td>
+	  <td align=left nowrap>&#XA0;<code><i>&lt;signal&gt;</i><code></td>
+	</tr>
+	<tr>
+	  <td align=right nowrap>&nbsp;</td>
+	  <td align=center nowrap>&#X2223;</td>
+	  <td align=left nowrap>&nbsp;<code><i>&lt;config&gt;</i> /\ <i>&lt;config&gt;</i></td>
+	</tr>
+	<tr>
+	  <td align=right nowrap>&nbsp;</td>
+	  <td align=center nowrap>&#X2223;</td>
+	  <td align=left nowrap>&nbsp;<code><i>&lt;config&gt;</i> \/ <i>&lt;config&gt;</i></td>
+	</tr>
+      <!-- </table> -->
+      <!-- <table cellspacing=6 cellpadding=0> -->
+	<tr>
+	  <td align=right nowrap><code><i>&lt;config-patt&gt;</i></code></td>
+	  <td align=center nowrap>::=</td>
+	  <td align=left nowrap>&#XA0;<code><i>&lt;signal&gt;</i><code> &#X2223; <code><i>&lt;signal&gt;</i>(<i>&lt;pattern&gt;</i>)<code></td>
+	</tr>
+	<tr>
+	  <td align=right nowrap>&nbsp;</td>
+	  <td align=center nowrap>&#X2223;</td>
+	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> /\ <i>&lt;config-patt&gt;</i></td>
+	</tr>
+	<tr>
+	  <td align=right nowrap>&nbsp;</td>
+	  <td align=center nowrap>&#X2223;</td>
+	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> \/ <i>&lt;config-patt&gt;</i></td>
+	</tr>
+      </table>
+      For example, the expression <code>await (s1(x) /\ s2(y)) \/ s3(x::y::_) when x + y > 42 in e</code>
+      waits that either <code>s1</code> and <code>s2</code> are
+      present simultaneously or <code>s3</code> is present and its
+      associated value is a list of at least two elements. In both
+      cases, the variables <code>x</code> and <code>y</code> are bind
+      and the sum of their value must be greater than <code>42</code>
+      to trigger the execution of <code>e</code>.
+
+    </section>
+
+</section>
+    <br>
+
+<section id="stdlib">
+    <h2>Standard Library</h2>
+    <p>
+      Any OCaml code can be linked to a ReactiveML program as long as
+      it provides an interface file which is compatible with
+      ReactiveML. Therefore, the standard library of OCaml is
+      available in ReactiveML.
+    </p>
+    <p>
+      The ReactiveML standard library also provides new modules:
+    </p>
+    <ul>
+      <li><a href="<#ROOTDIR>/documentation/stdlib/rml_list.html">Module <code>Rml_list</code>: process iterators on lists</a></li>
+      <li><a href="<#ROOTDIR>/documentation/stdlib/rml_process_manager.html">Module <code>Rml_process_manager</code>: process management combinators</a></li>
+      <li><a href="<#ROOTDIR>/documentation/stdlib/async.html">Module <code>async</code>: launching asychronous computations.</a></li>
+    </ul>
+    <p>
+      The full list of modules available in the standard library is <a href="<#ROOTDIR>/documentation/stdlib/index.html">here</a>.
+    </p>
+</section>
 </div>
 </div>
