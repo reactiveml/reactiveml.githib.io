@@ -383,40 +383,48 @@ This tool is based on <code>ocamlbuild</code>.
 	expressions <code><i>&lt;config&gt;</i></code>
 	and <code><i>&lt;config-patt&gt;</i></code> are defined as follows:
       </p>
-      <table cellspacing=6 cellpadding=0>
-	<tr>
-	  <td align=right nowrap><code><i>&lt;config&gt;</i></code></td>
-	  <td align=center nowrap>::=</td>
-	  <td align=left nowrap>&#XA0;<code><i>&lt;signal&gt;</i><code></td>
-	</tr>
-	<tr>
-	  <td align=right nowrap>&nbsp;</td>
-	  <td align=center nowrap>&#X2223;</td>
-	  <td align=left nowrap>&nbsp;<code><i>&lt;config&gt;</i> /\ <i>&lt;config&gt;</i></td>
-	</tr>
-	<tr>
-	  <td align=right nowrap>&nbsp;</td>
-	  <td align=center nowrap>&#X2223;</td>
-	  <td align=left nowrap>&nbsp;<code><i>&lt;config&gt;</i> \/ <i>&lt;config&gt;</i></td>
-	</tr>
-      <!-- </table> -->
+<pre>
+       <i>&lt;config&gt;</i> ::= <i>&lt;signal&gt;</i>
+                  | <i>&lt;config&gt;</i> /\ <i>&lt;config&gt;</i>
+                  | <i>&lt;config&gt;</i> \/ <i>&lt;config&gt;</i>
+  <i>&lt;config-patt&gt;</i> ::= <i>&lt;signal&gt;</i>
+                  | <i>&lt;signal&gt;</i> (<i>&lt;pattern&gt;</i>)
+                  | <i>&lt;config-patt&gt;</i> /\ <i>&lt;config-patt&gt;</i>
+                  | <i>&lt;config-patt&gt;</i> \/ <i>&lt;config-patt&gt;</i>
+</pre>
       <!-- <table cellspacing=6 cellpadding=0> -->
-	<tr>
-	  <td align=right nowrap><code><i>&lt;config-patt&gt;</i></code></td>
-	  <td align=center nowrap>::=</td>
-	  <td align=left nowrap>&#XA0;<code><i>&lt;signal&gt;</i><code> &#X2223; <code><i>&lt;signal&gt;</i>(<i>&lt;pattern&gt;</i>)<code></td>
-	</tr>
-	<tr>
-	  <td align=right nowrap>&nbsp;</td>
-	  <td align=center nowrap>&#X2223;</td>
-	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> /\ <i>&lt;config-patt&gt;</i></td>
-	</tr>
-	<tr>
-	  <td align=right nowrap>&nbsp;</td>
-	  <td align=center nowrap>&#X2223;</td>
-	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> \/ <i>&lt;config-patt&gt;</i></td>
-	</tr>
-      </table>
+      <!-- 	<tr> -->
+      <!-- 	  <td align=right nowrap><code><i>&lt;config&gt;</i></code></td> -->
+      <!-- 	  <td align=center nowrap>::=</td> -->
+      <!-- 	  <td align=left nowrap>&#XA0;<code><i>&lt;signal&gt;</i><code></td> -->
+      <!-- 	</tr> -->
+      <!-- 	<tr> -->
+      <!-- 	  <td align=right nowrap>&nbsp;</td> -->
+      <!-- 	  <td align=center nowrap>&#X2223;</td> -->
+      <!-- 	  <td align=left nowrap>&nbsp;<code><i>&lt;config&gt;</i> /\ <i>&lt;config&gt;</i></td> -->
+      <!-- 	</tr> -->
+      <!-- 	<tr> -->
+      <!-- 	  <td align=right nowrap>&nbsp;</td> -->
+      <!-- 	  <td align=center nowrap>&#X2223;</td> -->
+      <!-- 	  <td align=left nowrap>&nbsp;<code><i>&lt;config&gt;</i> \/ <i>&lt;config&gt;</i></td> -->
+      <!-- 	</tr> -->
+      <!-- 	<tr> -->
+      <!-- 	  <td align=right nowrap><code><i>&lt;config-patt&gt;</i></code></td> -->
+      <!-- 	  <td align=center nowrap>::=</td> -->
+      <!-- 	  <td align=left nowrap>&#XA0;<code><i>&lt;signal&gt;</i><code> &#X2223; <code><i>&lt;signal&gt;</i>(<i>&lt;pattern&gt;</i>)<code></td> -->
+      <!-- 	</tr> -->
+      <!-- 	<tr> -->
+      <!-- 	  <td align=right nowrap>&nbsp;</td> -->
+      <!-- 	  <td align=center nowrap>&#X2223;</td> -->
+      <!-- 	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> /\ <i>&lt;config-patt&gt;</i></td> -->
+      <!-- 	</tr> -->
+      <!-- 	<tr> -->
+      <!-- 	  <td align=right nowrap>&nbsp;</td> -->
+      <!-- 	  <td align=center nowrap>&#X2223;</td> -->
+      <!-- 	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> \/ <i>&lt;config-patt&gt;</i></td> -->
+      <!-- 	</tr> -->
+      <!-- </table> -->
+      <p>
       For example, the expression <code>await (s1(x) /\ s2(y)) \/ s3(x::y::_) when x + y > 42 in e</code>
       waits that either <code>s1</code> and <code>s2</code> are
       present simultaneously or <code>s3</code> is present and its
@@ -424,7 +432,7 @@ This tool is based on <code>ocamlbuild</code>.
       cases, the variables <code>x</code> and <code>y</code> are bind
       and the sum of their value must be greater than <code>42</code>
       to trigger the execution of <code>e</code>.
-
+      </p>
     </section>
 
 </section>
