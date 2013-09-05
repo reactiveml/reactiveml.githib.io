@@ -73,6 +73,8 @@ Type of the process identifier.<br>
 Display the list of running processes with their behaviors:<ul>
 <li><code class="code">k</code>: killable</li>
 <li><code class="code">s</code>: suspendable</li>
+<li><code class="code">r</code>: resetable</li>
+<li><code class="code">c</code>: changeable</li>
 <li><code class="code">x</code>: extensible</li>
 </ul>
 <br>
@@ -94,6 +96,20 @@ Signal gathering the killing orders.<br>
 </div>
 <pre><span id="VALsr"><span class="keyword">val</span> sr</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info">
 Signal gathering the suspension and resumption orders.<br>
+</div>
+<pre><span id="VALresetable"><span class="keyword">val</span> resetable</span> : <code class="type">'a process -> 'a process</code></pre><div class="info">
+<code class="code">run resetable p</code> associates an id to the process <code class="code">p</code> and executes
+    it. The execution of this process can be reset by the emission of
+    its id on the signal <code class="code">reset</code>.<br>
+</div>
+<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info">
+Signal gathering the reseting orders.<br>
+</div>
+<pre><span id="VALchangeable"><span class="keyword">val</span> changeable</span> : <code class="type">('a, (int * ('state -> unit process)) list) event -><br>       ('state -> unit process) -> 'state -> unit process</code></pre><div class="info">
+<code class="code">run changeable change p state</code> associates an id to the process
+    <code class="code">(p state)</code> and executes it. The behavior process can be changed
+    by emitting a new process on the signal <code class="code">change</code>. The state
+    <code class="code">state</code> is transnited to the new process.<br>
 </div>
 <pre><span id="VALextensible"><span class="keyword">val</span> extensible</span> : <code class="type">('a, (int * ('state -> unit process)) list) event -><br>       ('state -> unit process) -> 'state -> unit process</code></pre><div class="info">
 <code class="code">run extensible add p state</code> associates an id to the process

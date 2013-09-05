@@ -543,6 +543,12 @@ Return a copy of the argument, with the first letter set to uppercase.
 See <a href="Pervasives.html#VALfloor"><code class="code">Pervasives.floor</code></a>.
 </div>
 </td></tr>
+<tr><td><a href="Rml_process_manager.html#VALchangeable">changeable</a> [<a href="Rml_process_manager.html">Rml_process_manager</a>]</td>
+<td><div class="info">
+<code class="code">run changeable change p state</code> associates an id to the process
+    <code class="code">(p state)</code> and executes it.
+</div>
+</td></tr>
 <tr><td><a href="Digest.html#VALchannel">channel</a> [<a href="Digest.html">Digest</a>]</td>
 <td><div class="info">
 If <code class="code">len</code> is nonnegative, <code class="code">Digest.channel ic len</code> reads <code class="code">len</code>
@@ -3620,7 +3626,7 @@ Same as <code class="code">fprintf</code> above, but output on <code class="code
 </td></tr>
 <tr><td><a href="Rml_process_manager.html#VALps">ps</a> [<a href="Rml_process_manager.html">Rml_process_manager</a>]</td>
 <td><div class="info">
-Display the list of running processes with their behaviors: <code class="code">k</code>: killable, <code class="code">s</code>: suspendable, <code class="code">x</code>: extensible
+Display the list of running processes with their behaviors: <code class="code">k</code>: killable, <code class="code">s</code>: suspendable, <code class="code">r</code>: resetable, <code class="code">c</code>: changeable, <code class="code">x</code>: extensible
 </div>
 </td></tr>
 <tr><td><a href="Stack.html#VALpush">push</a> [<a href="Stack.html">Stack</a>]</td>
@@ -3851,11 +3857,22 @@ Same as <a href="Str.html#VALglobal_replace"><code class="code">Str.global_repla
 </td></tr>
 <tr><td><a href="Obj.html#VALrepr">repr</a> [<a href="Obj.html">Obj</a>]</td>
 <td></td></tr>
+<tr><td><a href="Rml_process_manager.html#VALreset">reset</a> [<a href="Rml_process_manager.html">Rml_process_manager</a>]</td>
+<td><div class="info">
+Signal gathering the reseting orders.
+</div>
+</td></tr>
 <tr><td><a href="Buffer.html#VALreset">reset</a> [<a href="Buffer.html">Buffer</a>]</td>
 <td><div class="info">
 Empty the buffer and deallocate the internal string holding the
    buffer contents, replacing it with the initial internal string
    of length <code class="code">n</code> that was allocated by <a href="Buffer.html#VALcreate"><code class="code">Buffer.create</code></a> <code class="code">n</code>.
+</div>
+</td></tr>
+<tr><td><a href="Rml_process_manager.html#VALresetable">resetable</a> [<a href="Rml_process_manager.html">Rml_process_manager</a>]</td>
+<td><div class="info">
+<code class="code">run resetable p</code> associates an id to the process <code class="code">p</code> and executes
+    it.
 </div>
 </td></tr>
 <tr><td><a href="Graphics.html#VALresize_window">resize_window</a> [<a href="Graphics.html">Graphics</a>]</td>
