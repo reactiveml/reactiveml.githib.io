@@ -32,7 +32,6 @@
     <p>
     The code is divided in several modules (click to see the code):
     </p>
-    <br>
     <ul>
       <li><a href="./code/types.html"><b>Types:</b></a> the structure of a score in terms of ML-types.</li>
       <li><a href="./code/time.html"><b>Time:</b></a> processes to wait and compute duration relative to the tempo.</li>
@@ -43,26 +42,30 @@
     </ul>
     <br>
 
-    <p>You can download the entire code with some toy example and
-    applications <a href="./resources/reactive_asco.tar.gz">here</a>. To
-    compile, just type <code>make</code> (clean with <code>make
-    clean</code> or <code>make cleanall</code>). Applications are the
-    following:</p>
-    <br><br>
+    <p>The entire source code with some toy example and applications
+    are available in
+    the <a href="<#ROOTDIR>/distrib/rml-<#RML_VERSION>-<#DATE>.tar.gz">ReactiveML
+    distribution</a> (<code>examples/reactive_asco</code>
+    directory). Applications are the following:</p>
     <ul>
       <li><code>asco.rml.native</code>: the sequencer
-      (type <code>asco.rml.native --help</code> to display a list of options)</li>
-      <li><code>piano_phase.rml.native</code>: Steve Reich's <a href="./videos.html">Piano
-      Phase</a> with graphical interface</li>
-      <li><code>frere_jacques.rml.native</code>: a famous French
-      musical round</li>
+      (type <code>asco.rml.native --help</code> to display a list of options).</li>
+      <li><code>piano_phase.rml.native</code>: Steve Reich's <a href="./videos.html">Piano Phase</a> with graphical interface.</li>
+      <li><code>frere_jacques.rml.native</code>: a famous French musical round.</li>
+      <li><code>lib/rising_sun.rml</code>: example of live coding (see the <a href="./videos.html#live_coding">video</a> demo).</li>
     </ul>
-    <hr>
 
+    <p>
+      These applications communicate with the listening machine of
+      Antescofo and the audio environment through UDP messages. A
+      stand alone MacOS application that play both roles is
+      available: <code><a href="./resources/ascoDemo.app.tar.gz">ascoDemo.app</a></code>
+    </p>
+
+    <hr>
     <h3>Toy examples</h3>
     <br>
-    <p>You can try the sequencer with several toy examples:</p>
-    <br><br>
+    <p>You can try the sequencer with several toy examples included in the distribution:</p>
     <ul>
       <li><a href="./code/syntax.html">An example</a> to illustrate the entire syntax of our language
       (actions, groups, strategies, preemption)</li>
@@ -73,13 +76,6 @@
       <li>Concerto for violin (P. I. Tchaikovsky) 2nd and 3rd mvt </li>
     </ul>
     <br>
-
-    <p>The file <a href="./resources/reactive_asco.tar.gz">reactive_asco.tar.gz</a> also contains:</p>
-    <br>
-    <ul>
-      <li><code>rising_sun.rml</code>: example of live coding (see the <code>lib</code> directory and the <a href="./videos.html#live_coding">video</a> demo)</li>
-      <li><code>AscoDemo.app</code>: a standalone MacOS application that play the role of Max/MSP for the demos.</li>
-    </ul>
 
 </div>
 </div>
