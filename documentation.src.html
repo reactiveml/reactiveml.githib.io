@@ -371,7 +371,7 @@ This tool is based on <code>ocamlbuild</code>.
 <br>
       <p>
 	The behavior of these expressions is the same as before except
-	that instead of depending on a signal, they depend on Boolean
+	that instead of depending on a signal, they depend on a Boolean
 	configuration of signals. The
 	expressions <code><i>&lt;config&gt;</i></code>
 	and <code><i>&lt;config-patt&gt;</i></code> are defined as follows:
@@ -419,12 +419,12 @@ This tool is based on <code>ocamlbuild</code>.
       <!-- </table> -->
       <p>
       For example, the expression <code>await (s1(x) /\ s2(y)) \/ s3(x::y::_) when x + y > 42 in e</code>
-      waits that either <code>s1</code> and <code>s2</code> are
-      present simultaneously or <code>s3</code> is present and its
-      associated value is a list of at least two elements. In both
-      cases, the variables <code>x</code> and <code>y</code> are bind
-      and the sum of their value must be greater than <code>42</code>
-      to trigger the execution of <code>e</code>.
+      waits for either <code>s1</code> and <code>s2</code> to be
+      present simultaneously or <code>s3</code> to be present if its
+      associated value is a list of at least two elements.
+      In both cases, the variables <code>x</code> and <code>y</code> are
+      bind and the sum of their value must be greater
+      than <code>42</code> to trigger the execution of <code>e</code>.
       </p>
     </section>
 
@@ -443,9 +443,9 @@ This tool is based on <code>ocamlbuild</code>.
       The ReactiveML standard library also provides new modules:
     </p>
     <ul>
-      <li><a href="<#ROOTDIR>/documentation/stdlib/rml_list.html">Module <code>Rml_list</code>: process iterators on lists</a></li>
-      <li><a href="<#ROOTDIR>/documentation/stdlib/rml_process_manager.html">Module <code>Rml_process_manager</code>: process management combinators</a></li>
-      <li><a href="<#ROOTDIR>/documentation/stdlib/async.html">Module <code>async</code>: launching asychronous computations.</a></li>
+      <li><a href="<#ROOTDIR>/documentation/stdlib/Rml_list.html">Module <code>Rml_list</code>: process iterators on lists</a></li>
+      <li><a href="<#ROOTDIR>/documentation/stdlib/Rml_process_manager.html">Module <code>Rml_process_manager</code>: process management combinators</a></li>
+      <li><a href="<#ROOTDIR>/documentation/stdlib/Async.html">Module <code>async</code>: launching asychronous computations.</a></li>
     </ul>
     <p>
       The full list of modules available in the standard library is <a href="<#ROOTDIR>/documentation/stdlib/index.html">here</a>.
