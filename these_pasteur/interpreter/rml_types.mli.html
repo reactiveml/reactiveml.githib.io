@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>rml_types.mli</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="keyword">exception</span> <span class="variable-name">RML</span>
+<span class="keyword">exception</span> <span class="variable-name">End_program</span>
+
+<span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">'</span><span class="type">a clock </span><span class="tuareg-font-lock-operator">=</span> CkTop <span class="tuareg-font-lock-operator">|</span> CkLocal <span class="tuareg-font-lock-operator">|</span> CkExpr <span class="tuareg-font-lock-operator">of</span> <span class="tuareg-font-lock-operator">'</span>a
+<span class="tuareg-font-lock-governing">type</span> <span class="type">pause_kind </span><span class="tuareg-font-lock-operator">=</span> Strong <span class="tuareg-font-lock-operator">|</span> Weak
+<span class="tuareg-font-lock-governing">type</span> <span class="type">signal_kind </span><span class="tuareg-font-lock-operator">=</span> Signal <span class="tuareg-font-lock-operator">|</span> Memory
+</pre>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+open Planets_utils
+
+let dt = 0.01
+signal env default (fun _ -> zero_vector) gather add_force
+
+let rec process body (x_t, v_t, w) =
+  emit env (force (x_t, w));
+  await env(f) in
+  let v_tp = v_t ++. (dt **. (f x_t)) in
+  let x_tp = x_t ++. (dt **. v_tp) in
+  draw_body x_t x_tp w;
+  run body (x_tp, v_tp, w)
+
+let process main =
+  init_gui ();
+  for i = 1 to 100 dopar
+    run body (random_planet ())
+  done
+  ||
+  run body (sun ())

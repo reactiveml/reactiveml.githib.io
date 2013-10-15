@@ -1,0 +1,5 @@
+let process hello_world_seq =
+  print_string "Hello";
+  print_endline " world"
+
+let main = hello_world_seq

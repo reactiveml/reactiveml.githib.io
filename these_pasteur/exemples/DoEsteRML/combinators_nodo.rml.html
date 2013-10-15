@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>combinators_nodo.rml</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.keyword   { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.keyword a { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.builtin   { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.builtin a { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.string   { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.string a { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.constant   { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.constant a { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment-delimiter   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment-delimiter a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.function-name   { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.function-name a { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.variable-name   { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.variable-name a { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="variable-name">open</span> <span class="function-name"><a href="ast.rml.html">Ast</a></span>
+<span class="variable-name">open</span> <span class="function-name"><a href="misc.rml.html">Misc</a></span>
+
+<span class="comment-delimiter">(* </span><span class="comment">Signal environment </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> status = <span class="function-name">Present</span> <span class="constant">|</span> <span class="function-name">Absent</span> <span class="constant">|</span> <span class="function-name">Unknown</span>
+
+<span class="type">type</span> revent = {
+    r_name : string;
+    r_may_emit : (unit, unit list) event{<span class="constant">|</span>topck<span class="constant">|</span>};
+    r_status : status mevent{<span class="constant">|</span>topck<span class="constant">|</span>};
+    r_clock : string;
+  }
+
+<span class="type">type</span> rclock =
+    { c_name : string;
+      c_depth : int;
+      c_parent : rclock option;
+      c_active : (unit, unit list) event{<span class="constant">|</span>topck<span class="constant">|</span>};
+      c_step : (unit, unit list) event{<span class="constant">|</span>topck<span class="constant">|</span>};
+      c_step_done : (unit, unit list) event{<span class="constant">|</span>topck<span class="constant">|</span>};
+      c_waiting : int mevent{<span class="constant">|</span>topck<span class="constant">|</span>};
+      c_signals : (ident * revent) list; }
+
+<span class="type">signal</span> move
+
+<span class="type">let</span> <span class="type">process</span> mk_clock name parent =
+  <span class="type">signal</span> c_active, c_step, c_step_done <span class="type">in</span>
+  memory c_waiting <span class="type">default</span> -1 <span class="type">gather</span> (<span class="type">fun</span> f acc <span class="constant">-&gt;</span> f acc) <span class="type">in</span>
+  <span class="type">let</span> depth = <span class="constant">match</span> parent <span class="constant">with</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> 0 <span class="constant">|</span> <span class="function-name">Some</span> pck <span class="constant">-&gt;</span> pck.c_depth + 1 <span class="type">in</span>
+  { c_name = name; c_parent = parent; c_depth = depth;
+    c_active = c_active; c_step = c_step;
+    c_step_done = c_step_done; c_waiting = c_waiting; c_signals = [] }
+
+<span class="type">let</span> <span class="type">process</span> new_event ck id =
+  memory r_status <span class="type">default</span> <span class="function-name">Unknown</span> <span class="type">gather</span> (<span class="type">fun</span> f acc <span class="constant">-&gt;</span> f acc) <span class="type">in</span>
+  <span class="type">signal</span> r_may_emit <span class="type">in</span>
+  <span class="type">let</span> rev = { r_name = id; r_status = r_status; r_may_emit = r_may_emit; r_clock = ck.c_name } <span class="type">in</span>
+  { ck <span class="constant">with</span> c_signals = (id, rev)::ck.c_signals }
+
+<span class="type">let</span> <span class="type">rec</span> event_of_id ck id =
+  <span class="constant">try</span>
+    <span class="function-name">List</span>.assoc id ck.c_signals
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span>
+      (<span class="constant">match</span> ck.c_parent <span class="constant">with</span>
+      <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> print_endline (<span class="string">&quot;Unknown or unreachable signal &quot;</span>^id); <span class="variable-name">assert</span> false
+      <span class="constant">|</span> <span class="function-name">Some</span> pck <span class="constant">-&gt;</span> event_of_id pck id)
+
+<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> mk_predict l = <span class="constant">match</span> l <span class="constant">with</span>
+<span class="constant">|</span> [] <span class="constant">-&gt;</span> []
+<span class="constant">|</span> (ck, _)::l <span class="constant">-&gt;</span>
+    <span class="type">signal</span> s <span class="type">in</span>
+    <span class="type">let</span> l = <span class="builtin">run</span> mk_predict l <span class="type">in</span>
+    (ck, s)::l
+
+<span class="type">let</span> <span class="type">rec</span> get_clock_by_depth d ck =
+  <span class="constant">if</span> ck.c_depth = d <span class="constant">then</span> ck
+  <span class="constant">else</span> (
+    <span class="constant">match</span> ck.c_parent <span class="constant">with</span>
+    <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> <span class="variable-name">assert</span> false
+    <span class="constant">|</span> <span class="function-name">Some</span> pck <span class="constant">-&gt;</span> get_clock_by_depth d pck
+  )
+
+<span class="type">let</span> <span class="type">rec</span> get_clock_by_name n ck =
+  <span class="constant">if</span> ck.c_name = n <span class="constant">then</span> ck
+  <span class="constant">else</span> (
+    <span class="constant">match</span> ck.c_parent <span class="constant">with</span>
+    <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> <span class="variable-name">assert</span> false
+    <span class="constant">|</span> <span class="function-name">Some</span> pck <span class="constant">-&gt;</span> get_clock_by_name n pck
+  )
+
+<span class="type">let</span> <span class="type">rec</span> ck_assoc ck l = <span class="constant">match</span> l <span class="constant">with</span>
+<span class="constant">|</span> [] <span class="constant">-&gt;</span> <span class="comment">raise</span> <span class="function-name">Not_found</span>
+<span class="constant">|</span> (pck, v)::l <span class="constant">-&gt;</span> <span class="constant">if</span> pck.c_name = ck.c_name <span class="constant">then</span> v <span class="constant">else</span> ck_assoc ck l
+
+<span class="comment-delimiter">(* </span><span class="comment">combinators </span><span class="comment-delimiter">*)</span>
+
+<span class="type">let</span> <span class="type">process</span> forward s_in s_out =
+  <span class="keyword">loop</span>
+    <span class="type">await</span> <span class="type">immediate</span> s_in;
+    <span class="builtin">emit</span> s_out;
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+
+<span class="type">let</span> <span class="type">process</span> forward_list predict_in predict_out =
+  <span class="builtin">run</span> par_iter2
+    (proc (_, p_in) (_, p_out) <span class="constant">-&gt;</span> <span class="builtin">run</span> forward p_in p_out)
+    predict_in predict_out
+
+<span class="type">let</span> <span class="type">process</span> pemit s lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> rev = event_of_id lck s <span class="type">in</span>
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  rev.r_status &lt;== <span class="function-name">Present</span>;
+  print_debug (s^<span class="string">&quot;:emit&quot;</span>);
+  <span class="builtin">emit</span> step_out;
+  <span class="builtin">emit</span> move;
+  <span class="builtin">pause</span>;
+  <span class="builtin">emit</span> move
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="builtin">run</span> par_iter2
+    (proc (ck, p_in) (_, p_out) <span class="constant">-&gt;</span>
+      <span class="keyword">loop</span>
+        <span class="type">await</span> <span class="type">immediate</span> p_in;
+        <span class="constant">if</span> rev.r_clock = ck.c_name <span class="constant">then</span> <span class="builtin">emit</span> rev.r_may_emit;
+        <span class="builtin">emit</span> p_out;
+        <span class="builtin">pause</span>
+      <span class="keyword">end</span>)
+    predict_in predict_out
+
+<span class="type">let</span> <span class="type">process</span> ppause pck lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> pck = get_clock_by_name pck lck <span class="type">in</span>
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  <span class="keyword">begin</span>
+    <span class="comment-delimiter">(* </span><span class="comment">emet sur c_waiting jusqu'a la fin de l'instant que l'on attend </span><span class="comment-delimiter">*)</span>
+    <span class="constant">do</span>
+      <span class="keyword">loop</span>
+        lck.c_waiting &lt;&lt;- max (pck.c_depth);
+        <span class="builtin">pause</span>;
+        <span class="type">await</span> <span class="type">immediate</span> lck.c_step
+      <span class="keyword">end</span>
+    <span class="constant">until</span> pck.c_step_done <span class="constant">done</span>
+    <span class="constant">||</span>
+    <span class="builtin">emit</span> move;
+    <span class="builtin">pause</span>;
+    <span class="type">await</span> <span class="type">immediate</span> pck.c_step;
+    <span class="keyword">begin</span>
+      <span class="builtin">emit</span> step_out
+      <span class="constant">||</span>
+      <span class="comment-delimiter">(* </span><span class="comment">on commence une nouvelle prediction a l'instant suivant </span><span class="comment-delimiter">*)</span>
+      <span class="builtin">run</span> hold_until (ck_assoc lck predict_out) lck.c_step_done
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">predicition </span><span class="comment-delimiter">*)</span>
+  <span class="builtin">run</span> par_iter2
+    (proc (ck, p_in) (_, p_out) <span class="constant">-&gt;</span> <span class="constant">if</span> ck.c_depth &lt; pck.c_depth <span class="constant">then</span> <span class="builtin">run</span> forward p_in p_out)
+    predict_in predict_out
+
+<span class="type">let</span> <span class="type">process</span> pseq p1 p2 lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">signal</span> l_step <span class="type">in</span>
+  <span class="type">let</span> l_predict = <span class="builtin">run</span> mk_predict predict_out <span class="type">in</span>
+  <span class="builtin">run</span> p1 lck (step_in, predict_in) (l_step, l_predict)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> p2 lck (l_step, l_predict) (step_out, predict_out)
+
+<span class="type">let</span> <span class="type">process</span> ppar p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">signal</span> s_out1, s_out2 <span class="type">in</span>
+  <span class="type">let</span> p_out1 = <span class="builtin">run</span> mk_predict predict_out <span class="type">in</span>
+  <span class="type">let</span> p_out2 = <span class="builtin">run</span> mk_predict predict_out <span class="type">in</span>
+  <span class="builtin">run</span> p1 env (step_in, predict_in) (s_out1, p_out1)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> p2 env (step_in, predict_in) (s_out2, p_out2)
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="keyword">begin</span>
+    (<span class="type">await</span> <span class="type">immediate</span> s_out1 <span class="constant">||</span> <span class="type">await</span> <span class="type">immediate</span> s_out2);
+    <span class="builtin">emit</span> step_out
+  <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="builtin">run</span> par_iter3
+    (proc (_, p_out1) (_, p_out2) (_, p_out) <span class="constant">-&gt;</span>
+      <span class="keyword">loop</span>
+        <span class="type">await</span> <span class="type">immediate</span> (p_out1 /\ p_out2);
+        <span class="builtin">emit</span> p_out;
+        <span class="builtin">pause</span>
+      <span class="keyword">end</span>)
+    p_out1 p_out2 predict_out
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">maintient p_out1 tant que la seconde branche n'a pas terminee </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> s_out1;
+  <span class="constant">do</span>
+    <span class="builtin">run</span> par_iter (proc (_, p_out1) <span class="constant">-&gt;</span> <span class="builtin">run</span> hold p_out1) p_out1
+  <span class="constant">until</span> s_out2 <span class="constant">done</span>
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">idem pour p_out2 </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> s_out2;
+  <span class="constant">do</span>
+    <span class="builtin">run</span> par_iter (proc (_, p_out2) <span class="constant">-&gt;</span> <span class="builtin">run</span> hold p_out2) p_out2
+  <span class="constant">until</span> s_out1 <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> ppresent s p1 p2 lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> rev = event_of_id lck s <span class="type">in</span>
+  <span class="type">signal</span> s_in1, s_in2, s_out1, s_out2 <span class="type">in</span>
+  <span class="type">let</span> p_in1 = <span class="builtin">run</span> mk_predict predict_in <span class="type">in</span>
+  <span class="type">let</span> p_in2 = <span class="builtin">run</span> mk_predict predict_in <span class="type">in</span>
+  <span class="builtin">run</span> p1 lck (s_in1, p_in1) (s_out1, predict_out)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> p2 lck (s_in2, p_in2) (s_out2, predict_out)
+  <span class="constant">||</span>
+  <span class="keyword">begin</span>
+    <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+    <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> check_status =
+      <span class="builtin">emit</span> lck.c_active;
+      <span class="constant">match</span> !!(rev.r_status) <span class="constant">with</span>
+      <span class="constant">|</span> <span class="function-name">Present</span> <span class="constant">-&gt;</span>
+          print_debug (s^<span class="string">&quot;:present&quot;</span>);
+          <span class="builtin">emit</span> move; <span class="builtin">emit</span> lck.c_active;
+          <span class="builtin">emit</span> s_in1;
+          <span class="comment-delimiter">(* </span><span class="comment">on attend la terminaison de cette branche </span><span class="comment-delimiter">*)</span>
+          <span class="type">await</span> <span class="type">immediate</span> s_out1;
+          <span class="builtin">emit</span> step_out
+      <span class="constant">|</span> <span class="function-name">Absent</span> <span class="constant">-&gt;</span>
+          print_debug (s^<span class="string">&quot;:absent&quot;</span>);
+          <span class="builtin">emit</span> move; <span class="builtin">emit</span> lck.c_active;
+          <span class="builtin">emit</span> s_in2;
+          <span class="comment-delimiter">(* </span><span class="comment">on attend la terminaison de cette branche </span><span class="comment-delimiter">*)</span>
+          <span class="type">await</span> <span class="type">immediate</span> s_out2;
+          <span class="builtin">emit</span> step_out
+      <span class="constant">|</span> <span class="function-name">Unknown</span> <span class="constant">-&gt;</span>
+          print_debug (s^<span class="string">&quot;:unkown&quot;</span>);
+          <span class="constant">present</span> rev.r_may_emit
+          <span class="constant">then</span> <span class="builtin">pause</span>
+          <span class="constant">else</span>
+            (<span class="constant">if</span> !!(rev.r_status) = <span class="function-name">Unknown</span> <span class="constant">then</span>
+              (<span class="builtin">emit</span> move; <span class="builtin">emit</span> lck.c_active; rev.r_status &lt;== <span class="function-name">Absent</span>));
+          <span class="builtin">run</span> check_status
+          <span class="constant">||</span>
+          <span class="builtin">pause</span>;
+          <span class="constant">present</span> move <span class="constant">else</span> (print_endline <span class="string">&quot;Program is not causal&quot;</span>; exit 2)
+    <span class="type">in</span>
+    <span class="type">await</span> <span class="type">immediate</span> step_in;
+    <span class="builtin">run</span> check_status
+  <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="type">let</span> rck = get_clock_by_name rev.r_clock lck <span class="type">in</span>
+  <span class="builtin">run</span> par_iter3
+    (proc (ck, predict_in) (_, p_in1) (_, p_in2) <span class="constant">-&gt;</span>
+      <span class="keyword">loop</span>
+        <span class="type">await</span> <span class="type">immediate</span> predict_in;
+        (<span class="constant">match</span> !!(rev.r_status) <span class="constant">with</span>
+        <span class="constant">|</span> <span class="function-name">Present</span> <span class="constant">when</span> ck.c_depth &gt;= rck.c_depth <span class="constant">-&gt;</span> <span class="builtin">emit</span> p_in1
+        <span class="constant">|</span> <span class="function-name">Absent</span> <span class="constant">when</span> ck.c_depth &gt;= rck.c_depth <span class="constant">-&gt;</span> <span class="builtin">emit</span> p_in2
+        <span class="constant">|</span> <span class="function-name">Unknown</span> <span class="constant">-&gt;</span> <span class="builtin">emit</span> p_in1; <span class="builtin">emit</span> p_in2);
+        <span class="builtin">pause</span>
+      <span class="keyword">end</span>)
+    predict_in p_in1 p_in2
+
+<span class="type">let</span> <span class="type">process</span> pnothing lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  <span class="builtin">emit</span> move;
+  <span class="builtin">emit</span> step_out
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="builtin">run</span> forward_list predict_in predict_out
+
+<span class="type">let</span> <span class="type">process</span> pprint s env (step_in, predict_in) (step_out, predict_out) =
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  print_endline s;
+  <span class="builtin">emit</span> move;
+  <span class="builtin">emit</span> step_out
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="builtin">run</span> forward_list predict_in predict_out
+
+<span class="type">let</span> <span class="type">process</span> psignal s p lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> lck = <span class="builtin">run</span> new_event lck s <span class="type">in</span>
+  <span class="builtin">run</span> p lck (step_in, predict_in) (step_out, predict_out)
+  <span class="constant">||</span>
+  <span class="type">signal</span> kill <span class="type">in</span>
+  <span class="constant">do</span>
+    <span class="type">let</span> rev = event_of_id lck s <span class="type">in</span>
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> lck.c_step_done;
+      rev.r_status &lt;== <span class="function-name">Unknown</span>;
+      <span class="type">await</span> <span class="type">immediate</span> lck.c_step
+    <span class="keyword">end</span>
+  <span class="constant">until</span> kill <span class="constant">done</span>
+  <span class="constant">||</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_out; <span class="builtin">emit</span> kill
+
+<span class="type">let</span> <span class="type">process</span> ploop p lck (step_in, predict_in) _ =
+  <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> aux (s_in, p_in) =
+    <span class="type">signal</span> s_out <span class="type">in</span>
+    <span class="type">signal</span> add <span class="type">in</span>
+    <span class="type">let</span> p_out = <span class="builtin">run</span> mk_predict p_in <span class="type">in</span>
+    <span class="builtin">run</span> p lck (s_in, p_in) (s_out, p_out)
+    <span class="constant">||</span>
+    <span class="builtin">run</span> par_iter
+      (proc (_, p_out) <span class="constant">-&gt;</span> <span class="type">await</span> <span class="type">immediate</span> p_out; <span class="builtin">emit</span> add)
+      p_out
+    <span class="constant">||</span>
+    <span class="type">await</span> <span class="type">immediate</span> s_out; <span class="builtin">emit</span> add
+    <span class="constant">||</span>
+    <span class="type">await</span> <span class="type">immediate</span> add;
+    <span class="builtin">run</span> aux (s_out, p_out)
+  <span class="type">in</span>
+  <span class="builtin">run</span> aux (step_in, predict_in)
+
+<span class="type">let</span> <span class="type">process</span> emit_active pck =
+  <span class="constant">match</span> pck <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> ()
+  <span class="constant">|</span> <span class="function-name">Some</span> lck <span class="constant">-&gt;</span> <span class="builtin">emit</span> lck.c_active
+
+<span class="type">let</span> <span class="type">process</span> _domain s pck p (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> nck = <span class="builtin">run</span> mk_clock s pck <span class="type">in</span>
+  <span class="type">signal</span> p_in, p_out <span class="type">in</span>
+  <span class="constant">do</span>
+    <span class="builtin">run</span> p nck (step_in, (nck, p_in)::predict_in) (step_out, (nck, p_out)::predict_out)
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+  <span class="constant">||</span>
+  <span class="constant">do</span>
+    <span class="type">signal</span> susp <span class="type">in</span>
+    <span class="constant">control</span>
+      <span class="constant">match</span> pck <span class="constant">with</span>
+      <span class="constant">|</span> <span class="function-name">None</span> <span class="constant">-&gt;</span> ()
+      <span class="constant">|</span> <span class="function-name">Some</span> pck <span class="constant">-&gt;</span> <span class="builtin">run</span> hold pck.c_active
+    <span class="constant">with</span> susp <span class="constant">done</span>
+    <span class="constant">||</span>
+    <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+    <span class="keyword">loop</span>
+      <span class="builtin">run</span> await_absent nck.c_active;
+      <span class="builtin">emit</span> nck.c_step_done; <span class="builtin">emit</span> move;
+      print_debug (<span class="string">&quot;EOI for &quot;</span>^nck.c_name);
+      <span class="builtin">pause</span>;
+      <span class="builtin">emit</span> move;
+      <span class="comment-delimiter">(* </span><span class="comment">fin macro instant ? </span><span class="comment-delimiter">*)</span>
+      <span class="type">let</span> idx = !!(nck.c_waiting) <span class="type">in</span>
+      print_debug (nck.c_name^<span class="string">&quot;: waiting for depth=&quot;</span>^string_of_int idx);
+      <span class="constant">if</span> idx &gt;= 0 <span class="constant">&amp;&amp;</span> idx &lt; nck.c_depth <span class="constant">then</span> (
+        <span class="type">let</span> wck = get_clock_by_depth idx nck <span class="type">in</span>
+        print_debug (nck.c_name^<span class="string">&quot; waiting for &quot;</span>^wck.c_name);
+        <span class="builtin">emit</span> susp;
+        <span class="type">await</span> <span class="type">immediate</span> wck.c_step;
+        <span class="builtin">emit</span> susp
+      );
+      <span class="comment-delimiter">(* </span><span class="comment">reset c_waiting </span><span class="comment-delimiter">*)</span>
+      nck.c_waiting &lt;== -1;
+      <span class="builtin">pause</span>;
+      <span class="builtin">emit</span> nck.c_step;
+      print_debug (<span class="string">&quot;New step for &quot;</span>^nck.c_name^<span class="string">&quot;\n\n&quot;</span>);
+      <span class="builtin">pause</span>
+    <span class="keyword">end</span>
+    <span class="constant">||</span>
+    <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+    <span class="builtin">run</span> hold_until p_in nck.c_step_done
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> pdomain s p lck (step_in, predict_in) (step_out, predict_out) =
+  <span class="builtin">run</span> _domain s (<span class="function-name">Some</span> lck) p (step_in, predict_in) (step_out, predict_out)
+
+<span class="type">let</span> <span class="type">rec</span> build_program p = <span class="constant">match</span> p <span class="constant">with</span>
+<span class="constant">|</span> <span class="function-name">Pnothing</span> <span class="constant">-&gt;</span> pnothing
+<span class="constant">|</span> <span class="function-name">Ppause</span> ck <span class="constant">-&gt;</span> ppause ck
+<span class="constant">|</span> <span class="function-name">Pemit</span> s <span class="constant">-&gt;</span> pemit s
+<span class="constant">|</span> <span class="function-name">Pprint</span> s <span class="constant">-&gt;</span> pprint s
+<span class="constant">|</span> <span class="function-name">Pseq</span> (e1, e2) <span class="constant">-&gt;</span> pseq (build_program e1) (build_program e2)
+<span class="constant">|</span> <span class="function-name">Ppar</span> (e1, e2) <span class="constant">-&gt;</span> ppar (build_program e1) (build_program e2)
+<span class="constant">|</span> <span class="function-name">Ppresent</span> (s, e1, e2) <span class="constant">-&gt;</span> ppresent s (build_program e1) (build_program e2)
+<span class="constant">|</span> <span class="function-name">Psignal</span> (s, e) <span class="constant">-&gt;</span> psignal s (build_program e)
+<span class="constant">|</span> <span class="function-name">Ploop</span> e1 <span class="constant">-&gt;</span> ploop (build_program e1)
+<span class="constant">|</span> <span class="function-name">Pdomain</span> (ck, _, e) <span class="constant">-&gt;</span> pdomain ck (build_program e)
+
+<span class="type">let</span> <span class="type">process</span> run_program p =
+  <span class="type">let</span> p = build_program p <span class="type">in</span>
+  <span class="type">signal</span> step_in, step_out <span class="type">in</span>
+  <span class="builtin">run</span> _domain <span class="string">&quot;topck&quot;</span> <span class="function-name">None</span> p (step_in, []) (step_out, [])
+  <span class="constant">||</span>
+  <span class="builtin">emit</span> step_in
+</pre>
+
+ </body>
+</html>

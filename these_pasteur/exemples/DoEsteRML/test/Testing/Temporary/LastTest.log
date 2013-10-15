@@ -1,0 +1,491 @@
+Start testing: Jun 19 09:46 CEST
+----------------------------------------------------------
+1/32 Testing: test_comb_nodo_constructive1
+1/32 Test: test_comb_nodo_constructive1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/constructive1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_constructive1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_constructive1" end time: Jun 19 09:46 CEST
+"test_comb_nodo_constructive1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/32 Testing: test_comb_nodo_domain1
+2/32 Test: test_comb_nodo_domain1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/domain1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_domain1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_domain1" end time: Jun 19 09:46 CEST
+"test_comb_nodo_domain1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/32 Testing: test_comb_nodo_domain2
+3/32 Test: test_comb_nodo_domain2
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/domain2.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_domain2" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_domain2" end time: Jun 19 09:46 CEST
+"test_comb_nodo_domain2" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/32 Testing: test_comb_nodo_domain3
+4/32 Test: test_comb_nodo_domain3
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/domain3.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_domain3" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_domain3" end time: Jun 19 09:46 CEST
+"test_comb_nodo_domain3" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/32 Testing: test_comb_nodo_domain4
+5/32 Test: test_comb_nodo_domain4
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/domain4.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_domain4" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_domain4" end time: Jun 19 09:46 CEST
+"test_comb_nodo_domain4" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/32 Testing: test_comb_nodo_domain5
+6/32 Test: test_comb_nodo_domain5
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/domain5.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_domain5" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_domain5" end time: Jun 19 09:46 CEST
+"test_comb_nodo_domain5" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/32 Testing: test_comb_nodo_domain6
+7/32 Test: test_comb_nodo_domain6
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/domain6.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_domain6" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_domain6" end time: Jun 19 09:46 CEST
+"test_comb_nodo_domain6" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/32 Testing: test_comb_nodo_loop0
+8/32 Test: test_comb_nodo_loop0
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/loop0.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_loop0" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_loop0" end time: Jun 19 09:46 CEST
+"test_comb_nodo_loop0" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/32 Testing: test_comb_nodo_loop1
+9/32 Test: test_comb_nodo_loop1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/loop1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_loop1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_loop1" end time: Jun 19 09:46 CEST
+"test_comb_nodo_loop1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/32 Testing: test_comb_nodo_loop2
+10/32 Test: test_comb_nodo_loop2
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/loop2.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_loop2" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_loop2" end time: Jun 19 09:46 CEST
+"test_comb_nodo_loop2" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/32 Testing: test_comb_nodo_loop3
+11/32 Test: test_comb_nodo_loop3
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/loop3.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_loop3" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_loop3" end time: Jun 19 09:46 CEST
+"test_comb_nodo_loop3" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/32 Testing: test_comb_nodo_t0
+12/32 Test: test_comb_nodo_t0
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t0.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t0" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t0" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t0" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/32 Testing: test_comb_nodo_t1
+13/32 Test: test_comb_nodo_t1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t1" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/32 Testing: test_comb_nodo_t10
+14/32 Test: test_comb_nodo_t10
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t10.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t10" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t10" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t10" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/32 Testing: test_comb_nodo_t11
+15/32 Test: test_comb_nodo_t11
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t11.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t11" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t11" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t11" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/32 Testing: test_comb_nodo_t12
+16/32 Test: test_comb_nodo_t12
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t12.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t12" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t12" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t12" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/32 Testing: test_comb_nodo_t2
+17/32 Test: test_comb_nodo_t2
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t2.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t2" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t2" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t2" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/32 Testing: test_comb_nodo_t3
+18/32 Test: test_comb_nodo_t3
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t3.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t3" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t3" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t3" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/32 Testing: test_comb_nodo_t4
+19/32 Test: test_comb_nodo_t4
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t4.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t4" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t4" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t4" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/32 Testing: test_comb_nodo_t5
+20/32 Test: test_comb_nodo_t5
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t5.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t5" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t5" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t5" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/32 Testing: test_comb_nodo_t6
+21/32 Test: test_comb_nodo_t6
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t6.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t6" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t6" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t6" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/32 Testing: test_comb_nodo_t7
+22/32 Test: test_comb_nodo_t7
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t7.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t7" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t7" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t7" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/32 Testing: test_comb_nodo_t8
+23/32 Test: test_comb_nodo_t8
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t8.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t8" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t8" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t8" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/32 Testing: test_comb_nodo_t9
+24/32 Test: test_comb_nodo_t9
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_test" "-kn" "good/t9.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"test_comb_nodo_t9" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_comb_nodo_t9" end time: Jun 19 09:46 CEST
+"test_comb_nodo_t9" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/32 Testing: bad_comb_nodo_bad1
+25/32 Test: bad_comb_nodo_bad1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/bad1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_bad1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_bad1" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_bad1" time elapsed: 00:00:01
+----------------------------------------------------------
+
+26/32 Testing: bad_comb_nodo_bad2
+26/32 Test: bad_comb_nodo_bad2
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/bad2.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_bad2" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_bad2" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_bad2" time elapsed: 00:00:01
+----------------------------------------------------------
+
+27/32 Testing: bad_comb_nodo_bad3
+27/32 Test: bad_comb_nodo_bad3
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/bad3.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_bad3" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_bad3" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_bad3" time elapsed: 00:00:01
+----------------------------------------------------------
+
+28/32 Testing: bad_comb_nodo_berry1
+28/32 Test: bad_comb_nodo_berry1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/berry1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_berry1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_berry1" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_berry1" time elapsed: 00:00:01
+----------------------------------------------------------
+
+29/32 Testing: bad_comb_nodo_berry2
+29/32 Test: bad_comb_nodo_berry2
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/berry2.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_berry2" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_berry2" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_berry2" time elapsed: 00:00:01
+----------------------------------------------------------
+
+30/32 Testing: bad_comb_nodo_domain1
+30/32 Test: bad_comb_nodo_domain1
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/domain1.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_domain1" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_domain1" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_domain1" time elapsed: 00:00:01
+----------------------------------------------------------
+
+31/32 Testing: bad_comb_nodo_domain2
+31/32 Test: bad_comb_nodo_domain2
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/domain2.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_domain2" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_domain2" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_domain2" time elapsed: 00:00:01
+----------------------------------------------------------
+
+32/32 Testing: bad_comb_nodo_loop4
+32/32 Test: bad_comb_nodo_loop4
+Command: "/Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test/run_bad" "-kn" "bad/loop4.strl"
+Directory: /Users/ccpasteur/Documents/work/git/these/exemples/DoEsteRML/test
+"bad_comb_nodo_loop4" start time: Jun 19 09:46 CEST
+Output:
+----------------------------------------------------------
+Program is not causal
+<end of output>
+Test time =   1.01 sec
+----------------------------------------------------------
+Test Passed.
+"bad_comb_nodo_loop4" end time: Jun 19 09:46 CEST
+"bad_comb_nodo_loop4" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Jun 19 09:46 CEST

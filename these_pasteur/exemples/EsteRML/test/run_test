@@ -1,0 +1,9 @@
+#!/bin/sh
+
+COMPILER=../esterml.rml.d.byte
+NB_STEPS=10
+
+set -o pipefail
+
+$COMPILER -n $NB_STEPS $2 $1 | { while read line; do if [ "$line" != "OK" ]; then exit 1; fi; done }
+if test $? -ne 0; then exit 1; fi

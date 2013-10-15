@@ -1,0 +1,33 @@
+open Preorder
+
+let rec process levelorder f t = match t with
+| Empty -> ()
+| Node (l, v, r) ->
+    f v; pause;
+    (run levelorder f l || run levelorder f r)
+
+let rec process levelorder_ck f s =
+  domain ck do
+    loop
+      await s(t) in
+      run levelorder f t;
+      pause global_ck
+    end
+  done
+
+let process main =
+  signal kill in
+  signal s default Empty gather (fun x _ -> x) in
+  do
+    run levelorder_ck (fun x -> print_int x; print_newline ()) s
+  until kill done
+  ||
+  pause;
+  emit s t;
+  pause;
+  pause;
+  print_newline (); print_newline ();
+  pause;
+  emit s t;
+  pause;
+  emit kill

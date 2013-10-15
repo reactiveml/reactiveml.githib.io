@@ -1,0 +1,6 @@
+#!/bin/sh
+
+COMPILER=../doesterml.rml.d.byte
+NB_STEPS=10
+
+$COMPILER -n $NB_STEPS $2 $1 | { while read line; do if [ "$line" != "OK" ]; then exit 1; fi; done }

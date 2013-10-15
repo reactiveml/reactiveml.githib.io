@@ -1,0 +1,4 @@
+%Berry:1996a p.41, P12
+signal O in
+  present O then emit O else emit O end
+end.

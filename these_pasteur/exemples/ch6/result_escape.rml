@@ -1,0 +1,4 @@
+let process result_escape =
+  domain ck do
+    signal s in s
+  done

@@ -1,0 +1,9 @@
+let rec process imprecise =
+  signal s in
+  present s then () else ();
+  run imprecise
+
+let process main =
+  run imprecise
+  ||
+  loop print_endline "tick"; pause end

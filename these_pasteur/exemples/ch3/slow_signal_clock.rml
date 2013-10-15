@@ -1,0 +1,11 @@
+let process slow_signal_clock =
+  let pck = local_ck in
+  domain ck by 3 do
+    signal s clock pck default 0 gather (+) in
+    await s(v) in print_int v
+    ||
+    emit s 4
+  done
+
+let process main =
+  run slow_signal_clock; print_newline ()

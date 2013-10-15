@@ -1,0 +1,230 @@
+open Ast
+open Misc
+
+(* Signal environment *)
+type status = Present | Absent | Unknown
+
+type revent{|'ck|} = {
+    r_name : string;
+    r_may_emit : (unit, unit list) event{|'ck|};
+    r_status : status mevent{|'ck|};
+  }
+
+type state{|'ck|} =
+    { m_eval_ck : [ 'ck ];
+      m_move : (unit, unit list) event{|'ck|};
+      m_signals : (ident * revent{|'ck|}) list;
+      m_processes : (ident * rprocess{|'ck|}) list }
+
+and rprocess{|'ck|} =
+  | Proc of state{|'ck|} -> ((unit, unit list) event{|'ck|} * (unit, unit list) event{|'ck|})
+      -> ((unit, unit list) event{|'ck|} * (unit, unit list) event{|'ck|}) -> unit process
+
+let process initial_state eval_ck =
+  signal m_move in
+  { m_eval_ck = eval_ck;
+    m_move = m_move; m_signals = []; m_processes = [] }
+
+let process new_event m id =
+  memory r_status default Unknown gather (fun f acc -> f acc) reset global_ck in
+  signal r_may_emit in
+  let rev = { r_name = id; r_status = r_status; r_may_emit = r_may_emit } in
+  { m with m_signals = (id, rev)::m.m_signals }
+
+let new_process m id p =
+  { m with m_processes = (id, Proc p)::m.m_processes }
+
+let event_of_id m id =
+  try
+    List.assoc id m.m_signals
+  with
+  | Not_found -> print_endline ("Unknown signal "^id); assert false
+
+let process_of_id m id =
+  try
+    let Proc p = List.assoc id m.m_processes in p
+  with
+  | Not_found -> print_endline ("Unknown process "^id); assert false
+
+(* combinators *)
+let process pemit s env (step_in, predict_in) (step_out, predict_out) =
+  let rev = event_of_id env s in
+  (* execution *)
+  await immediate step_in;
+  rev.r_status <== Present;
+  emit step_out;
+  pause;
+  emit env.m_move
+  ||
+  (* prediction *)
+  do
+    loop
+      await immediate predict_in;
+      emit rev.r_may_emit;
+      emit predict_out;
+      quiet pause
+    end
+  until step_out done
+
+let process ppause env (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await immediate step_in;
+  pause topck;
+  emit step_out;
+  emit predict_out
+
+let process pseq p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  signal l_step, l_predict in
+  run p1 env (step_in, predict_in) (l_step, l_predict)
+  ||
+  run p2 env (l_step, l_predict) (step_out, predict_out)
+
+let process ppar p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  signal s_out1, s_out2, p_out1, p_out2 in
+  run p1 env (step_in, predict_in) (s_out1, p_out1)
+  ||
+  run p2 env (step_in, predict_in) (s_out2, p_out2)
+  ||
+  do
+    (* execution *)
+    begin
+      (await immediate s_out1 || await immediate s_out2);
+      emit step_out
+    end
+    ||
+    (* prediction *)
+    loop
+      await immediate (p_out1 /\ p_out2); emit predict_out; quiet pause
+    end
+    ||
+    (* maintient p_out1 tant que la seconde branche n'a pas terminee *)
+    await immediate s_out1; run hold p_out1
+    ||
+    (* idem pour p_out2 *)
+    await immediate s_out2; run hold p_out2
+  until step_out done
+
+let process ppresent s p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  let rev = event_of_id env s in
+  signal s_in1, s_in2, p_in1, p_in2 in
+  run p1 env (s_in1, p_in1) (step_out, predict_out)
+  ||
+  run p2 env (s_in2, p_in2) (step_out, predict_out)
+  ||
+  do
+    begin
+      (* execution *)
+      let rec process check_status =
+        match !!(rev.r_status) with
+        | Present -> emit env.m_move; emit s_in1
+        | Absent -> emit env.m_move; emit s_in2
+        | Unknown ->
+            emit p_in1; emit p_in2;
+            present rev.r_may_emit
+            then pause
+            else (if !!(rev.r_status) = Unknown then (emit env.m_move; rev.r_status <== Absent));
+            run check_status
+            ||
+            pause;
+            present env.m_move else (print_endline "Program is not causal"; exit 2)
+      in
+      await immediate step_in;
+      run check_status
+    end
+    ||
+    (* prediction *)
+    loop
+      await immediate predict_in;
+      (match !!(rev.r_status) with
+      | Present -> emit p_in1
+      | Absent -> emit p_in2
+      | Unknown -> emit p_in1; emit p_in2);
+      quiet pause
+    end
+  until step_out done
+
+let process pnothing env (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await immediate step_in;
+  emit step_out
+  ||
+  (* prediction *)
+  do
+    loop
+      await immediate predict_in;
+      emit predict_out;
+      quiet pause
+    end
+  until step_out done
+
+let process pprint s env (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await immediate step_in;
+  print_endline s;
+  emit step_out
+  ||
+  (* prediction *)
+  do
+    loop
+      await immediate predict_in;
+      emit predict_out;
+      quiet pause
+    end
+  until step_out done
+
+let process psignal s p env (step_in, predict_in) (step_out, predict_out) =
+  let env = run new_event env s in
+  run p env (step_in, predict_in) (step_out, predict_out)
+
+let process ploop p env (step_in, predict_in) _ =
+  let rec process aux (s_in, p_in) =
+    signal p_out, s_out in
+    run p env (s_in, p_in) (s_out, p_out)
+    ||
+    (pause || await immediate (s_out \/ p_out));
+    run aux (s_out, p_out)
+  in
+  run aux (step_in, predict_in)
+
+
+let process prec f p env (step_in, predict_in) (step_out, predict_out) =
+  let process self env (step_in, predict_in) (step_out, predict_out) =
+    (pause || await immediate (step_in \/ predict_in));
+    run p env (step_in, predict_in) (step_out, predict_out)
+  in
+  let env = new_process env f self in
+  run p env (step_in, predict_in) (step_out, predict_out)
+
+
+let process prun f env (step_in, predict_in) (step_out, predict_out) =
+  let p = process_of_id env f in
+  run p env (step_in, predict_in) (step_out, predict_out)
+
+(* Main program *)
+let process run_program env p =
+  signal step_in, predict_in, step_out, predict_out in
+  run p env (step_in, predict_in) (step_out, predict_out)
+  ||
+  (* execution *)
+  emit step_in; emit predict_in
+
+let rec build_program p = match p with
+| Pnothing -> pnothing
+| Ppause -> ppause
+| Pemit s -> pemit s
+| Pprint s -> pprint s
+| Pseq (e1, e2) -> pseq (build_program e1) (build_program e2)
+| Ppar (e1, e2) -> ppar (build_program e1) (build_program e2)
+| Ppresent (s, e1, e2) -> ppresent s (build_program e1) (build_program e2)
+| Psignal (s, e) -> psignal s (build_program e)
+| Ploop e1 -> ploop (build_program e1)
+| Prec (f, p) -> prec f (build_program p)
+| Prun f -> prun f
+| Ptrap _ | Pexit _ -> failwith "Unsupported"
+
+let process run_program p =
+  domain eval_ck do
+    let env = run initial_state eval_ck in
+    let p = build_program p in
+    run run_program env p
+  done

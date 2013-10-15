@@ -1,0 +1,5 @@
+trap T in
+  exit T
+  ||
+  print "OK"
+end.

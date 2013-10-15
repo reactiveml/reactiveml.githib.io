@@ -1,0 +1,10 @@
+let process signal_memory =
+  memory m default 0 gather (+) in
+  signal s default 0 gather (+) in
+  emit m 2; emit s 2; pause;
+  emit m 1; emit s 1; pause;
+  print_endline ("m="^string_of_int (last m));
+  print_endline ("s="^string_of_int (last s))
+
+let process main =
+  run signal_memory

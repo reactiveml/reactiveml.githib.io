@@ -1,0 +1,18 @@
+let process quiet_sustain_v s ck =
+  loop emit s (last s); quiet pause ck end
+
+let process hold_domain =
+  domain ck do
+    signal s default 0 gather (+) in
+    run quiet_sustain_v s ck
+    ||
+    emit s 3; pause global_ck; print_int (last s)
+  done
+
+let process main =
+  signal kill in
+  do
+    run hold_domain
+  until kill done
+  ||
+  pause; emit kill; pause; print_newline ()

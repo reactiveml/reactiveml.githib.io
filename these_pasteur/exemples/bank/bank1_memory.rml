@@ -1,0 +1,23 @@
+open Agents
+
+type cmd = Put of int | Info
+
+let process bank self () =
+  memory counter default 0 gather (+) in
+  run react self
+    begin proc msg return -> match msg with
+    | Put x -> emit counter x
+    | Info -> return (last counter)
+    end
+
+let process main =
+  let b_p, b = run mk_agent "bank" bank in
+  run b_p ()
+  ||
+  send b (Put 3);
+  pause;
+  send b (Put 4);
+  pause;
+  let v = run send_and_wait b Info in
+  print_endline ("Balance: "^string_of_int v);
+  kill b

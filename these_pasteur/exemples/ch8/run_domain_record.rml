@@ -1,0 +1,9 @@
+type 'a poly_process =
+  { l : 'ck. 'a process{'ck|'ck} }
+
+let process run_domain q =
+  domain ck do run q.l done
+
+let process main =
+  let process q = pause in
+  run run_domain { l = q }

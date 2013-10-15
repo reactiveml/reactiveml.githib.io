@@ -1,0 +1,33 @@
+(* If l = [x0; ...; xn], runs p x0; p x1; ...; p xn *)
+let rec process iter_p p l = match l with
+| [] -> ()
+| x::l -> run (p x); run (iter_p p l)
+
+let map_option f v = match v with
+| None -> ()
+| Some v -> f v
+
+let process map_option_p p v = match v with
+| None -> ()
+| Some v -> run (p v)
+
+let equal_option x y = match y with
+| None -> false
+| Some y -> x = y
+
+let process sustain s =
+  loop
+    pause; emit s (last? s)
+  end
+
+let process sustain_list s =
+  loop
+    List.iter (fun x -> emit s x) (last? s); pause
+  end
+
+let rec process hold_server add =
+  await add(l) in
+  run (iter_p (fun p -> process (run p)) l)
+  ||
+  run (hold_server add)
+

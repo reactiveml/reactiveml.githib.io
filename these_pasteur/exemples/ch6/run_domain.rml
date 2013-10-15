@@ -1,0 +1,2 @@
+let process run_domain q =
+  domain ck do run q done

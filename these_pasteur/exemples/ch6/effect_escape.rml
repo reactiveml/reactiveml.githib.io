@@ -1,0 +1,5 @@
+let process effect_escape =
+  domain ck do
+    signal fast in
+    (fun () -> emit fast)
+  done

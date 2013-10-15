@@ -1,0 +1,5 @@
+let process immediate_dep_wrong =
+  signal s in
+  domain ck do
+    present s then () else ()
+  done

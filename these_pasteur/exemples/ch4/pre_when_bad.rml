@@ -1,0 +1,10 @@
+open Pre_simple
+
+let process pre_when_bad =
+  signal c in
+  do run pre_simple when c done
+  ||
+  emit c; pause; pause; emit c
+
+let process main =
+  run pre_when_bad; print_newline ()

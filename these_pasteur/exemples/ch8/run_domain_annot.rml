@@ -1,0 +1,7 @@
+let process run_domain
+    (q : 'ck. 'a process{'ck|'ck}) =
+  domain ck do run q done
+
+let process main =
+  let process q = pause in
+  run run_domain q

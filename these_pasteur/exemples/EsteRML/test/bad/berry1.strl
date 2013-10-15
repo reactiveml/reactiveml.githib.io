@@ -1,0 +1,11 @@
+% programme con constructif: on specule sur l'absence de O
+% Berry:1996a p.81
+signal O in
+  present O then
+    signal S in
+      emit S
+      ||
+      present S else emit O end
+    end
+  end
+end.

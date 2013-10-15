@@ -1,0 +1,11 @@
+open Domain_pre
+
+let process domain_pre_bad =
+  domain ck1 do
+    run domain_pre
+    ||
+    pause ck1; pause ck1
+  done
+
+let process main =
+  run domain_pre_bad; print_newline ()

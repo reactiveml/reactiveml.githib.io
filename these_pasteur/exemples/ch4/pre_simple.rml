@@ -1,0 +1,8 @@
+let process pre_simple =
+  signal s default 0 gather (+) in
+  emit s 10
+  ||
+  pause; print_int (pre? s)
+
+let process main =
+  run pre_simple; print_newline ()

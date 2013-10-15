@@ -1,0 +1,27 @@
+type ('a, 'b) value = Empty of 'b | Acc of 'b
+
+let last_ s =
+  let v = last s in
+  match v with
+  | Empty d -> d
+  | Acc acc -> acc
+
+let emit_ s v = emit s (last s, v)
+
+let gather_ g (l, v) old = match old, l with
+| Empty _, Empty d -> Acc (g v d)
+| Empty _, Acc l -> Acc (g v l)
+| Acc acc, _ -> Acc (g v acc)
+
+let process mk_memory d g =
+  signal s default Empty d gather gather_ g in s
+
+let process main =
+  let m = run mk_memory 0 (+) in
+  emit_ m 3;
+  pause;
+  pause;
+  pause;
+  emit_ m 4;
+  pause;
+  print_int (last_ m); print_newline ()

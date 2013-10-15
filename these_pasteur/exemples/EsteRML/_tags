@@ -1,0 +1,2 @@
+<*.rml>:no_reactivity, row_clocking
+<*.mli>:row_clocking

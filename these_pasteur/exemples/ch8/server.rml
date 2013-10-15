@@ -1,0 +1,24 @@
+let do_stuff () = ()
+
+let rec process server add =
+  await add(p, ack) in
+  run server add
+  ||
+  let v = run p in emit ack v
+
+let process server_main =
+  signal ack_slow in
+  domain ck do
+    signal add default (process (), ack_slow) gather (fun x _ -> x) in
+    run server add
+    ||
+    emit add (process (pause global_ck; do_stuff ()), ack_slow);
+    await ack_slow(_) in print_endline "Slow done"
+    ||
+    pause global_ck;
+    signal ack_fast in
+    emit add (process (pause ck; do_stuff ()), ack_fast);
+    await ack_fast(_) in print_endline "Fast done"
+  done
+
+let main = server_main

@@ -1,0 +1,10 @@
+let process domain_pre =
+  domain ck by 10 do
+    signal s default 0 gather (+) in
+    emit s 10
+    ||
+    pause topck; print_int (pre? s)
+  done
+
+let process main =
+  run domain_pre; print_newline ()

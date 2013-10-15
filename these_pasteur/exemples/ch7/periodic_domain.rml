@@ -1,0 +1,4 @@
+let process periodic_domain =
+  domain ck by 2 do
+    loop pause ck end
+  done

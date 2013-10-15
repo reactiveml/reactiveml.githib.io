@@ -1,0 +1,8 @@
+let process print_loop msg pck =
+  loop print_string msg; pause pck end
+
+let process stutter msg =
+  domain ck by 6 do run print_loop msg ck done
+
+let process main =
+  run stutter "a" || run stutter "b"

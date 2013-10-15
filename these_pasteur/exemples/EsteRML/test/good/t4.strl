@@ -1,0 +1,7 @@
+signal s in
+  signal s2 in
+    present s then print "ERROR"; emit s2 end
+    ||
+    present s2 then print "ERROR" else print "OK" end
+  end
+end.

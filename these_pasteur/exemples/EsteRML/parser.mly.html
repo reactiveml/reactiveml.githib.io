@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>parser.mly</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.variable-name   { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.variable-name a { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.governing   { color: #0000ff;  font-weight: 700;  font-family: Monaco;  font-stretch: normal;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.governing a { color: #0000ff;  font-weight: 700;  font-family: Monaco;  font-stretch: normal;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.operator   { color: #996633;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.operator a { color: #996633;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="operator">%{</span>
+<span class="governing">open</span> <span class="type">Ast</span><span class="operator">;;</span>
+<span class="operator">%}</span>
+
+
+<span class="operator">%</span>token LPAREN RPAREN QMARK LBRACKET RBRACKET
+<span class="operator">%</span>token COMBINE WITH PLUS TIMES AND OR COLONEQUAL
+<span class="operator">%</span>token NOTHING PAUSE EMIT PRESENT IF THEN ELSE
+<span class="operator">%</span>token SUSPEND WHEN LOOP TRAP IN EXIT SIGNAL VAR
+<span class="operator">%</span>token MODULE COLON END PARALLEL SEMICOLON DOT
+<span class="operator">%</span>token TRUE FALSE MINUS EQUAL UNEQUAL NOT COPYMODULE
+<span class="operator">%</span>token LOWER GREATER LOWEROREQUAL GREATEROREQUAL
+<span class="operator">%</span>token COMMA TYPE CONSTANT FUNCTION HANDLE ABORT
+<span class="operator">%</span>token CASE WEAK DO HALT IMMEDIATE DIV MOD CALL
+<span class="operator">%</span>token INPUT INPUTOUTPUT OUTPUT SENSOR PRE PROCEDURE
+<span class="operator">%</span>token SUSTAIN REPEAT AWAIT EACH RUN TIMES POSITIVE
+<span class="operator">%</span>token EVERY WATCHING TIMEOUT UPTO RELATION DASH IMPLY
+<span class="operator">%</span>token GOTO PRINT REC
+
+<span class="operator">%</span>right PARALLEL
+<span class="operator">%</span>right SEMICOLON
+<span class="operator">%</span>right COMMA
+<span class="operator">%</span>left OR
+<span class="operator">%</span>left AND
+<span class="operator">%</span>nonassoc NOT
+<span class="operator">%</span>left EQUAL UNEQUAL LOWER LOWEROREQUAL GREATER GREATEROREQUAL
+<span class="operator">%</span>left PLUS MINUS
+<span class="operator">%</span>left TIMES DIV MOD
+<span class="operator">%</span>nonassoc UMINUS
+<span class="operator">%</span>nonassoc QMARK
+
+<span class="operator">%</span>token <span class="operator">&lt;</span>string<span class="operator">&gt;</span> IDENT
+<span class="operator">%</span>token <span class="operator">&lt;</span>int<span class="operator">&gt;</span> INT
+<span class="operator">%</span>token <span class="operator">&lt;</span>string<span class="operator">&gt;</span> STRING
+
+<span class="operator">%</span>type <span class="operator">&lt;</span><span class="type">Ast</span>.pexp<span class="operator">&gt;</span> main
+
+<span class="operator">%</span>start main
+
+<span class="operator">%%</span>
+
+<span class="variable-name">main</span><span class="operator">:</span>
+<span class="operator">|</span> statement DOT                         <span class="operator">{</span> <span class="operator">$</span>1 <span class="operator">}</span>
+<span class="operator">|</span> DOT statement DOT                     <span class="operator">{</span> <span class="operator">$</span>2 <span class="operator">}</span>
+
+<span class="variable-name">statement</span><span class="operator">:</span>
+  <span class="type">NOTHING                               </span><span class="operator">{</span> Pnothing <span class="operator">}</span>
+<span class="operator">|</span> PAUSE                                 <span class="operator">{</span> Ppause <span class="operator">}</span>
+<span class="operator">|</span> PRINT STRING                          <span class="operator">{</span> Pprint <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">|</span> PRINT INT                             <span class="operator">{</span> Pprint <span class="operator">(</span>string_of_int <span class="operator">$</span>2<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> SIGNAL IDENT IN statement END         <span class="operator">{</span> Psignal <span class="operator">($</span>2<span class="operator">,</span> <span class="operator">$</span>4<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> EMIT IDENT                            <span class="operator">{</span> Pemit <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">|</span> PRESENT IDENT present END             <span class="operator">{</span> Ppresent <span class="operator">($</span>2<span class="operator">,</span> fst <span class="operator">$</span>3<span class="operator">,</span> snd <span class="operator">$</span>3<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> LBRACKET statement RBRACKET           <span class="operator">{</span> <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">|</span> statement SEMICOLON statement         <span class="operator">{</span> Pseq <span class="operator">($</span>1<span class="operator">,</span> <span class="operator">$</span>3<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> statement PARALLEL statement          <span class="operator">{</span> Ppar <span class="operator">($</span>1<span class="operator">,</span> <span class="operator">$</span>3<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> statement SEMICOLON                   <span class="operator">{</span> <span class="operator">$</span>1 <span class="operator">}</span>
+<span class="operator">|</span> LOOP statement END                    <span class="operator">{</span> Ploop <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">|</span> TRAP IDENT IN statement END           <span class="operator">{</span> Ptrap <span class="operator">($</span>2<span class="operator">,</span> <span class="operator">$</span>4<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> EXIT IDENT                            <span class="operator">{</span> Pexit <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">|</span> REC IDENT EQUAL statement END         <span class="operator">{</span> Prec <span class="operator">($</span>2<span class="operator">,</span> <span class="operator">$</span>4<span class="operator">)</span> <span class="operator">}</span>
+<span class="operator">|</span> RUN IDENT                             <span class="operator">{</span> Prun <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">;</span>
+
+<span class="variable-name">present</span><span class="operator">:</span>
+  <span class="type">THEN statement ELSE statement         </span><span class="operator">{</span> <span class="operator">$</span>2<span class="operator">,</span> <span class="operator">$</span>4 <span class="operator">}</span>
+<span class="operator">|</span> THEN statement                        <span class="operator">{</span> <span class="operator">$</span>2<span class="operator">,</span> Pnothing <span class="operator">}</span>
+<span class="operator">|</span> ELSE statement                        <span class="operator">{</span> Pnothing<span class="operator">,</span> <span class="operator">$</span>2 <span class="operator">}</span>
+<span class="operator">|</span>                                       <span class="operator">{</span> Pnothing<span class="operator">,</span> Pnothing <span class="operator">}</span>
+<span class="operator">;</span>
+</pre>
+
+ </body>
+</html>

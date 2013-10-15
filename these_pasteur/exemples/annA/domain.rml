@@ -1,0 +1,101 @@
+open Misc
+
+type clock =
+    { name : string;
+      step : (unit, unit list) event; (* debut de l'instant *)
+      eoi : (unit, unit list) event; (*  debut de l'eoi *)
+      has_next : (unit, unit list) event; (* present a la fin de l'eoi si on doit faire
+                                             un autre instant local dans ce macro-instant*)
+      alive : (int, int) event; (* nombre de domaines reactifs enfants en cours d'execution*)
+      finished : (unit, unit list) event; (* pour terminer le domaine *)
+      hold : (unit process, unit process list) event }
+
+type ('a, 'b) clocked_signal =
+    { s_await : ('a, 'b) event; (* signal pour obtenir la valeur *)
+      s_emit : ('a, 'a list) event; (* signal pour emission et when *)
+      s_clock : clock (* horloge du signal *)}
+
+let mk_clock name =
+  signal step, finished, eoi, has_next, hold in
+  signal alive default 0 gather (+) in
+  { step = step; alive = alive; finished = finished;
+    eoi = eoi; has_next = has_next; hold = hold; name = name }
+
+let process pause_ck d =
+  await d.eoi;
+  emit d.has_next;
+  await d.step
+
+let process await_step d =
+  await d.step
+
+let mk_domain name parent period =
+  let ck = mk_clock name in
+  let cpt = ref 0 in (* compteur du nombre d'instants *)
+  let process _domain =
+    do
+      map_option (fun pck -> emit pck.alive 1) parent;
+      loop
+        (* instant local *)
+        emit ck.step; incr cpt; pause;
+        await ck.alive(0) in
+        (* fin de l'instant local *)
+        emit ck.eoi; pause;
+        pause;
+        (* attente automatique *)
+        if parent <> None &&
+           (equal_option !cpt period or not (pre ck.has_next)) then (
+          cpt := 0;
+          match parent with
+          | None -> ()
+          | Some pck ->
+              (* attente du prochain instant de l'horloge parente *)
+              emit pck.alive(-1);
+              run (await_step pck);
+              map_option (fun pck -> emit pck.alive 1) parent
+         )
+      end
+      ||
+      run (sustain ck.alive)
+      ||
+      run (hold_server ck.hold)
+    until ck.finished done;
+    map_option (fun pck -> emit pck.alive (-1)) parent
+  in
+  _domain, ck
+
+let mk_signal d g ck =
+  signal s_await default d gather g in
+  signal s_emit in
+  let process hold =
+    (* cas special pour le premier instant *)
+    if pre s_emit then
+      (List.iter (fun x -> emit s_await x) (pre? s_emit))
+    ||
+    loop
+      await s_emit;
+      begin
+        do
+          run (sustain_list s_emit)
+        until ck.step done
+        ||
+        await immediate ck.eoi;
+        (* mise a jour de s_await *)
+        List.iter (fun x -> emit s_await x) (pre? s_emit)
+      end
+    end
+  in
+  let s = { s_await = s_await; s_emit = s_emit; s_clock = ck } in
+  emit ck.hold hold;
+  s
+
+let process await_all s act_ck =
+  await s.s_await(v) in
+  emit act_ck.has_next;
+  run (await_step act_ck);
+  v
+
+let emit_v s v =
+  emit s.s_emit v
+
+let gck_domain, gck = mk_domain "global_ck" None None

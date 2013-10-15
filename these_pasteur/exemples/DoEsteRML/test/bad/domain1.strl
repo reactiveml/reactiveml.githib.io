@@ -1,0 +1,7 @@
+signal s in
+  domain ck do
+    present s then print "ERROR" else print "ERROR" end
+    ||
+    pause ck; emit s
+  done
+end.

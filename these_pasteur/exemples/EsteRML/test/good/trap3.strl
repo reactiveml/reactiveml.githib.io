@@ -1,0 +1,6 @@
+trap T in
+  trap U in
+    exit T || exit U
+  end;
+  print "ERROR"
+end; print "OK".

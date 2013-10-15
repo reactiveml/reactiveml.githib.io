@@ -1,0 +1,12 @@
+open Preorder
+
+let process sum_ck t =
+  domain ck by 2 do
+    signal s default 0 gather (+) in
+    preorder (fun v -> emit s v) t
+    ||
+    await s(v) in print_int v
+  done
+
+let process main =
+  run sum_ck t; print_newline ()

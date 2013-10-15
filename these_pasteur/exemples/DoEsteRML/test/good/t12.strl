@@ -1,0 +1,7 @@
+signal s in
+signal s2 in
+  [ present s then nothing else nothing end || pause topck ]; emit s2
+  ||
+  present s2 then emit s else print "OK" end
+end
+end.

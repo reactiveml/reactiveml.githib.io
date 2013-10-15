@@ -1,0 +1,4 @@
+let process run_domain_wrong
+    (q : 'ck. 'a process{'ck|'ck}) =
+  let q = (fun x -> x) q in
+  domain ck do run q done

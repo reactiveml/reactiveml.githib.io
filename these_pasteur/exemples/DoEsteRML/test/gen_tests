@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in good/*.strl; do
+    echo 'ADD_TEST(test_comb_nodo_'`basename $i .strl` '"./run_test"' '"-kn"  "'$i'")'
+done
+
+for i in bad/*.strl; do
+    echo 'ADD_TEST(bad_comb_nodo_'`basename $i .strl` '"./run_bad"' '"-kn"  "'$i'")'
+done

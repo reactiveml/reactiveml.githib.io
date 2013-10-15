@@ -1,0 +1,56 @@
+open Agents_ck
+open Misc
+
+type cmd = Put of int | Info | Take of int
+type answer = Balance of int | Status of bool
+
+let process bank self () =
+  domain lck do
+    memory counter default 0 gather (fun f acc -> f acc) in
+    signal req in
+    run react self
+      begin proc msg return -> match msg with
+      | Put x -> emit counter (fun c -> c + x)
+      | Info -> return (Balance (last counter))
+      | Take x -> emit req (x, return)
+      end
+    ||
+    loop
+      for i=1 to 11 do pause self.a_network_ck done;
+      emit counter (fun c -> int_of_float (1.03 *. (float_of_int c)));
+      pause self.a_network_ck
+    end
+    ||
+    let try_take c (x,return) =
+      if x <= c then (return (Status true); c - x)
+      else (return (Status false); c)
+    in
+    loop
+      await req(l) in
+      let new_c = fold_left try_take (last counter) l in
+      let debit = last counter - new_c in
+      emit counter (fun c -> c - debit)
+    end
+  done
+
+let process main =
+  let b_p, b = run mk_agent "bank" global_ck bank in
+  run b_p ()
+  ||
+  b << (Put 10)
+  ||
+  begin
+    pause;
+    let Status res = run send_and_wait b (Take 6) in
+    if res then print_endline "Retrait OK" else print_endline "Retrait impossible";
+    let Balance count = run send_and_wait b Info in
+    print_endline ("Solde: "^string_of_int count);
+    pause;
+    kill b
+  end
+  ||
+  begin
+    pause;
+    let Status res = run send_and_wait b (Take 6) in
+    if res then print_endline "Retrait OK" else print_endline "Retrait impossible"
+  end

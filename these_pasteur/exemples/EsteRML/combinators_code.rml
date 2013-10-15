@@ -1,0 +1,369 @@
+open Ast
+open Misc
+
+(* Signal environment *)
+type status = Present | Absent | Unknown
+
+type revent{|'ck|} = {
+    r_name : string;
+    r_may_emit : (unit, unit list) event{|'ck|};
+    r_status : status mevent{|'ck|};
+  }
+
+type state{|'ck, 'pck|} =
+    { m_eval_ck : [ 'ck ];
+      m_predict_ck : [ 'pck ];
+      m_move : (unit, unit list) event{|'ck|};
+      m_signals : (ident * revent{|'ck|}) list;
+      m_traps : ident list }
+
+type rprocess{''c|'ck, 'sck, 'sck2, 'pck|'ef} =
+  state{|'ck, 'pck|}
+      -> ((int, int list) event{|'sck|} * (int, int list) event{|'sck|})
+      -> ((unit, unit list) event{|'sck|} * (unit, unit list) event{|'sck|})
+      -> ((unit, unit list) event{|'sck2|} * (unit, unit list) event{|'sck2|}) -> unit process{''c||'ef}
+and rprocess_poly{|'ck, 'sck, 'sck2, 'pck|'ef} =
+    { l : ''c. rprocess{''c|'ck,'sck, 'sck2, 'pck|'ef} }
+
+let process initial_state eval_ck predict_ck =
+  signal m_move clock eval_ck in
+  { m_eval_ck = eval_ck; m_predict_ck = predict_ck;
+    m_move = m_move; m_signals = []; m_traps = [] }
+
+let process new_event m id =
+  memory r_status clock m.m_eval_ck default Unknown gather (fun f acc -> f acc) reset global_ck in
+  signal r_may_emit clock m.m_eval_ck in
+  let rev = { r_name = id; r_status = r_status; r_may_emit = r_may_emit } in
+  { m with m_signals = (id, rev)::m.m_signals }
+
+let event_of_id m id =
+  try
+    List.assoc id m.m_signals
+  with
+  | Not_found -> print_endline ("Unknown signal "^id); assert false
+
+let new_trap m k =
+  { m with m_traps = k::m.m_traps }
+
+let code_of_id m k =
+  (index k m.m_traps) + 2
+
+let minus_trap c =
+  if c > 2 then c - 1 else c
+
+let rec minl m l = match l with
+| [] -> m
+| x::l -> let m = min x m in minl m l
+
+let max_list vl1 vl2 = match vl1, vl2 with
+| [], _ -> vl2
+| _, [] -> vl1
+| _, _ ->
+    let m = max (minl max_int vl1) (minl max_int vl2) in
+    List.filter (fun v -> v >= m) (List.rev_append vl1 vl2)
+
+let process pemit s env (_, _) (step_in, predict_in) (step_out, predict_out) =
+  let rev = event_of_id env s in
+  (* execution *)
+  await step_in;
+  rev.r_status <== Present;
+  emit step_out;
+  pause env.m_eval_ck;
+  emit env.m_move
+  ||
+  (* prediction *)
+  do
+    loop
+      await predict_in;
+      emit rev.r_may_emit;
+      emit predict_out;
+      quiet pause env.m_eval_ck
+    end
+  until step_out done
+
+let process ppause env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await step_in;
+  emit step_jp 1;
+  pause topck;
+  emit step_out;
+  emit predict_out
+  ||
+  (* prediction *)
+  do
+    loop
+      await predict_in;
+      emit predict_jp 1;
+      quiet pause env.m_eval_ck
+    end
+  until step_out done
+
+let process pseq p1 p2 env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  signal l_step, l_predict clock (clock_of step_in) in
+  run p1.l env (step_jp, predict_jp) (step_in, predict_in) (l_step, l_predict)
+  ||
+  run p2.l env (step_jp, predict_jp) (l_step, l_predict) (step_out, predict_out)
+
+let process ppar p1 p2
+    env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  signal s_jp1, p_jp1, s_jp2, p_jp2 clock (clock_of step_in) in
+  signal s_out1, s_out2, p_out1, p_out2 clock (clock_of step_in) in
+  domain ck do
+    run p1.l env (s_jp1, p_jp1) (step_in, predict_in) (s_out1, p_out1)
+    ||
+    run p2.l env (s_jp2, p_jp2) (step_in, predict_in) (s_out2, p_out2)
+  done
+  ||
+  do
+    (* execution *)
+    begin
+      (await s_out1 || await s_out2);
+      emit step_out
+    end
+    ||
+    (* prediction *)
+    loop
+      run await_both_reset p_out1 p_out2 env.m_eval_ck; emit predict_out; quiet pause env.m_eval_ck
+    end
+    ||
+    (* maintient p_out1 tant que la seconde branche n'a pas terminee *)
+    await s_out1;
+    emit s_jp1 0;
+    do
+      loop
+        emit p_out1;
+        emit p_jp1 0;
+        quiet pause env.m_eval_ck
+      end
+    until s_out2 done
+    ||
+    (* idem pour p_out2 *)
+    await s_out2;
+    emit s_jp2 0;
+    do
+      loop
+        emit p_out2;
+        emit p_jp2 0;
+        quiet pause env.m_eval_ck
+      end
+    until s_out1 done
+    ||
+    (* codes de retour *)
+    begin
+      let k1 = await one s_jp1 (v) in v
+      and k2 = await one s_jp2 (v) in v in
+      let k = max k1 k2 in
+      if k > 0 then emit step_jp k
+    end
+    ||
+    loop
+      let kl1 = await p_jp1 (v) in v
+      and kl2 = await p_jp2 (v) in v in
+      let kl = max_list kl1 kl2 in
+      iter (fun c -> emit predict_jp c) kl;
+      if List.mem 0 kl then emit predict_out;
+      quiet pause env.m_eval_ck
+    end
+  until step_out done
+
+let process ppresent s p1 p2 env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  let rev = event_of_id env s in
+  signal s_in1, s_in2, p_in1, p_in2 clock (clock_of step_in) in
+  run p1.l env (step_jp, predict_jp) (s_in1, p_in1) (step_out, predict_out)
+  ||
+  run p2.l env (step_jp, predict_jp) (s_in2, p_in2) (step_out, predict_out)
+  ||
+  do
+    begin
+      (* execution *)
+      let rec process check_status =
+        match !!(rev.r_status) with
+        | Present -> emit env.m_move; emit s_in1
+        | Absent -> emit env.m_move; emit s_in2
+        | Unknown ->
+            emit p_in1; emit p_in2;
+            pause env.m_eval_ck;
+            if not (pre rev.r_may_emit) && !!(rev.r_status) = Unknown then
+              (emit env.m_move; rev.r_status <== Absent; pause env.m_eval_ck);
+            run check_status
+            ||
+            pause env.m_eval_ck;
+            pause env.m_eval_ck;
+            if not (pre env.m_move) then (print_endline "Program is not causal"; exit 2)
+      in
+      await step_in;
+      run check_status
+    end
+    ||
+    (* prediction *)
+    loop
+      await predict_in;
+      (match !!(rev.r_status) with
+      | Present -> emit p_in1
+      | Absent -> emit p_in2
+      | Unknown -> emit p_in1; emit p_in2);
+      quiet pause env.m_eval_ck
+    end
+  until step_out done
+
+let process pnothing env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await step_in;
+  emit step_out
+  ||
+  (* prediction *)
+  do
+    loop
+      await predict_in;
+      emit predict_out;
+      quiet pause env.m_eval_ck
+    end
+  until step_out done
+
+let process pprint s env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await step_in;
+  print_endline s;
+  emit step_out
+  ||
+  (* prediction *)
+  do
+    loop
+      await predict_in;
+      emit predict_out;
+      quiet pause env.m_eval_ck
+    end
+  until step_out done
+
+let process psignal s p env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  let env = run new_event env s in
+  run p.l env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out)
+
+let process ploop p env (step_jp, predict_jp) (step_in, predict_in) _ =
+  let rec process aux (s_in, p_in) =
+    signal p_out, s_out clock (clock_of s_in) in
+    run p.l env (step_jp, predict_jp) (s_in, p_in) (s_out, p_out)
+    ||
+    await immediate (s_out \/ p_out);
+    run aux (s_out, p_out)
+  in
+  run aux (step_in, predict_in)
+
+
+(* Exceptions *)
+let process ptrap k p
+    env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out) =
+  signal kill clock global_ck in
+  signal l_s_jp, l_p_jp clock (clock_of step_in) in
+  let env = new_trap env k in
+  domain ck do
+    do
+      run p.l env (l_s_jp, l_p_jp) (step_in, predict_in) (step_out, predict_out)
+    until kill done
+  done
+  ||
+  do
+    (* execution *)
+    await one l_s_jp(c) in
+    if c = 2 then (
+      emit kill;
+      emit step_out
+     ) else
+      emit step_jp (minus_trap c)
+      ||
+      (* prediction *)
+      loop
+        await l_p_jp (vl) in
+        if List.mem 2 vl then emit predict_out;
+        quiet pause env.m_eval_ck
+      end
+  until step_out done
+
+let process pexit k env (step_jp, predict_jp) (step_in, predict_in)  (_, _) =
+  await step_in;
+  emit step_jp (code_of_id env k)
+  ||
+  (* prediction *)
+  do
+    loop
+      await predict_in;
+      emit predict_jp (code_of_id env k);
+      quiet pause env.m_eval_ck
+    end
+  until step_in done
+
+(* Main program *)
+let process run_program env p =
+  signal step_in, predict_in, step_out, predict_out, step_jp, predict_jp in
+  run p.l env (step_jp, predict_jp) (step_in, predict_in) (step_out, predict_out)
+  ||
+  (* execution *)
+  emit step_in; emit predict_in
+
+let rec build_program p = match p with
+| Pnothing -> { l = pnothing }
+| Ppause -> { l = ppause }
+| Pemit s ->
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run pemit s env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Pprint s ->
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run pprint s env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Pseq (e1, e2) ->
+    let p1 = build_program e1 in
+    let p2 = build_program e2 in
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run pseq p1 p2 env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Ppar (e1, e2) ->
+    let p1 = build_program e1 in
+    let p2 = build_program e2 in
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run ppar p1 p2 env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Ppresent (s, e1, e2) ->
+    let p1 = build_program e1 in
+    let p2 = build_program e2 in
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run ppresent s p1 p2 env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Psignal (s, e) ->
+    let p = build_program e in
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run psignal s p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Ploop e1 ->
+    let p1 = build_program e1 in
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run ploop p1 env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Ptrap (k, e1) ->
+    let p1 = build_program e1 in
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run ptrap k p1 env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Pexit k ->
+    let process p env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out) =
+      run pexit k env (step_jp, predict_jp) (step_in, predict_in)  (step_out, predict_out)
+    in
+    { l = p }
+| Prec _ | Prun _ -> failwith "Unsupported"
+
+let process run_program p =
+  domain eval_ck do
+    domain predict_ck do
+      let env = run initial_state eval_ck predict_ck in
+      let p = build_program p in
+      run run_program env p
+    done
+  done

@@ -1,0 +1,15 @@
+let rec process par_map p l =
+  match l with
+  | [] -> []
+  | x :: l -> let x' = run p x
+              and l' = run par_map p l in
+              x' :: l'
+
+let process main =
+  let process wait n =
+    for i=1 to n do pause done;
+    print_endline ("Done waiting "^string_of_int n);
+    n + 2
+  in
+  let l = run par_map wait [0; 4; 2; 1] in
+  List.iter print_int l; print_newline ()

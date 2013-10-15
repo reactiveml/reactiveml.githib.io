@@ -1,0 +1,108 @@
+open Rmlarg
+open Misc
+open Agents_ck
+open Radio_utils
+
+(* sensor radio *)
+let process radio self battery =
+  run react self
+    begin proc (msg, dst) return ->
+      for i=1 to packet_send_time do
+        battery << send_power; pause self.a_network_ck
+      done;
+      send dst msg;
+      return ()
+    end
+
+(* sensor software *)
+let process software self (neighbors, radio) =
+  run react self
+    begin proc msg return ->
+      print_endline (self.a_name^": Received "^string_of_int msg);
+      if msg>1 then
+        run iter_p (proc dst -> run send_and_wait radio (msg-1, dst)) neighbors
+    end
+
+(* sensor battery *)
+let process battery self sensor =
+  memory energy clock self.a_network_ck default e_0 gather (fun f acc -> f acc) in
+  run react self
+    begin proc msg return ->
+      emit energy (fun e -> e -. (msg /. 1000.0))
+    end
+  ||
+  loop
+    if last energy < e_min then kill sensor;
+    pause self.a_network_ck
+  end
+
+
+(* complete sensor *)
+let process node_with_energy self neighbors =
+  domain us by 1000 do
+    let battery_p, battery = run mk_agent "battery" us battery in
+    let radio_p, radio = run mk_agent "radio" us radio in
+    let soft_p, soft = run mk_agent "software" us software in
+    run battery_p self || run radio_p battery || run soft_p (neighbors, radio)
+    ||
+    run react self
+      begin proc msg return ->
+        soft << msg
+      end
+  done
+
+(* node without energy *)
+let process node self neighbors =
+ signal energy default e_0 gather (fun x _ -> x) in
+ (* reception des messages *)
+ run Agents_ck.react self
+  begin proc msg _ ->
+    print_endline (self.a_name^": Received "^string_of_int msg);
+    if msg > 1 then
+      iter (fun o -> Agents_ck.send o (msg-1)) neighbors
+  end
+ ||
+ (* comportement spontane *)
+ loop
+   if last energy < e_min
+   then Agents_ck.kill self
+   else emit energy (last energy -. max_power);
+   pause
+ end
+
+
+(* main program *)
+let nb_agents = ref 3
+let init_ttl = ref 5
+let msg_freq = ref 10000
+
+let args =
+  ["-nb-agents", Set_int nb_agents, "Number of agents";
+   "-ttl", Set_int init_ttl, "TTL of messages";
+   "-msg-period", Set_int msg_freq, "Message period";
+   "-no-power", Set no_simulate_power, "Approximate power consumption"]
+
+let process mk_node i =
+  if !no_simulate_power then
+    run mk_agent ("n"^string_of_int i) global_ck node_with_energy
+  else
+    run mk_agent ("n"^string_of_int i) global_ck node
+
+let process main =
+  Rmlarg.parse args ignore "Usage: ";
+  let agents = run init_p mk_node !nb_agents in
+  let pl, agents = List.split agents in
+  let rec process run_nodes (pl,agents) neighbors = match pl, agents with
+  | [], [] -> ()
+  | p::pl, agent::agents ->
+      run p neighbors
+      ||
+      run run_nodes (pl, agents) [agent]
+  in
+  run run_nodes (pl, agents) (List.tl agents)
+  ||
+  loop
+    send (List.hd agents) !init_ttl;
+    for i=1 to !msg_freq do pause done
+  end
+

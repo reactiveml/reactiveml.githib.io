@@ -1,0 +1,7 @@
+loop
+  signal s in
+    present s then print "ERROR" else print "OK" end;
+    pause;
+    emit s
+  end
+end.

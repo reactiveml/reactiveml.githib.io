@@ -1,0 +1,21 @@
+open Rmlarg
+
+let e_0 = 10.0
+let e_min = 1.0
+
+let max_power = 0.5
+let on_power = 0.1
+let send_power = 0.4
+let packet_send_time = 3
+
+
+let nb_agents = ref 3
+let init_ttl = ref 5
+let msg_freq = ref 10000
+let no_simulate_power = ref false
+
+let args =
+  ["-nb-agents", Set_int nb_agents, "Number of agents";
+   "-ttl", Set_int init_ttl, "TTL of messages";
+   "-msg-period", Set_int msg_freq, "Message period";
+   "-no-power", Set no_simulate_power, "Approximate power consumption"]

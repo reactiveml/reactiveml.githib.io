@@ -1,0 +1,6 @@
+open Periodic_domain
+
+let process nested_domain =
+  domain ck2 do
+    run periodic_domain
+  done

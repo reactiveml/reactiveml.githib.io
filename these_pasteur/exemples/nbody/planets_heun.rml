@@ -1,0 +1,32 @@
+open Planets_utils
+
+let dt = 0.01
+
+let rec process body_heun env (x_t, v_t, w) =
+  emit env (force (x_t, w));
+  await env(f_t) in
+  (* step 1 *)
+  let f_t = f_t x_t in
+  let v_int = v_t ++. (dt **. f_t) in
+  let x_int = x_t ++. (dt **. v_t) in
+  (* step 2 *)
+  emit env (force (x_int, w));
+  await env(f_int) in
+  let f_int = f_int x_int in
+  let v_tp = v_t ++. ((dt /. 2.0) **. (f_t ++. f_int)) in
+  let x_tp = x_t ++. ((dt /. 2.0) **. (v_t ++. v_int)) in
+  (* next step*)
+  draw_body x_t x_tp w;
+  pause topck;
+  run body_heun env (x_tp, v_tp, w)
+
+let process main =
+  init_gui ();
+  domain computation_ck do
+    signal env default (fun _ -> zero_vector) gather add_force in
+    for i = 1 to 100 dopar
+      run body_heun env (random_planet ())
+    done
+    ||
+    run body_heun env (sun ())
+  done

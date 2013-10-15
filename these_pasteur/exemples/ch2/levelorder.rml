@@ -1,0 +1,10 @@
+open Preorder
+
+let rec process levelorder f t = match t with
+| Empty -> ()
+| Node (l, v, r) ->
+    f v; pause;
+    (run levelorder f l || run levelorder f r)
+
+let process main =
+  run levelorder (fun x -> print_int x; print_newline ()) t

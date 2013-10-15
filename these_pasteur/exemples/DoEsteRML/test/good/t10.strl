@@ -1,0 +1,7 @@
+signal s in
+  [ emit s; pause topck; pause topck; emit s ]
+  ||
+  [ present s then print "OK" else print "ERROR" end; pause topck;
+    present s then print "ERROR" else print "OK" end; pause topck;
+    present s then print "OK" else print "ERROR" end ]
+end.

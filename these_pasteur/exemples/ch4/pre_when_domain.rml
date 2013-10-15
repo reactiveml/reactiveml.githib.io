@@ -1,0 +1,14 @@
+open Pre_simple
+
+let process pre_when_domain =
+  signal c in
+  do
+    domain ck by 1 do
+      run pre_simple
+    done
+  when c done
+  ||
+  emit c; pause; pause; emit c
+
+let process main =
+  run pre_when_domain; print_newline ()

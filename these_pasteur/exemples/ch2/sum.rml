@@ -1,0 +1,10 @@
+open Preorder
+
+let process sum t =
+  signal s default 0 gather (+) in
+  preorder (fun v -> emit s v) t
+  ||
+  await s(x) in print_int x
+
+let process main =
+  run sum t; print_newline ()

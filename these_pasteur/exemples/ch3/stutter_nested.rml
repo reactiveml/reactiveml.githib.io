@@ -1,0 +1,9 @@
+let process stutter_nested msg =
+  domain ck1 by 3 do
+    domain ck2 by 2 do
+      loop print_string msg; pause ck2 end
+    done
+  done
+
+let process main =
+  run stutter_nested "a" || run stutter_nested "b"

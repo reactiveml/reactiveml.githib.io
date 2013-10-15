@@ -1,0 +1,5 @@
+let process main =
+  domain ck do
+    pause ck; print_endline "tick";
+    pause topck; print_endline "tock"
+  done

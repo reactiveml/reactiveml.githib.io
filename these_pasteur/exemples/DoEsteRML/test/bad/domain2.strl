@@ -1,0 +1,15 @@
+signal s1 in
+signal s2 in
+  domain ck1 do
+    present s1 then print "ERROR" else print "ERROR" end
+    ||
+    pause ck1 ; emit s2
+  done
+  ||
+  domain ck2 do
+    present s2 then print "ERROR" else print "ERROR" end
+    ||
+    pause ck2; emit s1
+  done
+end
+end.

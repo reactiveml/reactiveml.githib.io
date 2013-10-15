@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>bank3_fixed.rml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .builtin {
+        /* font-lock-builtin-face */
+        color: #7a378b;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #008b8b;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #8b2252;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="variable-name">open</span> <span class="function-name"><a href="../sensor/agents.rml.html">Agents</a></span>
+<span class="variable-name">open</span> <span class="function-name">Misc</span>
+
+<span class="type">type</span> cmd = <span class="function-name">Put</span> <span class="type">of</span> int <span class="constant">|</span> <span class="function-name">Info</span> <span class="constant">|</span> <span class="function-name">Take</span> <span class="type">of</span> int
+<span class="type">type</span> answer = <span class="function-name">Balance</span> <span class="type">of</span> int <span class="constant">|</span> <span class="function-name">Status</span> <span class="type">of</span> bool
+
+<span class="type">let</span> <span class="type">process</span> bank self () =
+  memory counter <span class="type">default</span> 0 <span class="type">gather</span> (<span class="type">fun</span> f acc <span class="constant">-&gt;</span> f acc) <span class="type">in</span>
+  <span class="type">signal</span> req <span class="type">in</span>
+  <span class="builtin">run</span> react self
+    <span class="keyword">begin</span> proc msg return <span class="constant">-&gt;</span> <span class="constant">match</span> msg <span class="constant">with</span>
+    <span class="constant">|</span> <span class="function-name">Put</span> x <span class="constant">-&gt;</span> <span class="builtin">emit</span> counter (<span class="type">fun</span> c <span class="constant">-&gt;</span> c + x)
+    <span class="constant">|</span> <span class="function-name">Info</span> <span class="constant">-&gt;</span> return (<span class="function-name">Balance</span> (<span class="builtin">last</span> counter))
+    <span class="constant">|</span> <span class="function-name">Take</span> x <span class="constant">-&gt;</span> <span class="builtin">emit</span> req (x, return)
+    <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="keyword">loop</span>
+    <span class="constant">for</span> i=1 <span class="constant">to</span> 11 <span class="constant">do</span> <span class="builtin">pause</span> <span class="constant">done</span>;
+    <span class="builtin">emit</span> counter (<span class="type">fun</span> c <span class="constant">-&gt;</span> int_of_float (1.03 *. (float_of_int c)));
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="type">let</span> try_take c (x,return) =
+    <span class="constant">if</span> x &lt;= c <span class="constant">then</span> (return (<span class="function-name">Status</span> true); c - x)
+    <span class="constant">else</span> (return (<span class="function-name">Status</span> false); c)
+  <span class="type">in</span>
+  <span class="keyword">loop</span>
+    <span class="type">await</span> req(l) <span class="type">in</span>
+    <span class="type">let</span> new_c = fold_left try_take (<span class="builtin">last</span> counter) l <span class="type">in</span>
+    <span class="type">let</span> debit = <span class="builtin">last</span> counter - new_c <span class="type">in</span>
+    <span class="builtin">emit</span> counter (<span class="type">fun</span> c <span class="constant">-&gt;</span> c - debit)
+  <span class="keyword">end</span>
+
+<span class="type">let</span> <span class="type">process</span> main =
+  <span class="type">let</span> b_p, b = <span class="builtin">run</span> mk_agent <span class="string">"bank"</span> bank <span class="type">in</span>
+  <span class="builtin">run</span> b_p ()
+  <span class="constant">||</span>
+  b &lt;&lt; (<span class="function-name">Put</span> 10)
+  <span class="constant">||</span>
+  <span class="keyword">begin</span>
+    <span class="builtin">pause</span>;
+    <span class="type">let</span> <span class="function-name">Status</span> res = <span class="builtin">run</span> send_and_wait b (<span class="function-name">Take</span> 6) <span class="type">in</span>
+    <span class="constant">if</span> res <span class="constant">then</span> print_endline <span class="string">"Retrait OK"</span> <span class="constant">else</span> print_endline <span class="string">"Retrait impossible"</span>;
+    <span class="type">let</span> <span class="function-name">Balance</span> count = <span class="builtin">run</span> send_and_wait b <span class="function-name">Info</span> <span class="type">in</span>
+    print_endline (<span class="string">"Solde: "</span>^string_of_int count);
+    kill b
+  <span class="keyword">end</span>
+  <span class="constant">||</span>
+  <span class="keyword">begin</span>
+    <span class="builtin">pause</span>;
+    <span class="type">let</span> <span class="function-name">Status</span> res = <span class="builtin">run</span> send_and_wait b (<span class="function-name">Take</span> 6) <span class="type">in</span>
+    <span class="constant">if</span> res <span class="constant">then</span> print_endline <span class="string">"Retrait OK"</span> <span class="constant">else</span> print_endline <span class="string">"Retrait impossible"</span>
+  <span class="keyword">end</span>
+</pre>
+  </body>
+</html>

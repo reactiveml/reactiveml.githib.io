@@ -1,0 +1,10 @@
+let process slow_signal =
+  signal s default 0 gather (+) in
+  domain ck by 3 do
+    await s(v) in print_int v
+  done
+  ||
+  emit s 4
+
+let process main =
+  run slow_signal; print_newline ()

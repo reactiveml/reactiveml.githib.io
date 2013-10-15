@@ -1,0 +1,9 @@
+let process auto_waiting =
+  domain ck do
+    signal s in
+    await immediate s; print_endline "Received"
+    ||
+    pause global_ck; emit s
+  done
+
+let main = auto_waiting

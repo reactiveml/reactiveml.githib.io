@@ -1,0 +1,42 @@
+open Agents
+open Radio_utils
+open Misc
+
+let process node self neighbors =
+ signal energy default e_0 gather (fun x _ -> x) in
+ (* reception des messages *)
+ run Agents.react self
+  begin proc msg _ ->
+    print_endline (self.a_name^": Received "^string_of_int msg);
+    if msg > 1 then
+      iter (fun o -> Agents.send o (msg-1)) neighbors
+  end
+ ||
+ (* comportement spontane *)
+ loop
+   if last energy < e_min
+   then Agents.kill self
+   else emit energy (last energy -. max_power);
+   pause
+ end
+
+let process mk_node i =
+  run mk_agent ("n"^string_of_int i) node
+
+let process main =
+  Rmlarg.parse args ignore "Usage: ";
+  let agents = run init_p mk_node !nb_agents in
+  let pl, agents = List.split agents in
+  let rec process run_nodes (pl,agents) neighbors = match pl, agents with
+  | [], [] -> ()
+  | p::pl, agent::agents ->
+      run p neighbors
+      ||
+      run run_nodes (pl, agents) [agent]
+  in
+  run run_nodes (pl, agents) (List.tl agents)
+  ||
+  loop
+    send (List.hd agents) !init_ttl;
+    for i=1 to !msg_freq do pause done
+  end

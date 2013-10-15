@@ -1,0 +1,5 @@
+let process sustain_v s =
+  loop
+    emit s (last s);
+    pause
+  end

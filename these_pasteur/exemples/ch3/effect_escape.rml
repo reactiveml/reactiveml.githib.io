@@ -1,0 +1,5 @@
+let process effect_escape =
+  domain ck by 1 do
+    signal fast in
+    let f () = emit fast in f
+  done

@@ -1,0 +1,9 @@
+let process memory_reset =
+  domain ck do
+    signal s default 0 gather (+) reset global_ck in
+    emit s 2;
+    pause ck; print_int (last s);
+    pause global_ck; print_int (last s)
+  done
+
+let process main = run memory_reset; print_newline ()

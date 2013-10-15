@@ -1,0 +1,42 @@
+type backend =
+  | Combinators
+  | CombinatorsNoDomain
+  | CombinatorsReturn
+let used_backend = ref CombinatorsReturn
+let set_backend b () =
+  used_backend := b
+
+let find_file filename =
+  try
+    open_in filename
+  with
+    | _ -> print_endline ("No such file "^filename); exit 2
+
+let read_file filename =
+  let ic = find_file filename in
+  let lexbuf = Lexing.from_channel ic in
+  lexbuf.Lexing.lex_curr_p <- { lexbuf.Lexing.lex_curr_p with Lexing.pos_fname = filename };
+  try
+    Parser.main Lexer.token lexbuf
+  with
+    | e -> print_endline "Syntax error"; exit 2
+
+let file = ref ""
+let compile s = file := s
+
+let args =
+  [
+   "-d", Rmlarg.Set Ast.debug, "Debug mode";
+   "-k", Rmlarg.Unit (set_backend Combinators), "Use the combinators backend";
+   "-kn", Rmlarg.Unit (set_backend CombinatorsNoDomain),
+               "Use the combinators backend without reactive domains";
+   "-kc", Rmlarg.Unit (set_backend CombinatorsReturn), "Use the combnators backend with exceptions (default)"
+  ]
+
+let process main =
+  Rmlarg.parse args compile "";
+  let p = read_file !file in
+  match !used_backend with
+  | Combinators -> run Combinators.run_program p
+  | CombinatorsNoDomain -> run Combinators_nodo.run_program p
+  | CombinatorsReturn -> run Combinators_code.run_program p

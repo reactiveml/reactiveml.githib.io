@@ -1,0 +1,6 @@
+signal s in
+  loop
+    emit s; pause topck;
+    present s then print "OK" else print "ERROR" end
+  end
+end.

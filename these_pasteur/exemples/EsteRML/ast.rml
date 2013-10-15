@@ -1,0 +1,73 @@
+let debug = ref false
+let print_debug s =
+  if !debug then print_endline s
+
+(* Signals *)
+type ident = string
+let ident_equal = (=)
+
+(* Parsed expressions *)
+type pexp =
+  | Pnothing
+  | Ppause
+  | Pemit of ident
+  | Pprint of string
+  | Pseq of pexp * pexp
+  | Ppar of pexp * pexp
+  | Ppresent of ident * pexp * pexp
+  | Ploop of pexp
+  | Psignal of ident * pexp
+  | Ptrap of ident * pexp
+  | Pexit of ident
+  | Prec of ident * pexp
+  | Prun of ident
+
+(* Prediction counters *)
+type pred = (ident * int) list
+
+let pred_zero = ([]:pred)
+let pred_get c s =
+  try
+    List.assoc s c
+  with
+  | Not_found -> 0
+let pred_with c s v =
+  (s, v)::c
+let pred_sum c1 c2 =
+  let add_one (used, c) (s, v) =
+    if not (List.mem s used) then
+      s::used, pred_with c s (pred_get c s + v)
+    else
+      s::used, c
+  in
+  snd (List.fold_left add_one ([], c1) c2)
+let pred_sub c1 c2 =
+  let add_one c (s, v) =
+    pred_with c s (pred_get c s - v)
+  in
+  List.fold_left add_one c1 c2
+
+let pred_iter f c =
+  let rec aux used c = match c with
+  | [] -> ()
+  | (s, v)::c ->
+      if not (List.mem s used) then f (s, v);
+      aux (s::used) c
+  in
+  aux [] c
+
+let pred_print c =
+  pred_iter (fun (s, v) ->  print_string (s^":"^string_of_int v^" ")) c;
+  print_newline ()
+
+(* Expressions *)
+type exp =
+  | Enothing
+  | Epause of pred
+  | Eemit of ident
+  | Eprint of string
+  | Eseq of exp * exp
+  | Epar of pred * exp * exp
+  | Epresent of ident * exp * pred * exp * pred
+  | Eloop of exp * pred
+  | Esignal of ident * exp * int

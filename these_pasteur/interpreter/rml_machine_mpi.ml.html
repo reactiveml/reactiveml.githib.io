@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>rml_machine_mpi.ml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #008b8b;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #8b2252;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="tuareg-font-lock-governing">open</span> <span class="type">Rml_machine</span>
+<span class="tuareg-font-lock-governing">open</span> <span class="type">Runtime_options</span>
+<span class="tuareg-font-lock-governing">open</span> <span class="type">Runtime</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="tuareg-font-lock-governing">type</span> <span class="type">INTERPRETER </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">sig</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">'</span><span class="type">a process</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event</span>
+
+    <span class="tuareg-font-lock-governing">module</span> <span class="type">R </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">(</span><span class="tuareg-font-lock-governing">sig</span>
+      <span class="tuareg-font-lock-governing">type</span> <span class="type">clock_domain</span>
+      <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event</span>
+
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">init </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">get_top_clock_domain </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock_domain</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">finalize_top_clock_domain </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">react </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_current_instant </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">is_master </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">start_slave </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a option</span>
+    <span class="tuareg-font-lock-governing">end</span><span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">rml_make</span><span class="tuareg-font-lock-operator">:</span> <span class="type">R.clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a option </span><span class="tuareg-font-lock-operator">ref</span><span class="type"> </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a process </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">rml_make_n</span><span class="tuareg-font-lock-operator">:</span> <span class="type">R.clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a option </span><span class="tuareg-font-lock-operator">ref</span><span class="type"> </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a process list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step list</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="type">Machine </span><span class="tuareg-font-lock-operator">(</span><span class="variable-name">I</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">INTERPRETER</span><span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">=</span>
+<span class="tuareg-font-lock-governing">struct</span>
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">T </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Rmltest_mpi</span>.Test<span class="tuareg-font-lock-operator">(</span><span class="type">Mpi_communication</span>.Test<span class="tuareg-font-lock-operator">)</span>
+
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">MyInterpreter </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-governing">struct</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">'</span><span class="type">a process </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">'</span>a <span class="type">I</span>.process
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">finalize_master</span><span class="variable-name"> start_t </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cd </span><span class="tuareg-font-lock-operator">=</span> <span class="type">I</span>.<span class="type">R</span>.get_top_clock_domain <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+      <span class="type">I</span>.<span class="type">R</span>.finalize_top_clock_domain cd<span class="tuareg-font-lock-operator">;</span>
+      <span class="keyword">if</span> <span class="tuareg-font-lock-operator">!</span><span class="type">Runtime_options</span>.bench_mode <span class="keyword">then</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">end_t </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Unix</span>.gettimeofday <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">Format</span>.printf <span class="string">"%f@."</span> <span class="tuareg-font-lock-operator">(</span>end_t <span class="tuareg-font-lock-operator">-.</span> start_t<span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">relaunch_done </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="constant">false</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">finalize_slave</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> <span class="tuareg-font-lock-operator">not</span> <span class="tuareg-font-lock-operator">!</span>relaunch_done <span class="keyword">then</span> <span class="tuareg-font-lock-operator">(</span>
+        relaunch_done <span class="tuareg-font-lock-operator">:=</span> <span class="constant">true</span><span class="tuareg-font-lock-operator">;</span>
+        ignore <span class="tuareg-font-lock-operator">(</span><span class="type">I</span>.<span class="type">R</span>.start_slave <span class="tuareg-font-lock-operator">())</span>
+      <span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">init</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">I</span>.<span class="type">R</span>.init <span class="tuareg-font-lock-operator">();</span>
+      <span class="keyword">if</span> <span class="type">I</span>.<span class="type">R</span>.is_master <span class="tuareg-font-lock-operator">()</span> <span class="keyword">then</span> <span class="tuareg-font-lock-operator">(</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">start_t </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Unix</span>.gettimeofday <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        at_exit <span class="tuareg-font-lock-operator">(</span>finalize_master start_t<span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-operator">)</span> <span class="keyword">else</span>
+        at_exit finalize_slave
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_make</span><span class="variable-name"> p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> <span class="type">I</span>.<span class="type">R</span>.is_master <span class="tuareg-font-lock-operator">()</span> <span class="keyword">then</span> <span class="tuareg-font-lock-operator">(</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">result </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> None <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cd </span><span class="tuareg-font-lock-operator">=</span> <span class="type">I</span>.<span class="type">R</span>.get_top_clock_domain <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">step </span><span class="tuareg-font-lock-operator">=</span> <span class="type">I</span>.rml_make cd result p <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">I</span>.<span class="type">R</span>.on_current_instant cd step<span class="tuareg-font-lock-operator">;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">react</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="comment">(*(Gc.print_stat stdout; print_newline(); print_newline ());*)</span>
+          <span class="type">I</span>.<span class="type">R</span>.react cd<span class="tuareg-font-lock-operator">;</span>
+          <span class="tuareg-font-lock-operator">!</span>result
+        <span class="tuareg-font-lock-governing">in</span> react
+      <span class="tuareg-font-lock-operator">)</span> <span class="keyword">else</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">react</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+          IFDEF RML_DEBUG THEN print_debug <span class="string">"Launching slave@."</span> ELSE <span class="tuareg-font-lock-operator">()</span> END<span class="tuareg-font-lock-operator">;</span>
+          <span class="type">I</span>.<span class="type">R</span>.start_slave <span class="tuareg-font-lock-operator">()</span>
+        <span class="tuareg-font-lock-governing">in</span> react
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_make_test</span><span class="variable-name"> test_list </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> <span class="type">I</span>.<span class="type">R</span>.is_master <span class="tuareg-font-lock-operator">()</span> <span class="keyword">then</span> <span class="tuareg-font-lock-operator">(</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">result </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> None <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cd </span><span class="tuareg-font-lock-operator">=</span> <span class="type">I</span>.<span class="type">R</span>.get_top_clock_domain <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">mk_test</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">(</span><span class="variable-name">p</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> name</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> expected</span><span class="tuareg-font-lock-operator">)</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">act </span><span class="tuareg-font-lock-operator">=</span> <span class="type">T</span>.new_test name expected <span class="tuareg-font-lock-governing">in</span>
+          p act
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">pl </span><span class="tuareg-font-lock-operator">=</span> <span class="type">List</span>.map mk_test test_list <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">steps </span><span class="tuareg-font-lock-operator">=</span> <span class="type">I</span>.rml_make_n cd result pl <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">List</span>.iter <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">step </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">I</span>.<span class="type">R</span>.on_current_instant cd step<span class="tuareg-font-lock-operator">)</span> steps<span class="tuareg-font-lock-operator">;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">react</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+          IFDEF RML_DEBUG THEN
+            print_debug <span class="string">"@.********************* Doing one step@."</span>
+          ELSE <span class="tuareg-font-lock-operator">()</span> END<span class="tuareg-font-lock-operator">;</span>
+          <span class="type">I</span>.<span class="type">R</span>.react cd<span class="tuareg-font-lock-operator">;</span>
+          <span class="type">T</span>.next_step <span class="tuareg-font-lock-operator">();</span>
+          <span class="tuareg-font-lock-operator">!</span>result
+        <span class="tuareg-font-lock-governing">in</span>
+        at_exit <span class="type">T</span>.end_test<span class="tuareg-font-lock-operator">;</span>
+        react
+      <span class="tuareg-font-lock-operator">)</span> <span class="keyword">else</span>
+        <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">I</span>.<span class="type">R</span>.start_slave <span class="tuareg-font-lock-operator">())</span>
+
+  <span class="tuareg-font-lock-governing">end</span>
+
+  <span class="tuareg-font-lock-governing">include</span> <span class="type">M</span><span class="tuareg-font-lock-operator">(</span><span class="type">MyInterpreter</span><span class="tuareg-font-lock-operator">)</span>
+<span class="tuareg-font-lock-governing">end</span>
+
+<span class="comment">(*
+module Lco_ctrl_tree_mpi_interpreter = struct
+  module Interpreter = Lco_ctrl_tree_n.Rml_interpreter(Distributed_runtime_old.MpiRuntime)
+  module Machine = Machine(Interpreter)
+end
+
+module Lco_ctrl_tree_mpi_buffer_interpreter = struct
+  module Interpreter = Lco_ctrl_tree_n.Rml_interpreter(Distributed_runtime_old.MpiBufferedRuntime)
+  module Machine = Machine(Interpreter)
+end
+
+module Lco_ctrl_tree_mpi_c_interpreter = struct
+  module Interpreter = Lco_ctrl_tree_n.Rml_interpreter(Distributed_runtime_old.MpiCRuntime)
+  module Machine = Machine(Interpreter)
+end
+*)</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="type">Lco_ctrl_tree_mpi_new_interpreter </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-governing">struct</span>
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">Interpreter </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Lco_ctrl_tree_n</span>.Rml_interpreter<span class="tuareg-font-lock-operator">(</span><span class="type">Distributed_runtime</span>.MpiCRuntime<span class="tuareg-font-lock-operator">)</span>
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">Machine </span><span class="tuareg-font-lock-operator">=</span> Machine<span class="tuareg-font-lock-operator">(</span>Interpreter<span class="tuareg-font-lock-operator">)</span>
+<span class="tuareg-font-lock-governing">end</span>
+</pre>
+  </body>
+</html>

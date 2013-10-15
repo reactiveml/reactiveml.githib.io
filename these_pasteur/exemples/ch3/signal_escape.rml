@@ -1,0 +1,6 @@
+let process signal_escape =
+  signal slow in
+  domain ck by 1 do
+    signal fast default 0 gather (+) in
+    emit slow fast
+  done

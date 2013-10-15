@@ -1,0 +1,56 @@
+let (<<-) s f = emit s f
+let (<==) s v = emit s (fun _ -> v)
+let (!!) s = last s
+
+let rec process par_iter p l = match l with
+| [] -> ()
+| x::l -> run p x || run par_iter p l
+
+let rec iter f l = match l with
+| [] -> ()
+| x::l -> f x; iter f l
+
+(* Runs p2 until p1 terminates *)
+let process do_until_proc p1 p2 =
+  signal kill in
+  run p1; emit kill
+  ||
+  do run p2 until kill done
+
+let process hold s =
+  loop emit s; quiet pause (clock_of s) end
+
+let process do_one_step ck p =
+  signal kill clock ck in
+  do run p quiet until kill done
+  ||
+  emit kill
+
+let process emit_hold_one_step ck s =
+  run do_one_step ck (hold s)
+
+(* Termine quand a et b ont ete emis pendant le meme instant de l'horloge rck:
+   comme await immediate (a /\ b) *)
+let process await_both_reset a b rck =
+  signal kill clock (clock_of a) in
+  do
+    loop
+      run do_one_step rck (process (
+        (await a || await b);
+        emit kill; loop quiet pause (clock_of a) end
+      ))
+    end
+  until kill done
+
+let process await_now_or_later m v =
+  if !!m = v then ()
+  else await m(v') when v' = v in ()
+
+type 'a mevent{|'ck|} = ('a -> 'a, 'a) event{|'ck|}
+
+let index v l =
+  let rec aux i l = match l with
+  | [] -> raise Not_found
+  | x::l -> if x=v then i else aux (i+1) l
+  in
+  aux 0 l

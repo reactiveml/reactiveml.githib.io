@@ -1,0 +1,20 @@
+let debug = ref false
+let print_debug s =
+  if !debug then print_endline s
+
+(* Signals *)
+type ident = string
+let ident_equal = (=)
+
+(* Parsed expressions *)
+type pexp =
+  | Pnothing
+  | Ppause of ident
+  | Pemit of ident
+  | Pprint of string
+  | Pseq of pexp * pexp
+  | Ppar of pexp * pexp
+  | Ppresent of ident * pexp * pexp
+  | Ploop of pexp
+  | Psignal of ident * pexp
+  | Pdomain of ident * int option * pexp

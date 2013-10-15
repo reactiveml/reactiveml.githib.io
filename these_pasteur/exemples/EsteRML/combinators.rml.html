@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>combinators.rml</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.keyword   { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.keyword a { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.builtin   { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.builtin a { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.string   { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.string a { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.constant   { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.constant a { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment-delimiter   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment-delimiter a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.function-name   { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.function-name a { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.variable-name   { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.variable-name a { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="variable-name">open</span> <span class="function-name"><a href="ast.rml.html">Ast</a></span>
+<span class="variable-name">open</span> <span class="function-name"><a href="misc.rml.html">Misc</a></span>
+
+<span class="comment-delimiter">(* </span><span class="comment">Signal environment </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> status = <span class="function-name">Present</span> <span class="constant">|</span> <span class="function-name">Absent</span> <span class="constant">|</span> <span class="function-name">Unknown</span>
+
+<span class="type">type</span> revent{<span class="constant">|</span>'ck<span class="constant">|</span>} = {
+    r_name : string;
+    r_may_emit : (unit, unit list) event{<span class="constant">|</span>'ck<span class="constant">|</span>};
+    r_status : status mevent{<span class="constant">|</span>'ck<span class="constant">|</span>};
+  }
+
+<span class="type">type</span> state{<span class="constant">|</span>'ck<span class="constant">|</span>} =
+    { m_eval_ck : [ 'ck ];
+      m_move : (unit, unit list) event{<span class="constant">|</span>'ck<span class="constant">|</span>};
+      m_signals : (ident * revent{<span class="constant">|</span>'ck<span class="constant">|</span>}) list;
+      m_processes : (ident * rprocess{<span class="constant">|</span>'ck<span class="constant">|</span>}) list }
+
+<span class="type">and</span> rprocess{<span class="constant">|</span>'ck<span class="constant">|</span>} =
+  <span class="constant">|</span> <span class="function-name">Proc</span> <span class="type">of</span> state{<span class="constant">|</span>'ck<span class="constant">|</span>} <span class="constant">-&gt;</span> ((unit, unit list) event{<span class="constant">|</span>'ck<span class="constant">|</span>} * (unit, unit list) event{<span class="constant">|</span>'ck<span class="constant">|</span>})
+      <span class="constant">-&gt;</span> ((unit, unit list) event{<span class="constant">|</span>'ck<span class="constant">|</span>} * (unit, unit list) event{<span class="constant">|</span>'ck<span class="constant">|</span>}) <span class="constant">-&gt;</span> unit <span class="type">process</span>
+
+<span class="type">let</span> <span class="type">process</span> initial_state eval_ck =
+  <span class="type">signal</span> m_move <span class="type">in</span>
+  { m_eval_ck = eval_ck;
+    m_move = m_move; m_signals = []; m_processes = [] }
+
+<span class="type">let</span> <span class="type">process</span> new_event m id =
+  memory r_status <span class="type">default</span> <span class="function-name">Unknown</span> <span class="type">gather</span> (<span class="type">fun</span> f acc <span class="constant">-&gt;</span> f acc) reset global_ck <span class="type">in</span>
+  <span class="type">signal</span> r_may_emit <span class="type">in</span>
+  <span class="type">let</span> rev = { r_name = id; r_status = r_status; r_may_emit = r_may_emit } <span class="type">in</span>
+  { m <span class="constant">with</span> m_signals = (id, rev)::m.m_signals }
+
+<span class="type">let</span> new_process m id p =
+  { m <span class="constant">with</span> m_processes = (id, <span class="function-name">Proc</span> p)::m.m_processes }
+
+<span class="type">let</span> event_of_id m id =
+  <span class="constant">try</span>
+    <span class="function-name">List</span>.assoc id m.m_signals
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span> print_endline (<span class="string">&quot;Unknown signal &quot;</span>^id); <span class="variable-name">assert</span> false
+
+<span class="type">let</span> process_of_id m id =
+  <span class="constant">try</span>
+    <span class="type">let</span> <span class="function-name">Proc</span> p = <span class="function-name">List</span>.assoc id m.m_processes <span class="type">in</span> p
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span> print_endline (<span class="string">&quot;Unknown process &quot;</span>^id); <span class="variable-name">assert</span> false
+
+<span class="comment-delimiter">(* </span><span class="comment">combinators </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> pemit s env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> rev = event_of_id env s <span class="type">in</span>
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  rev.r_status &lt;== <span class="function-name">Present</span>;
+  <span class="builtin">emit</span> step_out;
+  <span class="builtin">pause</span>;
+  <span class="builtin">emit</span> env.m_move
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="constant">do</span>
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> predict_in;
+      <span class="builtin">emit</span> rev.r_may_emit;
+      <span class="builtin">emit</span> predict_out;
+      quiet <span class="builtin">pause</span>
+    <span class="keyword">end</span>
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> ppause env (step_in, predict_in) (step_out, predict_out) =
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  <span class="builtin">pause</span> topck;
+  <span class="builtin">emit</span> step_out;
+  <span class="builtin">emit</span> predict_out
+
+<span class="type">let</span> <span class="type">process</span> pseq p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">signal</span> l_step, l_predict <span class="type">in</span>
+  <span class="builtin">run</span> p1 env (step_in, predict_in) (l_step, l_predict)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> p2 env (l_step, l_predict) (step_out, predict_out)
+
+<span class="type">let</span> <span class="type">process</span> ppar p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">signal</span> s_out1, s_out2, p_out1, p_out2 <span class="type">in</span>
+  <span class="builtin">run</span> p1 env (step_in, predict_in) (s_out1, p_out1)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> p2 env (step_in, predict_in) (s_out2, p_out2)
+  <span class="constant">||</span>
+  <span class="constant">do</span>
+    <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+    <span class="keyword">begin</span>
+      (<span class="type">await</span> <span class="type">immediate</span> s_out1 <span class="constant">||</span> <span class="type">await</span> <span class="type">immediate</span> s_out2);
+      <span class="builtin">emit</span> step_out
+    <span class="keyword">end</span>
+    <span class="constant">||</span>
+    <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> (p_out1 /\ p_out2); <span class="builtin">emit</span> predict_out; quiet <span class="builtin">pause</span>
+    <span class="keyword">end</span>
+    <span class="constant">||</span>
+    <span class="comment-delimiter">(* </span><span class="comment">maintient p_out1 tant que la seconde branche n'a pas terminee </span><span class="comment-delimiter">*)</span>
+    <span class="type">await</span> <span class="type">immediate</span> s_out1; <span class="builtin">run</span> hold p_out1
+    <span class="constant">||</span>
+    <span class="comment-delimiter">(* </span><span class="comment">idem pour p_out2 </span><span class="comment-delimiter">*)</span>
+    <span class="type">await</span> <span class="type">immediate</span> s_out2; <span class="builtin">run</span> hold p_out2
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> ppresent s p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> rev = event_of_id env s <span class="type">in</span>
+  <span class="type">signal</span> s_in1, s_in2, p_in1, p_in2 <span class="type">in</span>
+  <span class="builtin">run</span> p1 env (s_in1, p_in1) (step_out, predict_out)
+  <span class="constant">||</span>
+  <span class="builtin">run</span> p2 env (s_in2, p_in2) (step_out, predict_out)
+  <span class="constant">||</span>
+  <span class="constant">do</span>
+    <span class="keyword">begin</span>
+      <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+      <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> check_status =
+        <span class="constant">match</span> !!(rev.r_status) <span class="constant">with</span>
+        <span class="constant">|</span> <span class="function-name">Present</span> <span class="constant">-&gt;</span> <span class="builtin">emit</span> env.m_move; <span class="builtin">emit</span> s_in1
+        <span class="constant">|</span> <span class="function-name">Absent</span> <span class="constant">-&gt;</span> <span class="builtin">emit</span> env.m_move; <span class="builtin">emit</span> s_in2
+        <span class="constant">|</span> <span class="function-name">Unknown</span> <span class="constant">-&gt;</span>
+            <span class="builtin">emit</span> p_in1; <span class="builtin">emit</span> p_in2;
+            <span class="constant">present</span> rev.r_may_emit
+            <span class="constant">then</span> <span class="builtin">pause</span>
+            <span class="constant">else</span> (<span class="constant">if</span> !!(rev.r_status) = <span class="function-name">Unknown</span> <span class="constant">then</span> (<span class="builtin">emit</span> env.m_move; rev.r_status &lt;== <span class="function-name">Absent</span>));
+            <span class="builtin">run</span> check_status
+            <span class="constant">||</span>
+            <span class="builtin">pause</span>;
+            <span class="constant">present</span> env.m_move <span class="constant">else</span> (print_endline <span class="string">&quot;Program is not causal&quot;</span>; exit 2)
+      <span class="type">in</span>
+      <span class="type">await</span> <span class="type">immediate</span> step_in;
+      <span class="builtin">run</span> check_status
+    <span class="keyword">end</span>
+    <span class="constant">||</span>
+    <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> predict_in;
+      (<span class="constant">match</span> !!(rev.r_status) <span class="constant">with</span>
+      <span class="constant">|</span> <span class="function-name">Present</span> <span class="constant">-&gt;</span> <span class="builtin">emit</span> p_in1
+      <span class="constant">|</span> <span class="function-name">Absent</span> <span class="constant">-&gt;</span> <span class="builtin">emit</span> p_in2
+      <span class="constant">|</span> <span class="function-name">Unknown</span> <span class="constant">-&gt;</span> <span class="builtin">emit</span> p_in1; <span class="builtin">emit</span> p_in2);
+      quiet <span class="builtin">pause</span>
+    <span class="keyword">end</span>
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> pnothing env (step_in, predict_in) (step_out, predict_out) =
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  <span class="builtin">emit</span> step_out
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="constant">do</span>
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> predict_in;
+      <span class="builtin">emit</span> predict_out;
+      quiet <span class="builtin">pause</span>
+    <span class="keyword">end</span>
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> pprint s env (step_in, predict_in) (step_out, predict_out) =
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="type">await</span> <span class="type">immediate</span> step_in;
+  print_endline s;
+  <span class="builtin">emit</span> step_out
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">prediction </span><span class="comment-delimiter">*)</span>
+  <span class="constant">do</span>
+    <span class="keyword">loop</span>
+      <span class="type">await</span> <span class="type">immediate</span> predict_in;
+      <span class="builtin">emit</span> predict_out;
+      quiet <span class="builtin">pause</span>
+    <span class="keyword">end</span>
+  <span class="constant">until</span> step_out <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> psignal s p env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> env = <span class="builtin">run</span> new_event env s <span class="type">in</span>
+  <span class="builtin">run</span> p env (step_in, predict_in) (step_out, predict_out)
+
+<span class="type">let</span> <span class="type">process</span> ploop p env (step_in, predict_in) _ =
+  <span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> aux (s_in, p_in) =
+    <span class="type">signal</span> p_out, s_out <span class="type">in</span>
+    <span class="builtin">run</span> p env (s_in, p_in) (s_out, p_out)
+    <span class="constant">||</span>
+    (<span class="builtin">pause</span> <span class="constant">||</span> <span class="type">await</span> <span class="type">immediate</span> (s_out \/ p_out));
+    <span class="builtin">run</span> aux (s_out, p_out)
+  <span class="type">in</span>
+  <span class="builtin">run</span> aux (step_in, predict_in)
+
+
+<span class="type">let</span> <span class="type">process</span> prec f p env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> <span class="type">process</span> self env (step_in, predict_in) (step_out, predict_out) =
+    (<span class="builtin">pause</span> <span class="constant">||</span> <span class="type">await</span> <span class="type">immediate</span> (step_in \/ predict_in));
+    <span class="builtin">run</span> p env (step_in, predict_in) (step_out, predict_out)
+  <span class="type">in</span>
+  <span class="type">let</span> env = new_process env f self <span class="type">in</span>
+  <span class="builtin">run</span> p env (step_in, predict_in) (step_out, predict_out)
+
+
+<span class="type">let</span> <span class="type">process</span> prun f env (step_in, predict_in) (step_out, predict_out) =
+  <span class="type">let</span> p = process_of_id env f <span class="type">in</span>
+  <span class="builtin">run</span> p env (step_in, predict_in) (step_out, predict_out)
+
+<span class="comment-delimiter">(* </span><span class="comment">Main program </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> run_program env p =
+  <span class="type">signal</span> step_in, predict_in, step_out, predict_out <span class="type">in</span>
+  <span class="builtin">run</span> p env (step_in, predict_in) (step_out, predict_out)
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">execution </span><span class="comment-delimiter">*)</span>
+  <span class="builtin">emit</span> step_in; <span class="builtin">emit</span> predict_in
+
+<span class="type">let</span> <span class="type">rec</span> build_program p = <span class="constant">match</span> p <span class="constant">with</span>
+<span class="constant">|</span> <span class="function-name">Pnothing</span> <span class="constant">-&gt;</span> pnothing
+<span class="constant">|</span> <span class="function-name">Ppause</span> <span class="constant">-&gt;</span> ppause
+<span class="constant">|</span> <span class="function-name">Pemit</span> s <span class="constant">-&gt;</span> pemit s
+<span class="constant">|</span> <span class="function-name">Pprint</span> s <span class="constant">-&gt;</span> pprint s
+<span class="constant">|</span> <span class="function-name">Pseq</span> (e1, e2) <span class="constant">-&gt;</span> pseq (build_program e1) (build_program e2)
+<span class="constant">|</span> <span class="function-name">Ppar</span> (e1, e2) <span class="constant">-&gt;</span> ppar (build_program e1) (build_program e2)
+<span class="constant">|</span> <span class="function-name">Ppresent</span> (s, e1, e2) <span class="constant">-&gt;</span> ppresent s (build_program e1) (build_program e2)
+<span class="constant">|</span> <span class="function-name">Psignal</span> (s, e) <span class="constant">-&gt;</span> psignal s (build_program e)
+<span class="constant">|</span> <span class="function-name">Ploop</span> e1 <span class="constant">-&gt;</span> ploop (build_program e1)
+<span class="constant">|</span> <span class="function-name">Prec</span> (f, p) <span class="constant">-&gt;</span> prec f (build_program p)
+<span class="constant">|</span> <span class="function-name">Prun</span> f <span class="constant">-&gt;</span> prun f
+<span class="constant">|</span> <span class="function-name">Ptrap</span> _ <span class="constant">|</span> <span class="function-name">Pexit</span> _ <span class="constant">-&gt;</span> failwith <span class="string">&quot;Unsupported&quot;</span>
+
+<span class="type">let</span> <span class="type">process</span> run_program p =
+  domain eval_ck <span class="constant">do</span>
+    <span class="type">let</span> env = <span class="builtin">run</span> initial_state eval_ck <span class="type">in</span>
+    <span class="type">let</span> p = build_program p <span class="type">in</span>
+    <span class="builtin">run</span> run_program env p
+  <span class="constant">done</span>
+</pre>
+
+ </body>
+</html>

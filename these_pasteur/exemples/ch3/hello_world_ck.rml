@@ -1,0 +1,7 @@
+let process hello_world_ck =
+  domain ck do
+    print_string "Hello"; pause ck;
+    print_endline " world"
+  done
+
+let main = hello_world_ck

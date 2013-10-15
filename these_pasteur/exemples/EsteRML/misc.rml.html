@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>misc.rml</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.function-name   { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.function-name a { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.keyword   { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.keyword a { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment-delimiter   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment-delimiter a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.constant   { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.constant a { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.builtin   { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.builtin a { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="type">let</span> (&lt;&lt;-) s f = <span class="builtin">emit</span> s f
+<span class="type">let</span> (&lt;==) s v = <span class="builtin">emit</span> s (<span class="type">fun</span> _ <span class="constant">-&gt;</span> v)
+<span class="type">let</span> (!!) s = <span class="builtin">last</span> s
+
+<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> par_iter p l = <span class="constant">match</span> l <span class="constant">with</span>
+<span class="constant">|</span> [] <span class="constant">-&gt;</span> ()
+<span class="constant">|</span> x::l <span class="constant">-&gt;</span> <span class="builtin">run</span> p x <span class="constant">||</span> <span class="builtin">run</span> par_iter p l
+
+<span class="type">let</span> <span class="type">rec</span> iter f l = <span class="constant">match</span> l <span class="constant">with</span>
+<span class="constant">|</span> [] <span class="constant">-&gt;</span> ()
+<span class="constant">|</span> x::l <span class="constant">-&gt;</span> f x; iter f l
+
+<span class="comment-delimiter">(* </span><span class="comment">Runs p2 until p1 terminates </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> do_until_proc p1 p2 =
+  <span class="type">signal</span> kill <span class="type">in</span>
+  <span class="builtin">run</span> p1; <span class="builtin">emit</span> kill
+  <span class="constant">||</span>
+  <span class="constant">do</span> <span class="builtin">run</span> p2 <span class="constant">until</span> kill <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> hold s =
+  <span class="keyword">loop</span> <span class="builtin">emit</span> s; quiet <span class="builtin">pause</span> (clock_of s) <span class="keyword">end</span>
+
+<span class="type">let</span> <span class="type">process</span> do_one_step ck p =
+  <span class="type">signal</span> kill clock ck <span class="type">in</span>
+  <span class="constant">do</span> <span class="builtin">run</span> p quiet <span class="constant">until</span> kill <span class="constant">done</span>
+  <span class="constant">||</span>
+  <span class="builtin">emit</span> kill
+
+<span class="type">let</span> <span class="type">process</span> emit_hold_one_step ck s =
+  <span class="builtin">run</span> do_one_step ck (hold s)
+
+<span class="comment-delimiter">(* </span><span class="comment">Termine quand a et b ont ete emis pendant le meme instant de l'horloge rck:
+   comme await immediate (a /\ b) </span><span class="comment-delimiter">*)</span>
+<span class="type">let</span> <span class="type">process</span> await_both_reset a b rck =
+  <span class="type">signal</span> kill clock (clock_of a) <span class="type">in</span>
+  <span class="constant">do</span>
+    <span class="keyword">loop</span>
+      <span class="builtin">run</span> do_one_step rck (<span class="type">process</span> (
+        (<span class="type">await</span> a <span class="constant">||</span> <span class="type">await</span> b);
+        <span class="builtin">emit</span> kill; <span class="keyword">loop</span> quiet <span class="builtin">pause</span> (clock_of a) <span class="keyword">end</span>
+      ))
+    <span class="keyword">end</span>
+  <span class="constant">until</span> kill <span class="constant">done</span>
+
+<span class="type">let</span> <span class="type">process</span> await_now_or_later m v =
+  <span class="constant">if</span> !!m = v <span class="constant">then</span> ()
+  <span class="constant">else</span> <span class="type">await</span> m(v') <span class="constant">when</span> v' = v <span class="type">in</span> ()
+
+<span class="type">type</span> 'a mevent{<span class="constant">|</span>'ck<span class="constant">|</span>} = ('a <span class="constant">-&gt;</span> 'a, 'a) event{<span class="constant">|</span>'ck<span class="constant">|</span>}
+
+<span class="type">let</span> index v l =
+  <span class="type">let</span> <span class="type">rec</span> aux i l = <span class="constant">match</span> l <span class="constant">with</span>
+  <span class="constant">|</span> [] <span class="constant">-&gt;</span> <span class="comment">raise</span> <span class="function-name">Not_found</span>
+  <span class="constant">|</span> x::l <span class="constant">-&gt;</span> <span class="constant">if</span> x=v <span class="constant">then</span> i <span class="constant">else</span> aux (i+1) l
+  <span class="type">in</span>
+  aux 0 l
+</pre>
+
+ </body>
+</html>

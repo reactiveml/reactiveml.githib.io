@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>sig_env.ml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #008b8b;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #8b2252;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="comment">(**********************************************************************)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*                           ReactiveML                               *)</span>
+<span class="comment">(*                    http://reactiveML.org                           *)</span>
+<span class="comment">(*                    http://rml.inria.fr                             *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*                          Louis Mandel                              *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*  Copyright 2002, 2007 Louis Mandel.  All rights reserved.          *)</span>
+<span class="comment">(*  This file is distributed under the terms of the GNU Library       *)</span>
+<span class="comment">(*  General Public License, with the special exception on linking     *)</span>
+<span class="comment">(*  described in file ../LICENSE.                                     *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*  ReactiveML has been done in the following labs:                   *)</span>
+<span class="comment">(*  - theme SPI, Laboratoire d'Informatique de Paris 6 (2002-2005)    *)</span>
+<span class="comment">(*  - Verimag, CNRS Grenoble (2005-2006)                              *)</span>
+<span class="comment">(*  - projet Moscova, INRIA Rocquencourt (2006-2007)                  *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(**********************************************************************)</span>
+
+<span class="comment">(* author: Louis Mandel *)</span>
+<span class="comment">(* created: 2005-08-28  *)</span>
+<span class="comment">(* file: sig_env.ml *)</span>
+
+<span class="comment">(*
+module type CLOCK_INDEX = sig
+  type t
+
+  val get : t -&gt; int
+  val init_clock : unit -&gt; clock_index
+  val next: clock_index -&gt; unit
+end
+
+*)</span>
+
+<span class="tuareg-font-lock-governing">open</span> <span class="type">Rml_types</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="tuareg-font-lock-governing">type</span> <span class="type">S </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">sig</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">clock</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">clock_index</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t</span>
+
+    <span class="comment">(* create ck kind default combine *)</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">create</span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> signal_kind </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">('</span><span class="type">a </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">status</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">value</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">pre_status</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">pre_value</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">last</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">default</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">one</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a list</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">emit</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">reset</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">set_value </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">copy </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">set_clock </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">init_clock </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">next</span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">get </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock_index</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">set </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock_index </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">equal </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_index </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock_index </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">print_clock_index </span><span class="tuareg-font-lock-operator">:</span> <span class="type">Format.formatter </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock_index </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+   <span class="comment">(* val remote_emit :  ('a, 'b) t -&gt; 'a -&gt; unit *)</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="type">Record </span><span class="tuareg-font-lock-operator">:</span> <span class="type">S  </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">struct</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">=</span> int <span class="tuareg-font-lock-operator">ref</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">clock_index </span><span class="tuareg-font-lock-operator">=</span> int
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> t </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="tuareg-font-lock-operator">{</span> <span class="keyword">mutable</span> <span class="variable-name">clock</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">clock</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="variable-name">kind</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">signal_kind</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">mutable</span> <span class="variable-name">status</span><span class="tuareg-font-lock-operator">:</span> <span class="type">int</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">mutable</span> <span class="variable-name">reset</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">bool</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">mutable</span> <span class="variable-name">value</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">mutable</span> <span class="variable-name">pre_status</span><span class="tuareg-font-lock-operator">:</span> <span class="type">int</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">mutable</span> <span class="variable-name">last</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">mutable</span> <span class="variable-name">default</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="variable-name">combine</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">);</span> <span class="tuareg-font-lock-operator">}</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">absent </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">-</span>2
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">create</span><span class="variable-name"> ck kind default combine </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-operator">{</span> clock <span class="tuareg-font-lock-operator">=</span> ck<span class="tuareg-font-lock-operator">;</span>
+        kind <span class="tuareg-font-lock-operator">=</span> kind<span class="tuareg-font-lock-operator">;</span>
+        status <span class="tuareg-font-lock-operator">=</span> absent<span class="tuareg-font-lock-operator">;</span>
+        reset <span class="tuareg-font-lock-operator">=</span> <span class="constant">false</span><span class="tuareg-font-lock-operator">;</span>
+        value <span class="tuareg-font-lock-operator">=</span> default<span class="tuareg-font-lock-operator">;</span>
+        pre_status <span class="tuareg-font-lock-operator">=</span> absent<span class="tuareg-font-lock-operator">;</span>
+        last <span class="tuareg-font-lock-operator">=</span> default<span class="tuareg-font-lock-operator">;</span>
+        default <span class="tuareg-font-lock-operator">=</span> default<span class="tuareg-font-lock-operator">;</span>
+        combine <span class="tuareg-font-lock-operator">=</span> combine<span class="tuareg-font-lock-operator">;</span> <span class="tuareg-font-lock-operator">}</span>
+
+<span class="comment">(* -------------------------- Access functions -------------------------- *)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">default</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span> n.default
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">status</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      n.status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">value</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span> n.value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">pre_status</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> n.status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span>
+      <span class="keyword">then</span> n.pre_status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-</span> 1
+      <span class="keyword">else</span> n.status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-</span> 1
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">last</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> n.reset
+      <span class="keyword">then</span> n.default
+      <span class="keyword">else</span> <span class="tuareg-font-lock-operator">(</span>
+        <span class="keyword">if</span> n.status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span>
+        <span class="keyword">then</span> n.last
+        <span class="keyword">else</span> n.value
+      <span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">pre_value</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> n.status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span>
+      <span class="keyword">then</span>
+        <span class="keyword">if</span> n.pre_status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-</span> 1
+        <span class="keyword">then</span> n.last
+        <span class="keyword">else</span> n.default
+      <span class="keyword">else</span>
+        <span class="keyword">if</span> n.status <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-</span> 1
+        <span class="keyword">then</span> n.value
+        <span class="keyword">else</span> n.default
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">one</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">match</span> n.value <span class="keyword">with</span>
+      <span class="tuareg-font-lock-operator">|</span> x <span class="tuareg-font-lock-operator">::</span> _ <span class="tuareg-font-lock-operator">-&gt;</span> x
+      <span class="tuareg-font-lock-operator">|</span> _ <span class="tuareg-font-lock-operator">-&gt;</span> <span class="keyword">assert</span> <span class="constant">false</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">emit</span><span class="variable-name"> n v </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> n.status <span class="tuareg-font-lock-operator">&lt;&gt;</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span>
+      <span class="keyword">then</span>
+        <span class="tuareg-font-lock-operator">(</span>n.pre_status <span class="tuareg-font-lock-operator">&lt;-</span> n.status<span class="tuareg-font-lock-operator">;</span>
+         n.last <span class="tuareg-font-lock-operator">&lt;-</span> <span class="keyword">if</span> n.reset <span class="keyword">then</span> n.default <span class="keyword">else</span> n.value<span class="tuareg-font-lock-operator">;</span>
+         n.status <span class="tuareg-font-lock-operator">&lt;-</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">);</span>
+         n.reset <span class="tuareg-font-lock-operator">&lt;-</span> <span class="constant">false</span><span class="tuareg-font-lock-operator">;</span>
+         n.value <span class="tuareg-font-lock-operator">&lt;-</span> <span class="keyword">if</span> n.kind <span class="tuareg-font-lock-operator">=</span> Memory <span class="keyword">then</span> n.combine v n.last <span class="keyword">else</span> n.combine v n.default<span class="tuareg-font-lock-operator">)</span>
+      <span class="keyword">else</span>
+        n.value <span class="tuareg-font-lock-operator">&lt;-</span> n.combine v n.value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">set_value</span><span class="variable-name"> n v </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">if</span> n.status <span class="tuareg-font-lock-operator">&lt;&gt;</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">)</span>
+      <span class="keyword">then</span>
+        <span class="tuareg-font-lock-operator">(</span>n.pre_status <span class="tuareg-font-lock-operator">&lt;-</span> n.status<span class="tuareg-font-lock-operator">;</span>
+         n.last <span class="tuareg-font-lock-operator">&lt;-</span> <span class="keyword">if</span> n.reset <span class="keyword">then</span> n.default <span class="keyword">else</span> n.value<span class="tuareg-font-lock-operator">;</span>
+         n.status <span class="tuareg-font-lock-operator">&lt;-</span> <span class="tuareg-font-lock-operator">!(</span>n.clock<span class="tuareg-font-lock-operator">);</span>
+         n.reset <span class="tuareg-font-lock-operator">&lt;-</span> <span class="constant">false</span><span class="tuareg-font-lock-operator">;</span>
+         n.value <span class="tuareg-font-lock-operator">&lt;-</span> v<span class="tuareg-font-lock-operator">)</span>
+      <span class="keyword">else</span>
+        n.value <span class="tuareg-font-lock-operator">&lt;-</span> v
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">copy</span><span class="variable-name"> n new_n </span><span class="tuareg-font-lock-operator">=</span>
+      n.status <span class="tuareg-font-lock-operator">&lt;-</span> new_n.status<span class="tuareg-font-lock-operator">;</span>
+      n.value <span class="tuareg-font-lock-operator">&lt;-</span> new_n.value<span class="tuareg-font-lock-operator">;</span>
+      n.pre_status <span class="tuareg-font-lock-operator">&lt;-</span> new_n.pre_status<span class="tuareg-font-lock-operator">;</span>
+      n.last <span class="tuareg-font-lock-operator">&lt;-</span> new_n.last
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">reset</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      n.reset <span class="tuareg-font-lock-operator">&lt;-</span> <span class="constant">true</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">init_clock</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-operator">ref</span> 0
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">set_clock</span><span class="variable-name"> n ck </span><span class="tuareg-font-lock-operator">=</span>
+      n.clock <span class="tuareg-font-lock-operator">&lt;-</span> ck
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">next</span><span class="variable-name"> ck </span><span class="tuareg-font-lock-operator">=</span>
+      incr ck
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">get</span><span class="variable-name"> ck </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">!</span>ck
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">set</span><span class="variable-name"> ck v </span><span class="tuareg-font-lock-operator">=</span> ck <span class="tuareg-font-lock-operator">:=</span> v
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">equal</span><span class="variable-name"> ck1 ck2 </span><span class="tuareg-font-lock-operator">=</span>
+      ck1 <span class="tuareg-font-lock-operator">=</span> ck2
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">print_clock_index</span><span class="variable-name"> ff c </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">Format</span>.fprintf ff <span class="string">"%d"</span> c
+  <span class="tuareg-font-lock-governing">end</span>
+
+<span class="comment">(*
+module DistributedRecord  (*: S*)  =
+  struct
+    type clock_index = int ref
+    type ('a, 'b) t =
+        { clock : clock_index;
+          mutex : Mutex.t;
+          mutable status: int;
+          mutable value: 'b;
+          mutable pre_status: int;
+          mutable last: 'b;
+          mutable default: 'b;
+          combine: ('a -&gt; 'b -&gt; 'b); }
+
+    let absent = -2
+
+    let create ck default combine =
+      { clock = ck;
+        status = absent;
+        mutex = Mutex.create ();
+        value = default;
+        pre_status = absent;
+        last = default;
+        default = default;
+        combine = combine; }
+
+(* -------------------------- Access functions -------------------------- *)
+    let default n = n.default
+    let status n = n.status = !(n.clock)
+
+    let value n = n.value
+
+    let pre_status n =
+      if n.status = !(n.clock)
+      then n.pre_status = !(n.clock) - 1
+      else n.status = !(n.clock) - 1
+
+    let last n =
+      if n.status = !(n.clock)
+      then n.last
+      else n.value
+
+    let pre_value n =
+      if n.status = !(n.clock)
+      then
+        if n.pre_status = !(n.clock) - 1
+        then n.last
+        else n.default
+      else
+        if n.status = !(n.clock) - 1
+        then n.value
+        else n.default
+
+    let one n =
+      match n.value with
+      | x :: _ -&gt; x
+      | _ -&gt; assert false
+
+    let emit n v =
+      if n.status &lt;&gt; !(n.clock)
+      then
+        (n.pre_status &lt;- n.status;
+         n.last &lt;- n.value;
+         n.status &lt;- !(n.clock);
+         Mutex.lock n.lock;
+         n.value &lt;- n.combine v n.default;
+         Mutex.unlock n.lock;)
+      else (
+        Mutex.lock n.lock;
+        n.value &lt;- n.combine v n.value;
+        Mutex.unlock n.lock
+      )
+
+    let remote_emit = emit
+
+    let init_clock () =
+      ref 0
+
+    let next ck =
+      incr ck
+  end
+  *)</span>
+</pre>
+  </body>
+</html>

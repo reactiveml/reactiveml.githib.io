@@ -1,0 +1,5 @@
+rec p =
+  print "1"; pause; print "2"; pause; print "3"
+  ||
+  pause; run p
+end.

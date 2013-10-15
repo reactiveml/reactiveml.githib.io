@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>planets_dyn.rml</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.keyword   { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.keyword a { color: #7f007f;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment-delimiter   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment-delimiter a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.builtin   { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.builtin a { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.constant   { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.constant a { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.function-name   { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.function-name a { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.variable-name   { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.variable-name a { color: #a4361e;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="variable-name">open</span> <span class="function-name"><a href="planets_utils.rml.html">Planets_utils</a></span>
+
+<span class="type">let</span> dt = 0.01
+<span class="type">signal</span> env <span class="type">default</span> (<span class="type">fun</span> _ <span class="constant">-&gt;</span> zero_vector) <span class="type">gather</span> add_force
+
+<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> body (x_t, v_t, w) =
+  <span class="builtin">emit</span> env (force (x_t, w));
+  <span class="type">await</span> env(f) <span class="type">in</span>
+  <span class="type">let</span> v_tp = v_t ++. (dt **. (f x_t)) <span class="type">in</span>
+  <span class="type">let</span> x_tp = x_t ++. (dt **. v_tp) <span class="type">in</span>
+  draw_body x_t x_tp w;
+  <span class="builtin">run</span> body (x_tp, v_tp, w)
+
+<span class="type">let</span> <span class="type">rec</span> <span class="type">process</span> add_planet add =
+  <span class="type">await</span> add(p) <span class="type">in</span>
+  <span class="builtin">run</span> body p <span class="constant">||</span> <span class="builtin">run</span> add_planet add
+
+<span class="type">let</span> <span class="type">process</span> main =
+  init_gui ();
+  <span class="constant">for</span> i = 1 <span class="constant">to</span> 100 <span class="constant">dopar</span>
+    <span class="builtin">run</span> body (random_planet ())
+  <span class="constant">done</span>
+  <span class="constant">||</span>
+  <span class="builtin">run</span> body (sun ())
+  <span class="constant">||</span>
+  <span class="type">signal</span> add <span class="type">default</span> (zero_vector, zero_vector, 0.0) <span class="type">gather</span> (<span class="type">fun</span> x _ <span class="constant">-&gt;</span> x) <span class="type">in</span>
+  <span class="builtin">run</span> add_planet add
+  <span class="constant">||</span>
+  <span class="comment-delimiter">(* </span><span class="comment">Emet le signal add a chaque appui sur le clavier </span><span class="comment-delimiter">*)</span>
+  <span class="keyword">loop</span>
+    <span class="constant">if</span> <span class="function-name">Graphics</span>.key_pressed () <span class="constant">then</span> <span class="builtin">emit</span> add (random_planet ());
+    <span class="builtin">pause</span>
+  <span class="keyword">end</span>
+</pre>
+
+ </body>
+</html>

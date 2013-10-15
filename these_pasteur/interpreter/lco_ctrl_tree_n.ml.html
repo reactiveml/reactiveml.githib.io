@@ -1,0 +1,892 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>lco_ctrl_tree_n.ml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #008b8b;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #8b2252;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+<span class="comment">(**********************************************************************)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*                           ReactiveML                               *)</span>
+<span class="comment">(*                    http://reactiveML.org                           *)</span>
+<span class="comment">(*                    http://rml.inria.fr                             *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*                          Louis Mandel                              *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*  Copyright 2002, 2007 Louis Mandel.  All rights reserved.          *)</span>
+<span class="comment">(*  This file is distributed under the terms of the GNU Library       *)</span>
+<span class="comment">(*  General Public License, with the special exception on linking     *)</span>
+<span class="comment">(*  described in file ../LICENSE.                                     *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(*  ReactiveML has been done in the following labs:                   *)</span>
+<span class="comment">(*  - theme SPI, Laboratoire d'Informatique de Paris 6 (2002-2005)    *)</span>
+<span class="comment">(*  - Verimag, CNRS Grenoble (2005-2006)                              *)</span>
+<span class="comment">(*  - projet Moscova, INRIA Rocquencourt (2006-2007)                  *)</span>
+<span class="comment">(*                                                                    *)</span>
+<span class="comment">(**********************************************************************)</span>
+
+<span class="comment">(* author: Louis Mandel *)</span>
+<span class="comment">(* created: 2009-03-03  *)</span>
+<span class="comment">(* file: lco_ctrl_tree_n *)</span>
+
+<span class="comment">(* Remark: taken from                                         *)</span>
+<span class="comment">(*            interpreter_without_scope_extrusion_control.ml  *)</span>
+
+<span class="comment">(* Description :                                                      *)</span>
+<span class="comment">(*   On a une liste next associee a chaque noeud de l'arbre de        *)</span>
+<span class="comment">(*   control.                                                         *)</span>
+<span class="comment">(*   Marche avec Scope Extrusion                                      *)</span>
+<span class="comment">(*   Ajout des valeurs pour traiter def_dyn et def_and_dyn            *)</span>
+<span class="comment">(*   Ajout de until_match et await_match                              *)</span>
+<span class="comment">(*   Ajout des configurations evenementielles                         *)</span>
+<span class="comment">(*   Parametrisation par le foncteur "Event"                          *)</span>
+<span class="comment">(*   Suppression du type "value" et des "Obj.magic"                   *)</span>
+<span class="comment">(*   Suppression de exec                                              *)</span>
+<span class="comment">(*   Gestion du parallele n-aire                                      *)</span>
+
+<span class="tuareg-font-lock-governing">open</span> <span class="type">Runtime_options</span>
+<span class="tuareg-font-lock-governing">open</span> <span class="type">Runtime</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="type">Rml_interpreter </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">functor</span> <span class="tuareg-font-lock-operator">(</span><span class="variable-name">R</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">Runtime.CONTROL_TREE_R</span><span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+  <span class="tuareg-font-lock-governing">struct</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">join_point </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.join_point option
+    <span class="tuareg-font-lock-governing">and</span> <span class="tuareg-font-lock-operator">'</span><span class="function-name">a</span><span class="variable-name"> expr </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">'</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.control_tree <span class="tuareg-font-lock-operator">-&gt;</span> join_point <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.clock_domain <span class="tuareg-font-lock-operator">-&gt;</span> unit step
+    <span class="tuareg-font-lock-governing">and</span> <span class="tuareg-font-lock-operator">'</span><span class="function-name">a</span><span class="variable-name"> process </span><span class="tuareg-font-lock-operator">=</span> unit <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>a expr
+
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">('</span>a<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">'</span>b<span class="tuareg-font-lock-operator">)</span> <span class="type">R</span>.event
+    <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">'</span><span class="type">a memory </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">('</span>a <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>a<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">'</span>a<span class="tuareg-font-lock-operator">)</span> <span class="type">R</span>.event
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">event_cfg_gen </span><span class="tuareg-font-lock-operator">=</span> unit <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.event_cfg
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">clock_expr </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.clock <span class="type">Rml_types</span>.clock
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">region_expr </span><span class="tuareg-font-lock-operator">=</span> clock_expr
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">unit_value </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">()</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">dummy_step</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">open</span> <span class="type">R</span>
+    <span class="tuareg-font-lock-governing">open</span> <span class="type">Rml_types</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">eval_clock_expr</span><span class="variable-name"> current_cd ce </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">match</span> ce <span class="keyword">with</span>
+      <span class="tuareg-font-lock-operator">|</span> CkLocal <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.clock current_cd
+      <span class="tuareg-font-lock-operator">|</span> CkTop <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.top_clock <span class="tuareg-font-lock-operator">()</span>
+      <span class="tuareg-font-lock-operator">|</span> CkExpr e <span class="tuareg-font-lock-operator">-&gt;</span> e
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">ensure_clock_expr</span><span class="variable-name"> ce </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">match</span> ce <span class="keyword">with</span>
+      <span class="tuareg-font-lock-operator">|</span> CkExpr e <span class="tuareg-font-lock-operator">-&gt;</span> e
+      <span class="tuareg-font-lock-operator">|</span> CkTop <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.top_clock <span class="tuareg-font-lock-operator">()</span>
+      <span class="tuareg-font-lock-operator">|</span> CkLocal <span class="tuareg-font-lock-operator">-&gt;</span> <span class="comment">(* should be rejected by compiler *)</span>
+          print_debug <span class="string">"Error: Unexpected local clock@."</span><span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">raise</span> <span class="type">Rml_types</span>.RML
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="tuareg-font-lock-governing">rec</span> <span class="function-name">on_event_at_eoi</span><span class="variable-name"> evt ctrl f </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="function-name">eoi_work</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="keyword">try</span>
+          f <span class="tuareg-font-lock-operator">()</span>
+        <span class="keyword">with</span>
+          <span class="tuareg-font-lock-operator">|</span> <span class="type">R</span>.Wait_again <span class="tuareg-font-lock-operator">-&gt;</span> on_event_at_eoi evt ctrl f
+      <span class="tuareg-font-lock-governing">in</span>
+      <span class="type">R</span>.on_event evt ctrl <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.on_eoi <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.<span class="type">Event</span>.clock evt<span class="tuareg-font-lock-operator">)</span> eoi_work<span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">on_event_cfg_at_eoi</span><span class="variable-name"> evt_cfg ctrl f </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">()</span>
+
+<span class="comment">(* ------------------------------------------------------------------------ *)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_pre_status</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.pre_status evt
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_pre_value</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.pre_value evt
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_last</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.last evt
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_default</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.default evt
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_last_mem</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.last evt
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_clock</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> CkExpr <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.<span class="type">Event</span>.clock evt<span class="tuareg-font-lock-operator">)</span>
+
+<span class="comment">(* ------------------------------------------------------------------------ *)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">default_combine</span><span class="variable-name"> x y </span><span class="tuareg-font-lock-operator">=</span> x <span class="tuareg-font-lock-operator">::</span> y
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">default_default </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">[]</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_global_signal_combine</span><span class="variable-name"> k default combine </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">R</span>.<span class="type">Event</span>.new_evt_global k default combine
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_global_signal</span><span class="variable-name"> k </span><span class="tuareg-font-lock-operator">=</span>
+      rml_global_signal_combine k default_default default_combine
+
+<span class="comment">(* ------------------------------------------------------------------------ *)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">cfg_present</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt _ </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">R</span>.<span class="type">Event</span>.cfg_present evt
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">cfg_present</span><span class="variable-name"> expr_evt _ </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+      <span class="type">R</span>.<span class="type">Event</span>.cfg_present evt
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">cfg_and</span><span class="variable-name"> ev1 ev2 _ </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">R</span>.<span class="type">Event</span>.cfg_and <span class="tuareg-font-lock-operator">(</span>ev1 <span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-operator">(</span>ev2 <span class="tuareg-font-lock-operator">())</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">cfg_or</span><span class="variable-name"> ev1 ev2 _ </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">R</span>.<span class="type">Event</span>.cfg_or <span class="tuareg-font-lock-operator">(</span>ev1 <span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-operator">(</span>ev2 <span class="tuareg-font-lock-operator">())</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* nothing                            *)</span>
+<span class="comment">(**************************************)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_nothing</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        f_k unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* compute                            *)</span>
+<span class="comment">(**************************************)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_compute</span><span class="variable-name"> e </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">v </span><span class="tuareg-font-lock-operator">=</span> e <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        f_k v
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* pause                              *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_pause</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> pause_ce </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">pause_ck </span><span class="tuareg-font-lock-operator">=</span> eval_clock_expr cd pause_ce <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">R</span>.on_eoi pause_ck <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.on_next_instant ctrl f_k<span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_pause</span><span class="variable-name"> e </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        rml_pause<span class="tuareg-font-lock-operator">'</span> <span class="tuareg-font-lock-operator">(</span>e <span class="tuareg-font-lock-operator">())</span> f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* weak pause                              *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_weak_pause</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> pause_ce </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">pause_ck </span><span class="tuareg-font-lock-operator">=</span> eval_clock_expr cd pause_ce <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">R</span>.on_eoi pause_ck <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.on_next_instant <span class="tuareg-font-lock-operator">~</span><span class="variable-name">kind</span><span class="tuareg-font-lock-operator">:</span><span class="type">Weak ctrl f_k</span><span class="tuareg-font-lock-operator">)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_weak_pause</span><span class="variable-name"> e </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        rml_weak_pause<span class="tuareg-font-lock-operator">'</span> <span class="tuareg-font-lock-operator">(</span>e <span class="tuareg-font-lock-operator">())</span> f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* halt                               *)</span>
+<span class="comment">(**************************************)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_halt</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-operator">()</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* emit                               *)</span>
+<span class="comment">(**************************************)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_emit_val</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt e </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="type">R</span>.<span class="type">Event</span>.emit evt <span class="tuareg-font-lock-operator">(</span>e<span class="tuareg-font-lock-operator">());</span>
+        f_k unit_value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_emit_val</span><span class="variable-name"> expr_evt e </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_emit_val<span class="tuareg-font-lock-operator">'</span> evt e f_k ctrl jp cd unit_value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_emit</span><span class="variable-name"> expr_evt </span><span class="tuareg-font-lock-operator">=</span> rml_emit_val expr_evt <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">())</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_emit</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> rml_emit_val<span class="tuareg-font-lock-operator">'</span> evt <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">())</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_expr_emit_val</span><span class="variable-name"> evt v </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="type">R</span>.<span class="type">Event</span>.emit evt v
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_expr_emit</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span>
+      rml_expr_emit_val evt <span class="tuareg-font-lock-operator">()</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* await_immediate                    *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_immediate</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="type">R</span>.on_event evt ctrl f_k
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_immediate</span><span class="variable-name"> expr_evt </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_await_immediate<span class="tuareg-font-lock-operator">'</span> evt f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* await_immediate_conf               *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_immediate_conf</span><span class="variable-name"> expr_cfg </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="type">R</span>.on_event_cfg <span class="tuareg-font-lock-operator">(</span>expr_cfg <span class="tuareg-font-lock-operator">())</span> ctrl f_k
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* get                                *)</span>
+<span class="comment">(**************************************)</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_get</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f_get</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">x </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">if</span> <span class="type">R</span>.<span class="type">Event</span>.status evt <span class="keyword">then</span> <span class="type">R</span>.<span class="type">Event</span>.value evt <span class="keyword">else</span> <span class="type">R</span>.<span class="type">Event</span>.default evt <span class="tuareg-font-lock-governing">in</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_body </span><span class="tuareg-font-lock-operator">=</span> p x f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+          <span class="type">R</span>.on_next_instant ctrl f_body
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">R</span>.on_eoi <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.<span class="type">Event</span>.clock evt<span class="tuareg-font-lock-operator">)</span> f_get
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_get</span><span class="variable-name"> expr_evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+      rml_get<span class="tuareg-font-lock-operator">'</span> evt p
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* await_immediate_one                *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_immediate_one</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">x </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.one evt <span class="tuareg-font-lock-governing">in</span>
+          p x f_k ctrl jp cd unit_value
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">R</span>.on_event evt ctrl f
+
+     <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_immediate_one</span><span class="variable-name"> expr_evt p </span><span class="tuareg-font-lock-operator">=</span>
+       <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+         <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+         rml_await_immediate_one<span class="tuareg-font-lock-operator">'</span> evt p f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* await_all_match                    *)</span>
+<span class="comment">(**************************************)</span>
+
+     <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_all_match</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt matching p </span><span class="tuareg-font-lock-operator">=</span>
+       <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+         <span class="tuareg-font-lock-governing">let</span> <span class="function-name">await_eoi</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+           <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">v </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.value evt <span class="tuareg-font-lock-governing">in</span>
+           <span class="keyword">if</span> matching v <span class="keyword">then</span>
+             <span class="type">R</span>.on_next_instant ctrl <span class="tuareg-font-lock-operator">(</span>p v f_k ctrl jp cd<span class="tuareg-font-lock-operator">)</span>
+           <span class="keyword">else</span>
+             <span class="keyword">raise</span> Wait_again
+         <span class="tuareg-font-lock-governing">in</span>
+         on_event_at_eoi evt ctrl await_eoi
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_all_match</span><span class="variable-name"> expr_evt matching p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_await_all_match<span class="tuareg-font-lock-operator">'</span> evt matching p f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* await                              *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">await_eoi</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.on_next_instant ctrl f_k <span class="tuareg-font-lock-governing">in</span>
+        on_event_at_eoi evt ctrl await_eoi
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await</span><span class="variable-name"> expr_evt </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_await<span class="tuareg-font-lock-operator">'</span> evt f_k ctrl jp cd unit_value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_all</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p </span><span class="tuareg-font-lock-operator">=</span>
+      rml_await_all_match<span class="tuareg-font-lock-operator">'</span> evt <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="constant">true</span><span class="tuareg-font-lock-operator">)</span> p
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_all</span><span class="variable-name"> expr_evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_await_all_match<span class="tuareg-font-lock-operator">'</span> evt <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="constant">true</span><span class="tuareg-font-lock-operator">)</span> p f_k ctrl jp cd unit_value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_one</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p </span><span class="tuareg-font-lock-operator">=</span>
+       <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+         <span class="tuareg-font-lock-governing">let</span> <span class="function-name">await_eoi</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+           <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">v </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.one evt <span class="tuareg-font-lock-governing">in</span>
+           <span class="type">R</span>.on_next_instant ctrl <span class="tuareg-font-lock-operator">(</span>p v f_k ctrl jp cd<span class="tuareg-font-lock-operator">)</span>
+         <span class="tuareg-font-lock-governing">in</span>
+         on_event_at_eoi evt ctrl await_eoi
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_one</span><span class="variable-name"> expr_evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_await_one<span class="tuareg-font-lock-operator">'</span> evt p f_k ctrl jp cd unit_value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_await_conf</span><span class="variable-name"> expr_cfg </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        on_event_cfg_at_eoi <span class="tuareg-font-lock-operator">(</span>expr_cfg <span class="tuareg-font-lock-operator">())</span> ctrl <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">R</span>.on_next_instant ctrl f_k<span class="tuareg-font-lock-operator">)</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* present                            *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_present</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p_1 p_2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> p_1 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_2 </span><span class="tuareg-font-lock-operator">=</span> p_2 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="type">R</span>.on_event_or_next evt f_1 cd ctrl f_2
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_present</span><span class="variable-name"> expr_evt p_1 p_2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+        rml_present<span class="tuareg-font-lock-operator">'</span> evt p_1 p_2 f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* present_conf                       *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_present_conf</span><span class="variable-name"> expr_cfg p_1 p_2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> p_1 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_2 </span><span class="tuareg-font-lock-operator">=</span> p_2 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="type">R</span>.on_event_cfg_or_next <span class="tuareg-font-lock-operator">(</span>expr_cfg <span class="tuareg-font-lock-operator">())</span> f_1 cd ctrl f_2
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* seq                                *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_seq</span><span class="variable-name"> p_1 p_2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_2 </span><span class="tuareg-font-lock-operator">=</span> p_2 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> p_1 <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span> f_2 <span class="tuareg-font-lock-operator">())</span> ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        f_1
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* par                                *)</span>
+<span class="comment">(**************************************)</span>
+<span class="comment">(* Utilisation de Obj.magic pour le pb de la generalisation des *)</span>
+<span class="comment">(* applications partielles.                                     *)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">join_n</span><span class="variable-name"> cpt </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="keyword">if</span> <span class="type">R</span>.<span class="type">Join</span>.decr cpt <span class="keyword">then</span>
+          f_k unit_value
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_ignore</span><span class="variable-name"> f_k _ </span><span class="tuareg-font-lock-operator">=</span>
+      f_k <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_par</span><span class="variable-name"> p_1 p_2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">i </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">match</span> jp <span class="keyword">with</span> None <span class="tuareg-font-lock-operator">-&gt;</span> 2 <span class="tuareg-font-lock-operator">|</span> Some _ <span class="tuareg-font-lock-operator">-&gt;</span> 1 <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cpt</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> j </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="keyword">match</span> jp <span class="keyword">with</span>
+            <span class="tuareg-font-lock-operator">|</span> None <span class="tuareg-font-lock-operator">-&gt;</span>
+                <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cpt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Join</span>.new_join_point 0 <span class="tuareg-font-lock-governing">in</span>
+                cpt<span class="tuareg-font-lock-operator">,</span> join_n cpt f_k ctrl jp cd
+            <span class="tuareg-font-lock-operator">|</span> Some cpt <span class="tuareg-font-lock-operator">-&gt;</span> cpt<span class="tuareg-font-lock-operator">,</span> f_k
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> p_1 <span class="tuareg-font-lock-operator">(</span>rml_ignore j<span class="tuareg-font-lock-operator">)</span> ctrl <span class="tuareg-font-lock-operator">(</span>Some cpt<span class="tuareg-font-lock-operator">)</span> cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_2 </span><span class="tuareg-font-lock-operator">=</span> p_2 <span class="tuareg-font-lock-operator">(</span>rml_ignore j<span class="tuareg-font-lock-operator">)</span> ctrl <span class="tuareg-font-lock-operator">(</span>Some cpt<span class="tuareg-font-lock-operator">)</span> cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="type">R</span>.<span class="type">Join</span>.incr cpt i<span class="tuareg-font-lock-operator">;</span>
+          <span class="type">R</span>.on_current_instant cd f_2<span class="tuareg-font-lock-operator">;</span>
+          f_1 unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* loop                               *)</span>
+<span class="comment">(**************************************)</span>
+<span class="comment">(*
+let rec rml_loop p f_k ctrl _ =
+  p (rml_loop p f_k ctrl) ctrl unit_value
+*)</span>
+
+<span class="comment">(*
+let rml_loop p =
+  fun f_k ctrl -&gt;
+    let rec f_1 = lazy (p f ctrl)
+    and f =
+      fun _ -&gt;
+        Lazy.force f_1 unit_value
+    in
+    f
+*)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_loop</span><span class="variable-name"> p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">_ ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> dummy_step <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_loop </span><span class="tuareg-font-lock-operator">=</span> p <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">!</span>f_1 unit_value<span class="tuareg-font-lock-operator">)</span> ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        f_1 <span class="tuareg-font-lock-operator">:=</span> f_loop<span class="tuareg-font-lock-operator">;</span>
+        f_loop
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* loop_n                             *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_loop_n</span><span class="variable-name"> e p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cpt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Join</span>.new_join_point 0 <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> dummy_step <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_loop </span><span class="tuareg-font-lock-operator">=</span>
+          p
+            <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+              <span class="keyword">if</span> <span class="type">R</span>.<span class="type">Join</span>.decr cpt <span class="keyword">then</span>
+                f_k unit_value
+              <span class="keyword">else</span>
+                <span class="tuareg-font-lock-operator">!</span>f_1 unit_value<span class="tuareg-font-lock-operator">)</span>
+            ctrl None cd
+        <span class="tuareg-font-lock-governing">in</span>
+        f_1 <span class="tuareg-font-lock-operator">:=</span> f_loop<span class="tuareg-font-lock-operator">;</span>
+        <span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">n </span><span class="tuareg-font-lock-operator">=</span> e<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          <span class="keyword">if</span> n <span class="tuareg-font-lock-operator">&gt;</span> 0 <span class="keyword">then</span>
+            <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.<span class="type">Join</span>.incr cpt <span class="tuareg-font-lock-operator">(</span>n <span class="tuareg-font-lock-operator">-</span> 1<span class="tuareg-font-lock-operator">);</span>
+             f_loop unit_value<span class="tuareg-font-lock-operator">)</span>
+          <span class="keyword">else</span>
+            f_k unit_value
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* signal                             *)</span>
+<span class="comment">(**************************************)</span>
+
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">_rml_signal</span><span class="variable-name"> f_k ctrl jp cd  kind ce re default combine reset p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">ck </span><span class="tuareg-font-lock-operator">=</span> eval_clock_expr cd ce <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">r </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.region_of_clock <span class="tuareg-font-lock-operator">(</span>eval_clock_expr cd re<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">reset </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="keyword">match</span> reset <span class="keyword">with</span>
+          <span class="tuareg-font-lock-operator">|</span> None <span class="tuareg-font-lock-operator">-&gt;</span> None
+          <span class="tuareg-font-lock-operator">|</span> Some r <span class="tuareg-font-lock-operator">-&gt;</span> Some <span class="tuareg-font-lock-operator">(</span>eval_clock_expr cd r<span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="function-name">k</span><span class="variable-name"> evt </span><span class="tuareg-font-lock-operator">=</span> p evt f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+      <span class="type">R</span>.<span class="type">Event</span>.new_evt cd ck r kind default combine reset k <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_signal_combine</span><span class="variable-name"> kind ce re default combine reset p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        _rml_signal f_k ctrl jp cd kind ce re <span class="tuareg-font-lock-operator">(</span>default <span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-operator">(</span>combine <span class="tuareg-font-lock-operator">())</span> reset p
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_signal</span><span class="variable-name"> kind ce re reset p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        _rml_signal f_k ctrl jp cd kind ce re default_default default_combine reset p
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* def                                *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_def</span><span class="variable-name"> e p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        p <span class="tuareg-font-lock-operator">(</span>e<span class="tuareg-font-lock-operator">())</span> f_k ctrl jp cd unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* def_dyn                            *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_def_dyn</span><span class="variable-name"> p1 p2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        p1 <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">v </span><span class="tuareg-font-lock-operator">-&gt;</span> p2 v f_k ctrl None cd unit_value<span class="tuareg-font-lock-operator">)</span> ctrl jp cd
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* def_and_dyn                        *)</span>
+<span class="comment">(**************************************)</span>
+<span class="comment">(*
+    let rml_def_and_dyn =
+      let join_n cpt value_array p3 i =
+        fun f_k ctrl jp cd -&gt;
+          fun x -&gt;
+            value_array.(i) &lt;- x;
+            decr cpt;
+            if !cpt = 0 then
+              let f = p3 value_array f_k ctrl jp cd in
+              f unit_value
+            else
+              sched()
+      in
+      fun p_array p3 -&gt;
+        fun f_k ctrl jp cd -&gt;
+          let n = Array.length p_array in
+          let cpt = ref n in
+          let value_array = Array.make n (Obj.magic()) in
+          let step_init =
+            fun _ -&gt;
+              cpt := n;
+              for i = 0 to n - 1 do
+                let f =
+                  p_array.(i)
+                    (join_n cpt value_array p3 i f_k ctrl jp cd)
+                    ctrl (Some cpt)
+                in
+                current := f :: !current
+               done;
+              sched()
+          in step_init
+*)</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* match                              *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_match</span><span class="variable-name"> e p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        p <span class="tuareg-font-lock-operator">(</span>e<span class="tuareg-font-lock-operator">())</span> f_k ctrl jp cd unit_value
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* run                                *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_run</span><span class="variable-name"> e </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd _ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-operator">(</span>e <span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-operator">()</span> f_k ctrl jp cd unit_value
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* if                                 *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_if</span><span class="variable-name"> e p_1 p_2 </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_1 </span><span class="tuareg-font-lock-operator">=</span> p_1 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_2 </span><span class="tuareg-font-lock-operator">=</span> p_2 f_k ctrl jp cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="keyword">if</span> e<span class="tuareg-font-lock-operator">()</span> <span class="keyword">then</span>
+            f_1 unit_value
+          <span class="keyword">else</span>
+            f_2 unit_value
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* while                              *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_while</span><span class="variable-name"> e p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_body </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> dummy_step <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f_while</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="keyword">if</span> e<span class="tuareg-font-lock-operator">()</span>
+          <span class="keyword">then</span> <span class="tuareg-font-lock-operator">!</span>f_body unit_value
+          <span class="keyword">else</span> f_k unit_value
+        <span class="tuareg-font-lock-governing">in</span>
+        f_body <span class="tuareg-font-lock-operator">:=</span> p f_while ctrl None cd<span class="tuareg-font-lock-operator">;</span>
+        f_while
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* for                                *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_for</span><span class="variable-name"> e1 e2 dir p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">(</span><span class="variable-name">incr</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> cmp</span><span class="tuareg-font-lock-operator">)</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">if</span> dir <span class="keyword">then</span> incr<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">(&lt;=)</span> <span class="keyword">else</span> decr<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">(&gt;=)</span> <span class="tuareg-font-lock-governing">in</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="tuareg-font-lock-governing">rec</span> <span class="function-name">f_for</span><span class="variable-name"> i v2 _ </span><span class="tuareg-font-lock-operator">=</span>
+          incr i<span class="tuareg-font-lock-operator">;</span>
+          <span class="keyword">if</span> cmp <span class="tuareg-font-lock-operator">!</span>i v2
+          <span class="keyword">then</span> p <span class="tuareg-font-lock-operator">!</span>i <span class="tuareg-font-lock-operator">(</span>f_for i v2<span class="tuareg-font-lock-operator">)</span> ctrl None cd unit_value
+          <span class="keyword">else</span> f_k unit_value
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f_for_init</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">i </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="tuareg-font-lock-operator">(</span>e1<span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-governing">in</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">v2 </span><span class="tuareg-font-lock-operator">=</span> e2<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          <span class="keyword">if</span> cmp <span class="tuareg-font-lock-operator">!</span>i v2
+          <span class="keyword">then</span> p <span class="tuareg-font-lock-operator">!</span>i <span class="tuareg-font-lock-operator">(</span>f_for i v2<span class="tuareg-font-lock-operator">)</span> ctrl None cd unit_value
+          <span class="keyword">else</span> f_k unit_value
+        <span class="tuareg-font-lock-governing">in</span>
+        f_for_init
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* for_dopar                          *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_fordopar</span><span class="variable-name"> e1 e2 dir p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cpt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Join</span>.new_join_point 0 <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">j </span><span class="tuareg-font-lock-operator">=</span> join_n cpt f_k jp ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f_fordopar</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="keyword">if</span> dir <span class="keyword">then</span>
+            <span class="tuareg-font-lock-governing">begin</span>
+              <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">min </span><span class="tuareg-font-lock-operator">=</span> e1<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+              <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">max </span><span class="tuareg-font-lock-operator">=</span> e2<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+              <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">n </span><span class="tuareg-font-lock-operator">=</span> max <span class="tuareg-font-lock-operator">-</span> min <span class="tuareg-font-lock-operator">+</span> 1 <span class="tuareg-font-lock-governing">in</span>
+              <span class="type">R</span>.<span class="type">Join</span>.incr cpt n<span class="tuareg-font-lock-operator">;</span>
+              <span class="keyword">if</span> n <span class="tuareg-font-lock-operator">&lt;=</span> 0 <span class="keyword">then</span>
+                f_k unit_value
+              <span class="keyword">else</span>
+                <span class="keyword">for</span> i <span class="tuareg-font-lock-operator">=</span> max <span class="keyword">downto</span> min <span class="keyword">do</span>
+                  <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> p i j ctrl <span class="tuareg-font-lock-operator">(</span>Some cpt<span class="tuareg-font-lock-operator">)</span> cd <span class="tuareg-font-lock-governing">in</span>
+                  <span class="type">R</span>.on_current_instant cd f
+                <span class="keyword">done</span>
+            <span class="tuareg-font-lock-governing">end</span>
+          <span class="keyword">else</span>
+            <span class="tuareg-font-lock-governing">begin</span>
+              <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">max </span><span class="tuareg-font-lock-operator">=</span> e1<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+              <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">min </span><span class="tuareg-font-lock-operator">=</span> e2<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+              <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">n </span><span class="tuareg-font-lock-operator">=</span> max <span class="tuareg-font-lock-operator">-</span> min <span class="tuareg-font-lock-operator">+</span> 1 <span class="tuareg-font-lock-governing">in</span>
+              <span class="type">R</span>.<span class="type">Join</span>.incr cpt n<span class="tuareg-font-lock-operator">;</span>
+              <span class="keyword">if</span> n <span class="tuareg-font-lock-operator">&lt;=</span> 0 <span class="keyword">then</span>
+                f_k unit_value
+              <span class="keyword">else</span>
+                <span class="keyword">for</span> i <span class="tuareg-font-lock-operator">=</span> min <span class="keyword">to</span> max <span class="keyword">do</span>
+                  <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> p i j ctrl <span class="tuareg-font-lock-operator">(</span>Some cpt<span class="tuareg-font-lock-operator">)</span> cd <span class="tuareg-font-lock-governing">in</span>
+                  <span class="type">R</span>.on_current_instant cd f
+                <span class="keyword">done</span>
+            <span class="tuareg-font-lock-governing">end</span>
+        <span class="tuareg-font-lock-governing">in</span>
+        f_fordopar
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_par_n</span><span class="variable-name"> p_list </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">nb </span><span class="tuareg-font-lock-operator">=</span> <span class="type">List</span>.length p_list <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">i </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">match</span> jp <span class="keyword">with</span> None <span class="tuareg-font-lock-operator">-&gt;</span> nb <span class="tuareg-font-lock-operator">|</span> Some _ <span class="tuareg-font-lock-operator">-&gt;</span> nb <span class="tuareg-font-lock-operator">-</span> 1 <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cpt</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> j </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="keyword">match</span> jp <span class="keyword">with</span>
+            <span class="tuareg-font-lock-operator">|</span> None <span class="tuareg-font-lock-operator">-&gt;</span>
+                <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cpt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Join</span>.new_join_point 0 <span class="tuareg-font-lock-governing">in</span>
+                cpt<span class="tuareg-font-lock-operator">,</span> join_n cpt f_k ctrl jp cd
+            <span class="tuareg-font-lock-operator">|</span> Some cpt <span class="tuareg-font-lock-operator">-&gt;</span> cpt<span class="tuareg-font-lock-operator">,</span> f_k
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f_list </span><span class="tuareg-font-lock-operator">=</span> <span class="type">List</span>.rev_map <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">p </span><span class="tuareg-font-lock-operator">-&gt;</span> p j ctrl <span class="tuareg-font-lock-operator">(</span>Some cpt<span class="tuareg-font-lock-operator">)</span> cd<span class="tuareg-font-lock-operator">)</span> p_list <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="type">R</span>.<span class="type">Join</span>.incr cpt i<span class="tuareg-font-lock-operator">;</span>
+          <span class="type">R</span>.on_current_instant_list cd f_list
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">rml_seq_n </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="tuareg-font-lock-governing">rec</span> <span class="function-name">fold</span><span class="variable-name"> p_list k ctrl jp cd </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="keyword">match</span> p_list <span class="keyword">with</span>
+        <span class="tuareg-font-lock-operator">|</span> <span class="tuareg-font-lock-operator">[]</span> <span class="tuareg-font-lock-operator">-&gt;</span> k
+        <span class="tuareg-font-lock-operator">|</span> <span class="tuareg-font-lock-operator">[</span> p <span class="tuareg-font-lock-operator">]</span> <span class="tuareg-font-lock-operator">-&gt;</span> p k ctrl jp cd
+        <span class="tuareg-font-lock-operator">|</span> p<span class="tuareg-font-lock-operator">::</span>p_list <span class="tuareg-font-lock-operator">-&gt;</span> p <span class="tuareg-font-lock-operator">(</span>fold p_list k ctrl jp cd<span class="tuareg-font-lock-operator">)</span> ctrl None cd
+      <span class="tuareg-font-lock-governing">in</span>
+      <span class="keyword">fun</span> <span class="variable-name">p_list </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span>
+            <span class="comment">(* List.fold_right (fun p -&gt; fun k -&gt; p k ctrl None) p_list f_k  *)</span>
+            fold p_list f_k ctrl jp cd
+          <span class="tuareg-font-lock-governing">in</span> f
+
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* until                              *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">true_cond</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span> <span class="constant">true</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until</span><span class="variable-name"> pause_kind expr_evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control <span class="tuareg-font-lock-operator">(</span>Kill <span class="tuareg-font-lock-operator">(</span>pause_kind<span class="tuareg-font-lock-operator">,</span> f_k<span class="tuareg-font-lock-operator">))</span> body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          f evt true_cond <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> pause_kind evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        create_control <span class="tuareg-font-lock-operator">(</span>Kill <span class="tuareg-font-lock-operator">(</span>pause_kind<span class="tuareg-font-lock-operator">,</span> f_k<span class="tuareg-font-lock-operator">))</span> body f_k ctrl cd evt true_cond
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_conf</span><span class="variable-name"> pause_kind expr_cfg p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control_evt_conf <span class="tuareg-font-lock-operator">(</span>Kill <span class="tuareg-font-lock-operator">(</span>pause_kind<span class="tuareg-font-lock-operator">,</span> f_k<span class="tuareg-font-lock-operator">))</span> body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt_cfg </span><span class="tuareg-font-lock-operator">=</span> expr_cfg <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          f evt_cfg <span class="tuareg-font-lock-operator">()</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* until handler                      *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_handler_local</span><span class="variable-name"> pause_kind expr_evt matching_opt p p_handler </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="tuareg-font-lock-operator">(</span><span class="type">Obj</span>.magic<span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event</span><span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">handler</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">x </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.value <span class="tuareg-font-lock-operator">!</span>evt <span class="tuareg-font-lock-governing">in</span>
+          p_handler x f_k ctrl jp cd
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control <span class="tuareg-font-lock-operator">(</span>Kill_handler <span class="tuareg-font-lock-operator">(</span>pause_kind<span class="tuareg-font-lock-operator">,</span> handler<span class="tuareg-font-lock-operator">))</span> body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cond </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="keyword">match</span> matching_opt <span class="keyword">with</span>
+            <span class="tuareg-font-lock-operator">|</span> None <span class="tuareg-font-lock-operator">-&gt;</span> true_cond
+            <span class="tuareg-font-lock-operator">|</span> Some cond <span class="tuareg-font-lock-operator">-&gt;</span> cond
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          evt <span class="tuareg-font-lock-operator">:=</span> expr_evt <span class="tuareg-font-lock-operator">();</span>
+          f <span class="tuareg-font-lock-operator">!</span>evt cond <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_handler_local</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> pause_kind evt matching_opt p p_handler </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">handler</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">x </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Event</span>.value evt <span class="tuareg-font-lock-governing">in</span>
+          p_handler x f_k ctrl jp cd
+        <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control <span class="tuareg-font-lock-operator">(</span>Kill_handler <span class="tuareg-font-lock-operator">(</span>pause_kind<span class="tuareg-font-lock-operator">,</span> handler<span class="tuareg-font-lock-operator">))</span> body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">cond </span><span class="tuareg-font-lock-operator">=</span>
+          <span class="keyword">match</span> matching_opt <span class="keyword">with</span>
+            <span class="tuareg-font-lock-operator">|</span> None <span class="tuareg-font-lock-operator">-&gt;</span> true_cond
+            <span class="tuareg-font-lock-operator">|</span> Some cond <span class="tuareg-font-lock-operator">-&gt;</span> cond
+        <span class="tuareg-font-lock-governing">in</span>
+        f evt cond
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_handler</span><span class="variable-name"> pause_kind expr_evt p p_handler </span><span class="tuareg-font-lock-operator">=</span>
+      rml_until_handler_local pause_kind expr_evt None p p_handler
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_handler</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> pause_kind evt p p_handler </span><span class="tuareg-font-lock-operator">=</span>
+      rml_until_handler_local<span class="tuareg-font-lock-operator">'</span> pause_kind evt None p p_handler
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_handler_match</span><span class="variable-name"> pause_kind expr_evt matching p p_handler </span><span class="tuareg-font-lock-operator">=</span>
+      rml_until_handler_local pause_kind expr_evt <span class="tuareg-font-lock-operator">(</span>Some matching<span class="tuareg-font-lock-operator">)</span> p p_handler
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_until_handler_match</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> pause_kind evt matching p p_handler </span><span class="tuareg-font-lock-operator">=</span>
+      rml_until_handler_local<span class="tuareg-font-lock-operator">'</span> pause_kind evt <span class="tuareg-font-lock-operator">(</span>Some matching<span class="tuareg-font-lock-operator">)</span> p p_handler
+
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* control                            *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">step_control_static</span><span class="variable-name"> evt cond p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        create_control Susp body f_k ctrl cd evt cond
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">step_control</span><span class="variable-name"> expr_evt cond p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control Susp body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          f evt cond <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_control</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p </span><span class="tuareg-font-lock-operator">=</span> step_control_static evt true_cond p
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_control</span><span class="variable-name"> expr_evt p </span><span class="tuareg-font-lock-operator">=</span> step_control expr_evt true_cond p
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_control_match</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt matching p </span><span class="tuareg-font-lock-operator">=</span> step_control_static evt matching p
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_control_match</span><span class="variable-name"> expr_evt matching p </span><span class="tuareg-font-lock-operator">=</span> step_control expr_evt matching p
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_control_conf</span><span class="variable-name"> expr_cfg p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control_evt_conf Susp body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt_cfg </span><span class="tuareg-font-lock-operator">=</span> expr_cfg <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          f evt_cfg <span class="tuareg-font-lock-operator">()</span>
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* when                               *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_when</span><span class="variable-name"> expr_evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+       <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">f </span><span class="tuareg-font-lock-operator">=</span> create_control When body f_k ctrl cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">evt </span><span class="tuareg-font-lock-operator">=</span> expr_evt <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+          f evt true_cond <span class="tuareg-font-lock-operator">()</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_when</span><span class="tuareg-font-lock-operator">'</span><span class="variable-name"> evt p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="function-name">body</span><span class="variable-name"> f_k new_ctrl </span><span class="tuareg-font-lock-operator">=</span> p f_k new_ctrl None cd <span class="tuareg-font-lock-governing">in</span>
+        <span class="type">R</span>.create_control When body f_k ctrl cd evt true_cond
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_when_conf</span><span class="variable-name"> expr_cfg </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="keyword">fun</span> <span class="variable-name">_ </span><span class="tuareg-font-lock-operator">-&gt;</span> print_debug <span class="string">"Unimplemented when_conf@."</span><span class="tuareg-font-lock-operator">;</span> <span class="keyword">raise</span> <span class="type">Rml_types</span>.RML
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* clock domain                       *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_newclock</span><span class="variable-name"> sch period p </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">fun</span> <span class="variable-name">f_k ctrl jp cd </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="type">R</span>.new_clock_domain cd ctrl
+          <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">cd ctrl f_k </span><span class="tuareg-font-lock-operator">-&gt;</span> p <span class="tuareg-font-lock-operator">(</span>CkExpr <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.clock cd<span class="tuareg-font-lock-operator">))</span> f_k ctrl None cd<span class="tuareg-font-lock-operator">)</span> sch period f_k
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">rml_top_clock </span><span class="tuareg-font-lock-operator">=</span> CkTop
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">rml_base_clock </span><span class="tuareg-font-lock-operator">=</span> CkLocal
+
+<span class="comment">(**************************************)</span>
+<span class="comment">(* rml_make                           *)</span>
+<span class="comment">(**************************************)</span>
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_make</span><span class="variable-name"> cd result p </span><span class="tuareg-font-lock-operator">=</span>
+     <span class="comment">(* Function to create the last continuation of a toplevel process *)</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">jp</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> join_end </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">term_cpt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Join</span>.new_join_point 0 <span class="tuareg-font-lock-governing">in</span>
+        Some term_cpt<span class="tuareg-font-lock-operator">,</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="type">R</span>.<span class="type">Join</span>.incr term_cpt 1<span class="tuareg-font-lock-operator">;</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f</span><span class="variable-name"> x </span><span class="tuareg-font-lock-operator">=</span>
+            <span class="keyword">if</span> <span class="type">R</span>.<span class="type">Join</span>.decr term_cpt <span class="keyword">then</span>
+              <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.set_paused cd x<span class="tuareg-font-lock-operator">;</span> result <span class="tuareg-font-lock-operator">:=</span> Some x<span class="tuareg-font-lock-operator">)</span>
+          <span class="tuareg-font-lock-governing">in</span> f
+      <span class="tuareg-font-lock-governing">in</span>
+      p <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-operator">(</span>join_end<span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-operator">(</span>control_tree cd<span class="tuareg-font-lock-operator">)</span> jp cd
+
+    <span class="tuareg-font-lock-governing">let</span> <span class="function-name">rml_make_n</span><span class="variable-name"> cd result pl </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">jp</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> join_end </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">term_cpt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">R</span>.<span class="type">Join</span>.new_join_point 0 <span class="tuareg-font-lock-governing">in</span>
+        Some term_cpt<span class="tuareg-font-lock-operator">,</span>
+        <span class="keyword">fun</span> <span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">-&gt;</span>
+          <span class="type">R</span>.<span class="type">Join</span>.incr term_cpt <span class="tuareg-font-lock-operator">(</span><span class="type">List</span>.length pl<span class="tuareg-font-lock-operator">);</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="function-name">f</span><span class="variable-name"> x </span><span class="tuareg-font-lock-operator">=</span>
+            <span class="keyword">if</span> <span class="type">R</span>.<span class="type">Join</span>.decr term_cpt <span class="keyword">then</span>
+              <span class="tuareg-font-lock-operator">(</span><span class="type">R</span>.set_paused cd x<span class="tuareg-font-lock-operator">;</span> result <span class="tuareg-font-lock-operator">:=</span> Some x<span class="tuareg-font-lock-operator">)</span>
+          <span class="tuareg-font-lock-governing">in</span> f
+      <span class="tuareg-font-lock-governing">in</span>
+      <span class="type">List</span>.map <span class="tuareg-font-lock-operator">(</span><span class="keyword">fun</span> <span class="variable-name">p </span><span class="tuareg-font-lock-operator">-&gt;</span> p <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-operator">(</span>join_end <span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-operator">(</span>control_tree cd<span class="tuareg-font-lock-operator">)</span> jp cd<span class="tuareg-font-lock-operator">)</span> pl
+
+    <span class="tuareg-font-lock-governing">module</span> <span class="type">R </span><span class="tuareg-font-lock-operator">=</span> R
+
+  <span class="tuareg-font-lock-governing">end</span>  <span class="comment">(* Module Rml_interpreter *)</span>
+
+<span class="comment">(* This module declaration is only used to check that the module is compatible
+   with the signature Lco_interpreter.S. It should not be used. *)</span>
+<span class="tuareg-font-lock-governing">module</span> <span class="type">Fake </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-operator">(</span><span class="variable-name">Rml_interpreter</span> <span class="tuareg-font-lock-operator">:</span>
+     <span class="tuareg-font-lock-operator">(</span><span class="tuareg-font-lock-governing">functor</span> <span class="tuareg-font-lock-operator">(</span><span class="variable-name">R</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">Runtime.CONTROL_TREE_R</span><span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">Lco_interpreter</span>.S<span class="tuareg-font-lock-operator">))</span>
+</pre>
+  </body>
+</html>

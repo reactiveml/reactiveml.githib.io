@@ -1,0 +1,5 @@
+domain ck do
+  print "OK"; pause topck; print "OK"
+  ||
+  pause ck; print "OK"
+done.

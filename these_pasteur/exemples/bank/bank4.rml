@@ -1,0 +1,37 @@
+open Agents_ck
+
+let (<<-) s f = emit s f
+
+
+type cmd = Put of int | Info
+
+let process bank self () =
+  memory counter default 0 gather (fun f acc -> f acc) in
+  memory operations default 0 gather (fun f acc -> f acc) reset global_ck in
+  run react self
+    begin proc msg return -> match msg with
+    | Put x -> operations <<- (+) 1; counter <<- (+) x
+    | Info -> return (last counter)
+    end
+  ||
+  loop
+    await operations(nb) in
+    if nb > 3
+    then (counter <<- (fun c -> c - 2); operations <<- (fun nb -> nb - 3))
+  end
+
+let process main =
+  let b_p, b = run mk_agent "bank" global_ck bank in
+  run b_p ()
+  ||
+  for i=1 to 4 do
+    b << (Put 10)
+  done;
+  pause;
+  b << (Put 10);
+  pause;
+  let count = run send_and_wait b Info in
+  print_endline ("Solde: "^string_of_int count);
+  kill b
+
+

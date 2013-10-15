@@ -1,0 +1,365 @@
+open Ast
+open Misc
+
+(* Signal environment *)
+type status = Present | Absent | Unknown
+
+type revent = {
+    r_name : string;
+    r_may_emit : (unit, unit list) event{|topck|};
+    r_status : status mevent{|topck|};
+    r_clock : string;
+  }
+
+type rclock =
+    { c_name : string;
+      c_depth : int;
+      c_parent : rclock option;
+      c_active : (unit, unit list) event{|topck|};
+      c_step : (unit, unit list) event{|topck|};
+      c_step_done : (unit, unit list) event{|topck|};
+      c_waiting : int mevent{|topck|};
+      c_signals : (ident * revent) list; }
+
+signal move
+
+let process mk_clock name parent =
+  signal c_active, c_step, c_step_done in
+  memory c_waiting default -1 gather (fun f acc -> f acc) in
+  let depth = match parent with None -> 0 | Some pck -> pck.c_depth + 1 in
+  { c_name = name; c_parent = parent; c_depth = depth;
+    c_active = c_active; c_step = c_step;
+    c_step_done = c_step_done; c_waiting = c_waiting; c_signals = [] }
+
+let process new_event ck id =
+  memory r_status default Unknown gather (fun f acc -> f acc) in
+  signal r_may_emit in
+  let rev = { r_name = id; r_status = r_status; r_may_emit = r_may_emit; r_clock = ck.c_name } in
+  { ck with c_signals = (id, rev)::ck.c_signals }
+
+let rec event_of_id ck id =
+  try
+    List.assoc id ck.c_signals
+  with
+  | Not_found ->
+      (match ck.c_parent with
+      | None -> print_endline ("Unknown or unreachable signal "^id); assert false
+      | Some pck -> event_of_id pck id)
+
+let rec process mk_predict l = match l with
+| [] -> []
+| (ck, _)::l ->
+    signal s in
+    let l = run mk_predict l in
+    (ck, s)::l
+
+let rec get_clock_by_depth d ck =
+  if ck.c_depth = d then ck
+  else (
+    match ck.c_parent with
+    | None -> assert false
+    | Some pck -> get_clock_by_depth d pck
+  )
+
+let rec get_clock_by_name n ck =
+  if ck.c_name = n then ck
+  else (
+    match ck.c_parent with
+    | None -> assert false
+    | Some pck -> get_clock_by_name n pck
+  )
+
+let rec ck_assoc ck l = match l with
+| [] -> raise Not_found
+| (pck, v)::l -> if pck.c_name = ck.c_name then v else ck_assoc ck l
+
+(* combinators *)
+
+let process forward s_in s_out =
+  loop
+    await immediate s_in;
+    emit s_out;
+    pause
+  end
+
+let process forward_list predict_in predict_out =
+  run par_iter2
+    (proc (_, p_in) (_, p_out) -> run forward p_in p_out)
+    predict_in predict_out
+
+let process pemit s lck (step_in, predict_in) (step_out, predict_out) =
+  let rev = event_of_id lck s in
+  (* execution *)
+  await immediate step_in;
+  rev.r_status <== Present;
+  print_debug (s^":emit");
+  emit step_out;
+  emit move;
+  pause;
+  emit move
+  ||
+  (* prediction *)
+  run par_iter2
+    (proc (ck, p_in) (_, p_out) ->
+      loop
+        await immediate p_in;
+        if rev.r_clock = ck.c_name then emit rev.r_may_emit;
+        emit p_out;
+        pause
+      end)
+    predict_in predict_out
+
+let process ppause pck lck (step_in, predict_in) (step_out, predict_out) =
+  let pck = get_clock_by_name pck lck in
+  (* execution *)
+  await immediate step_in;
+  begin
+    (* emet sur c_waiting jusqu'a la fin de l'instant que l'on attend *)
+    do
+      loop
+        lck.c_waiting <<- max (pck.c_depth);
+        pause;
+        await immediate lck.c_step
+      end
+    until pck.c_step_done done
+    ||
+    emit move;
+    pause;
+    await immediate pck.c_step;
+    begin
+      emit step_out
+      ||
+      (* on commence une nouvelle prediction a l'instant suivant *)
+      run hold_until (ck_assoc lck predict_out) lck.c_step_done
+    end
+  end
+  ||
+  (* predicition *)
+  run par_iter2
+    (proc (ck, p_in) (_, p_out) -> if ck.c_depth < pck.c_depth then run forward p_in p_out)
+    predict_in predict_out
+
+let process pseq p1 p2 lck (step_in, predict_in) (step_out, predict_out) =
+  signal l_step in
+  let l_predict = run mk_predict predict_out in
+  run p1 lck (step_in, predict_in) (l_step, l_predict)
+  ||
+  run p2 lck (l_step, l_predict) (step_out, predict_out)
+
+let process ppar p1 p2 env (step_in, predict_in) (step_out, predict_out) =
+  signal s_out1, s_out2 in
+  let p_out1 = run mk_predict predict_out in
+  let p_out2 = run mk_predict predict_out in
+  run p1 env (step_in, predict_in) (s_out1, p_out1)
+  ||
+  run p2 env (step_in, predict_in) (s_out2, p_out2)
+  ||
+  (* execution *)
+  begin
+    (await immediate s_out1 || await immediate s_out2);
+    emit step_out
+  end
+  ||
+  (* prediction *)
+  run par_iter3
+    (proc (_, p_out1) (_, p_out2) (_, p_out) ->
+      loop
+        await immediate (p_out1 /\ p_out2);
+        emit p_out;
+        pause
+      end)
+    p_out1 p_out2 predict_out
+  ||
+  (* maintient p_out1 tant que la seconde branche n'a pas terminee *)
+  await immediate s_out1;
+  do
+    run par_iter (proc (_, p_out1) -> run hold p_out1) p_out1
+  until s_out2 done
+  ||
+  (* idem pour p_out2 *)
+  await immediate s_out2;
+  do
+    run par_iter (proc (_, p_out2) -> run hold p_out2) p_out2
+  until s_out1 done
+
+let process ppresent s p1 p2 lck (step_in, predict_in) (step_out, predict_out) =
+  let rev = event_of_id lck s in
+  signal s_in1, s_in2, s_out1, s_out2 in
+  let p_in1 = run mk_predict predict_in in
+  let p_in2 = run mk_predict predict_in in
+  run p1 lck (s_in1, p_in1) (s_out1, predict_out)
+  ||
+  run p2 lck (s_in2, p_in2) (s_out2, predict_out)
+  ||
+  begin
+    (* execution *)
+    let rec process check_status =
+      emit lck.c_active;
+      match !!(rev.r_status) with
+      | Present ->
+          print_debug (s^":present");
+          emit move; emit lck.c_active;
+          emit s_in1;
+          (* on attend la terminaison de cette branche *)
+          await immediate s_out1;
+          emit step_out
+      | Absent ->
+          print_debug (s^":absent");
+          emit move; emit lck.c_active;
+          emit s_in2;
+          (* on attend la terminaison de cette branche *)
+          await immediate s_out2;
+          emit step_out
+      | Unknown ->
+          print_debug (s^":unkown");
+          present rev.r_may_emit
+          then pause
+          else
+            (if !!(rev.r_status) = Unknown then
+              (emit move; emit lck.c_active; rev.r_status <== Absent));
+          run check_status
+          ||
+          pause;
+          present move else (print_endline "Program is not causal"; exit 2)
+    in
+    await immediate step_in;
+    run check_status
+  end
+  ||
+  (* prediction *)
+  let rck = get_clock_by_name rev.r_clock lck in
+  run par_iter3
+    (proc (ck, predict_in) (_, p_in1) (_, p_in2) ->
+      loop
+        await immediate predict_in;
+        (match !!(rev.r_status) with
+        | Present when ck.c_depth >= rck.c_depth -> emit p_in1
+        | Absent when ck.c_depth >= rck.c_depth -> emit p_in2
+        | Unknown -> emit p_in1; emit p_in2);
+        pause
+      end)
+    predict_in p_in1 p_in2
+
+let process pnothing lck (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await immediate step_in;
+  emit move;
+  emit step_out
+  ||
+  (* prediction *)
+  run forward_list predict_in predict_out
+
+let process pprint s env (step_in, predict_in) (step_out, predict_out) =
+  (* execution *)
+  await immediate step_in;
+  print_endline s;
+  emit move;
+  emit step_out
+  ||
+  (* prediction *)
+  run forward_list predict_in predict_out
+
+let process psignal s p lck (step_in, predict_in) (step_out, predict_out) =
+  let lck = run new_event lck s in
+  run p lck (step_in, predict_in) (step_out, predict_out)
+  ||
+  signal kill in
+  do
+    let rev = event_of_id lck s in
+    loop
+      await immediate lck.c_step_done;
+      rev.r_status <== Unknown;
+      await immediate lck.c_step
+    end
+  until kill done
+  ||
+  await immediate step_out; emit kill
+
+let process ploop p lck (step_in, predict_in) _ =
+  let rec process aux (s_in, p_in) =
+    signal s_out in
+    signal add in
+    let p_out = run mk_predict p_in in
+    run p lck (s_in, p_in) (s_out, p_out)
+    ||
+    run par_iter
+      (proc (_, p_out) -> await immediate p_out; emit add)
+      p_out
+    ||
+    await immediate s_out; emit add
+    ||
+    await immediate add;
+    run aux (s_out, p_out)
+  in
+  run aux (step_in, predict_in)
+
+let process emit_active pck =
+  match pck with
+  | None -> ()
+  | Some lck -> emit lck.c_active
+
+let process _domain s pck p (step_in, predict_in) (step_out, predict_out) =
+  let nck = run mk_clock s pck in
+  signal p_in, p_out in
+  do
+    run p nck (step_in, (nck, p_in)::predict_in) (step_out, (nck, p_out)::predict_out)
+  until step_out done
+  ||
+  do
+    signal susp in
+    control
+      match pck with
+      | None -> ()
+      | Some pck -> run hold pck.c_active
+    with susp done
+    ||
+    (* execution *)
+    loop
+      run await_absent nck.c_active;
+      emit nck.c_step_done; emit move;
+      print_debug ("EOI for "^nck.c_name);
+      pause;
+      emit move;
+      (* fin macro instant ? *)
+      let idx = !!(nck.c_waiting) in
+      print_debug (nck.c_name^": waiting for depth="^string_of_int idx);
+      if idx >= 0 && idx < nck.c_depth then (
+        let wck = get_clock_by_depth idx nck in
+        print_debug (nck.c_name^" waiting for "^wck.c_name);
+        emit susp;
+        await immediate wck.c_step;
+        emit susp
+      );
+      (* reset c_waiting *)
+      nck.c_waiting <== -1;
+      pause;
+      emit nck.c_step;
+      print_debug ("New step for "^nck.c_name^"\n\n");
+      pause
+    end
+    ||
+    (* prediction *)
+    run hold_until p_in nck.c_step_done
+  until step_out done
+
+let process pdomain s p lck (step_in, predict_in) (step_out, predict_out) =
+  run _domain s (Some lck) p (step_in, predict_in) (step_out, predict_out)
+
+let rec build_program p = match p with
+| Pnothing -> pnothing
+| Ppause ck -> ppause ck
+| Pemit s -> pemit s
+| Pprint s -> pprint s
+| Pseq (e1, e2) -> pseq (build_program e1) (build_program e2)
+| Ppar (e1, e2) -> ppar (build_program e1) (build_program e2)
+| Ppresent (s, e1, e2) -> ppresent s (build_program e1) (build_program e2)
+| Psignal (s, e) -> psignal s (build_program e)
+| Ploop e1 -> ploop (build_program e1)
+| Pdomain (ck, _, e) -> pdomain ck (build_program e)
+
+let process run_program p =
+  let p = build_program p in
+  signal step_in, step_out in
+  run _domain "topck" None p (step_in, []) (step_out, [])
+  ||
+  emit step_in

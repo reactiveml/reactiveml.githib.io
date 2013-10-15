@@ -1,0 +1,7 @@
+let rec process instantaneous s =
+  emit s ();
+  run (instantaneous s)
+
+let process main =
+  signal s in
+  run instantaneous s

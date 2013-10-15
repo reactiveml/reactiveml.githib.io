@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>runtime.mli</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .doc {
+        /* font-lock-doc-face */
+        color: #8b2252;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+
+<span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">'</span><span class="type">a step </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">'</span>a <span class="tuareg-font-lock-operator">-&gt;</span> unit
+
+<span class="tuareg-font-lock-governing">module</span> <span class="tuareg-font-lock-governing">type</span> <span class="type">SEQ_DATA_STRUCT </span><span class="tuareg-font-lock-operator">=</span>
+<span class="tuareg-font-lock-governing">sig</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">next</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">current</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">waiting_list</span>
+
+  <span class="comment">(* functions on the current data structure *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">mk_current </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> current</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">exec_all_current </span><span class="tuareg-font-lock-operator">:</span> <span class="type">current </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_current </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> current </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_current_list </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit step list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> current </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="comment">(* Adds all elements of a waiting list or next to current and empty it. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_current_waiting_list </span><span class="tuareg-font-lock-operator">:</span> <span class="type">waiting_list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> current </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_current_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">next </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> current </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">current_length </span><span class="tuareg-font-lock-operator">:</span> <span class="type">current </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> int</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">waiting_length </span><span class="tuareg-font-lock-operator">:</span> <span class="type">waiting_list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> int</span>
+
+  <span class="comment">(*functions on waiting list*)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">mk_waiting_list </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> waiting_list</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_waiting </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> waiting_list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">take_all </span><span class="tuareg-font-lock-operator">:</span> <span class="type">waiting_list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step list</span>
+
+  <span class="comment">(* functions on next lists *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">mk_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> next</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> next </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">add_next_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">next </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> next </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">clear_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">next </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">is_empty_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">next </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+<span class="tuareg-font-lock-governing">end</span>
+
+<span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">step</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">clock</span><span class="tuareg-font-lock-operator">)</span><span class="type"> control_type </span><span class="tuareg-font-lock-operator">=</span>
+    <span class="tuareg-font-lock-operator">|</span> Clock_domain <span class="tuareg-font-lock-operator">of</span> <span class="tuareg-font-lock-operator">'</span>clock
+    <span class="tuareg-font-lock-operator">|</span> Kill <span class="tuareg-font-lock-operator">of</span> <span class="type">Rml_types</span>.pause_kind <span class="tuareg-font-lock-operator">*</span> <span class="tuareg-font-lock-operator">'</span>step
+    <span class="tuareg-font-lock-operator">|</span> Kill_handler <span class="tuareg-font-lock-operator">of</span> <span class="type">Rml_types</span>.pause_kind <span class="tuareg-font-lock-operator">*</span> <span class="tuareg-font-lock-operator">(</span>unit <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>step<span class="tuareg-font-lock-operator">)</span>
+    <span class="tuareg-font-lock-operator">|</span> Susp
+    <span class="tuareg-font-lock-operator">|</span> When
+
+
+
+<span class="tuareg-font-lock-governing">module</span> <span class="tuareg-font-lock-governing">type</span> <span class="type">CONTROL_TREE_R </span><span class="tuareg-font-lock-operator">=</span>
+<span class="tuareg-font-lock-governing">sig</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">control_tree</span>
+  <span class="tuareg-font-lock-governing">and</span> <span class="function-name">clock_domain</span>
+  <span class="tuareg-font-lock-governing">and</span> <span class="variable-name">clock</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">region</span>
+
+  <span class="tuareg-font-lock-governing">type</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">event_cfg</span>
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">Event </span><span class="tuareg-font-lock-operator">:</span>
+    <span class="tuareg-font-lock-operator">(</span><span class="tuareg-font-lock-governing">sig</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">new_evt_global</span><span class="tuareg-font-lock-operator">:</span> <span class="type">Rml_types.signal_kind </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">('</span><span class="type">a </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">new_evt </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> region </span><span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="type">Rml_types</span>.signal_kind <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>b <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">('</span>a <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>b <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>b<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span> clock option <span class="tuareg-font-lock-operator">-&gt;</span>
+        <span class="tuareg-font-lock-operator">(('</span>a<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">'</span>b<span class="tuareg-font-lock-operator">)</span> event <span class="tuareg-font-lock-operator">-&gt;</span> unit step<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span> unit step
+
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">status</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">?</span><span class="type">only_at_eoi</span><span class="tuareg-font-lock-operator">:</span>bool <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">('</span>a<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">'</span>b<span class="tuareg-font-lock-operator">)</span> event <span class="tuareg-font-lock-operator">-&gt;</span> bool
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">value</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">one</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a list</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">pre_status</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">pre_value</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">last</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">default</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">emit</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">clock </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">region_of_clock </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> region</span>
+
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">cfg_present </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> event_cfg</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">cfg_or </span><span class="tuareg-font-lock-operator">:</span> <span class="type">event_cfg </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> event_cfg </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> event_cfg</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">cfg_and </span><span class="tuareg-font-lock-operator">:</span> <span class="type">event_cfg </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> event_cfg </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> event_cfg</span>
+      <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">cfg_status</span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">?</span><span class="type">only_at_eoi</span><span class="tuareg-font-lock-operator">:</span>bool <span class="tuareg-font-lock-operator">-&gt;</span> event_cfg <span class="tuareg-font-lock-operator">-&gt;</span> bool
+     <span class="tuareg-font-lock-governing">end</span><span class="tuareg-font-lock-operator">)</span>
+
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">join_point</span>
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">Join </span><span class="tuareg-font-lock-operator">:</span>
+    <span class="tuareg-font-lock-operator">(</span><span class="tuareg-font-lock-governing">sig</span>
+        <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">new_join_point </span><span class="tuareg-font-lock-operator">:</span> <span class="type">int </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> join_point</span>
+        <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">incr </span><span class="tuareg-font-lock-operator">:</span> <span class="type">join_point </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> int </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+        <span class="comment">(* Returns whether the join point counter has reached zero *)</span>
+        <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">decr </span><span class="tuareg-font-lock-operator">:</span> <span class="type">join_point </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+     <span class="tuareg-font-lock-governing">end</span><span class="tuareg-font-lock-operator">)</span>
+
+  <span class="comment">(* functions on the control tree *)</span>
+  <span class="comment">(* let f = create_control kind (fun f_k new_ctrl -&gt; body new_ctrl f_k) f_k ctrl s (fun v -&gt; .) in]
+     f ()
+
+     OR for partial application:
+
+     let f = create_control kind (fun f_k new_ctrl -&gt; body new_ctrl f_k) f_k ctrl in
+     fun () -&gt;
+       let s = e () in
+       f s (fun v -&gt; .) ()
+  *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">create_control </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">(</span><span class="type">unit step</span><span class="tuareg-font-lock-operator">,</span><span class="type"> clock</span><span class="tuareg-font-lock-operator">)</span><span class="type"> control_type </span><span class="tuareg-font-lock-operator">-&gt;</span>
+    <span class="tuareg-font-lock-operator">('</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> unit step<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> clock_domain <span class="tuareg-font-lock-operator">-&gt;</span>
+    <span class="tuareg-font-lock-operator">('</span>b<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">'</span>c<span class="tuareg-font-lock-operator">)</span> event <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">('</span>c <span class="tuareg-font-lock-operator">-&gt;</span> bool<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span> unit step
+
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">create_control_evt_conf </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">(</span><span class="type">unit step</span><span class="tuareg-font-lock-operator">,</span><span class="type"> clock</span><span class="tuareg-font-lock-operator">)</span><span class="type"> control_type </span><span class="tuareg-font-lock-operator">-&gt;</span>
+    <span class="tuareg-font-lock-operator">('</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> unit step<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> clock_domain <span class="tuareg-font-lock-operator">-&gt;</span>
+    event_cfg <span class="tuareg-font-lock-operator">-&gt;</span> unit step
+
+  <span class="comment">(* various functions on the clock domain *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">is_eoi </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">control_tree </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> control_tree</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">clock </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">top_clock </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">new_clock_domain </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> control_tree </span><span class="tuareg-font-lock-operator">-&gt;</span>
+    <span class="tuareg-font-lock-operator">(</span>clock_domain <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> unit step<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+    <span class="tuareg-font-lock-operator">(</span>int <span class="tuareg-font-lock-operator">-&gt;</span> int <span class="tuareg-font-lock-operator">*</span> int<span class="tuareg-font-lock-operator">)</span> option <span class="tuareg-font-lock-operator">-&gt;</span> int option <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">'</span>a step <span class="tuareg-font-lock-operator">-&gt;</span> unit step
+
+  <span class="comment">(* step scheduling *)</span>
+  <span class="keyword">exception</span> <span class="variable-name">Wait_again</span>
+
+  <span class="doc">(** [on_current_instant cd f] executes 'f ()' during the current step of [cd]. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_current_instant </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="doc">(** [on_current_instant_list cd fl] executes the list of step functions [fl]
+      during the current step of [cd]. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_current_instant_list </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step list </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="doc">(** [on_next_instant ctrl f] executes 'f ()' during the next activation of [ctrl]. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_next_instant </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">?</span><span class="type">kind</span><span class="tuareg-font-lock-operator">:</span><span class="type">Rml_types</span>.pause_kind <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> unit step <span class="tuareg-font-lock-operator">-&gt;</span> unit
+  <span class="doc">(** [on_eoi cd f v] executes 'f v' during the eoi of cd. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_eoi </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+
+  <span class="doc">(** [on_event evt ctrl f] executes 'f ()' if evt is emitted and
+      ctrl is active in the same step.
+      It waits for the next activation of w otherwise,
+      or if the call raises Wait_again *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_event </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> control_tree </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="doc">(** [on_event_cfg evt_cfg ctrl f] executes 'f ()' if evt_cfg is true and
+      ctrl is active in the same step.
+      It waits for the next activation of evt_cfg otherwise,
+      or if the call raises Wait_again *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_event_cfg </span><span class="tuareg-font-lock-operator">:</span> <span class="type">event_cfg </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> control_tree </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="doc">(** [on_event_or_next evt f_w cd ctrl f_next] executes 'f_w ()' if
+      evt is emitted before the end of instant of cd.
+      Otherwise, executes 'f_next ()' during the next instant. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_event_or_next </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">('</span><span class="type">a</span><span class="tuareg-font-lock-operator">,</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">b</span><span class="tuareg-font-lock-operator">)</span><span class="type"> event </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span>
+    clock_domain <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> unit step <span class="tuareg-font-lock-operator">-&gt;</span> unit
+ <span class="doc">(** [on_event_cfg_or_next evt_cfg f_w cd ctrl f_next] executes 'f_w ()' if
+      evt_cfg is true before the end of instant of cd.
+      Otherwise, executes 'f_next ()' during the next instant. *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">on_event_cfg_or_next </span><span class="tuareg-font-lock-operator">:</span> <span class="type">event_cfg </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit step </span><span class="tuareg-font-lock-operator">-&gt;</span>
+    clock_domain <span class="tuareg-font-lock-operator">-&gt;</span> control_tree <span class="tuareg-font-lock-operator">-&gt;</span> unit step <span class="tuareg-font-lock-operator">-&gt;</span> unit
+
+  <span class="comment">(* scheduling *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">init </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">get_top_clock_domain </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> clock_domain</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">react </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">set_paused </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="doc">(** [step_clock_domain ctrl new_ctrl cd new_cd] creates the step
+      function of the new clock domain [new_cd]. *)</span>
+<span class="comment">(*  val step_clock_domain :
+    control_tree -&gt; control_tree -&gt; clock_domain -&gt; clock_domain -&gt; unit -&gt; unit *)</span>
+
+
+  <span class="comment">(* Only for distributed runtimes *)</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">start_slave </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> </span><span class="tuareg-font-lock-operator">'</span><span class="type">a option</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">finalize_top_clock_domain </span><span class="tuareg-font-lock-operator">:</span> <span class="type">clock_domain </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> unit</span>
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">is_master </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> bool</span>
+<span class="tuareg-font-lock-governing">end</span>
+</pre>
+  </body>
+</html>

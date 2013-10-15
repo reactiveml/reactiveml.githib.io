@@ -1,0 +1,6 @@
+let process nonreactive_domain =
+  domain ck do
+    loop pause ck end
+  done
+
+let main = nonreactive_domain

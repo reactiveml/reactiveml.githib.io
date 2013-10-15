@@ -1,0 +1,23 @@
+let rec iter f l = match l with
+| [] -> ()
+| x::l -> f x; iter f l
+
+let rec fold_left f acc l = match l with
+| [] -> acc
+| x::l -> fold_left f (f acc x) l
+
+(* If l = [x0; ...; xn], runs p x0; p x1; ...; p xn *)
+let rec process iter_p p l = match l with
+| [] -> ()
+| x::l -> run p x; run iter_p p l
+
+(* Returns [p 0; ...; p n]*)
+let process init_p p n =
+  let rec process aux i = match i with
+  | i when i = n -> []
+  | _ ->
+      let x = run p i
+      and l = run aux (i+1) in
+      x::l
+  in
+  run aux 0

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>ast.rml</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.string   { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.string a { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.function-name   { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.function-name a { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.comment-delimiter   { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.comment-delimiter a { color: #c20015;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.constant   { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.constant a { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="type">let</span> debug = ref false
+<span class="type">let</span> print_debug s =
+  <span class="constant">if</span> !debug <span class="constant">then</span> print_endline s
+
+<span class="comment-delimiter">(* </span><span class="comment">Signals </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> ident = string
+<span class="type">let</span> ident_equal = (=)
+
+<span class="comment-delimiter">(* </span><span class="comment">Parsed expressions </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> pexp =
+  <span class="constant">|</span> <span class="function-name">Pnothing</span>
+  <span class="constant">|</span> <span class="function-name">Ppause</span>
+  <span class="constant">|</span> <span class="function-name">Pemit</span> <span class="type">of</span> ident
+  <span class="constant">|</span> <span class="function-name">Pprint</span> <span class="type">of</span> string
+  <span class="constant">|</span> <span class="function-name">Pseq</span> <span class="type">of</span> pexp * pexp
+  <span class="constant">|</span> <span class="function-name">Ppar</span> <span class="type">of</span> pexp * pexp
+  <span class="constant">|</span> <span class="function-name">Ppresent</span> <span class="type">of</span> ident * pexp * pexp
+  <span class="constant">|</span> <span class="function-name">Ploop</span> <span class="type">of</span> pexp
+  <span class="constant">|</span> <span class="function-name">Psignal</span> <span class="type">of</span> ident * pexp
+  <span class="constant">|</span> <span class="function-name">Ptrap</span> <span class="type">of</span> ident * pexp
+  <span class="constant">|</span> <span class="function-name">Pexit</span> <span class="type">of</span> ident
+  <span class="constant">|</span> <span class="function-name">Prec</span> <span class="type">of</span> ident * pexp
+  <span class="constant">|</span> <span class="function-name">Prun</span> <span class="type">of</span> ident
+
+<span class="comment-delimiter">(* </span><span class="comment">Prediction counters </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> pred = (ident * int) list
+
+<span class="type">let</span> pred_zero = ([]:pred)
+<span class="type">let</span> pred_get c s =
+  <span class="constant">try</span>
+    <span class="function-name">List</span>.assoc s c
+  <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Not_found</span> <span class="constant">-&gt;</span> 0
+<span class="type">let</span> pred_with c s v =
+  (s, v)::c
+<span class="type">let</span> pred_sum c1 c2 =
+  <span class="type">let</span> add_one (used, c) (s, v) =
+    <span class="constant">if</span> not (<span class="function-name">List</span>.mem s used) <span class="constant">then</span>
+      s::used, pred_with c s (pred_get c s + v)
+    <span class="constant">else</span>
+      s::used, c
+  <span class="type">in</span>
+  snd (<span class="function-name">List</span>.fold_left add_one ([], c1) c2)
+<span class="type">let</span> pred_sub c1 c2 =
+  <span class="type">let</span> add_one c (s, v) =
+    pred_with c s (pred_get c s - v)
+  <span class="type">in</span>
+  <span class="function-name">List</span>.fold_left add_one c1 c2
+
+<span class="type">let</span> pred_iter f c =
+  <span class="type">let</span> <span class="type">rec</span> aux used c = <span class="constant">match</span> c <span class="constant">with</span>
+  <span class="constant">|</span> [] <span class="constant">-&gt;</span> ()
+  <span class="constant">|</span> (s, v)::c <span class="constant">-&gt;</span>
+      <span class="constant">if</span> not (<span class="function-name">List</span>.mem s used) <span class="constant">then</span> f (s, v);
+      aux (s::used) c
+  <span class="type">in</span>
+  aux [] c
+
+<span class="type">let</span> pred_print c =
+  pred_iter (<span class="type">fun</span> (s, v) <span class="constant">-&gt;</span>  print_string (s^<span class="string">&quot;:&quot;</span>^string_of_int v^<span class="string">&quot; &quot;</span>)) c;
+  print_newline ()
+
+<span class="comment-delimiter">(* </span><span class="comment">Expressions </span><span class="comment-delimiter">*)</span>
+<span class="type">type</span> exp =
+  <span class="constant">|</span> <span class="function-name">Enothing</span>
+  <span class="constant">|</span> <span class="function-name">Epause</span> <span class="type">of</span> pred
+  <span class="constant">|</span> <span class="function-name">Eemit</span> <span class="type">of</span> ident
+  <span class="constant">|</span> <span class="function-name">Eprint</span> <span class="type">of</span> string
+  <span class="constant">|</span> <span class="function-name">Eseq</span> <span class="type">of</span> exp * exp
+  <span class="constant">|</span> <span class="function-name">Epar</span> <span class="type">of</span> pred * exp * exp
+  <span class="constant">|</span> <span class="function-name">Epresent</span> <span class="type">of</span> ident * exp * pred * exp * pred
+  <span class="constant">|</span> <span class="function-name">Eloop</span> <span class="type">of</span> exp * pred
+  <span class="constant">|</span> <span class="function-name">Esignal</span> <span class="type">of</span> ident * exp * int
+</pre>
+
+ </body>
+</html>

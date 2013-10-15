@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>load_balancer.ml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #008b8b;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="tuareg-font-lock-governing">type</span> <span class="type">S </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-governing">sig</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">site</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">kind </span><span class="tuareg-font-lock-operator">=</span> Lany <span class="tuareg-font-lock-operator">|</span> Lleaf
+
+  <span class="tuareg-font-lock-governing">class</span> <span class="tuareg-font-lock-governing">virtual</span><span class="variable-name"> load_balancer </span><span class="tuareg-font-lock-operator">:</span>
+  <span class="tuareg-font-lock-governing">object</span>
+    <span class="tuareg-font-lock-governing">method</span> <span class="tuareg-font-lock-governing">virtual</span><span class="variable-name"> </span><span class="function-name">new_child</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">(</span><span class="type">int </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> int </span><span class="tuareg-font-lock-operator">*</span><span class="type"> int</span><span class="tuareg-font-lock-operator">)</span><span class="type"> option </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> site </span><span class="tuareg-font-lock-operator">*</span><span class="type"> kind </span><span class="tuareg-font-lock-operator">*</span><span class="type"> load_balancer</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+  <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">mk_top_balancer </span><span class="tuareg-font-lock-operator">:</span> <span class="type">unit </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> load_balancer</span>
+<span class="tuareg-font-lock-governing">end</span>
+
+<span class="tuareg-font-lock-governing">module</span> <span class="type">Make </span><span class="tuareg-font-lock-operator">(</span><span class="variable-name">C</span> <span class="tuareg-font-lock-operator">:</span> <span class="type">Communication.S</span><span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-governing">struct</span>
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">site </span><span class="tuareg-font-lock-operator">=</span> <span class="type">C</span>.site
+  <span class="tuareg-font-lock-governing">type</span> <span class="type">kind </span><span class="tuareg-font-lock-operator">=</span> Lany <span class="tuareg-font-lock-operator">|</span> Lleaf
+
+  <span class="tuareg-font-lock-governing">class</span> <span class="tuareg-font-lock-governing">virtual</span><span class="variable-name"> load_balancer  </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">object</span>
+    <span class="tuareg-font-lock-governing">method</span> <span class="tuareg-font-lock-governing">virtual</span><span class="variable-name"> </span><span class="function-name">new_child</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">:</span> <span class="tuareg-font-lock-operator">(</span><span class="type">int </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> int </span><span class="tuareg-font-lock-operator">*</span><span class="type"> int</span><span class="tuareg-font-lock-operator">)</span><span class="type"> option </span><span class="tuareg-font-lock-operator">-&gt;</span><span class="type"> C.site </span><span class="tuareg-font-lock-operator">*</span><span class="type"> kind </span><span class="tuareg-font-lock-operator">*</span><span class="type"> load_balancer</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+  <span class="tuareg-font-lock-governing">class</span> <span class="function-name">local_balancer</span><span class="variable-name"> site </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">object</span><span class="tuareg-font-lock-operator">(</span>self<span class="tuareg-font-lock-operator">)</span>
+    <span class="tuareg-font-lock-governing">inherit</span> <span class="type">load_balancer</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">site </span><span class="tuareg-font-lock-operator">=</span> site
+    <span class="tuareg-font-lock-governing">method</span> <span class="function-name">new_child</span><span class="variable-name"> _ </span><span class="tuareg-font-lock-operator">=</span>
+      site<span class="tuareg-font-lock-operator">,</span> Lleaf<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">({&lt;</span> <span class="tuareg-font-lock-operator">&gt;}</span> <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+  <span class="tuareg-font-lock-governing">module</span> <span class="type">IntMap </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Map</span>.Make<span class="tuareg-font-lock-operator">(</span><span class="tuareg-font-lock-governing">struct</span>
+    <span class="tuareg-font-lock-governing">type</span> <span class="type">t </span><span class="tuareg-font-lock-operator">=</span> int
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">compare </span><span class="tuareg-font-lock-operator">=</span> compare
+  <span class="tuareg-font-lock-governing">end</span><span class="tuareg-font-lock-operator">)</span>
+
+  <span class="tuareg-font-lock-governing">class</span> <span class="tuareg-font-lock-governing">virtual</span><span class="variable-name"> generic_balancer here sites </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">object</span><span class="tuareg-font-lock-operator">(</span>self<span class="tuareg-font-lock-operator">)</span>
+    <span class="tuareg-font-lock-governing">inherit</span> <span class="type">load_balancer</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">nb_sites </span><span class="tuareg-font-lock-operator">=</span> <span class="type">C</span>.<span class="type">SiteSet</span>.cardinal <span class="tuareg-font-lock-operator">!</span>sites
+    <span class="tuareg-font-lock-governing">val</span> <span class="variable-name">unused_sites </span><span class="tuareg-font-lock-operator">=</span> sites
+    <span class="tuareg-font-lock-governing">val</span> <span class="keyword">mutable</span> <span class="variable-name">child_sites </span><span class="tuareg-font-lock-operator">=</span> <span class="type">IntMap</span>.empty
+
+    <span class="comment">(* Tries to use site number i to execute a child. If it is not available, use
+       another unused site. Returns the used site and updates the state of the object*)</span>
+    <span class="tuareg-font-lock-governing">method</span> <span class="function-name">add_child_site</span><span class="variable-name"> i </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="tuareg-font-lock-governing">rec</span> <span class="function-name">aux</span><span class="variable-name"> i </span><span class="tuareg-font-lock-operator">=</span>
+        <span class="keyword">if</span> i <span class="tuareg-font-lock-operator">&gt;</span> nb_sites <span class="keyword">then</span>
+          aux <span class="tuareg-font-lock-operator">(</span>i <span class="tuareg-font-lock-operator">mod</span> <span class="tuareg-font-lock-operator">(</span>nb_sites <span class="tuareg-font-lock-operator">+</span> 1<span class="tuareg-font-lock-operator">))</span>
+        <span class="keyword">else</span> <span class="keyword">if</span> i <span class="tuareg-font-lock-operator">=</span> 0 <span class="keyword">then</span>
+          here
+        <span class="keyword">else</span> <span class="keyword">if</span> <span class="type">IntMap</span>.mem i child_sites <span class="keyword">then</span>
+          <span class="type">IntMap</span>.find i child_sites
+        <span class="keyword">else</span>
+          <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">s </span><span class="tuareg-font-lock-operator">=</span>
+            <span class="keyword">if</span> <span class="type">C</span>.<span class="type">SiteSet</span>.is_empty <span class="tuareg-font-lock-operator">!</span>unused_sites <span class="keyword">then</span>
+              aux <span class="tuareg-font-lock-operator">((</span>i<span class="tuareg-font-lock-operator">+</span>1<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">mod</span> <span class="tuareg-font-lock-operator">(</span>nb_sites <span class="tuareg-font-lock-operator">+</span> 1<span class="tuareg-font-lock-operator">))</span>
+            <span class="keyword">else</span>
+              <span class="type">C</span>.<span class="type">SiteSet</span>.choose <span class="tuareg-font-lock-operator">!</span>unused_sites
+          <span class="tuareg-font-lock-governing">in</span>
+          child_sites <span class="tuareg-font-lock-operator">&lt;-</span> <span class="type">IntMap</span>.add i s child_sites<span class="tuareg-font-lock-operator">;</span>
+          unused_sites <span class="tuareg-font-lock-operator">:=</span> <span class="type">C</span>.<span class="type">SiteSet</span>.remove s <span class="tuareg-font-lock-operator">!</span>unused_sites<span class="tuareg-font-lock-operator">;</span>
+          s
+      <span class="tuareg-font-lock-governing">in</span>
+      aux i
+
+    <span class="tuareg-font-lock-governing">method</span> <span class="function-name">take_grand_child_sites</span><span class="variable-name"> n </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="tuareg-font-lock-governing">rec</span> <span class="function-name">take</span><span class="variable-name"> n s acc </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">match</span> n <span class="keyword">with</span>
+        <span class="tuareg-font-lock-operator">|</span> 0 <span class="tuareg-font-lock-operator">-&gt;</span> s<span class="tuareg-font-lock-operator">,</span> acc
+        <span class="tuareg-font-lock-operator">|</span> _ <span class="tuareg-font-lock-operator">-&gt;</span>
+            <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">elt </span><span class="tuareg-font-lock-operator">=</span> <span class="type">C</span>.<span class="type">SiteSet</span>.choose s <span class="tuareg-font-lock-governing">in</span>
+            take <span class="tuareg-font-lock-operator">(</span>n<span class="tuareg-font-lock-operator">-</span>1<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">(</span><span class="type">C</span>.<span class="type">SiteSet</span>.remove elt s<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">(</span><span class="type">C</span>.<span class="type">SiteSet</span>.add elt acc<span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">n </span><span class="tuareg-font-lock-operator">=</span> min <span class="tuareg-font-lock-operator">(</span><span class="type">C</span>.<span class="type">SiteSet</span>.cardinal <span class="tuareg-font-lock-operator">!</span>unused_sites<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">(</span>max 0 n<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">unused</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> used </span><span class="tuareg-font-lock-operator">=</span> take n <span class="tuareg-font-lock-operator">!</span>unused_sites <span class="type">C</span>.<span class="type">SiteSet</span>.empty <span class="tuareg-font-lock-governing">in</span>
+      unused_sites <span class="tuareg-font-lock-operator">:=</span> unused<span class="tuareg-font-lock-operator">;</span>
+      used
+
+    <span class="tuareg-font-lock-governing">method</span> <span class="function-name">follow_annotation</span><span class="variable-name"> f </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">i</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> nb_req_sites </span><span class="tuareg-font-lock-operator">=</span> f nb_sites <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">site </span><span class="tuareg-font-lock-operator">=</span> self<span class="tuareg-font-lock-operator">#</span>add_child_site i <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">k </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">if</span> nb_req_sites <span class="tuareg-font-lock-operator">=</span> 0 <span class="keyword">then</span> Lleaf <span class="keyword">else</span> Lany <span class="tuareg-font-lock-governing">in</span>
+      <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">sites </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="tuareg-font-lock-operator">(</span>self<span class="tuareg-font-lock-operator">#</span>take_grand_child_sites nb_req_sites<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-governing">in</span>
+      <span class="comment">(*Format.eprintf "Creating clock domain at %a with idx %d at site %a with %d req_sites and %d provided@."
+        C.print_site here  i  C.print_site site  nb_req_sites (C.SiteSet.cardinal !sites);*)</span>
+      site<span class="tuareg-font-lock-operator">,</span> k<span class="tuareg-font-lock-operator">,</span> sites
+  <span class="tuareg-font-lock-governing">end</span>
+
+  <span class="tuareg-font-lock-governing">class</span> <span class="function-name">local_user_balancer</span><span class="variable-name"> here sites </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">object</span><span class="tuareg-font-lock-operator">(</span>self<span class="tuareg-font-lock-operator">)</span>
+    <span class="tuareg-font-lock-governing">inherit</span> <span class="type">generic_balancer here sites</span>
+
+    <span class="tuareg-font-lock-governing">method</span> <span class="function-name">new_child</span><span class="variable-name"> f </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">match</span> f <span class="keyword">with</span>
+        <span class="tuareg-font-lock-operator">|</span> Some f <span class="tuareg-font-lock-operator">-&gt;</span>
+            <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">site</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> k</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> sites </span><span class="tuareg-font-lock-operator">=</span> self<span class="tuareg-font-lock-operator">#</span>follow_annotation f <span class="tuareg-font-lock-governing">in</span>
+            site<span class="tuareg-font-lock-operator">,</span> k<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> local_user_balancer site sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+        <span class="tuareg-font-lock-operator">|</span> _ <span class="tuareg-font-lock-operator">-&gt;</span>
+            <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">k </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">if</span> <span class="type">C</span>.<span class="type">SiteSet</span>.is_empty <span class="tuareg-font-lock-operator">!</span>unused_sites <span class="keyword">then</span> Lleaf <span class="keyword">else</span> Lany <span class="tuareg-font-lock-governing">in</span>
+            here<span class="tuareg-font-lock-operator">,</span> k<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> local_user_balancer here unused_sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+
+  <span class="tuareg-font-lock-governing">class</span> <span class="function-name">robin_balancer</span><span class="variable-name"> ignore_annotations start_index here sites </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">object</span><span class="tuareg-font-lock-operator">(</span>self<span class="tuareg-font-lock-operator">)</span>
+    <span class="tuareg-font-lock-governing">inherit</span> <span class="type">generic_balancer here sites</span>
+
+    <span class="tuareg-font-lock-governing">val</span> <span class="keyword">mutable</span> <span class="variable-name">current_index </span><span class="tuareg-font-lock-operator">=</span> start_index
+
+    <span class="tuareg-font-lock-governing">method</span> <span class="function-name">new_child</span><span class="variable-name"> f </span><span class="tuareg-font-lock-operator">=</span>
+      <span class="keyword">match</span> f<span class="tuareg-font-lock-operator">,</span> ignore_annotations <span class="keyword">with</span>
+        <span class="tuareg-font-lock-operator">|</span> Some f<span class="tuareg-font-lock-operator">,</span> <span class="constant">false</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+            <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">site</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> k</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> sites </span><span class="tuareg-font-lock-operator">=</span> self<span class="tuareg-font-lock-operator">#</span>follow_annotation f <span class="tuareg-font-lock-governing">in</span>
+            site<span class="tuareg-font-lock-operator">,</span> k<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> robin_balancer ignore_annotations start_index site sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+        <span class="tuareg-font-lock-operator">|</span> _ <span class="tuareg-font-lock-operator">-&gt;</span>
+            <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">s</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> k</span><span class="tuareg-font-lock-operator">,</span><span class="variable-name"> bal </span><span class="tuareg-font-lock-operator">=</span>
+              <span class="keyword">if</span> current_index <span class="tuareg-font-lock-operator">=</span> 0 <span class="keyword">then</span>
+                <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">k </span><span class="tuareg-font-lock-operator">=</span> <span class="keyword">if</span> <span class="type">C</span>.<span class="type">SiteSet</span>.is_empty <span class="tuareg-font-lock-operator">!</span>sites <span class="keyword">then</span> Lleaf <span class="keyword">else</span> Lany <span class="tuareg-font-lock-governing">in</span>
+                here<span class="tuareg-font-lock-operator">,</span> k<span class="tuareg-font-lock-operator">,</span> <span class="keyword">new</span> robin_balancer ignore_annotations start_index here unused_sites
+              <span class="keyword">else</span>
+                <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">site </span><span class="tuareg-font-lock-operator">=</span> self<span class="tuareg-font-lock-operator">#</span>add_child_site current_index <span class="tuareg-font-lock-governing">in</span>
+                site<span class="tuareg-font-lock-operator">,</span> Lleaf<span class="tuareg-font-lock-operator">,</span> <span class="keyword">new</span> robin_balancer ignore_annotations start_index site <span class="tuareg-font-lock-operator">(ref</span> <span class="type">C</span>.<span class="type">SiteSet</span>.empty<span class="tuareg-font-lock-operator">)</span>
+            <span class="tuareg-font-lock-governing">in</span>
+            current_index <span class="tuareg-font-lock-operator">&lt;-</span> <span class="tuareg-font-lock-operator">(</span>current_index <span class="tuareg-font-lock-operator">+</span> 1<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-operator">mod</span> <span class="tuareg-font-lock-operator">(</span>nb_sites <span class="tuareg-font-lock-operator">+</span> 1<span class="tuareg-font-lock-operator">);</span>
+            s<span class="tuareg-font-lock-operator">,</span> k<span class="tuareg-font-lock-operator">,</span> <span class="tuareg-font-lock-operator">(</span>bal <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+  <span class="tuareg-font-lock-governing">end</span>
+
+  <span class="tuareg-font-lock-governing">let</span> <span class="function-name">mk_top_balancer</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">all_sites </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="tuareg-font-lock-operator">(</span><span class="type">C</span>.all_sites <span class="tuareg-font-lock-operator">())</span> <span class="tuareg-font-lock-governing">in</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">master </span><span class="tuareg-font-lock-operator">=</span> <span class="type">C</span>.master_site <span class="tuareg-font-lock-operator">()</span> <span class="tuareg-font-lock-governing">in</span>
+    <span class="keyword">match</span> <span class="tuareg-font-lock-operator">!</span><span class="type">Runtime_options</span>.load_balancing_policy <span class="keyword">with</span>
+      <span class="tuareg-font-lock-operator">|</span> <span class="type">Runtime_options</span>.Plocal <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> local_balancer master<span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-operator">|</span> <span class="type">Runtime_options</span>.Puser_local <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> local_user_balancer master all_sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-operator">|</span> <span class="type">Runtime_options</span>.Pround_robin <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> robin_balancer <span class="constant">true</span> 0 master all_sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-operator">|</span> <span class="type">Runtime_options</span>.Puser_robin <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> robin_balancer <span class="constant">false</span> 0 master all_sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+      <span class="tuareg-font-lock-operator">|</span> <span class="type">Runtime_options</span>.Premote <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">(</span><span class="keyword">new</span> robin_balancer <span class="constant">true</span> 1 master all_sites <span class="tuareg-font-lock-operator">:&gt;</span><span class="type"> load_balancer</span><span class="tuareg-font-lock-operator">)</span>
+<span class="tuareg-font-lock-governing">end</span>
+</pre>
+  </body>
+</html>

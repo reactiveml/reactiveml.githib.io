@@ -1,0 +1,2 @@
+<planets_utils.rml>:use_graphics
+<*.rml.{byte,native}>:use_graphics

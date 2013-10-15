@@ -1,0 +1,39 @@
+open Rmlarg
+open Radio_utils
+open Misc
+
+let process node idx me neighbors =
+  signal dead in
+  signal energy default e_0 gather (fun x _ -> x) in
+  let process send msg n = emit n msg in
+  let process forward_msg msg =
+    print_endline (string_of_int idx^": Received "^string_of_int msg);
+    if msg>1 then run iter_p (send (msg-1)) neighbors
+  in
+  do
+    loop
+      await me(msgs) in run iter_p forward_msg msgs
+    end
+    ||
+    loop
+      if last energy < e_min
+      then emit dead
+      else emit energy (last energy -. max_power);
+      pause
+    end
+  until dead done
+
+let process main =
+  Rmlarg.parse args ignore "Usage: ";
+  let process mk_signal i = signal s in s in
+  let agents = run init_p mk_signal !nb_agents in
+  let rec process run_nodes idx l neighbors = match l with
+  | [] -> ()
+  | n::l -> run node idx n neighbors || run run_nodes (idx+1) l [n]
+  in
+  run run_nodes 0 agents (List.tl agents)
+  ||
+  loop
+    emit (List.hd agents) !init_ttl;
+    for i=1 to !msg_freq do pause done
+  end

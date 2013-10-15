@@ -1,0 +1,49 @@
+open Misc
+
+(* Type des messages: message ou requete *)
+type ('msg, 'out) msg =
+  | Mmsg of 'msg
+  | Mreq of 'msg * ('out, 'out list) event
+
+(* Type des agents *)
+type ('msg, 'out) agent{|'ck|} = {
+    a_name : string;
+    a_msg_signal : (('msg, 'out) msg, ('msg, 'out) msg list) event{|'ck|};
+    a_kill_signal : (unit, unit list) event;
+    a_network_ck : ['ck];
+  }
+
+let rec process react self act =
+  (* Appelle le processus react avec le bon argument return *)
+  let process proxy react msg = match msg with
+  | Mmsg msg -> run react msg (fun _ -> ())
+  | Mreq (msg, s) -> run react msg (fun v -> emit s v)
+  in
+  await self.a_msg_signal(msgs) in
+  run iter_p (proxy act) msgs || run react self act
+
+let process mk_agent name nck p =
+  signal kill, msg_sig clock nck in
+  let self = { a_name = name; a_msg_signal = msg_sig;
+               a_kill_signal = kill; a_network_ck = nck } in
+  let process agent args =
+    do
+      run p self args
+    until kill done
+  in
+  agent, self
+
+(* Terminaison d'un agent *)
+let kill o =
+  emit o.a_kill_signal
+
+(* Envoi d'un message *)
+let send o msg =
+  emit o.a_msg_signal (Mmsg msg)
+let (<<) o msg = send o msg
+
+(* Envoi d'une requete et attente du resultat *)
+let process send_and_wait o msg =
+  signal s clock o.a_network_ck in
+  emit o.a_msg_signal (Mreq (msg, s));
+  await s([v]) in v

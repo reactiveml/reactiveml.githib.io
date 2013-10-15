@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>esterml.rml</title>
+<meta name="generator" content="emacs 23.4.1; htmlfontify 0.21" />
+<style type="text/css"><!--
+body { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default   { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.default a { font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #000000;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.builtin   { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.builtin a { color: #781679;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.string   { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.string a { color: #8f0040;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.function-name   { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.function-name a { color: #1300ff;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.constant   { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.constant a { color: #007e78;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+span.type   { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: none; }
+span.type a { color: #008114;  font-family: Monaco;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #ffffff;  font-size: 12pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="type">type</span> backend =
+  <span class="constant">|</span> <span class="function-name">Combinators</span>
+  <span class="constant">|</span> <span class="function-name">CombinatorsNoDomain</span>
+  <span class="constant">|</span> <span class="function-name">CombinatorsReturn</span>
+<span class="type">let</span> used_backend = ref <span class="function-name">CombinatorsReturn</span>
+<span class="type">let</span> set_backend b () =
+  used_backend := b
+
+<span class="type">let</span> find_file filename =
+  <span class="constant">try</span>
+    open_in filename
+  <span class="constant">with</span>
+    <span class="constant">|</span> _ <span class="constant">-&gt;</span> print_endline (<span class="string">&quot;No such file &quot;</span>^filename); exit 2
+
+<span class="type">let</span> read_file filename =
+  <span class="type">let</span> ic = find_file filename <span class="type">in</span>
+  <span class="type">let</span> lexbuf = <span class="function-name">Lexing</span>.from_channel ic <span class="type">in</span>
+  lexbuf.<span class="function-name">Lexing</span>.lex_curr_p &lt;- { lexbuf.<span class="function-name">Lexing</span>.lex_curr_p <span class="constant">with</span> <span class="function-name">Lexing</span>.pos_fname = filename };
+  <span class="constant">try</span>
+    <span class="function-name"><a href="parser.mly.html">Parser</a></span>.main <span class="function-name"><a href="lexer.mll.html">Lexer</a></span>.token lexbuf
+  <span class="constant">with</span>
+    <span class="constant">|</span> e <span class="constant">-&gt;</span> print_endline <span class="string">&quot;Syntax error&quot;</span>; exit 2
+
+<span class="type">let</span> file = ref <span class="string">&quot;&quot;</span>
+<span class="type">let</span> compile s = file := s
+
+<span class="type">let</span> args =
+  [
+   <span class="string">&quot;-d&quot;</span>, <span class="function-name">Rmlarg</span>.<span class="function-name">Set</span> <span class="function-name">Ast</span>.debug, <span class="string">&quot;Debug mode&quot;</span>;
+   <span class="string">&quot;-k&quot;</span>, <span class="function-name">Rmlarg</span>.<span class="function-name">Unit</span> (set_backend <span class="function-name">Combinators</span>), <span class="string">&quot;Use the combinators backend&quot;</span>;
+   <span class="string">&quot;-kn&quot;</span>, <span class="function-name">Rmlarg</span>.<span class="function-name">Unit</span> (set_backend <span class="function-name">CombinatorsNoDomain</span>),
+               <span class="string">&quot;Use the combinators backend without reactive domains&quot;</span>;
+   <span class="string">&quot;-kc&quot;</span>, <span class="function-name">Rmlarg</span>.<span class="function-name">Unit</span> (set_backend <span class="function-name">CombinatorsReturn</span>), <span class="string">&quot;Use the combnators backend with exceptions (default)&quot;</span>
+  ]
+
+<span class="type">let</span> <span class="type">process</span> main =
+  <span class="function-name">Rmlarg</span>.parse args compile <span class="string">&quot;&quot;</span>;
+  <span class="type">let</span> p = read_file !file <span class="type">in</span>
+  <span class="constant">match</span> !used_backend <span class="constant">with</span>
+  <span class="constant">|</span> <span class="function-name">Combinators</span> <span class="constant">-&gt;</span> <span class="builtin">run</span> <span class="function-name"><a href="combinators.rml.html">Combinators</a></span>.run_program p
+  <span class="constant">|</span> <span class="function-name">CombinatorsNoDomain</span> <span class="constant">-&gt;</span> <span class="builtin">run</span> <span class="function-name"><a href="combinators_nodo.rml.html">Combinators_nodo</a></span>.run_program p
+  <span class="constant">|</span> <span class="function-name">CombinatorsReturn</span> <span class="constant">-&gt;</span> <span class="builtin">run</span> <span class="function-name"><a href="combinators_code.rml.html">Combinators_code</a></span>.run_program p
+</pre>
+
+ </body>
+</html>

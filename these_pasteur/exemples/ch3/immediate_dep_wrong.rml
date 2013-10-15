@@ -1,0 +1,7 @@
+let process immediate_dep_wrong =
+  signal s in
+  domain ck by 2 do
+    await immediate s; print_string "Ok"
+    ||
+    pause ck; emit s
+  done

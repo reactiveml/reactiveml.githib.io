@@ -1,0 +1,4 @@
+let rec process reset_every s p v =
+  do
+    run p v
+  until s(v) -> run reset_every s p v done

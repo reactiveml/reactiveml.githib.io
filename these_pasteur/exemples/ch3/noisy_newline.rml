@@ -1,0 +1,36 @@
+let process noisy =
+  signal kill in
+  do
+    loop
+      print_endline "bla"; pause global_ck
+    end
+  until kill done
+  ||
+  loop
+    (print_endline "bli" || print_endline "blo"); pause global_ck
+  end
+
+let process printer =
+  run noisy
+  ||
+  loop
+    print_newline (); print_newline (); pause
+  end
+
+let process printer_fixed =
+  domain ck do
+    run noisy
+    ||
+    loop
+      pause ck;
+      print_newline (); print_newline (); pause global_ck
+    end
+  done
+
+let use_fixed = ref false
+let args = ["-fixed", Rmlarg.Set use_fixed, "Utiliser la methode avec domaines"]
+
+let process main =
+  Rmlarg.parse args ignore "Usage: ";
+  if !use_fixed then run printer_fixed else run printer
+

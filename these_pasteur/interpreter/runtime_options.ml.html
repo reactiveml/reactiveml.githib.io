@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- Created by htmlize-1.47 in css mode. -->
+<html>
+  <head>
+    <title>runtime_options.ml</title>
+    <style type="text/css">
+    <!--
+      body {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #b22222;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #008b8b;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #0000ff;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #a020f0;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #8b2252;
+      }
+      .tuareg-font-lock-governing {
+        /* tuareg-font-lock-governing-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .tuareg-font-lock-operator {
+        /* tuareg-font-lock-operator-face */
+        color: #a52a2a;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #228b22;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #a0522d;
+      }
+
+      a {
+        color: inherit;
+        background-color: inherit;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    -->
+    </style>
+  </head>
+  <body>
+    <pre>
+
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_load_balancer </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"&lt;name&gt; Load balancer to use"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_number_steps </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"&lt;n&gt; Number of steps to execute"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_sampling </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"&lt;f&gt; Minimum step period"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_min_rank </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"&lt;n&gt; Use only ranks starting from n (only for MPI backend)"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_debug </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"Print debugging information"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_bench </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"Print the elapsed time on the standard output"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_signals_remote </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"Do not use a remote set for each signal"</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">doc_local_slow_signals </span><span class="tuareg-font-lock-operator">=</span> <span class="string">"Do not allocate slow local signals"</span>
+
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">number_steps </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="tuareg-font-lock-operator">(-</span> 1<span class="tuareg-font-lock-operator">)</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">sampling_rate </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="tuareg-font-lock-operator">(-</span>1.0<span class="tuareg-font-lock-operator">)</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">min_rank </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> 0
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">debug_mode </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="constant">false</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">bench_mode </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="constant">false</span>
+
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">use_signals_users_set </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="constant">true</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">use_local_slow_signals </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="constant">true</span>
+
+<span class="tuareg-font-lock-governing">type</span> <span class="type">policy </span><span class="tuareg-font-lock-operator">=</span> Plocal <span class="tuareg-font-lock-operator">|</span> Pround_robin <span class="tuareg-font-lock-operator">|</span> Puser_local <span class="tuareg-font-lock-operator">|</span> Puser_robin <span class="tuareg-font-lock-operator">|</span> Premote
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">load_balancing_policy </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> Pround_robin
+
+<span class="tuareg-font-lock-governing">let</span> <span class="function-name">set_load_balancing_policy</span><span class="variable-name"> s </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">p </span><span class="tuareg-font-lock-operator">=</span>
+    <span class="keyword">match</span> s <span class="keyword">with</span>
+      <span class="tuareg-font-lock-operator">|</span> <span class="string">"local"</span> <span class="tuareg-font-lock-operator">-&gt;</span> Plocal
+      <span class="tuareg-font-lock-operator">|</span> <span class="string">"robin"</span> <span class="tuareg-font-lock-operator">-&gt;</span> Pround_robin
+      <span class="tuareg-font-lock-operator">|</span> <span class="string">"user_local"</span> <span class="tuareg-font-lock-operator">-&gt;</span> Puser_local
+      <span class="tuareg-font-lock-operator">|</span> <span class="string">"user_robin"</span> <span class="tuareg-font-lock-operator">-&gt;</span> Puser_robin
+      <span class="tuareg-font-lock-operator">|</span> <span class="string">"remote"</span> <span class="tuareg-font-lock-operator">-&gt;</span> Premote
+      <span class="tuareg-font-lock-operator">|</span> _ <span class="tuareg-font-lock-operator">-&gt;</span> <span class="keyword">raise</span> <span class="tuareg-font-lock-operator">(</span><span class="type">Arg</span>.Bad <span class="tuareg-font-lock-operator">(</span><span class="string">"Invalid load balancing policy"</span><span class="tuareg-font-lock-operator">))</span>
+  <span class="tuareg-font-lock-governing">in</span>
+  load_balancing_policy <span class="tuareg-font-lock-operator">:=</span> p
+
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">errmsg </span><span class="tuareg-font-lock-operator">=</span> <span class="string">""</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">rml_cli_options </span><span class="tuareg-font-lock-operator">=</span>
+    <span class="tuareg-font-lock-operator">[</span> <span class="string">"-load-balancer"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.String ignore<span class="tuareg-font-lock-operator">,</span> doc_load_balancer<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-n"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Int ignore<span class="tuareg-font-lock-operator">,</span> doc_number_steps<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-sampling"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Float ignore<span class="tuareg-font-lock-operator">,</span> doc_sampling<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-min-rank"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Int ignore<span class="tuareg-font-lock-operator">,</span> doc_min_rank<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-debug"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Unit ignore<span class="tuareg-font-lock-operator">,</span> doc_debug<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-bench"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Unit ignore<span class="tuareg-font-lock-operator">,</span> doc_bench<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-no-signals-remote"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Unit ignore<span class="tuareg-font-lock-operator">,</span> doc_signals_remote<span class="tuareg-font-lock-operator">;</span>
+      <span class="string">"-no-local-slow-signals"</span><span class="tuareg-font-lock-operator">,</span> <span class="type">Arg</span>.Unit ignore<span class="tuareg-font-lock-operator">,</span> doc_local_slow_signals<span class="tuareg-font-lock-operator">;</span>
+    <span class="tuareg-font-lock-operator">]</span>
+
+<span class="tuareg-font-lock-governing">let</span> <span class="function-name">parse_cli</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="keyword">try</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">current </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> 1 <span class="tuareg-font-lock-governing">in</span>
+    <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">n </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Array</span>.length <span class="type">Sys</span>.argv <span class="tuareg-font-lock-governing">in</span>
+      <span class="keyword">while</span> <span class="tuareg-font-lock-operator">!</span>current <span class="tuareg-font-lock-operator">&lt;</span> n <span class="keyword">do</span>
+        <span class="tuareg-font-lock-governing">let</span> <span class="variable-name">arg </span><span class="tuareg-font-lock-operator">=</span> <span class="type">Sys</span>.argv.<span class="tuareg-font-lock-operator">(!</span>current<span class="tuareg-font-lock-operator">)</span> <span class="tuareg-font-lock-governing">in</span>
+        incr current<span class="tuareg-font-lock-operator">;</span>
+        <span class="keyword">match</span> arg <span class="keyword">with</span>
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-no-signals-remote"</span> <span class="tuareg-font-lock-operator">-&gt;</span> use_signals_users_set <span class="tuareg-font-lock-operator">:=</span> <span class="constant">false</span>
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-no-local-slow-signals"</span> <span class="tuareg-font-lock-operator">-&gt;</span> use_local_slow_signals <span class="tuareg-font-lock-operator">:=</span> <span class="constant">false</span>
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-bench"</span> <span class="tuareg-font-lock-operator">-&gt;</span> bench_mode <span class="tuareg-font-lock-operator">:=</span> <span class="constant">true</span>
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-debug"</span> <span class="tuareg-font-lock-operator">-&gt;</span> debug_mode <span class="tuareg-font-lock-operator">:=</span> <span class="constant">true</span>
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-min-rank"</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+              <span class="keyword">if</span> <span class="tuareg-font-lock-operator">!</span>current <span class="tuareg-font-lock-operator">=</span> n <span class="keyword">then</span>
+                <span class="keyword">raise</span> <span class="tuareg-font-lock-operator">(</span><span class="type">Arg</span>.Bad <span class="tuareg-font-lock-operator">(</span><span class="string">"Expected a number after -min-rank"</span><span class="tuareg-font-lock-operator">));</span>
+              min_rank <span class="tuareg-font-lock-operator">:=</span> int_of_string <span class="type">Sys</span>.argv.<span class="tuareg-font-lock-operator">(!</span>current<span class="tuareg-font-lock-operator">);</span>
+              incr current
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-load-balancer"</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+              <span class="keyword">if</span> <span class="tuareg-font-lock-operator">!</span>current <span class="tuareg-font-lock-operator">=</span> n <span class="keyword">then</span>
+                <span class="keyword">raise</span> <span class="tuareg-font-lock-operator">(</span><span class="type">Arg</span>.Bad <span class="tuareg-font-lock-operator">(</span><span class="string">"Expected a load balancer name after -load-balancer"</span><span class="tuareg-font-lock-operator">));</span>
+              set_load_balancing_policy <span class="type">Sys</span>.argv.<span class="tuareg-font-lock-operator">(!</span>current<span class="tuareg-font-lock-operator">);</span>
+              incr current
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-n"</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+              <span class="keyword">if</span> <span class="tuareg-font-lock-operator">!</span>current <span class="tuareg-font-lock-operator">=</span> n <span class="keyword">then</span>
+                <span class="keyword">raise</span> <span class="tuareg-font-lock-operator">(</span><span class="type">Arg</span>.Bad <span class="tuareg-font-lock-operator">(</span><span class="string">"Expected a number of steps after -n"</span><span class="tuareg-font-lock-operator">));</span>
+              number_steps <span class="tuareg-font-lock-operator">:=</span> int_of_string <span class="type">Sys</span>.argv.<span class="tuareg-font-lock-operator">(!</span>current<span class="tuareg-font-lock-operator">);</span>
+              incr current
+          <span class="tuareg-font-lock-operator">|</span> <span class="string">"-sampling"</span> <span class="tuareg-font-lock-operator">-&gt;</span>
+              <span class="keyword">if</span> <span class="tuareg-font-lock-operator">!</span>current <span class="tuareg-font-lock-operator">=</span> n <span class="keyword">then</span>
+                <span class="keyword">raise</span> <span class="tuareg-font-lock-operator">(</span><span class="type">Arg</span>.Bad <span class="tuareg-font-lock-operator">(</span><span class="string">"Expected a period after -sampling"</span><span class="tuareg-font-lock-operator">));</span>
+              sampling_rate <span class="tuareg-font-lock-operator">:=</span> float_of_string <span class="type">Sys</span>.argv.<span class="tuareg-font-lock-operator">(!</span>current<span class="tuareg-font-lock-operator">);</span>
+              incr current
+          <span class="comment">(*| "-help" | "--help" -&gt; raise (Arg.Help (Arg.usage_string rml_cli_options "Usage:")) *)</span>
+          <span class="tuareg-font-lock-operator">|</span> _ <span class="tuareg-font-lock-operator">-&gt;</span> <span class="tuareg-font-lock-operator">()</span>
+      <span class="keyword">done</span>
+  <span class="keyword">with</span>
+    <span class="tuareg-font-lock-operator">|</span> <span class="type">Arg</span>.Bad s <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">Format</span>.eprintf <span class="string">"%s@."</span> s<span class="tuareg-font-lock-operator">;</span> <span class="keyword">exit</span> 2
+    <span class="tuareg-font-lock-operator">|</span> <span class="type">Arg</span>.Help s <span class="tuareg-font-lock-operator">-&gt;</span> <span class="type">Format</span>.eprintf <span class="string">"%s@."</span> s<span class="tuareg-font-lock-operator">;</span> <span class="keyword">exit</span> 0
+
+<span class="tuareg-font-lock-governing">let</span> <span class="variable-name">parsing_done </span><span class="tuareg-font-lock-operator">=</span> <span class="tuareg-font-lock-operator">ref</span> <span class="constant">false</span>
+<span class="tuareg-font-lock-governing">let</span> <span class="function-name">parse_cli</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">()</span><span class="variable-name"> </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="keyword">if</span> <span class="tuareg-font-lock-operator">not</span> <span class="tuareg-font-lock-operator">!</span>parsing_done <span class="keyword">then</span> <span class="tuareg-font-lock-operator">(</span>
+    parse_cli <span class="tuareg-font-lock-operator">();</span>
+    parsing_done <span class="tuareg-font-lock-operator">:=</span> <span class="constant">true</span>
+  <span class="tuareg-font-lock-operator">)</span>
+
+<span class="tuareg-font-lock-governing">let</span> <span class="function-name">print_debug</span><span class="variable-name"> fmt </span><span class="tuareg-font-lock-operator">=</span>
+  <span class="keyword">if</span> <span class="tuareg-font-lock-operator">!</span>debug_mode <span class="keyword">then</span>
+    <span class="type">Format</span>.eprintf fmt
+  <span class="keyword">else</span>
+    <span class="type">Format</span>.ifprintf <span class="type">Format</span>.err_formatter fmt
+
+</pre>
+  </body>
+</html>
