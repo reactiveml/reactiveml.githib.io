@@ -1,0 +1,43 @@
+<div class="row-fluid">
+  <div class="span12">
+
+
+    <h1>Raffinement temporel et ex&eacute;cution parall&egrave;le dans un langage synchrone fonctionnel</h1>
+
+    <h4>C&eacute;dric Pasteur<br><br>
+      Th&egrave;se de doctorat de l'universit&eacute; Paris 6, 2013</h4>
+
+  <hr>
+
+
+
+    <p>
+      Nous nous int&eacute;ressons dans ce manuscrit au langage ReactiveML, qui est une extension de ML avec des constructions inspir&eacute;es des langages synchrones. L'id&eacute;e de ces langages est de diviser l'ex&eacute;cution d'un programme en une suite d'instants logiques discrets. Cela permet de proposer un mod&egrave;le de concurrence d&eacute;terministe que l'on peut compiler vers du code s&eacute;quentiel imp&eacute;ratif. La principale application de ReactiveML est la simulation discr&egrave;te, par exemple de r&eacute;seaux de capteurs. Nous cherchons ici &agrave; programmer des simulations &agrave; grande &eacute;chelle, ce qui pose deux questions: sait-on les programmer de fa&ccedilon simple et modulaire? sait-on ensuite ex&eacute;cuter ces programmes efficacement?<br/>
+
+
+      Nous r&eacute;pondons &agrave; la premi&egrave;re question en proposant une extension du mod&egrave;le synchrone appel&eacute;e domaines r&eacute;actifs. Elle permet de cr&eacute;er des instants locaux invisibles de l'ext&eacute;rieur. Cela rend possible le raffinement temporel, c'est-&agrave;-dire le remplacement d'une approximation d'un syst&egrave;me par une version plus d&eacute;taill&eacute;e sans changer son comportement externe. Nous d&eacute;veloppons dans ce manuscrit la s&eacute;mantique formelle de cette construction ainsi que plusieurs analyses statiques, sous forme de syst&egrave;mes de types-et-effets, garantissant la s&ucirc;ret&eacute; des programmes dans le langage &eacute;tendu.<br/>
+
+      Enfin, nous montrons &eacute;galement plusieurs impl&eacute;mentations parall&egrave;les du langage pour tenter de r&eacute;pondre &agrave; la question du passage &agrave; l'&eacute;chelle des simulations. Nous d&eacute;crivons tout d'abord une impl&eacute;mentation avec threads communiquant par m&eacute;moire partag&eacute;e et bas&eacute;e sur le vol de t&acirc;ches, puis une seconde impl&eacute;mentation utilisant des processus lourds communiquant par envoi de messages.
+    </p>
+
+
+    <p>
+      La th&egrave;se a &eacute;t&eacute; encadr&eacute;e par Marc Pouzet (Professeur ENS/UPMC) et Louis Mandel
+      (Maitre de conf&eacute;rence Coll&egrave;ge de France).<br/> Les rapporteurs sont Florence Maraninchi
+      (Professeur Grenoble INP/VERIMAG) et Jean-Bernard
+      Stefani (Directeur de recherche INRIA). Le jury est pr&eacute;sid&eacute; par Christian Queinnec
+      (Professeur UPMC) et contient
+      &eacute;galement G&eacute;rard Berry (Professeur Coll&egrave;ge de France), Bruno Pagano
+      (Directeur scientifique Esterel Technologies) et Didier R&eacute;my (Directeur de recherche INRIA).
+    </p>
+
+
+    <h3>Ressources</h3>
+    <ul>
+      <li><a href="these.pdf">Manuscrit <i class="icon-file icon-black"></i></a></li>
+      <li><a href="rml-these.zip">Compilateur et exemples<i class="icon-file icon-black"></i></a></li>
+    </ul>
+
+
+</div>
+</div>

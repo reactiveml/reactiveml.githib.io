@@ -46,6 +46,7 @@ GENERATED=index.html \
 	farm13/index.html \
 	farm13/videos.html \
 	farm13/code/jacques.html \
+	these_pasteur/index.html \
 
 
 all: $(GENERATED)
@@ -195,6 +196,10 @@ farm13/videos.html: header.html footer.html farm13/videos.src.html
 farm13/code/jacques.html: farm13/code/jacques.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		header.html farm13/code/footer.html farm13/code/jacques.src.html > $@
+
+these_pasteur/index.html: header.html footer.html these_pasteur/index.src.html
+	$(SRC2HTML) ".." "These de C. Pasteur" "XXX" \
+		header.html footer.html these_pasteur/index.src.html > $@
 
 
 publications/rml.html: publications/rml.bib

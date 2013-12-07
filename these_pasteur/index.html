@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>These de C. Pasteur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="masthead">
+      <div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+	  <div class="container">
+
+	    <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
+	      <!-- <span class="icon-bar"></span> -->
+	      <!-- <span class="icon-bar"></span> -->
+	      <!-- <span class="icon-bar"></span> -->
+	      menu
+	    </a>
+
+	    <a class="brand" href="../index.html">ReactiveML</a>
+
+	    <div class="nav-collapse collapse">
+	      <ul class="nav">
+		<li><a href="../index.html">Home</a></li>
+		<li><a href="../tryrml/tryrml.html">Try online</a></li>
+		<li><a href="../documentation.html">Documentation</a></li>
+		<li><a href="../examples.html">Examples</a></li>
+		<li><a href="../videos.html">Videos</a></li>
+		<li><a href="../publications.html">Publications</a></li>
+		<li><a href="../contact.html">Contact</a></li>
+	      </ul>
+	    </div> <!-- /nav-collapse -->
+	  </div> <!-- /container -->
+	</div> <!-- /navbar-inner -->
+      </div> <!-- /navbar -->
+    </div> <!-- /masthead -->
+<div class="row-fluid">
+  <div class="span12">
+
+
+    <h1>Raffinement temporel et ex&eacute;cution parall&egrave;le dans un langage synchrone fonctionnel</h1>
+
+    <h4>C&eacute;dric Pasteur<br><br>
+      Th&egrave;se de doctorat de l'universit&eacute; Paris 6, 2013</h4>
+
+  <hr>
+
+
+
+    <p>
+      Nous nous int&eacute;ressons dans ce manuscrit au langage ReactiveML, qui est une extension de ML avec des constructions inspir&eacute;es des langages synchrones. L'id&eacute;e de ces langages est de diviser l'ex&eacute;cution d'un programme en une suite d'instants logiques discrets. Cela permet de proposer un mod&egrave;le de concurrence d&eacute;terministe que l'on peut compiler vers du code s&eacute;quentiel imp&eacute;ratif. La principale application de ReactiveML est la simulation discr&egrave;te, par exemple de r&eacute;seaux de capteurs. Nous cherchons ici &agrave; programmer des simulations &agrave; grande &eacute;chelle, ce qui pose deux questions: sait-on les programmer de fa&ccedilon simple et modulaire? sait-on ensuite ex&eacute;cuter ces programmes efficacement?<br/>
+
+
+      Nous r&eacute;pondons &agrave; la premi&egrave;re question en proposant une extension du mod&egrave;le synchrone appel&eacute;e domaines r&eacute;actifs. Elle permet de cr&eacute;er des instants locaux invisibles de l'ext&eacute;rieur. Cela rend possible le raffinement temporel, c'est-&agrave;-dire le remplacement d'une approximation d'un syst&egrave;me par une version plus d&eacute;taill&eacute;e sans changer son comportement externe. Nous d&eacute;veloppons dans ce manuscrit la s&eacute;mantique formelle de cette construction ainsi que plusieurs analyses statiques, sous forme de syst&egrave;mes de types-et-effets, garantissant la s&ucirc;ret&eacute; des programmes dans le langage &eacute;tendu.<br/>
+
+      Enfin, nous montrons &eacute;galement plusieurs impl&eacute;mentations parall&egrave;les du langage pour tenter de r&eacute;pondre &agrave; la question du passage &agrave; l'&eacute;chelle des simulations. Nous d&eacute;crivons tout d'abord une impl&eacute;mentation avec threads communiquant par m&eacute;moire partag&eacute;e et bas&eacute;e sur le vol de t&acirc;ches, puis une seconde impl&eacute;mentation utilisant des processus lourds communiquant par envoi de messages.
+    </p>
+
+
+    <p>
+      La th&egrave;se a &eacute;t&eacute; encadr&eacute;e par Marc Pouzet (Professeur ENS/UPMC) et Louis Mandel
+      (Maitre de conf&eacute;rence Coll&egrave;ge de France).<br/> Les rapporteurs sont Florence Maraninchi
+      (Professeur Grenoble INP/VERIMAG) et Jean-Bernard
+      Stefani (Directeur de recherche INRIA). Le jury est pr&eacute;sid&eacute; par Christian Queinnec
+      (Professeur UPMC) et contient
+      &eacute;galement G&eacute;rard Berry (Professeur Coll&egrave;ge de France), Bruno Pagano
+      (Directeur scientifique Esterel Technologies) et Didier R&eacute;my (Directeur de recherche INRIA).
+    </p>
+
+
+    <h3>Ressources</h3>
+    <ul>
+      <li><a href="these.pdf">Manuscrit <i class="icon-file icon-black"></i></a></li>
+      <li><a href="rml-these.zip">Compilateur et exemples<i class="icon-file icon-black"></i></a></li>
+    </ul>
+
+
+</div>
+</div>
+<div class="row-fluid">
+<div class="span12">
+
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+	<p>
+	  <small>
+	    <a href="../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /span6 -->
+    <div class="span6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../distrib/rml-1.09.02-dev-2013-11-28.tar.gz">ReactiveML version 1.09.02-dev</a><br>
+	    2013-11-28 <a href="../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /footer -->
+
+</div> <!-- /span12 -->
+</div> <!-- /row-fluid -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>
