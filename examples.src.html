@@ -7,7 +7,7 @@
 	<li><a href="<#ROOTDIR>/distrib/rml-<#RML_VERSION>-<#DATE>.tar.gz"><i class="icon-globe icon-black"></i> Download</a></li>
 
 	<li class="nav-header">Examples</li>
-        <li><a href="#hello"><i class="icon-chevron-right"></i> Hello World!</a></li>
+        <!-- <li><a href="#hello"><i class="icon-chevron-right"></i> Hello World!</a></li> -->
         <li><a href="#breadth"><i class="icon-chevron-right"></i> Breadth first traversal</a></li>
         <li><a href="#nbody"><i class="icon-chevron-right"></i> N-body</a></li>
         <li><a href="#cell"><i class="icon-chevron-right"></i> Cellular automata</a></li>
@@ -26,25 +26,24 @@
     <h1>Examples</h1>
     <hr>
 
-    <section id="hello">
-      <h3>Hello World!</h3>
-      The famous "Hello World!" written using two parallel
-      processes and an internal communication.
-      <br><br>
+  <!--   <section id="hello"> -->
+  <!--     <h3>Hello World!</h3> -->
+  <!--     The famous "Hello World!" written using two parallel -->
+  <!--     processes and an internal communication. -->
+  <!--     <br><br> -->
 
-      <pre>
-  <span class="type">let</span> <span class="type">process</span> hello_word =
-    <span class="type">signal</span> s <span class="type">in</span>
-    <span class="type">await</span> s; print_string <span class="string">"World!"</span>
-    <span class="constant">||</span>
-    print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre>
-    </section>
-    <hr>
+  <!--     <pre> -->
+  <!-- <span class="type">let</span> <span class="type">process</span> hello_word = -->
+  <!--   <span class="type">signal</span> s <span class="type">in</span> -->
+  <!--   <span class="type">await</span> s; print_string <span class="string">"World!"</span> -->
+  <!--   <span class="constant">||</span> -->
+  <!--   print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre> -->
+  <!--   </section> -->
+  <!--   <hr> -->
 
     <section id="breadth">
-      <h3>Breadth First Traversal</h3>
-      Breadth first traveral using parallel composition (<code>||</code>)
-      and synchronization of logical time (<code>pause</code>).
+      <h3>Breadth First Traversal of a tree</h3>
+      Breadth first traveral of a binary tree using parallel composition (<code>||</code>) and synchronization of logical time (<code>pause</code>). A level of the tree is traversed at each logical instant.
       <br><br>
    <pre>
 <span style="color: #b22222;">(* </span><span style="color: #b22222;">Definition the type of binary trees. </span><span style="color: #b22222;">*)</span>
@@ -60,7 +59,34 @@
         f x;
         <span style="color: #483d8b;">pause</span>;
         <span style="color: #483d8b;">run</span> (iter_breadth f l) <span style="color: #008b8b;">||</span> <span style="color: #483d8b;">run</span> (iter_breadth f r)</pre>
-      </section>
+    </section>
+    <hr>
+
+
+    <section id="jacques">
+      <h3>Frère Jacques</h3>
+      <br>
+
+	<div class="row-fluid">
+          <ul class="thumbnails">
+            <li class="span7">
+	      <div class="thumbnail">
+		<img src="<#ROOTDIR>/reactive_asco/resources/score_jacques.png" alt="jacques">
+	      </div>
+            </li>
+	    <li class="span5">
+	       <p>
+       Here, we present a musical library written in ReactiveML
+      through a simple example: the classic French musical round
+      "Frère Jacques".
+      </p>
+      <p><a class="btn"
+      href="<#ROOTDIR>/reactive_asco/code/jacques.html">View Details &raquo;</a></p>
+            </li>
+          </ul>
+        </div>
+
+    </section>
     <hr>
 
     <section id="nbody">
@@ -148,33 +174,6 @@
               </li>
             </ul>
           </div>
-    </section>
-    <hr>
-
-
-    <section id="jacques">
-      <h3>Frère Jacques</h3>
-      <br>
-
-	<div class="row-fluid">
-          <ul class="thumbnails">
-            <li class="span7">
-	      <div class="thumbnail">
-		<img src="<#ROOTDIR>/reactive_asco/resources/score_jacques.png" alt="jacques">
-	      </div>
-            </li>
-	    <li class="span5">
-	       <p>
-       Here, we present a musical library written in ReactiveML
-      through a simple example: the classic French musical round
-      "Frère Jacques".
-      </p>
-      <p><a class="btn"
-      href="<#ROOTDIR>/reactive_asco/code/jacques.html">View Details &raquo;</a></p>
-            </li>
-          </ul>
-        </div>
-
     </section>
 
     <br><br>
