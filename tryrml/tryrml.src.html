@@ -3,21 +3,8 @@
     <div id="sidebar">
       <div id="intro">
 	<h3>Try ReactiveML</h3>
-	<br>
-	<p>
-	  <b>ReactiveML</b> is a programming language similar to
-	  OCaml extended with the synchronous reactive model. It is
-	  dedicated to the implementation of interactive systems as
-	  found in graphical user interfaces, video games and
-	  simulation problems.
-	</p>
-	<br />
-
-	<p>For more details about OCaml programming you can
-	  try <a href="http://try.ocamlpro.com">TryOcaml</a>.
-	</p>
-
-	<hr />
+	<!-- <br> -->
+	<!-- <hr /> -->
 
 	<table class="zebra-striped">
 	  <thead>
@@ -43,21 +30,49 @@
 	<hr />
 
 	<p>
-	  To test the toplevel, you can copy the following code or
-	  simply click on it.
+	  <b>ReactiveML</b> is a programming language similar to
+	  <a href="http://ocaml.org">OCaml</a> extended with the
+	  synchronous reactive model. It is dedicated to the
+	  implementation of interactive systems as found in graphical
+	  user interfaces, video games and simulation problems.
 	</p>
-	<pre class="code">print_endline "Hello world!" ;;</pre>
 	<p>
-	  You can also drag and drop a ReactiveML file into the
-	  toplevel window if you want to evaluate it. Here is an
-	  example to download and drag and
-	  drop: <a href="lessons/planets.rml" target="_blank">planets.rml</a> (or
-	  <a class="code-file">lessons/planets.rml</a>).
+	  For example, you can execute the n-body problem
+	  (<a href="lessons/planets.rml"
+	  target="_blank">planets.rml</a>): <a class="code-file">lessons/planets.rml</a>
 	</p>
+	<p>
+	  You can add ten new planets moving in parallel by typing the
+	  following line or simply by clicking on it:
+	</p>
+	<pre class="code">#exec (for i = 1 to 10 dopar run planet done);;</pre>
+	<p>
+	  You can stop the simulation with:
+	</p>
+	<pre class="code">emit quit;;</pre>
 	<br />
 
+	<!-- <p>For more details about OCaml programming you can -->
+	<!--   try <a href="http://try.ocamlpro.com">TryOcaml</a>. -->
+	<!-- </p> -->
+
+
+	<!-- <p> -->
+	<!--   To test the toplevel, you can copy the following code or -->
+	<!--   simply click on it. -->
+	<!-- </p> -->
+	<!-- <pre class="code">print_endline "Hello world!" ;;</pre> -->
+	<!-- <p> -->
+	<!--   You can also drag and drop a ReactiveML file into the -->
+	<!--   toplevel window if you want to evaluate it. Here is an -->
+	<!--   example to download and drag and -->
+	<!--   drop: <a href="lessons/planets.rml" target="_blank">planets.rml</a> (or -->
+	<!--   <a class="code-file">lessons/planets.rml</a>). -->
+	<!-- </p> -->
+	<!-- <br /> -->
+
 	<p>
-	  An interactive tutorial is also available.
+	  An interactive tutorial is available.
 	</p>
 
       </div>
