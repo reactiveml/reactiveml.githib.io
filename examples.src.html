@@ -42,11 +42,12 @@
   <!--   <hr> -->
 
     <section id="breadth">
-      <h3>Breadth First Traversal of a tree</h3>
+      <h3>Breadth First Traversal of a Tree</h3>
       Breadth first traveral of a binary tree using parallel composition (<code>||</code>) and synchronization of logical time (<code>pause</code>). A level of the tree is traversed at each logical instant.
-      <br><br>
-   <pre>
-<span style="color: #b22222;">(* </span><span style="color: #b22222;">Definition the type of binary trees. </span><span style="color: #b22222;">*)</span>
+      <br><br
+<!-- *************************** -->
+<pre>
+  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Definition of binary trees. </span><span style="color: #b22222;">*)</span>
   <span style="color: #228b22;">type</span> 'a tree =
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Empty</span>
     <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Node</span> <span style="color: #228b22;">of</span> 'a * 'a tree * 'a tree
@@ -59,6 +60,7 @@
         f x;
         <span style="color: #483d8b;">pause</span>;
         <span style="color: #483d8b;">run</span> (iter_breadth f l) <span style="color: #008b8b;">||</span> <span style="color: #483d8b;">run</span> (iter_breadth f r)</pre>
+<!-- *************************** -->
     </section>
     <hr>
 
