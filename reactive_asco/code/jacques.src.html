@@ -29,6 +29,70 @@
   <img src="<#ROOTDIR>/reactive_asco/resources/score_jacques.png" alt="jacques">
 </div>
 <br><br>
+<p>
+  ReactiveML has been used to
+  implement <a href="<#ROOTDIR>/reactive_asco/index.html">a sequencer
+  for mixed music</a>. Here, we present a simple library that takes
+  advantage of the expressiveness of ReactiveML to program the classic
+  French musical round "Frère Jacques".
+  <div class="raw-fluid row">
+    <div class="span6">
+      <audio controls>
+	<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
+		type="audio/mp3">
+	  <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+      </audio>
+    </div>
+  </div>
+</p>
+
+<p>
+  Traditionally, in western music, a melody is a sequence of notes,
+  where a note is a sound event characterized by a pitch and a
+  duration. Notes can be defined with the following types using a
+  syntax similar to the one of OCaml.
+</p>
+<pre>
+(** Pitch class of a note (Af = A flat, As = A sharp, ...). *)
+type pitch_class =
+  | A | Af | As
+  | B | Bf | Bs
+  | C | Cf | Cs
+  | D | Df | Ds
+  | E | Ef | Es
+  | F | Ff | Fs
+  | G | Gf | Gs
+
+(** Octave *)
+type octave = int
+(** Pitch *)
+type pitch = pitch_class * octave
+(** Duration *)
+type dur = float
+(** Note*)
+type note = dur * pitch
+</pre>
+<p>
+  The pitch is represented by a pair <code>(pitch_class,
+  octave)</code>, where <code>pitch_class</code> denotes one of the
+  twelve semi-tones, e.g., A, A#, A♭, B, B#..., and octave is an
+  integer. For instance <code>(A,4)</code> denotes the famous A 440Hz.
+</p>
+<p>
+  Using these data types, we can define the score of Frère Jacques:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> jacques =
+  [1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
+   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
+   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);]
+</pre>
+
 <h3>Audio</h3>
      <ul>
       <li> <p>Theme only</p>
