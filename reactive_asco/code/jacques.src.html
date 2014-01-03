@@ -35,16 +35,16 @@
   for mixed music</a>. Here, we present a simple library that takes
   advantage of the expressiveness of ReactiveML to program the classic
   French musical round "Frère Jacques".
-  <div class="raw-fluid row">
-    <div class="span6">
-      <audio controls>
-	<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
-		type="audio/mp3">
-	  <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
-      </audio>
-    </div>
-  </div>
 </p>
+<div class="raw-fluid row">
+  <div class="span6 offset1">
+    <audio controls>
+      <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
+	      type="audio/mp3">
+	<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+    </audio>
+  </div>
+</div>
 
 <p>
   Traditionally, in western music, a melody is a sequence of notes,
@@ -79,7 +79,7 @@ type note = dur * pitch
   integer. For instance <code>(A,4)</code> denotes the famous A 440Hz.
 </p>
 <p>
-  Using these data types, we can define the score of Frère Jacques:
+  Using these data types, we can define the score of Frère Jacques as list of notes:
 </p>
 <pre>
 <span style="color:rgb(34,139,34)">let</span> jacques =
@@ -92,74 +92,60 @@ type note = dur * pitch
    1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);
    1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);]
 </pre>
-
-<h3>Audio</h3>
-     <ul>
-      <li> <p>Theme only</p>
-	<div class="raw-fluid row">
-	  <div class="span6">
-	    <audio controls>
-	      <source src="<#ROOTDIR>/reactive_asco/resources/jacques_alone.mp3"
-		      type="audio/mp3">
-		<source src="<#ROOTDIR>/reactive_asco/resources/jacques_alone.ogg" type="audio/ogg">
-	    </audio>
-	  </div>
-	</div>
-    </li>
-
-      <li><p>Theme doubled one third higher (four semi-tones)</p>
-	<div class="raw-fluid row">
-	  <div class="span6">
-	    <audio controls>
-	      <source src="<#ROOTDIR>/reactive_asco/resources/jacques_double.mp3"
-		      type="audio/mp3">
-		<source src="<#ROOTDIR>/reactive_asco/resources/jacques_double.ogg" type="audio/ogg">
-	    </audio>
-	  </div>
-	</div>
-      </li>
-
-      <li><p>The entire round</p>
-	<div class="raw-fluid row">
-	  <div class="span6">
-	    <audio controls>
-	      <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
-		      type="audio/mp3">
-		<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
-	    </audio>
-	  </div>
-	</div>
-      </li>
-     </ul>
-
-<br>
-<h3>Source Code</h3>
-<pre><span style="color:rgb(160,82,45)">open</span> <span style="color:rgb(0,0,255)">Music</span>
-
+<p>
+  In order to play the score, we have to build a link between the
+  logical time and the physical time. To do that, we first define a
+  signal <code>clock</code> which will be emitted
+  every <code>period</code> seconds:
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">signal</span> clock
 <span style="color:rgb(34,139,34)">let</span> period = 0.01
-
+</pre>
+<p>
+The process <code>emit_clock</code> emits the
+signal <code>clock</code>. It uses the
+function <code>gettimeofday</code> of the <code>Unix</code> module to
+try get access to the physical time:
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock =
+  <span style="color:rgb(178,34,34)">(* set the next deadline *)</span>
   <span style="color:rgb(34,139,34)">let</span> next = ref (<span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () +. period) <span style="color:rgb(34,139,34)">in</span>
   <span style="color:rgb(160,32,240)">loop</span>
     <span style="color:rgb(34,139,34)">let</span> current = <span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () <span style="color:rgb(34,139,34)">in</span>
+    <span style="color:rgb(178,34,34)">(* check if the deadline has been reached *)</span>
     <span style="color:rgb(0,139,139)">if</span> (current &gt;= !next)
     <span style="color:rgb(0,139,139)">then</span>
       <span style="color:rgb(160,32,240)">begin</span>
         <span style="color:rgb(72,61,139)">emit</span> clock ();
-        next := !next +. period;
+        next := !next +. period; <span style="color:rgb(178,34,34)">(* update the next deadline *)</span>
       <span style="color:rgb(160,32,240)">end</span>;
     <span style="color:rgb(72,61,139)">pause</span>
   <span style="color:rgb(160,32,240)">end</span>
-
+</pre>
+<p>
+  Now, to wait a duration of <code>dur</code> seconds, we only have to
+  count the occurrences of the signal <code>clock</code>:
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> wait dur =
   <span style="color:rgb(34,139,34)">let</span> d = int_of_float (dur /. period) <span style="color:rgb(34,139,34)">in</span>
   <span style="color:rgb(0,139,139)">for</span> i = 1 <span style="color:rgb(0,139,139)">to</span> d <span style="color:rgb(0,139,139)">do</span>
     <span style="color:rgb(34,139,34)">await</span> clock
   <span style="color:rgb(0,139,139)">done</span>
+</pre>
 
+<p>
+A performance will be represented by a signal on which notes to play will be sent.
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">signal</span> perf <span style="color:rgb(34,139,34)">default</span> [] <span style="color:rgb(34,139,34)">gather</span> (<span style="color:rgb(34,139,34)">fun</span> x y <span style="color:rgb(0,139,139)">-&gt;</span> x::y)
-
+</pre>
+<p>
+  The execution of a score is the traversal of the list of notes at the right tempo.
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">rec</span> <span style="color:rgb(34,139,34)">process</span> play sequence =
   <span style="color:rgb(0,139,139)">match</span> sequence <span style="color:rgb(0,139,139)">with</span>
   <span style="color:rgb(0,139,139)">|</span> [] <span style="color:rgb(0,139,139)">-&gt;</span> ()
@@ -167,10 +153,14 @@ type note = dur * pitch
       <span style="color:rgb(72,61,139)">emit</span> perf note;
       <span style="color:rgb(72,61,139)">run</span> (wait dur);
       <span style="color:rgb(72,61,139)">run</span> (play s)
+</pre>
 
-<span style="color:rgb(178,34,34)">(* </span><span style="color:rgb(178,34,34)">Send a message to the audio environment via a socket </span><span style="color:rgb(178,34,34)">*)</span>
+<p>
+  To be able to listen the performance, we will send UDP messages to an audio environment. To do that, we define a process <code>sender</code> executed in parallel to the player that is listening to the <code>perf</code> signal and sends the UDP messages.
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> send_to_audio sock note =
-  <span style="color:rgb(34,139,34)">let</span> m = string_of_note note <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(34,139,34)">let</span> m = Music.string_of_note note <span style="color:rgb(34,139,34)">in</span>
   <span style="color:rgb(0,0,255)">Network</span>.sendUDP m sock 7400 ()
 
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> sender =
@@ -180,36 +170,49 @@ type note = dur * pitch
     <span style="color:rgb(34,139,34)">await</span> perf (notes) <span style="color:rgb(34,139,34)">in</span>
     <span style="color:rgb(0,0,255)">List</span>.iter (<span style="color:rgb(34,139,34)">fun</span> n <span style="color:rgb(0,139,139)">-&gt;</span> send_to_audio sock n) notes
   <span style="color:rgb(160,32,240)">end</span>
+</pre>
 
-<span style="color:rgb(34,139,34)">let</span> jacques =
-  [1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
-   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
-   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
-   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
-   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
-   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
-   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);
-   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);]
-
-<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> double sequence =
-  <span style="color:rgb(72,61,139)">run</span> (play sequence) <span style="color:rgb(0,139,139)">||</span>
-  <span style="color:rgb(72,61,139)">run</span> (play (transpose 4 sequence))
-
-<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> delayed p dur =
-  <span style="color:rgb(72,61,139)">run</span> (wait dur);
-  <span style="color:rgb(72,61,139)">run</span> p
-
+<p>
+  To test or implementation, we can play the theme as an infinite repetition of the score:
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> theme =
   <span style="color:rgb(160,32,240)">loop</span>
     <span style="color:rgb(72,61,139)">run</span> (play jacques)
   <span style="color:rgb(160,32,240)">end</span>
+</pre>
+<p>
+  The main program is then the parallel composition of the metronome (the <code>emit_clock</code> process), the theme and the <code>sender</code> process:
+</p>
+<pre>
+  <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> main =
+  <span style="color:rgb(72,61,139)">run</span> emit_clock <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> sender</pre>
+</pre>
 
+<p>
+  Now to perform a round, we first define a process <code>delayed</code> which delays the execution of a process:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> delayed p dur =
+  <span style="color:rgb(72,61,139)">run</span> (wait dur);
+  <span style="color:rgb(72,61,139)">run</span> p
+</pre>
+<p>
+  Then, we can execute the theme four times in parallel, each time delayed by 8 seconds:
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> round_basic =
   <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
   <span style="color:rgb(72,61,139)">run</span> (delayed theme 8.0) <span style="color:rgb(0,139,139)">||</span>
   <span style="color:rgb(72,61,139)">run</span> (delayed theme 16.0) <span style="color:rgb(0,139,139)">||</span>
   <span style="color:rgb(72,61,139)">run</span> (delayed theme 24.0)
-
+</pre>
+<p>
+  Finally, we can redefine the round using parallel iterations or recursive processes:
+</p>
+<pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> round_for =
   <span style="color:rgb(0,139,139)">for</span> i = 0 <span style="color:rgb(0,139,139)">to</span> 3 <span style="color:rgb(0,139,139)">dopar</span>
     <span style="color:rgb(72,61,139)">run</span> (delayed theme (float (i * 8)))
@@ -221,9 +224,16 @@ type note = dur * pitch
     <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
     <span style="color:rgb(72,61,139)">run</span> (delayed (round (nb_voices - 1)) 8.0)
   <span style="color:rgb(160,32,240)">end</span>
-
-<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> main =
-  <span style="color:rgb(72,61,139)">run</span> emit_clock <span style="color:rgb(0,139,139)">||</span>
-  <span style="color:rgb(72,61,139)">run</span> (round 4) <span style="color:rgb(0,139,139)">||</span>
-  <span style="color:rgb(72,61,139)">run</span> sender</pre>
-
+</pre>
+<p>
+  Here is the result of the round:
+</p>
+<div class="raw-fluid row">
+  <div class="span6 offset1">
+    <audio controls>
+      <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
+	      type="audio/mp3">
+	<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+    </audio>
+  </div>
+</div>
