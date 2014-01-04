@@ -206,7 +206,7 @@ publications/rml.html: publications/rml.bib
 	(export TMPDIR=.; \
 	 cd publications; \
 	 $(BIBTEX2HTML) \
-		-linebreak -nofooter \
+		-linebreak -nofooter -revkeys \
 		-nf url2 extended.pdf -nf webpage "more details" \
 		 rml.bib)
 
