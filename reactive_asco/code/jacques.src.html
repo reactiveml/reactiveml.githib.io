@@ -7,11 +7,11 @@
 	<li><a href="<#ROOTDIR>/distrib/rml-<#RML_VERSION>-<#DATE>.tar.gz"><i class="icon-globe icon-black"></i> Download</a></li>
 
 	<li class="nav-header">Examples</li>
-        <li><a href="<#ROOTDIR>/examples.html#hello"><i class="icon-chevron-right"></i> Hello World!</a></li>
+        <!-- <li><a href="<#ROOTDIR>/examples.html#hello"><i class="icon-chevron-right"></i> Hello World!</a></li> -->
         <li><a href="<#ROOTDIR>/examples.html#breadth"><i class="icon-chevron-right"></i> Breadth first traversal</a></li>
+	<li><a href="<#ROOTDIR>/examples.html#jacques"><i class="icon-chevron-right"></i> Frère Jacques</a></li>
         <li><a href="<#ROOTDIR>/examples.html#nbody"><i class="icon-chevron-right"></i> N-body</a></li>
         <li><a href="<#ROOTDIR>/examples.html#cell"><i class="icon-chevron-right"></i> Cellular automata</a></li>
-	<li><a href="<#ROOTDIR>/examples.html#jacques"><i class="icon-chevron-right"></i> Frère Jacques</a></li>
 
 	<li class="nav-header">Projects</li>
         <li><a href="<#ROOTDIR>/examples.html#network"><i class="icon-chevron-right"></i> Network simulation</a></li>
@@ -94,7 +94,7 @@
 </pre>
 <p>
   In order to play the score, we have to build a link between the
-  logical time and the physical time. To do that, we first define a
+  logical time and the physical time. Let us define a
   signal <code>clock</code> which will be emitted
   every <code>period</code> seconds:
 </p>
@@ -104,9 +104,8 @@
 </pre>
 <p>
 The process <code>emit_clock</code> emits the
-signal <code>clock</code>. It uses the
-function <code>gettimeofday</code> of the <code>Unix</code> module to
-try get access to the physical time:
+signal <code>clock</code>. The function <code>gettimeofday</code> of
+the <code>Unix</code> module gives access to the physical time:
 </p>
 <pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock =
@@ -137,13 +136,13 @@ try get access to the physical time:
 </pre>
 
 <p>
-A performance will be represented by a signal on which notes to play will be sent.
+A performance is represented by a signal on which notes to play are sent.
 </p>
 <pre>
 <span style="color:rgb(34,139,34)">signal</span> perf <span style="color:rgb(34,139,34)">default</span> [] <span style="color:rgb(34,139,34)">gather</span> (<span style="color:rgb(34,139,34)">fun</span> x y <span style="color:rgb(0,139,139)">-&gt;</span> x::y)
 </pre>
 <p>
-  The execution of a score is the traversal of the list of notes at the right tempo.
+  The execution of a score is the traversal of the list of notes at the right speed.
 </p>
 <pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">rec</span> <span style="color:rgb(34,139,34)">process</span> play sequence =
@@ -156,7 +155,7 @@ A performance will be represented by a signal on which notes to play will be sen
 </pre>
 
 <p>
-  To be able to listen the performance, we will send UDP messages to an audio environment. To do that, we define a process <code>sender</code> executed in parallel to the player that is listening to the <code>perf</code> signal and sends the UDP messages.
+  In order to produce actual sounds, notes are converted into UDP messages and sent to an audio environment. This is done by the process <code>sender</code>. This process awaits notes produced on the signal <code>perf</code> and sends UDP messages.
 </p>
 <pre>
 <span style="color:rgb(34,139,34)">let</span> send_to_audio sock note =
@@ -173,7 +172,7 @@ A performance will be represented by a signal on which notes to play will be sen
 </pre>
 
 <p>
-  To test or implementation, we can play the theme as an infinite repetition of the score:
+  To test our implementation, we can play the theme as an infinite repetition of the score:
 </p>
 <pre>
 <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> theme =
@@ -182,7 +181,7 @@ A performance will be represented by a signal on which notes to play will be sen
   <span style="color:rgb(160,32,240)">end</span>
 </pre>
 <p>
-  The main program is then the parallel composition of the metronome (the <code>emit_clock</code> process), the theme and the <code>sender</code> process:
+  Finally, the main process is the parallel composition of the metronome (the <code>emit_clock</code> process), the theme and the <code>sender</code> process:
 </p>
 <pre>
   <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> main =
