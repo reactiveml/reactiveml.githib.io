@@ -53,24 +53,24 @@
   syntax similar to the one of OCaml.
 </p>
 <pre>
-(** Pitch class of a note (Af = A flat, As = A sharp, ...). *)
-type pitch_class =
-  | A | Af | As
-  | B | Bf | Bs
-  | C | Cf | Cs
-  | D | Df | Ds
-  | E | Ef | Es
-  | F | Ff | Fs
-  | G | Gf | Gs
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Pitch class of a note (Af = A flat, As = A sharp, ...). </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> pitch_class =
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">A</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Af</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">As</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">B</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Bf</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Bs</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">C</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Cf</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Cs</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">D</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Df</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Ds</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">E</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Ef</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Es</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">F</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Ff</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Fs</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">G</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Gf</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Gs</span>
 
-(** Octave *)
-type octave = int
-(** Pitch *)
-type pitch = pitch_class * octave
-(** Duration *)
-type dur = float
-(** Note*)
-type note = dur * pitch
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Octave </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> octave = int
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Pitch </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> pitch = pitch_class * octave
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Duration </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> dur = float
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Note</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> note = dur * pitch
 </pre>
 <p>
   The pitch is represented by a pair <code>(pitch_class,
