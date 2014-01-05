@@ -1,3 +1,12 @@
+<script type="text/javascript">
+<!--
+  function email(name,dom,ext){
+    addr=(name + '@' + dom + '.' + ext)
+    document.write('<a href="mailto:' + addr + '">' + addr + '</a>')
+  }
+//-->
+</script>
+
 <div class="row-fluid">
   <div class="span12">
 
@@ -5,15 +14,45 @@
 <hr>
 <!-- <hr>  ************************************************************* -->
 <h3>Mailing lists</h3>
-<p>Mailing-list: <a href="mailto:list@reactiveml.org">list@reactiveml.org</a> (send me an email to subscribe: <a href="mailto:louis.mandel@lri.fr">louis.mandel@lri.fr</a>)<br>
-Bugs: <a href="mailto:bugs@reactiveml.org">bugs@reactiveml.org</a><br>
-Developers: <a href="mailto:devel@reactiveml.org">devel@reactiveml.org</a></p>
+<p>
+  Mailing-list:
+  <script type="text/javascript">
+    <!--
+	email("list","reactiveml","org")
+    //-->
+  </script>
+  <noscript>list [@] reactiveml [dot] org</noscript>
+  (send me an email to subscribe:
+  <script type="text/javascript">
+    <!--
+	email("louis.mandel","lri","fr")
+    //-->
+  </script>
+  <noscript>louis.mandel [@] lri [dot] fr</noscript>)<br>
+
+  Bugs:
+  <script type="text/javascript">
+    <!--
+	email("bugs","reactiveml","org")
+    //-->
+  </script>
+  <noscript>bugs [@] reactiveml [dot] org</noscript><br>
+
+  Developers:
+  <script type="text/javascript">
+    <!--
+	email("devel","reactiveml","org")
+    //-->
+  </script>
+  <noscript>devel [@] reactiveml [dot] org</noscript>
+</p>
 
 <!-- <hr>  ************************************************************* -->
 
 <br>
 <h3>People</h3>
-<p><a href="http://www.lri.fr/~mandel">Louis Mandel</a> - <a href="http://www.lri.fr">Laboratoire de Recherche en Informatique</a><br>
+<p><a href="http://www.lri.fr/~mandel">Louis Mandel</a> - <a href="http://www.college-de-france.fr">Collège de France</a><br>
+ <!-- <a href="http://www.lri.fr">Laboratoire de Recherche en Informatique</a><br> -->
 <a href="http://www.di.ens.fr/~pouzet">Marc Pouzet</a> - <a href="http://www.di.ens.fr">D&eacute;partement d'informatique de l'&Eacute;cole normale sup&eacute;rieure</a><br>
 <a href="http://www.di.ens.fr/~pasteur">C&eacute;dric Pasteur</a> - <a href="http://www.di.ens.fr">D&eacute;partement d'informatique de l'&Eacute;cole normale sup&eacute;rieure</a></p>
 
@@ -21,11 +60,13 @@ Developers: <a href="mailto:devel@reactiveml.org">devel@reactiveml.org</a></p>
 
 <br>
 <h3>Contributors</h3>
-<p>Matthieu Carlier (2004): Examples<br>
-Sarah Maarek (2004): Emacs mode<br>
-Florence Plateau (2008)<br>
-Mehdi Dogguy (2012)<br>
-Guillaume Baudart (2012-2013)</p>
+<p>
+  Guillaume Baudart <!-- (2012-2013) --><br>
+  Matthieu Carlier <!-- (2004): Examples --><br>
+  Mehdi Dogguy <!-- (2012) --><br>
+  Sarah Maarek <!-- (2004): Emacs mode --><br>
+  Florence Plateau <!-- (2008) --><br>
+</p>
 
 </div>
 </div>
