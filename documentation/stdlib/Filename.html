@@ -58,44 +58,53 @@
 &nbsp;<a class="post" href="Format.html" title="Format">Next</a>
 </div>
 <h1>Module <a href="type_Filename.html">Filename</a></h1>
-<pre><span class="keyword">module</span> Filename: <code class="code">sig</code> <a href="Filename.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Filename: <code class="code">sig</code> <a href="Filename.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Operations on file names.<br>
 </div>
 <hr width="100%">
 <br>
 Operations on file names.<br>
-<pre><span id="VALcurrent_dir_name"><span class="keyword">val</span> current_dir_name</span> : <code class="type">string</code></pre><div class="info">
+
+<pre><span id="VALcurrent_dir_name"><span class="keyword">val</span> current_dir_name</span> : <code class="type">string</code></pre><div class="info ">
 The conventional name for the current directory (e.g. <code class="code">.</code> in Unix).<br>
 </div>
-<pre><span id="VALparent_dir_name"><span class="keyword">val</span> parent_dir_name</span> : <code class="type">string</code></pre><div class="info">
+
+<pre><span id="VALparent_dir_name"><span class="keyword">val</span> parent_dir_name</span> : <code class="type">string</code></pre><div class="info ">
 The conventional name for the parent of the current directory
    (e.g. <code class="code">..</code> in Unix).<br>
 </div>
-<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type">string -> string -> string</code></pre><div class="info">
+
+<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type">string -> string -> string</code></pre><div class="info ">
 <code class="code">concat dir file</code> returns a file name that designates file
    <code class="code">file</code> in directory <code class="code">dir</code>.<br>
 </div>
-<pre><span id="VALis_relative"><span class="keyword">val</span> is_relative</span> : <code class="type">string -> bool</code></pre><div class="info">
+
+<pre><span id="VALis_relative"><span class="keyword">val</span> is_relative</span> : <code class="type">string -> bool</code></pre><div class="info ">
 Return <code class="code">true</code> if the file name is relative to the current
    directory, <code class="code">false</code> if it is absolute (i.e. in Unix, starts
    with <code class="code">/</code>).<br>
 </div>
-<pre><span id="VALis_implicit"><span class="keyword">val</span> is_implicit</span> : <code class="type">string -> bool</code></pre><div class="info">
+
+<pre><span id="VALis_implicit"><span class="keyword">val</span> is_implicit</span> : <code class="type">string -> bool</code></pre><div class="info ">
 Return <code class="code">true</code> if the file name is relative and does not start
    with an explicit reference to the current directory (<code class="code">./</code> or
    <code class="code">../</code> in Unix), <code class="code">false</code> if it starts with an explicit reference
    to the root directory or the current directory.<br>
 </div>
-<pre><span id="VALcheck_suffix"><span class="keyword">val</span> check_suffix</span> : <code class="type">string -> string -> bool</code></pre><div class="info">
+
+<pre><span id="VALcheck_suffix"><span class="keyword">val</span> check_suffix</span> : <code class="type">string -> string -> bool</code></pre><div class="info ">
 <code class="code">check_suffix name suff</code> returns <code class="code">true</code> if the filename <code class="code">name</code>
    ends with the suffix <code class="code">suff</code>.<br>
 </div>
-<pre><span id="VALchop_suffix"><span class="keyword">val</span> chop_suffix</span> : <code class="type">string -> string -> string</code></pre><div class="info">
+
+<pre><span id="VALchop_suffix"><span class="keyword">val</span> chop_suffix</span> : <code class="type">string -> string -> string</code></pre><div class="info ">
 <code class="code">chop_suffix name suff</code> removes the suffix <code class="code">suff</code> from
    the filename <code class="code">name</code>. The behavior is undefined if <code class="code">name</code> does not
    end with the suffix <code class="code">suff</code>.<br>
 </div>
-<pre><span id="VALchop_extension"><span class="keyword">val</span> chop_extension</span> : <code class="type">string -> string</code></pre><div class="info">
+
+<pre><span id="VALchop_extension"><span class="keyword">val</span> chop_extension</span> : <code class="type">string -> string</code></pre><div class="info ">
 Return the given file name without its extension. The extension
    is the shortest suffix starting with a period and not including
    a directory separator, <code class="code">.xyz</code> for instance.
@@ -104,7 +113,8 @@ Return the given file name without its extension. The extension
    Raise <code class="code">Invalid_argument</code> if the given name does not contain
    an extension.<br>
 </div>
-<pre><span id="VALbasename"><span class="keyword">val</span> basename</span> : <code class="type">string -> string</code></pre><div class="info">
+
+<pre><span id="VALbasename"><span class="keyword">val</span> basename</span> : <code class="type">string -> string</code></pre><div class="info ">
 Split a file name into directory name / base file name.
    <code class="code">concat (dirname name) (basename name)</code> returns a file name
    which is equivalent to <code class="code">name</code>. Moreover, after setting the
@@ -112,10 +122,12 @@ Split a file name into directory name / base file name.
    references to <code class="code">basename name</code> (which is a relative file name)
    designate the same file as <code class="code">name</code> before the call to <a href="Sys.html#VALchdir"><code class="code">Sys.chdir</code></a>.<br>
 </div>
-<pre><span id="VALdirname"><span class="keyword">val</span> dirname</span> : <code class="type">string -> string</code></pre><div class="info">
+
+<pre><span id="VALdirname"><span class="keyword">val</span> dirname</span> : <code class="type">string -> string</code></pre><div class="info ">
 See <a href="Filename.html#VALbasename"><code class="code">Filename.basename</code></a>.<br>
 </div>
-<pre><span id="VALtemp_file"><span class="keyword">val</span> temp_file</span> : <code class="type">string -> string -> string</code></pre><div class="info">
+
+<pre><span id="VALtemp_file"><span class="keyword">val</span> temp_file</span> : <code class="type">string -> string -> string</code></pre><div class="info ">
 <code class="code">temp_file prefix suffix</code> returns the name of a
    fresh temporary file in the temporary directory.
    The base name of the temporary file is formed by concatenating
@@ -129,7 +141,8 @@ See <a href="Filename.html#VALbasename"><code class="code">Filename.basename</co
    Under Windows, the name of the temporary directory is the
    value of the environment variable <code class="code">TEMP</code>, or <code class="code">C:\temp</code> by default.<br>
 </div>
-<pre><span id="VALopen_temp_file"><span class="keyword">val</span> open_temp_file</span> : <code class="type"><a href="Pervasives.html#TYPEopen_flag">Pervasives.open_flag</a> list -><br>       string -> string -> string * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info">
+
+<pre><span id="VALopen_temp_file"><span class="keyword">val</span> open_temp_file</span> : <code class="type"><a href="Pervasives.html#TYPEopen_flag">Pervasives.open_flag</a> list -><br>       string -> string -> string * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info ">
 Same as <a href="Filename.html#VALtemp_file"><code class="code">Filename.temp_file</code></a>, but returns both the name of a fresh
    temporary file, and an output channel opened (atomically) on
    this file.  This function is more secure than <code class="code">temp_file</code>: there
@@ -139,7 +152,8 @@ Same as <a href="Filename.html#VALtemp_file"><code class="code">Filename.temp_fi
    It can contain one or several of <code class="code">Open_append</code>, <code class="code">Open_binary</code>,
    and <code class="code">Open_text</code>.  The default is <code class="code">[Open_text]</code> (open in text mode).<br>
 </div>
-<pre><span id="VALquote"><span class="keyword">val</span> quote</span> : <code class="type">string -> string</code></pre><div class="info">
+
+<pre><span id="VALquote"><span class="keyword">val</span> quote</span> : <code class="type">string -> string</code></pre><div class="info ">
 Return a quoted version of a file name, suitable for use as
    one argument in a shell command line, escaping all shell
    meta-characters.<br>

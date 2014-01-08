@@ -58,7 +58,8 @@
 &nbsp;<a class="post" href="Buffer.html" title="Buffer">Next</a>
 </div>
 <h1>Module <a href="type_Async.html">Async</a></h1>
-<pre><span class="keyword">module</span> Async: <code class="code">sig</code> <a href="Async.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Async: <code class="code">sig</code> <a href="Async.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Launching asychronous computations.
 <p>
 
@@ -72,18 +73,21 @@ Launching asychronous computations.
 
     To use this module, ReactiveML programs need to be compiled with
     the option -thread.<br>
-<pre><span id="VALproc_of_fun"><span class="keyword">val</span> proc_of_fun</span> : <code class="type">('a -> 'b) -> 'a -> 'b process</code></pre><div class="info">
+
+<pre><span id="VALproc_of_fun"><span class="keyword">val</span> proc_of_fun</span> : <code class="type">('a -> 'b) -> 'a -> 'b process</code></pre><div class="info ">
 <code class="code">run proc_of_fun f x</code> executes <code class="code">f x</code> in a thread. The execution
     can last several instants and terminates when the computation of
     <code class="code">f x</code> terminates. If <code class="code">f x</code> do not terminate, the system remains
     cooperative.<br>
 </div>
-<pre><span id="VALexec"><span class="keyword">val</span> exec</span> : <code class="type">('a, 'b) event -> ('c -> 'a) -> 'c -> unit</code></pre><div class="info">
+
+<pre><span id="VALexec"><span class="keyword">val</span> exec</span> : <code class="type">('a, 'b) event -> ('c -> 'a) -> 'c -> unit</code></pre><div class="info ">
 <code class="code">exec term f x</code> spawn the computation of <code class="code">f x</code> in a thread and
     terminates instantaneously. When the computation of <code class="code">f x</code>
     terminates, the result is sent on the signal <code class="code">term</code>.<br>
 </div>
-<pre><span id="VALsafe_emit"><span class="keyword">val</span> safe_emit</span> : <code class="type">('a, 'b) event -> 'a -> unit</code></pre><div class="info">
+
+<pre><span id="VALsafe_emit"><span class="keyword">val</span> safe_emit</span> : <code class="type">('a, 'b) event -> 'a -> unit</code></pre><div class="info ">
 <code class="code">safe_emit s v</code> will emit the value <code class="code">v</code> on the signal <code class="code">s</code>, but
     there is no guaranty on the instant of emission. This function can
     be called from an external thread.<br>

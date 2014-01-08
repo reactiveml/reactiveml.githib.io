@@ -58,7 +58,8 @@
 &nbsp;<a class="post" href="Char.html" title="Char">Next</a>
 </div>
 <h1>Module <a href="type_Callback.html">Callback</a></h1>
-<pre><span class="keyword">module</span> Callback: <code class="code">sig</code> <a href="Callback.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Callback: <code class="code">sig</code> <a href="Callback.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Registering Caml values with the C runtime.
 <p>
 
@@ -74,12 +75,14 @@ Registering Caml values with the C runtime.
    This module allows Caml values to be registered with the C runtime
    under a symbolic name, so that C code can later call back registered
    Caml functions, or raise registered Caml exceptions.<br>
-<pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type">string -> 'a -> unit</code></pre><div class="info">
+
+<pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type">string -> 'a -> unit</code></pre><div class="info ">
 <code class="code">Callback.register n v</code> registers the value <code class="code">v</code> under
    the name <code class="code">n</code>. C code can later retrieve a handle to <code class="code">v</code>
    by calling <code class="code">caml_named_value(n)</code>.<br>
 </div>
-<pre><span id="VALregister_exception"><span class="keyword">val</span> register_exception</span> : <code class="type">string -> exn -> unit</code></pre><div class="info">
+
+<pre><span id="VALregister_exception"><span class="keyword">val</span> register_exception</span> : <code class="type">string -> exn -> unit</code></pre><div class="info ">
 <code class="code">Callback.register_exception n exn</code> registers the
    exception contained in the exception value <code class="code">exn</code>
    under the name <code class="code">n</code>. C code can later retrieve a handle to

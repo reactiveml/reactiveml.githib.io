@@ -84,7 +84,8 @@
 &nbsp;<a class="post" href="Weak.html" title="Weak">Next</a>
 </div>
 <h1>Module <a href="type_Unix.html">Unix</a></h1>
-<pre><span class="keyword">module</span> Unix: <code class="code">sig</code> <a href="Unix.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Unix: <code class="code">sig</code> <a href="Unix.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Interface to the Unix system<br>
 </div>
 <hr width="100%">
@@ -92,6 +93,7 @@ Interface to the Unix system<br>
 Interface to the Unix system<br>
 <br>
 <h6 id="6_Errorreport">Error report</h6><br>
+
 <pre><code><span id="TYPEerror"><span class="keyword">type</span> <code class="type"></code>error</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -577,40 +579,46 @@ Interface to the Unix system<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Unknown error</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The type of error codes.
    Errors defined in the POSIX standard
    and additional errors from UNIX98 and BSD.
    All other errors are mapped to EUNKNOWNERR.<br>
 </div>
 
+
 <pre><span id="EXCEPTIONUnix_error"><span class="keyword">exception</span> Unix_error</span> <span class="keyword">of</span> <code class="type"><a href="Unix.html#TYPEerror">error</a> * string * string</code></pre>
-<div class="info">
+<div class="info ">
 Raised by the system calls below when an error is encountered.
    The first component is the error code; the second component
    is the function name; the third component is the string parameter
    to the function, if it has one, or the empty string otherwise.<br>
 </div>
-<pre><span id="VALerror_message"><span class="keyword">val</span> error_message</span> : <code class="type"><a href="Unix.html#TYPEerror">error</a> -> string</code></pre><div class="info">
+
+<pre><span id="VALerror_message"><span class="keyword">val</span> error_message</span> : <code class="type"><a href="Unix.html#TYPEerror">error</a> -> string</code></pre><div class="info ">
 Return a string describing the given error code.<br>
 </div>
-<pre><span id="VALhandle_unix_error"><span class="keyword">val</span> handle_unix_error</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info">
+
+<pre><span id="VALhandle_unix_error"><span class="keyword">val</span> handle_unix_error</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
 <code class="code">handle_unix_error f x</code> applies <code class="code">f</code> to <code class="code">x</code> and returns the result.
    If the exception <code class="code">Unix_error</code> is raised, it prints a message
    describing the error and exits with code 2.<br>
 </div>
 <br>
 <h6 id="6_Accesstotheprocessenvironment">Access to the process environment</h6><br>
-<pre><span id="VALenvironment"><span class="keyword">val</span> environment</span> : <code class="type">unit -> string array</code></pre><div class="info">
+
+<pre><span id="VALenvironment"><span class="keyword">val</span> environment</span> : <code class="type">unit -> string array</code></pre><div class="info ">
 Return the process environment, as an array of strings
     with the format ``variable=value''.<br>
 </div>
-<pre><span id="VALgetenv"><span class="keyword">val</span> getenv</span> : <code class="type">string -> string</code></pre><div class="info">
+
+<pre><span id="VALgetenv"><span class="keyword">val</span> getenv</span> : <code class="type">string -> string</code></pre><div class="info ">
 Return the value associated to a variable in the process
    environment. Raise <code class="code">Not_found</code> if the variable is unbound.
    (This function is identical to <code class="code">Sys.getenv</code>.)<br>
 </div>
-<pre><span id="VALputenv"><span class="keyword">val</span> putenv</span> : <code class="type">string -> string -> unit</code></pre><div class="info">
+
+<pre><span id="VALputenv"><span class="keyword">val</span> putenv</span> : <code class="type">string -> string -> unit</code></pre><div class="info ">
 <code class="code">Unix.putenv name value</code> sets the value associated to a
    variable in the process environment.
    <code class="code">name</code> is the name of the environment variable,
@@ -618,6 +626,7 @@ Return the value associated to a variable in the process
 </div>
 <br>
 <h6 id="6_Processhandling">Process handling</h6><br>
+
 <pre><code><span id="TYPEprocess_status"><span class="keyword">type</span> <code class="type"></code>process_status</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -644,9 +653,10 @@ Return the value associated to a variable in the process
            signal number.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The termination status of a process.<br>
 </div>
+
 
 <pre><code><span id="TYPEwait_flag"><span class="keyword">type</span> <code class="type"></code>wait_flag</span> = </code></pre><table class="typetable">
 <tr>
@@ -665,35 +675,42 @@ The termination status of a process.<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >report also the children that receive stop signals.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 Flags for <a href="Unix.html#VALwaitpid"><code class="code">Unix.waitpid</code></a>.<br>
 </div>
 
-<pre><span id="VALexecv"><span class="keyword">val</span> execv</span> : <code class="type">string -> string array -> unit</code></pre><div class="info">
+
+<pre><span id="VALexecv"><span class="keyword">val</span> execv</span> : <code class="type">string -> string array -> unit</code></pre><div class="info ">
 <code class="code">execv prog args</code> execute the program in file <code class="code">prog</code>, with
    the arguments <code class="code">args</code>, and the current process environment.<br>
 </div>
-<pre><span id="VALexecve"><span class="keyword">val</span> execve</span> : <code class="type">string -> string array -> string array -> unit</code></pre><div class="info">
+
+<pre><span id="VALexecve"><span class="keyword">val</span> execve</span> : <code class="type">string -> string array -> string array -> unit</code></pre><div class="info ">
 Same as <a href="Unix.html#VALexecv"><code class="code">Unix.execv</code></a>, except that the third argument provides the
    environment to the program executed.<br>
 </div>
-<pre><span id="VALexecvp"><span class="keyword">val</span> execvp</span> : <code class="type">string -> string array -> unit</code></pre><div class="info">
+
+<pre><span id="VALexecvp"><span class="keyword">val</span> execvp</span> : <code class="type">string -> string array -> unit</code></pre><div class="info ">
 Same as <a href="Unix.html#VALexecv"><code class="code">Unix.execv</code></a> respectively, except that
    the program is searched in the path.<br>
 </div>
-<pre><span id="VALexecvpe"><span class="keyword">val</span> execvpe</span> : <code class="type">string -> string array -> string array -> unit</code></pre><div class="info">
+
+<pre><span id="VALexecvpe"><span class="keyword">val</span> execvpe</span> : <code class="type">string -> string array -> string array -> unit</code></pre><div class="info ">
 Same as <a href="Unix.html#VALexecvp"><code class="code">Unix.execvp</code></a> respectively, except that
    the program is searched in the path.<br>
 </div>
-<pre><span id="VALfork"><span class="keyword">val</span> fork</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALfork"><span class="keyword">val</span> fork</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Fork a new process. The returned integer is 0 for the child
    process, the pid of the child process for the parent process.<br>
 </div>
-<pre><span id="VALwait"><span class="keyword">val</span> wait</span> : <code class="type">unit -> int * <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALwait"><span class="keyword">val</span> wait</span> : <code class="type">unit -> int * <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Wait until one of the children processes die, and return its pid
    and termination status.<br>
 </div>
-<pre><span id="VALwaitpid"><span class="keyword">val</span> waitpid</span> : <code class="type"><a href="Unix.html#TYPEwait_flag">wait_flag</a> list -> int -> int * <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALwaitpid"><span class="keyword">val</span> waitpid</span> : <code class="type"><a href="Unix.html#TYPEwait_flag">wait_flag</a> list -> int -> int * <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Same as <a href="Unix.html#VALwait"><code class="code">Unix.wait</code></a>, but waits for the process whose pid is given.
    A pid of <code class="code">-1</code> means wait for any child.
    A pid of <code class="code">0</code> means wait for any child in the same process group
@@ -702,40 +719,49 @@ Same as <a href="Unix.html#VALwait"><code class="code">Unix.wait</code></a>, but
    The list of options indicates whether <code class="code">waitpid</code> should return
    immediately without waiting, or also report stopped children.<br>
 </div>
-<pre><span id="VALsystem"><span class="keyword">val</span> system</span> : <code class="type">string -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALsystem"><span class="keyword">val</span> system</span> : <code class="type">string -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Execute the given command, wait until it terminates, and return
    its termination status. The string is interpreted by the shell
    <code class="code">/bin/sh</code> and therefore can contain redirections, quotes, variables,
    etc. The result <code class="code">WEXITED 127</code> indicates that the shell couldn't
    be executed.<br>
 </div>
-<pre><span id="VALgetpid"><span class="keyword">val</span> getpid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALgetpid"><span class="keyword">val</span> getpid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Return the pid of the process.<br>
 </div>
-<pre><span id="VALgetppid"><span class="keyword">val</span> getppid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALgetppid"><span class="keyword">val</span> getppid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Return the pid of the parent process.<br>
 </div>
-<pre><span id="VALnice"><span class="keyword">val</span> nice</span> : <code class="type">int -> int</code></pre><div class="info">
+
+<pre><span id="VALnice"><span class="keyword">val</span> nice</span> : <code class="type">int -> int</code></pre><div class="info ">
 Change the process priority. The integer argument is added to the
    ``nice'' value. (Higher values of the ``nice'' value mean
    lower priorities.) Return the new nice value.<br>
 </div>
 <br>
 <h6 id="6_Basicfileinputoutput">Basic file input/output</h6><br>
+
 <pre><span id="TYPEfile_descr"><span class="keyword">type</span> <code class="type"></code>file_descr</span> </pre>
-<div class="info">
+<div class="info ">
 The abstract type of file descriptors.<br>
 </div>
 
-<pre><span id="VALstdin"><span class="keyword">val</span> stdin</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALstdin"><span class="keyword">val</span> stdin</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 File descriptor for standard input.<br>
 </div>
-<pre><span id="VALstdout"><span class="keyword">val</span> stdout</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALstdout"><span class="keyword">val</span> stdout</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 File descriptor for standard output.<br>
 </div>
-<pre><span id="VALstderr"><span class="keyword">val</span> stderr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALstderr"><span class="keyword">val</span> stderr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 File descriptor for standard standard error.<br>
 </div>
+
 <pre><code><span id="TYPEopen_flag"><span class="keyword">type</span> <code class="type"></code>open_flag</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -822,29 +848,34 @@ File descriptor for standard standard error.<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Reads complete as writes (depending on O_SYNC/O_DSYNC)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The flags to <a href="Unix.html#VALopenfile"><code class="code">Unix.openfile</code></a>.<br>
 </div>
 
+
 <pre><span id="TYPEfile_perm"><span class="keyword">type</span> <code class="type"></code>file_perm</span> = <code class="type">int</code> </pre>
-<div class="info">
+<div class="info ">
 The type of file access rights.<br>
 </div>
 
-<pre><span id="VALopenfile"><span class="keyword">val</span> openfile</span> : <code class="type">string -> <a href="Unix.html#TYPEopen_flag">open_flag</a> list -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALopenfile"><span class="keyword">val</span> openfile</span> : <code class="type">string -> <a href="Unix.html#TYPEopen_flag">open_flag</a> list -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Open the named file with the given flags. Third argument is
    the permissions to give to the file if it is created. Return
    a file descriptor on the named file.<br>
 </div>
-<pre><span id="VALclose"><span class="keyword">val</span> close</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALclose"><span class="keyword">val</span> close</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 Close a file descriptor.<br>
 </div>
-<pre><span id="VALread"><span class="keyword">val</span> read</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> int</code></pre><div class="info">
+
+<pre><span id="VALread"><span class="keyword">val</span> read</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> int</code></pre><div class="info ">
 <code class="code">read fd buff ofs len</code> reads <code class="code">len</code> characters from descriptor
    <code class="code">fd</code>, storing them in string <code class="code">buff</code>, starting at position <code class="code">ofs</code>
    in string <code class="code">buff</code>. Return the number of characters actually read.<br>
 </div>
-<pre><span id="VALwrite"><span class="keyword">val</span> write</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> int</code></pre><div class="info">
+
+<pre><span id="VALwrite"><span class="keyword">val</span> write</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> int</code></pre><div class="info ">
 <code class="code">write fd buff ofs len</code> writes <code class="code">len</code> characters to descriptor
    <code class="code">fd</code>, taking them from string <code class="code">buff</code>, starting at position <code class="code">ofs</code>
    in string <code class="code">buff</code>. Return the number of characters actually
@@ -852,24 +883,29 @@ Close a file descriptor.<br>
 </div>
 <br>
 <h6 id="6_Interfacingwiththestandardinputoutputlibrary">Interfacing with the standard input/output library</h6><br>
-<pre><span id="VALin_channel_of_descr"><span class="keyword">val</span> in_channel_of_descr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a></code></pre><div class="info">
+
+<pre><span id="VALin_channel_of_descr"><span class="keyword">val</span> in_channel_of_descr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a></code></pre><div class="info ">
 Create an input channel reading from the given descriptor.
    The channel is initially in binary mode; use
    <code class="code">set_binary_mode_in ic false</code> if text mode is desired.<br>
 </div>
-<pre><span id="VALout_channel_of_descr"><span class="keyword">val</span> out_channel_of_descr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info">
+
+<pre><span id="VALout_channel_of_descr"><span class="keyword">val</span> out_channel_of_descr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info ">
 Create an output channel writing on the given descriptor.
    The channel is initially in binary mode; use
    <code class="code">set_binary_mode_out oc false</code> if text mode is desired.<br>
 </div>
-<pre><span id="VALdescr_of_in_channel"><span class="keyword">val</span> descr_of_in_channel</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALdescr_of_in_channel"><span class="keyword">val</span> descr_of_in_channel</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Return the descriptor corresponding to an input channel.<br>
 </div>
-<pre><span id="VALdescr_of_out_channel"><span class="keyword">val</span> descr_of_out_channel</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALdescr_of_out_channel"><span class="keyword">val</span> descr_of_out_channel</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Return the descriptor corresponding to an output channel.<br>
 </div>
 <br>
 <h6 id="6_Seekingandtruncating">Seeking and truncating</h6><br>
+
 <pre><code><span id="TYPEseek_command"><span class="keyword">type</span> <code class="type"></code>seek_command</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -893,22 +929,26 @@ Return the descriptor corresponding to an output channel.<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >indicates positions relative to the end of the file</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 Positioning modes for <a href="Unix.html#VALlseek"><code class="code">Unix.lseek</code></a>.<br>
 </div>
 
-<pre><span id="VALlseek"><span class="keyword">val</span> lseek</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> <a href="Unix.html#TYPEseek_command">seek_command</a> -> int</code></pre><div class="info">
+
+<pre><span id="VALlseek"><span class="keyword">val</span> lseek</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> <a href="Unix.html#TYPEseek_command">seek_command</a> -> int</code></pre><div class="info ">
 Set the current position for a file descriptor<br>
 </div>
-<pre><span id="VALtruncate"><span class="keyword">val</span> truncate</span> : <code class="type">string -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALtruncate"><span class="keyword">val</span> truncate</span> : <code class="type">string -> int -> unit</code></pre><div class="info ">
 Truncates the named file to the given size.<br>
 </div>
-<pre><span id="VALftruncate"><span class="keyword">val</span> ftruncate</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALftruncate"><span class="keyword">val</span> ftruncate</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> unit</code></pre><div class="info ">
 Truncates the file corresponding to the given descriptor
    to the given size.<br>
 </div>
 <br>
 <h6 id="6_Filestatistics">File statistics</h6><br>
+
 <pre><code><span id="TYPEfile_kind"><span class="keyword">type</span> <code class="type"></code>file_kind</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -961,105 +1001,109 @@ Truncates the file corresponding to the given descriptor
 </tr></table>
 
 
+
 <pre><code><span id="TYPEstats"><span class="keyword">type</span> <code class="type"></code>stats</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_dev">st_dev</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_dev">st_dev</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Device number</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_ino">st_ino</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_ino">st_ino</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Inode number</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_kind">st_kind</span>&nbsp;:<code class="type"><a href="Unix.html#TYPEfile_kind">file_kind</a></code>;</code></td>
+<code><span id="TYPEELTstats.st_kind">st_kind</span>&nbsp;: <code class="type"><a href="Unix.html#TYPEfile_kind">file_kind</a></code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Kind of the file</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_perm">st_perm</span>&nbsp;:<code class="type"><a href="Unix.html#TYPEfile_perm">file_perm</a></code>;</code></td>
+<code><span id="TYPEELTstats.st_perm">st_perm</span>&nbsp;: <code class="type"><a href="Unix.html#TYPEfile_perm">file_perm</a></code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Access rights</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_nlink">st_nlink</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_nlink">st_nlink</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Number of links</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_uid">st_uid</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_uid">st_uid</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >User id of the owner</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_gid">st_gid</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_gid">st_gid</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Group ID of the file's group</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_rdev">st_rdev</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_rdev">st_rdev</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Device minor number</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_size">st_size</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTstats.st_size">st_size</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size in bytes</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_atime">st_atime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTstats.st_atime">st_atime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Last access time</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_mtime">st_mtime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTstats.st_mtime">st_mtime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Last modification time</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstats.st_ctime">st_ctime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTstats.st_ctime">st_ctime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Last status change time</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 The informations returned by the <a href="Unix.html#VALstat"><code class="code">Unix.stat</code></a> calls.<br>
 </div>
 
-<pre><span id="VALstat"><span class="keyword">val</span> stat</span> : <code class="type">string -> <a href="Unix.html#TYPEstats">stats</a></code></pre><div class="info">
+
+<pre><span id="VALstat"><span class="keyword">val</span> stat</span> : <code class="type">string -> <a href="Unix.html#TYPEstats">stats</a></code></pre><div class="info ">
 Return the informations for the named file.<br>
 </div>
-<pre><span id="VALlstat"><span class="keyword">val</span> lstat</span> : <code class="type">string -> <a href="Unix.html#TYPEstats">stats</a></code></pre><div class="info">
+
+<pre><span id="VALlstat"><span class="keyword">val</span> lstat</span> : <code class="type">string -> <a href="Unix.html#TYPEstats">stats</a></code></pre><div class="info ">
 Same as <a href="Unix.html#VALstat"><code class="code">Unix.stat</code></a>, but in case the file is a symbolic link,
    return the informations for the link itself.<br>
 </div>
-<pre><span id="VALfstat"><span class="keyword">val</span> fstat</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEstats">stats</a></code></pre><div class="info">
+
+<pre><span id="VALfstat"><span class="keyword">val</span> fstat</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEstats">stats</a></code></pre><div class="info ">
 Return the informations for the file associated with the given
    descriptor.<br>
 </div>
@@ -1067,18 +1111,22 @@ Return the informations for the file associated with the given
 <h6 id="6_Fileoperationsonlargefiles">File operations on large files</h6><br>
 <br>
 <h6 id="6_Operationsonfilenames">Operations on file names</h6><br>
-<pre><span id="VALunlink"><span class="keyword">val</span> unlink</span> : <code class="type">string -> unit</code></pre><div class="info">
+
+<pre><span id="VALunlink"><span class="keyword">val</span> unlink</span> : <code class="type">string -> unit</code></pre><div class="info ">
 Removes the named file<br>
 </div>
-<pre><span id="VALrename"><span class="keyword">val</span> rename</span> : <code class="type">string -> string -> unit</code></pre><div class="info">
+
+<pre><span id="VALrename"><span class="keyword">val</span> rename</span> : <code class="type">string -> string -> unit</code></pre><div class="info ">
 <code class="code">rename old new</code> changes the name of a file from <code class="code">old</code> to <code class="code">new</code>.<br>
 </div>
-<pre><span id="VALlink"><span class="keyword">val</span> link</span> : <code class="type">string -> string -> unit</code></pre><div class="info">
+
+<pre><span id="VALlink"><span class="keyword">val</span> link</span> : <code class="type">string -> string -> unit</code></pre><div class="info ">
 <code class="code">link source dest</code> creates a hard link named <code class="code">dest</code> to the file
    named <code class="code">source</code>.<br>
 </div>
 <br>
 <h6 id="6_Filepermissionsandownership">File permissions and ownership</h6><br>
+
 <pre><code><span id="TYPEaccess_permission"><span class="keyword">type</span> <code class="type"></code>access_permission</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1109,41 +1157,50 @@ Removes the named file<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >File exists</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 Flags for the <a href="Unix.html#VALaccess"><code class="code">Unix.access</code></a> call.<br>
 </div>
 
-<pre><span id="VALchmod"><span class="keyword">val</span> chmod</span> : <code class="type">string -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALchmod"><span class="keyword">val</span> chmod</span> : <code class="type">string -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info ">
 Change the permissions of the named file.<br>
 </div>
-<pre><span id="VALfchmod"><span class="keyword">val</span> fchmod</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALfchmod"><span class="keyword">val</span> fchmod</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info ">
 Change the permissions of an opened file.<br>
 </div>
-<pre><span id="VALchown"><span class="keyword">val</span> chown</span> : <code class="type">string -> int -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALchown"><span class="keyword">val</span> chown</span> : <code class="type">string -> int -> int -> unit</code></pre><div class="info ">
 Change the owner uid and owner gid of the named file.<br>
 </div>
-<pre><span id="VALfchown"><span class="keyword">val</span> fchown</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALfchown"><span class="keyword">val</span> fchown</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> int -> unit</code></pre><div class="info ">
 Change the owner uid and owner gid of an opened file.<br>
 </div>
-<pre><span id="VALumask"><span class="keyword">val</span> umask</span> : <code class="type">int -> int</code></pre><div class="info">
+
+<pre><span id="VALumask"><span class="keyword">val</span> umask</span> : <code class="type">int -> int</code></pre><div class="info ">
 Set the process's file mode creation mask, and return the previous
     mask.<br>
 </div>
-<pre><span id="VALaccess"><span class="keyword">val</span> access</span> : <code class="type">string -> <a href="Unix.html#TYPEaccess_permission">access_permission</a> list -> unit</code></pre><div class="info">
+
+<pre><span id="VALaccess"><span class="keyword">val</span> access</span> : <code class="type">string -> <a href="Unix.html#TYPEaccess_permission">access_permission</a> list -> unit</code></pre><div class="info ">
 Check that the process has the given permissions over the named
    file. Raise <code class="code">Unix_error</code> otherwise.<br>
 </div>
 <br>
 <h6 id="6_Operationsonfiledescriptors">Operations on file descriptors</h6><br>
-<pre><span id="VALdup"><span class="keyword">val</span> dup</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALdup"><span class="keyword">val</span> dup</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Return a new file descriptor referencing the same file as
    the given descriptor.<br>
 </div>
-<pre><span id="VALdup2"><span class="keyword">val</span> dup2</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALdup2"><span class="keyword">val</span> dup2</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 <code class="code">dup2 fd1 fd2</code> duplicates <code class="code">fd1</code> to <code class="code">fd2</code>, closing <code class="code">fd2</code> if already
    opened.<br>
 </div>
-<pre><span id="VALset_nonblock"><span class="keyword">val</span> set_nonblock</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALset_nonblock"><span class="keyword">val</span> set_nonblock</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 Set the ``non-blocking'' flag on the given descriptor.
    When the non-blocking flag is set, reading on a descriptor
    on which there is temporarily no data available raises the
@@ -1151,68 +1208,84 @@ Set the ``non-blocking'' flag on the given descriptor.
    writing on a descriptor on which there is temporarily no room
    for writing also raises <code class="code">EAGAIN</code> or <code class="code">EWOULDBLOCK</code>.<br>
 </div>
-<pre><span id="VALclear_nonblock"><span class="keyword">val</span> clear_nonblock</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALclear_nonblock"><span class="keyword">val</span> clear_nonblock</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 Clear the ``non-blocking'' flag on the given descriptor.
    See <a href="Unix.html#VALset_nonblock"><code class="code">Unix.set_nonblock</code></a>.<br>
 </div>
-<pre><span id="VALset_close_on_exec"><span class="keyword">val</span> set_close_on_exec</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALset_close_on_exec"><span class="keyword">val</span> set_close_on_exec</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 Set the ``close-on-exec'' flag on the given descriptor.
    A descriptor with the close-on-exec flag is automatically
    closed when the current process starts another program with
    one of the <code class="code">exec</code> functions.<br>
 </div>
-<pre><span id="VALclear_close_on_exec"><span class="keyword">val</span> clear_close_on_exec</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALclear_close_on_exec"><span class="keyword">val</span> clear_close_on_exec</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 Clear the ``close-on-exec'' flag on the given descriptor.
    See <a href="Unix.html#VALset_close_on_exec"><code class="code">Unix.set_close_on_exec</code></a>.<br>
 </div>
 <br>
 <h6 id="6_Directories">Directories</h6><br>
-<pre><span id="VALmkdir"><span class="keyword">val</span> mkdir</span> : <code class="type">string -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALmkdir"><span class="keyword">val</span> mkdir</span> : <code class="type">string -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info ">
 Create a directory with the given permissions.<br>
 </div>
-<pre><span id="VALrmdir"><span class="keyword">val</span> rmdir</span> : <code class="type">string -> unit</code></pre><div class="info">
+
+<pre><span id="VALrmdir"><span class="keyword">val</span> rmdir</span> : <code class="type">string -> unit</code></pre><div class="info ">
 Remove an empty directory.<br>
 </div>
-<pre><span id="VALchdir"><span class="keyword">val</span> chdir</span> : <code class="type">string -> unit</code></pre><div class="info">
+
+<pre><span id="VALchdir"><span class="keyword">val</span> chdir</span> : <code class="type">string -> unit</code></pre><div class="info ">
 Change the process working directory.<br>
 </div>
-<pre><span id="VALgetcwd"><span class="keyword">val</span> getcwd</span> : <code class="type">unit -> string</code></pre><div class="info">
+
+<pre><span id="VALgetcwd"><span class="keyword">val</span> getcwd</span> : <code class="type">unit -> string</code></pre><div class="info ">
 Return the name of the current working directory.<br>
 </div>
-<pre><span id="VALchroot"><span class="keyword">val</span> chroot</span> : <code class="type">string -> unit</code></pre><div class="info">
+
+<pre><span id="VALchroot"><span class="keyword">val</span> chroot</span> : <code class="type">string -> unit</code></pre><div class="info ">
 Change the process root directory.<br>
 </div>
+
 <pre><span id="TYPEdir_handle"><span class="keyword">type</span> <code class="type"></code>dir_handle</span> </pre>
-<div class="info">
+<div class="info ">
 The type of descriptors over opened directories.<br>
 </div>
 
-<pre><span id="VALopendir"><span class="keyword">val</span> opendir</span> : <code class="type">string -> <a href="Unix.html#TYPEdir_handle">dir_handle</a></code></pre><div class="info">
+
+<pre><span id="VALopendir"><span class="keyword">val</span> opendir</span> : <code class="type">string -> <a href="Unix.html#TYPEdir_handle">dir_handle</a></code></pre><div class="info ">
 Open a descriptor on a directory<br>
 </div>
-<pre><span id="VALreaddir"><span class="keyword">val</span> readdir</span> : <code class="type"><a href="Unix.html#TYPEdir_handle">dir_handle</a> -> string</code></pre><div class="info">
+
+<pre><span id="VALreaddir"><span class="keyword">val</span> readdir</span> : <code class="type"><a href="Unix.html#TYPEdir_handle">dir_handle</a> -> string</code></pre><div class="info ">
 Return the next entry in a directory.<br>
 <b>Raises</b> <code>End_of_file</code> when the end of the directory has been reached.<br>
 </div>
-<pre><span id="VALrewinddir"><span class="keyword">val</span> rewinddir</span> : <code class="type"><a href="Unix.html#TYPEdir_handle">dir_handle</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALrewinddir"><span class="keyword">val</span> rewinddir</span> : <code class="type"><a href="Unix.html#TYPEdir_handle">dir_handle</a> -> unit</code></pre><div class="info ">
 Reposition the descriptor to the beginning of the directory<br>
 </div>
-<pre><span id="VALclosedir"><span class="keyword">val</span> closedir</span> : <code class="type"><a href="Unix.html#TYPEdir_handle">dir_handle</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALclosedir"><span class="keyword">val</span> closedir</span> : <code class="type"><a href="Unix.html#TYPEdir_handle">dir_handle</a> -> unit</code></pre><div class="info ">
 Close a directory descriptor.<br>
 </div>
 <br>
 <h6 id="6_Pipesandredirections">Pipes and redirections</h6><br>
-<pre><span id="VALpipe"><span class="keyword">val</span> pipe</span> : <code class="type">unit -> <a href="Unix.html#TYPEfile_descr">file_descr</a> * <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALpipe"><span class="keyword">val</span> pipe</span> : <code class="type">unit -> <a href="Unix.html#TYPEfile_descr">file_descr</a> * <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Create a pipe. The first component of the result is opened
    for reading, that's the exit to the pipe. The second component is
    opened for writing, that's the entrance to the pipe.<br>
 </div>
-<pre><span id="VALmkfifo"><span class="keyword">val</span> mkfifo</span> : <code class="type">string -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALmkfifo"><span class="keyword">val</span> mkfifo</span> : <code class="type">string -> <a href="Unix.html#TYPEfile_perm">file_perm</a> -> unit</code></pre><div class="info ">
 Create a named pipe with the given permissions.<br>
 </div>
 <br>
 <h6 id="6_Highlevelprocessandredirectionmanagement">High-level process and redirection management</h6><br>
-<pre><span id="VALcreate_process"><span class="keyword">val</span> create_process</span> : <code class="type">string -><br>       string array -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> int</code></pre><div class="info">
+
+<pre><span id="VALcreate_process"><span class="keyword">val</span> create_process</span> : <code class="type">string -><br>       string array -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> int</code></pre><div class="info ">
 <code class="code">create_process prog args new_stdin new_stdout new_stderr</code>
    forks a new process that executes the program
    in file <code class="code">prog</code>, with arguments <code class="code">args</code>. The pid of the new
@@ -1226,19 +1299,22 @@ Create a named pipe with the given permissions.<br>
    The executable file <code class="code">prog</code> is searched in the path.
    The new process has the same environment as the current process.<br>
 </div>
-<pre><span id="VALcreate_process_env"><span class="keyword">val</span> create_process_env</span> : <code class="type">string -><br>       string array -><br>       string array -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> int</code></pre><div class="info">
+
+<pre><span id="VALcreate_process_env"><span class="keyword">val</span> create_process_env</span> : <code class="type">string -><br>       string array -><br>       string array -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> -> int</code></pre><div class="info ">
 <code class="code">create_process_env prog args env new_stdin new_stdout new_stderr</code>
    works as <a href="Unix.html#VALcreate_process"><code class="code">Unix.create_process</code></a>, except that the extra argument
    <code class="code">env</code> specifies the environment passed to the program.<br>
 </div>
-<pre><span id="VALopen_process_in"><span class="keyword">val</span> open_process_in</span> : <code class="type">string -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a></code></pre><div class="info">
+
+<pre><span id="VALopen_process_in"><span class="keyword">val</span> open_process_in</span> : <code class="type">string -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a></code></pre><div class="info ">
 High-level pipe and process management. This function
    runs the given command in parallel with the program.
    The standard output of the command is redirected to a pipe,
    which can be read via the returned input channel.
    The command is interpreted by the shell <code class="code">/bin/sh</code> (cf. <code class="code">system</code>).<br>
 </div>
-<pre><span id="VALopen_process_out"><span class="keyword">val</span> open_process_out</span> : <code class="type">string -> <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info">
+
+<pre><span id="VALopen_process_out"><span class="keyword">val</span> open_process_out</span> : <code class="type">string -> <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info ">
 Same as <a href="Unix.html#VALopen_process_in"><code class="code">Unix.open_process_in</code></a>, but redirect the standard input of
    the command to a pipe.  Data written to the returned output channel
    is sent to the standard input of the command.
@@ -1246,50 +1322,59 @@ Same as <a href="Unix.html#VALopen_process_in"><code class="code">Unix.open_proc
    to call <a href="Pervasives.html#VALflush"><code class="code">Pervasives.flush</code></a> at the right times to ensure
    correct synchronization.<br>
 </div>
-<pre><span id="VALopen_process"><span class="keyword">val</span> open_process</span> : <code class="type">string -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info">
+
+<pre><span id="VALopen_process"><span class="keyword">val</span> open_process</span> : <code class="type">string -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info ">
 Same as <a href="Unix.html#VALopen_process_out"><code class="code">Unix.open_process_out</code></a>, but redirects both the standard input
    and standard output of the command to pipes connected to the two
    returned channels.  The input channel is connected to the output
    of the command, and the output channel to the input of the command.<br>
 </div>
-<pre><span id="VALopen_process_full"><span class="keyword">val</span> open_process_full</span> : <code class="type">string -><br>       string array -><br>       <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> * <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a></code></pre><div class="info">
+
+<pre><span id="VALopen_process_full"><span class="keyword">val</span> open_process_full</span> : <code class="type">string -><br>       string array -><br>       <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> * <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a></code></pre><div class="info ">
 Similar to <a href="Unix.html#VALopen_process"><code class="code">Unix.open_process</code></a>, but the second argument specifies
    the environment passed to the command.  The result is a triple
    of channels connected respectively to the standard output, standard input,
    and standard error of the command.<br>
 </div>
-<pre><span id="VALclose_process_in"><span class="keyword">val</span> close_process_in</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALclose_process_in"><span class="keyword">val</span> close_process_in</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Close channels opened by <a href="Unix.html#VALopen_process_in"><code class="code">Unix.open_process_in</code></a>,
    wait for the associated command to terminate,
    and return its termination status.<br>
 </div>
-<pre><span id="VALclose_process_out"><span class="keyword">val</span> close_process_out</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALclose_process_out"><span class="keyword">val</span> close_process_out</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Close channels opened by <a href="Unix.html#VALopen_process_out"><code class="code">Unix.open_process_out</code></a>,
    wait for the associated command to terminate,
    and return its termination status.<br>
 </div>
-<pre><span id="VALclose_process"><span class="keyword">val</span> close_process</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALclose_process"><span class="keyword">val</span> close_process</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Close channels opened by <a href="Unix.html#VALopen_process"><code class="code">Unix.open_process</code></a>,
    wait for the associated command to terminate,
    and return its termination status.<br>
 </div>
-<pre><span id="VALclose_process_full"><span class="keyword">val</span> close_process_full</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> * <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -><br>       <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info">
+
+<pre><span id="VALclose_process_full"><span class="keyword">val</span> close_process_full</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> * <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -><br>       <a href="Unix.html#TYPEprocess_status">process_status</a></code></pre><div class="info ">
 Close channels opened by <a href="Unix.html#VALopen_process_full"><code class="code">Unix.open_process_full</code></a>,
    wait for the associated command to terminate,
    and return its termination status.<br>
 </div>
 <br>
 <h6 id="6_Symboliclinks">Symbolic links</h6><br>
-<pre><span id="VALsymlink"><span class="keyword">val</span> symlink</span> : <code class="type">string -> string -> unit</code></pre><div class="info">
+
+<pre><span id="VALsymlink"><span class="keyword">val</span> symlink</span> : <code class="type">string -> string -> unit</code></pre><div class="info ">
 <code class="code">symlink source dest</code> creates the file <code class="code">dest</code> as a symbolic link
    to the file <code class="code">source</code>.<br>
 </div>
-<pre><span id="VALreadlink"><span class="keyword">val</span> readlink</span> : <code class="type">string -> string</code></pre><div class="info">
+
+<pre><span id="VALreadlink"><span class="keyword">val</span> readlink</span> : <code class="type">string -> string</code></pre><div class="info ">
 Read the contents of a link.<br>
 </div>
 <br>
 <h6 id="6_Polling">Polling</h6><br>
-<pre><span id="VALselect"><span class="keyword">val</span> select</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> list -><br>       <a href="Unix.html#TYPEfile_descr">file_descr</a> list -><br>       <a href="Unix.html#TYPEfile_descr">file_descr</a> list -><br>       float -> <a href="Unix.html#TYPEfile_descr">file_descr</a> list * <a href="Unix.html#TYPEfile_descr">file_descr</a> list * <a href="Unix.html#TYPEfile_descr">file_descr</a> list</code></pre><div class="info">
+
+<pre><span id="VALselect"><span class="keyword">val</span> select</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> list -><br>       <a href="Unix.html#TYPEfile_descr">file_descr</a> list -><br>       <a href="Unix.html#TYPEfile_descr">file_descr</a> list -><br>       float -> <a href="Unix.html#TYPEfile_descr">file_descr</a> list * <a href="Unix.html#TYPEfile_descr">file_descr</a> list * <a href="Unix.html#TYPEfile_descr">file_descr</a> list</code></pre><div class="info ">
 Wait until some input/output operations become possible on
    some channels. The three list arguments are, respectively, a set
    of descriptors to check for reading (first argument), for writing
@@ -1303,6 +1388,7 @@ Wait until some input/output operations become possible on
 </div>
 <br>
 <h6 id="6_Locking">Locking</h6><br>
+
 <pre><code><span id="TYPElock_command"><span class="keyword">type</span> <code class="type"></code>lock_command</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1347,11 +1433,12 @@ Wait until some input/output operations become possible on
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Lock a region for reading, or fail if already locked</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 Commands for <a href="Unix.html#VALlockf"><code class="code">Unix.lockf</code></a>.<br>
 </div>
 
-<pre><span id="VALlockf"><span class="keyword">val</span> lockf</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPElock_command">lock_command</a> -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALlockf"><span class="keyword">val</span> lockf</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPElock_command">lock_command</a> -> int -> unit</code></pre><div class="info ">
 <code class="code">lockf fd cmd size</code> puts a lock on a region of the file opened
    as <code class="code">fd</code>. The region starts at the current read/write position for
    <code class="code">fd</code> (as set by <a href="Unix.html#VALlseek"><code class="code">Unix.lseek</code></a>), and extends <code class="code">size</code> bytes forward if
@@ -1367,10 +1454,12 @@ Commands for <a href="Unix.html#VALlockf"><code class="code">Unix.lockf</code></
 <h6 id="6_Signals">Signals</h6>
    Note: installation of signal handlers is performed via
    the functions <code class="code">Sys.signal</code> and <a href="Sys.html#VALset_signal"><code class="code">Sys.set_signal</code></a>.<br>
-<pre><span id="VALkill"><span class="keyword">val</span> kill</span> : <code class="type">int -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALkill"><span class="keyword">val</span> kill</span> : <code class="type">int -> int -> unit</code></pre><div class="info ">
 <code class="code">kill pid sig</code> sends signal number <code class="code">sig</code> to the process
    with id <code class="code">pid</code>.<br>
 </div>
+
 <pre><code><span id="TYPEsigprocmask_command"><span class="keyword">type</span> <code class="type"></code>sigprocmask_command</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1395,7 +1484,8 @@ Commands for <a href="Unix.html#VALlockf"><code class="code">Unix.lockf</code></
 </tr></table>
 
 
-<pre><span id="VALsigprocmask"><span class="keyword">val</span> sigprocmask</span> : <code class="type"><a href="Unix.html#TYPEsigprocmask_command">sigprocmask_command</a> -> int list -> int list</code></pre><div class="info">
+
+<pre><span id="VALsigprocmask"><span class="keyword">val</span> sigprocmask</span> : <code class="type"><a href="Unix.html#TYPEsigprocmask_command">sigprocmask_command</a> -> int list -> int list</code></pre><div class="info ">
 <code class="code">sigprocmask cmd sigs</code> changes the set of blocked signals.
    If <code class="code">cmd</code> is <code class="code">SIG_SETMASK</code>, blocked signals are set to those in
    the list <code class="code">sigs</code>.
@@ -1405,10 +1495,12 @@ Commands for <a href="Unix.html#VALlockf"><code class="code">Unix.lockf</code></
    from the set of blocked signals.
    <code class="code">sigprocmask</code> returns the set of previously blocked signals.<br>
 </div>
-<pre><span id="VALsigpending"><span class="keyword">val</span> sigpending</span> : <code class="type">unit -> int list</code></pre><div class="info">
+
+<pre><span id="VALsigpending"><span class="keyword">val</span> sigpending</span> : <code class="type">unit -> int list</code></pre><div class="info ">
 Return the set of blocked signals that are currently pending.<br>
 </div>
-<pre><span id="VALsigsuspend"><span class="keyword">val</span> sigsuspend</span> : <code class="type">int list -> unit</code></pre><div class="info">
+
+<pre><span id="VALsigsuspend"><span class="keyword">val</span> sigsuspend</span> : <code class="type">int list -> unit</code></pre><div class="info ">
 <code class="code">sigsuspend sigs</code> atomically sets the blocked signals to <code class="code">sig</code>
    and waits for a non-ignored, non-blocked signal to be delivered.
    On return, the blocked signals are reset to their initial value.<br>
@@ -1417,147 +1509,159 @@ Return the set of blocked signals that are currently pending.<br>
 Wait until a non-ignored, non-blocked signal is delivered.<br>
 <br>
 <h6 id="6_Timefunctions">Time functions</h6><br>
+
 <pre><code><span id="TYPEprocess_times"><span class="keyword">type</span> <code class="type"></code>process_times</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprocess_times.tms_utime">tms_utime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTprocess_times.tms_utime">tms_utime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >User time for the process</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprocess_times.tms_stime">tms_stime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTprocess_times.tms_stime">tms_stime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >System time for the process</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprocess_times.tms_cutime">tms_cutime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTprocess_times.tms_cutime">tms_cutime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >User time for the children processes</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprocess_times.tms_cstime">tms_cstime</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTprocess_times.tms_cstime">tms_cstime</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >System time for the children processes</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 The execution times (CPU times) of a process.<br>
 </div>
+
 
 <pre><code><span id="TYPEtm"><span class="keyword">type</span> <code class="type"></code>tm</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_sec">tm_sec</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_sec">tm_sec</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Seconds 0..59</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_min">tm_min</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_min">tm_min</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Minutes 0..59</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_hour">tm_hour</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_hour">tm_hour</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Hours 0..23</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_mday">tm_mday</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_mday">tm_mday</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Day of month 1..31</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_mon">tm_mon</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_mon">tm_mon</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Month of year 0..11</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_year">tm_year</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_year">tm_year</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Year - 1900</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_wday">tm_wday</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_wday">tm_wday</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Day of week (Sunday is 0)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_yday">tm_yday</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTtm.tm_yday">tm_yday</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Day of year 0..365</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTtm.tm_isdst">tm_isdst</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span id="TYPEELTtm.tm_isdst">tm_isdst</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Daylight time savings in effect</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 The type representing wallclock time and calendar date.<br>
 </div>
 
-<pre><span id="VALtime"><span class="keyword">val</span> time</span> : <code class="type">unit -> float</code></pre><div class="info">
+
+<pre><span id="VALtime"><span class="keyword">val</span> time</span> : <code class="type">unit -> float</code></pre><div class="info ">
 Return the current time since 00:00:00 GMT, Jan. 1, 1970,
    in seconds.<br>
 </div>
-<pre><span id="VALgettimeofday"><span class="keyword">val</span> gettimeofday</span> : <code class="type">unit -> float</code></pre><div class="info">
+
+<pre><span id="VALgettimeofday"><span class="keyword">val</span> gettimeofday</span> : <code class="type">unit -> float</code></pre><div class="info ">
 Same as <a href="Unix.html#VALtime"><code class="code">Unix.time</code></a>, but with resolution better than 1 second.<br>
 </div>
-<pre><span id="VALgmtime"><span class="keyword">val</span> gmtime</span> : <code class="type">float -> <a href="Unix.html#TYPEtm">tm</a></code></pre><div class="info">
+
+<pre><span id="VALgmtime"><span class="keyword">val</span> gmtime</span> : <code class="type">float -> <a href="Unix.html#TYPEtm">tm</a></code></pre><div class="info ">
 Convert a time in seconds, as returned by <a href="Unix.html#VALtime"><code class="code">Unix.time</code></a>, into a date and
    a time. Assumes UTC (Coordinated Universal Time), also known as GMT.<br>
 </div>
-<pre><span id="VALlocaltime"><span class="keyword">val</span> localtime</span> : <code class="type">float -> <a href="Unix.html#TYPEtm">tm</a></code></pre><div class="info">
+
+<pre><span id="VALlocaltime"><span class="keyword">val</span> localtime</span> : <code class="type">float -> <a href="Unix.html#TYPEtm">tm</a></code></pre><div class="info ">
 Convert a time in seconds, as returned by <a href="Unix.html#VALtime"><code class="code">Unix.time</code></a>, into a date and
    a time. Assumes the local time zone.<br>
 </div>
-<pre><span id="VALmktime"><span class="keyword">val</span> mktime</span> : <code class="type"><a href="Unix.html#TYPEtm">tm</a> -> float * <a href="Unix.html#TYPEtm">tm</a></code></pre><div class="info">
+
+<pre><span id="VALmktime"><span class="keyword">val</span> mktime</span> : <code class="type"><a href="Unix.html#TYPEtm">tm</a> -> float * <a href="Unix.html#TYPEtm">tm</a></code></pre><div class="info ">
 Convert a date and time, specified by the <code class="code">tm</code> argument, into
    a time in seconds, as returned by <a href="Unix.html#VALtime"><code class="code">Unix.time</code></a>. Also return a normalized
    copy of the given <code class="code">tm</code> record, with the <code class="code">tm_wday</code>, <code class="code">tm_yday</code>,
    and <code class="code">tm_isdst</code> fields recomputed from the other fields.
    The <code class="code">tm</code> argument is interpreted in the local time zone.<br>
 </div>
-<pre><span id="VALalarm"><span class="keyword">val</span> alarm</span> : <code class="type">int -> int</code></pre><div class="info">
+
+<pre><span id="VALalarm"><span class="keyword">val</span> alarm</span> : <code class="type">int -> int</code></pre><div class="info ">
 Schedule a <code class="code">SIGALRM</code> signal after the given number of seconds.<br>
 </div>
-<pre><span id="VALsleep"><span class="keyword">val</span> sleep</span> : <code class="type">int -> unit</code></pre><div class="info">
+
+<pre><span id="VALsleep"><span class="keyword">val</span> sleep</span> : <code class="type">int -> unit</code></pre><div class="info ">
 Stop execution for the given number of seconds.<br>
 </div>
-<pre><span id="VALtimes"><span class="keyword">val</span> times</span> : <code class="type">unit -> <a href="Unix.html#TYPEprocess_times">process_times</a></code></pre><div class="info">
+
+<pre><span id="VALtimes"><span class="keyword">val</span> times</span> : <code class="type">unit -> <a href="Unix.html#TYPEprocess_times">process_times</a></code></pre><div class="info ">
 Return the execution times of the process.<br>
 </div>
-<pre><span id="VALutimes"><span class="keyword">val</span> utimes</span> : <code class="type">string -> float -> float -> unit</code></pre><div class="info">
+
+<pre><span id="VALutimes"><span class="keyword">val</span> utimes</span> : <code class="type">string -> float -> float -> unit</code></pre><div class="info ">
 Set the last access time (second arg) and last modification time
    (third arg) for a file. Times are expressed in seconds from
    00:00:00 GMT, Jan. 1, 1970.<br>
 </div>
+
 <pre><code><span id="TYPEinterval_timer"><span class="keyword">type</span> <code class="type"></code>interval_timer</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1583,35 +1687,38 @@ Set the last access time (second arg) and last modification time
          process; it sends <code class="code">SIGPROF</code> when expired.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The three kinds of interval timers.<br>
 </div>
+
 
 <pre><code><span id="TYPEinterval_timer_status"><span class="keyword">type</span> <code class="type"></code>interval_timer_status</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTinterval_timer_status.it_interval">it_interval</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTinterval_timer_status.it_interval">it_interval</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Period</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTinterval_timer_status.it_value">it_value</span>&nbsp;:<code class="type">float</code>;</code></td>
+<code><span id="TYPEELTinterval_timer_status.it_value">it_value</span>&nbsp;: <code class="type">float</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Current value of the timer</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 The type describing the status of an interval timer<br>
 </div>
 
-<pre><span id="VALgetitimer"><span class="keyword">val</span> getitimer</span> : <code class="type"><a href="Unix.html#TYPEinterval_timer">interval_timer</a> -> <a href="Unix.html#TYPEinterval_timer_status">interval_timer_status</a></code></pre><div class="info">
+
+<pre><span id="VALgetitimer"><span class="keyword">val</span> getitimer</span> : <code class="type"><a href="Unix.html#TYPEinterval_timer">interval_timer</a> -> <a href="Unix.html#TYPEinterval_timer_status">interval_timer_status</a></code></pre><div class="info ">
 Return the current status of the given interval timer.<br>
 </div>
-<pre><span id="VALsetitimer"><span class="keyword">val</span> setitimer</span> : <code class="type"><a href="Unix.html#TYPEinterval_timer">interval_timer</a> -><br>       <a href="Unix.html#TYPEinterval_timer_status">interval_timer_status</a> -> <a href="Unix.html#TYPEinterval_timer_status">interval_timer_status</a></code></pre><div class="info">
+
+<pre><span id="VALsetitimer"><span class="keyword">val</span> setitimer</span> : <code class="type"><a href="Unix.html#TYPEinterval_timer">interval_timer</a> -><br>       <a href="Unix.html#TYPEinterval_timer_status">interval_timer_status</a> -> <a href="Unix.html#TYPEinterval_timer_status">interval_timer_status</a></code></pre><div class="info ">
 <code class="code">setitimer t s</code> sets the interval timer <code class="code">t</code> and returns
    its previous status. The <code class="code">s</code> argument is interpreted as follows:
    <code class="code">s.it_value</code>, if nonzero, is the time to the next timer expiration;
@@ -1623,159 +1730,178 @@ Return the current status of the given interval timer.<br>
 </div>
 <br>
 <h6 id="6_Useridgroupid">User id, group id</h6><br>
-<pre><span id="VALgetuid"><span class="keyword">val</span> getuid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALgetuid"><span class="keyword">val</span> getuid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Return the user id of the user executing the process.<br>
 </div>
-<pre><span id="VALgeteuid"><span class="keyword">val</span> geteuid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALgeteuid"><span class="keyword">val</span> geteuid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Return the effective user id under which the process runs.<br>
 </div>
-<pre><span id="VALsetuid"><span class="keyword">val</span> setuid</span> : <code class="type">int -> unit</code></pre><div class="info">
+
+<pre><span id="VALsetuid"><span class="keyword">val</span> setuid</span> : <code class="type">int -> unit</code></pre><div class="info ">
 Set the real user id and effective user id for the process.<br>
 </div>
-<pre><span id="VALgetgid"><span class="keyword">val</span> getgid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALgetgid"><span class="keyword">val</span> getgid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Return the group id of the user executing the process.<br>
 </div>
-<pre><span id="VALgetegid"><span class="keyword">val</span> getegid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALgetegid"><span class="keyword">val</span> getegid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Return the effective group id under which the process runs.<br>
 </div>
-<pre><span id="VALsetgid"><span class="keyword">val</span> setgid</span> : <code class="type">int -> unit</code></pre><div class="info">
+
+<pre><span id="VALsetgid"><span class="keyword">val</span> setgid</span> : <code class="type">int -> unit</code></pre><div class="info ">
 Set the real group id and effective group id for the process.<br>
 </div>
-<pre><span id="VALgetgroups"><span class="keyword">val</span> getgroups</span> : <code class="type">unit -> int array</code></pre><div class="info">
+
+<pre><span id="VALgetgroups"><span class="keyword">val</span> getgroups</span> : <code class="type">unit -> int array</code></pre><div class="info ">
 Return the list of groups to which the user executing the process
    belongs.<br>
 </div>
+
 <pre><code><span id="TYPEpasswd_entry"><span class="keyword">type</span> <code class="type"></code>passwd_entry</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_name">pw_name</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_name">pw_name</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_passwd">pw_passwd</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_passwd">pw_passwd</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_uid">pw_uid</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_uid">pw_uid</span>&nbsp;: <code class="type">int</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_gid">pw_gid</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_gid">pw_gid</span>&nbsp;: <code class="type">int</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_gecos">pw_gecos</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_gecos">pw_gecos</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_dir">pw_dir</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_dir">pw_dir</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTpasswd_entry.pw_shell">pw_shell</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTpasswd_entry.pw_shell">pw_shell</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 Structure of entries in the <code class="code">passwd</code> database.<br>
 </div>
+
 
 <pre><code><span id="TYPEgroup_entry"><span class="keyword">type</span> <code class="type"></code>group_entry</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTgroup_entry.gr_name">gr_name</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTgroup_entry.gr_name">gr_name</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTgroup_entry.gr_passwd">gr_passwd</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTgroup_entry.gr_passwd">gr_passwd</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTgroup_entry.gr_gid">gr_gid</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTgroup_entry.gr_gid">gr_gid</span>&nbsp;: <code class="type">int</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTgroup_entry.gr_mem">gr_mem</span>&nbsp;:<code class="type">string array</code>;</code></td>
+<code><span id="TYPEELTgroup_entry.gr_mem">gr_mem</span>&nbsp;: <code class="type">string array</code>;</code></td>
 
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 Structure of entries in the <code class="code">groups</code> database.<br>
 </div>
 
-<pre><span id="VALgetlogin"><span class="keyword">val</span> getlogin</span> : <code class="type">unit -> string</code></pre><div class="info">
+
+<pre><span id="VALgetlogin"><span class="keyword">val</span> getlogin</span> : <code class="type">unit -> string</code></pre><div class="info ">
 Return the login name of the user executing the process.<br>
 </div>
-<pre><span id="VALgetpwnam"><span class="keyword">val</span> getpwnam</span> : <code class="type">string -> <a href="Unix.html#TYPEpasswd_entry">passwd_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetpwnam"><span class="keyword">val</span> getpwnam</span> : <code class="type">string -> <a href="Unix.html#TYPEpasswd_entry">passwd_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">passwd</code> with the given name, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetgrnam"><span class="keyword">val</span> getgrnam</span> : <code class="type">string -> <a href="Unix.html#TYPEgroup_entry">group_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetgrnam"><span class="keyword">val</span> getgrnam</span> : <code class="type">string -> <a href="Unix.html#TYPEgroup_entry">group_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">group</code> with the given name, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetpwuid"><span class="keyword">val</span> getpwuid</span> : <code class="type">int -> <a href="Unix.html#TYPEpasswd_entry">passwd_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetpwuid"><span class="keyword">val</span> getpwuid</span> : <code class="type">int -> <a href="Unix.html#TYPEpasswd_entry">passwd_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">passwd</code> with the given user id, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetgrgid"><span class="keyword">val</span> getgrgid</span> : <code class="type">int -> <a href="Unix.html#TYPEgroup_entry">group_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetgrgid"><span class="keyword">val</span> getgrgid</span> : <code class="type">int -> <a href="Unix.html#TYPEgroup_entry">group_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">group</code> with the given group id, or raise
    <code class="code">Not_found</code>.<br>
 </div>
 <br>
 <h6 id="6_Internetaddresses">Internet addresses</h6><br>
+
 <pre><span id="TYPEinet_addr"><span class="keyword">type</span> <code class="type"></code>inet_addr</span> </pre>
-<div class="info">
+<div class="info ">
 The abstract type of Internet addresses.<br>
 </div>
 
-<pre><span id="VALinet_addr_of_string"><span class="keyword">val</span> inet_addr_of_string</span> : <code class="type">string -> <a href="Unix.html#TYPEinet_addr">inet_addr</a></code></pre><div class="info">
+
+<pre><span id="VALinet_addr_of_string"><span class="keyword">val</span> inet_addr_of_string</span> : <code class="type">string -> <a href="Unix.html#TYPEinet_addr">inet_addr</a></code></pre><div class="info ">
 Conversions between string with the format <code class="code">XXX.YYY.ZZZ.TTT</code>
    and Internet addresses. <code class="code">inet_addr_of_string</code> raises <code class="code">Failure</code>
    when given a string that does not match this format.<br>
 </div>
-<pre><span id="VALstring_of_inet_addr"><span class="keyword">val</span> string_of_inet_addr</span> : <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a> -> string</code></pre><div class="info">
+
+<pre><span id="VALstring_of_inet_addr"><span class="keyword">val</span> string_of_inet_addr</span> : <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a> -> string</code></pre><div class="info ">
 See <a href="Unix.html#VALinet_addr_of_string"><code class="code">Unix.inet_addr_of_string</code></a>.<br>
 </div>
-<pre><span id="VALinet_addr_any"><span class="keyword">val</span> inet_addr_any</span> : <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a></code></pre><div class="info">
+
+<pre><span id="VALinet_addr_any"><span class="keyword">val</span> inet_addr_any</span> : <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a></code></pre><div class="info ">
 A special Internet address, for use only with <code class="code">bind</code>, representing
    all the Internet addresses that the host machine possesses.<br>
 </div>
 <br>
 <h6 id="6_Sockets">Sockets</h6><br>
+
 <pre><code><span id="TYPEsocket_domain"><span class="keyword">type</span> <code class="type"></code>socket_domain</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1792,9 +1918,10 @@ A special Internet address, for use only with <code class="code">bind</code>, re
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Internet domain</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The type of socket domains.<br>
 </div>
+
 
 <pre><code><span id="TYPEsocket_type"><span class="keyword">type</span> <code class="type"></code>socket_type</span> = </code></pre><table class="typetable">
 <tr>
@@ -1826,10 +1953,11 @@ The type of socket domains.<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sequenced packets socket</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The type of socket kinds, specifying the semantics of
    communications.<br>
 </div>
+
 
 <pre><code><span id="TYPEsockaddr"><span class="keyword">type</span> <code class="type"></code>sockaddr</span> = </code></pre><table class="typetable">
 <tr>
@@ -1852,29 +1980,36 @@ The type of socket kinds, specifying the semantics of
 </tr></table>
 
 
-<pre><span id="VALsocket"><span class="keyword">val</span> socket</span> : <code class="type"><a href="Unix.html#TYPEsocket_domain">socket_domain</a> -> <a href="Unix.html#TYPEsocket_type">socket_type</a> -> int -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALsocket"><span class="keyword">val</span> socket</span> : <code class="type"><a href="Unix.html#TYPEsocket_domain">socket_domain</a> -> <a href="Unix.html#TYPEsocket_type">socket_type</a> -> int -> <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Create a new socket in the given domain, and with the
    given kind. The third argument is the protocol type; 0 selects
    the default protocol for that kind of sockets.<br>
 </div>
-<pre><span id="VALsocketpair"><span class="keyword">val</span> socketpair</span> : <code class="type"><a href="Unix.html#TYPEsocket_domain">socket_domain</a> -><br>       <a href="Unix.html#TYPEsocket_type">socket_type</a> -> int -> <a href="Unix.html#TYPEfile_descr">file_descr</a> * <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info">
+
+<pre><span id="VALsocketpair"><span class="keyword">val</span> socketpair</span> : <code class="type"><a href="Unix.html#TYPEsocket_domain">socket_domain</a> -><br>       <a href="Unix.html#TYPEsocket_type">socket_type</a> -> int -> <a href="Unix.html#TYPEfile_descr">file_descr</a> * <a href="Unix.html#TYPEfile_descr">file_descr</a></code></pre><div class="info ">
 Create a pair of unnamed sockets, connected together.<br>
 </div>
-<pre><span id="VALaccept"><span class="keyword">val</span> accept</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> * <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info">
+
+<pre><span id="VALaccept"><span class="keyword">val</span> accept</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEfile_descr">file_descr</a> * <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info ">
 Accept connections on the given socket. The returned descriptor
    is a socket connected to the client; the returned address is
    the address of the connecting client.<br>
 </div>
-<pre><span id="VALbind"><span class="keyword">val</span> bind</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALbind"><span class="keyword">val</span> bind</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> unit</code></pre><div class="info ">
 Bind a socket to an address.<br>
 </div>
-<pre><span id="VALconnect"><span class="keyword">val</span> connect</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALconnect"><span class="keyword">val</span> connect</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> unit</code></pre><div class="info ">
 Connect a socket to an address.<br>
 </div>
-<pre><span id="VALlisten"><span class="keyword">val</span> listen</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALlisten"><span class="keyword">val</span> listen</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> unit</code></pre><div class="info ">
 Set up a socket for receiving connection requests. The integer
    argument is the maximal number of pending requests.<br>
 </div>
+
 <pre><code><span id="TYPEshutdown_command"><span class="keyword">type</span> <code class="type"></code>shutdown_command</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1898,23 +2033,27 @@ Set up a socket for receiving connection requests. The integer
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Close both</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The type of commands for <code class="code">shutdown</code>.<br>
 </div>
 
-<pre><span id="VALshutdown"><span class="keyword">val</span> shutdown</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEshutdown_command">shutdown_command</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALshutdown"><span class="keyword">val</span> shutdown</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEshutdown_command">shutdown_command</a> -> unit</code></pre><div class="info ">
 Shutdown a socket connection. <code class="code">SHUTDOWN_SEND</code> as second argument
    causes reads on the other end of the connection to return
    an end-of-file condition.
    <code class="code">SHUTDOWN_RECEIVE</code> causes writes on the other end of the connection
    to return a closed pipe condition (<code class="code">SIGPIPE</code> signal).<br>
 </div>
-<pre><span id="VALgetsockname"><span class="keyword">val</span> getsockname</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info">
+
+<pre><span id="VALgetsockname"><span class="keyword">val</span> getsockname</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info ">
 Return the address of the given socket.<br>
 </div>
-<pre><span id="VALgetpeername"><span class="keyword">val</span> getpeername</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info">
+
+<pre><span id="VALgetpeername"><span class="keyword">val</span> getpeername</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info ">
 Return the address of the host connected to the given socket.<br>
 </div>
+
 <pre><code><span id="TYPEmsg_flag"><span class="keyword">type</span> <code class="type"></code>msg_flag</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -1940,20 +2079,25 @@ Return the address of the host connected to the given socket.<br>
 </tr></table>
 
 
-<pre><span id="VALrecv"><span class="keyword">val</span> recv</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> int</code></pre><div class="info">
+
+<pre><span id="VALrecv"><span class="keyword">val</span> recv</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> int</code></pre><div class="info ">
 Receive data from a connected socket.<br>
 </div>
-<pre><span id="VALrecvfrom"><span class="keyword">val</span> recvfrom</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -><br>       string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> int * <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info">
+
+<pre><span id="VALrecvfrom"><span class="keyword">val</span> recvfrom</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -><br>       string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> int * <a href="Unix.html#TYPEsockaddr">sockaddr</a></code></pre><div class="info ">
 Receive data from an unconnected socket.<br>
 </div>
-<pre><span id="VALsend"><span class="keyword">val</span> send</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> int</code></pre><div class="info">
+
+<pre><span id="VALsend"><span class="keyword">val</span> send</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> int</code></pre><div class="info ">
 Send data over a connected socket.<br>
 </div>
-<pre><span id="VALsendto"><span class="keyword">val</span> sendto</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -><br>       string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> int</code></pre><div class="info">
+
+<pre><span id="VALsendto"><span class="keyword">val</span> sendto</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -><br>       string -> int -> int -> <a href="Unix.html#TYPEmsg_flag">msg_flag</a> list -> <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> int</code></pre><div class="info ">
 Send data over an unconnected socket.<br>
 </div>
 <br>
 <h6 id="6_Socketoptions">Socket options</h6><br>
+
 <pre><code><span id="TYPEsocket_bool_option"><span class="keyword">type</span> <code class="type"></code>socket_bool_option</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -2005,11 +2149,12 @@ Send data over an unconnected socket.<br>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Report whether socket listening is enabled</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The socket options that can be consulted with <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a>
    and modified with <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a>.  These options have a boolean
    (<code class="code">true</code>/<code class="code">false</code>) value.<br>
 </div>
+
 
 <pre><code><span id="TYPEsocket_int_option"><span class="keyword">type</span> <code class="type"></code>socket_int_option</span> = </code></pre><table class="typetable">
 <tr>
@@ -2055,11 +2200,12 @@ The socket options that can be consulted with <a href="Unix.html#VALgetsockopt">
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Minimum number of bytes to process for output operations</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The socket options that can be consulted with <a href="Unix.html#VALgetsockopt_int"><code class="code">Unix.getsockopt_int</code></a>
    and modified with <a href="Unix.html#VALsetsockopt_int"><code class="code">Unix.setsockopt_int</code></a>.  These options have an
    integer value.<br>
 </div>
+
 
 <pre><code><span id="TYPEsocket_optint_option"><span class="keyword">type</span> <code class="type"></code>socket_optint_option</span> = </code></pre><table class="typetable">
 <tr>
@@ -2072,11 +2218,12 @@ The socket options that can be consulted with <a href="Unix.html#VALgetsockopt_i
                     (in seconds)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The socket options that can be consulted with <a href="Unix.html#VALgetsockopt_optint"><code class="code">Unix.getsockopt_optint</code></a>
    and modified with <a href="Unix.html#VALsetsockopt_optint"><code class="code">Unix.setsockopt_optint</code></a>.  These options have a
    value of type <code class="code">int option</code>, with <code class="code">None</code> meaning ``disabled''.<br>
 </div>
+
 
 <pre><code><span id="TYPEsocket_float_option"><span class="keyword">type</span> <code class="type"></code>socket_float_option</span> = </code></pre><table class="typetable">
 <tr>
@@ -2094,52 +2241,63 @@ The socket options that can be consulted with <a href="Unix.html#VALgetsockopt_o
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Timeout for output operations</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The socket options that can be consulted with <a href="Unix.html#VALgetsockopt_float"><code class="code">Unix.getsockopt_float</code></a>
    and modified with <a href="Unix.html#VALsetsockopt_float"><code class="code">Unix.setsockopt_float</code></a>.  These options have a
    floating-point value representing a time in seconds.
    The value 0 means infinite timeout.<br>
 </div>
 
-<pre><span id="VALgetsockopt"><span class="keyword">val</span> getsockopt</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_bool_option">socket_bool_option</a> -> bool</code></pre><div class="info">
+
+<pre><span id="VALgetsockopt"><span class="keyword">val</span> getsockopt</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_bool_option">socket_bool_option</a> -> bool</code></pre><div class="info ">
 Return the current status of a boolean-valued option
    in the given socket.<br>
 </div>
-<pre><span id="VALsetsockopt"><span class="keyword">val</span> setsockopt</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_bool_option">socket_bool_option</a> -> bool -> unit</code></pre><div class="info">
+
+<pre><span id="VALsetsockopt"><span class="keyword">val</span> setsockopt</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_bool_option">socket_bool_option</a> -> bool -> unit</code></pre><div class="info ">
 Set or clear a boolean-valued option in the given socket.<br>
 </div>
-<pre><span id="VALgetsockopt_int"><span class="keyword">val</span> getsockopt_int</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_int_option">socket_int_option</a> -> int</code></pre><div class="info">
+
+<pre><span id="VALgetsockopt_int"><span class="keyword">val</span> getsockopt_int</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_int_option">socket_int_option</a> -> int</code></pre><div class="info ">
 Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for an integer-valued socket option.<br>
 </div>
-<pre><span id="VALsetsockopt_int"><span class="keyword">val</span> setsockopt_int</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_int_option">socket_int_option</a> -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALsetsockopt_int"><span class="keyword">val</span> setsockopt_int</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_int_option">socket_int_option</a> -> int -> unit</code></pre><div class="info ">
 Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for an integer-valued socket option.<br>
 </div>
-<pre><span id="VALgetsockopt_optint"><span class="keyword">val</span> getsockopt_optint</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_optint_option">socket_optint_option</a> -> int option</code></pre><div class="info">
+
+<pre><span id="VALgetsockopt_optint"><span class="keyword">val</span> getsockopt_optint</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_optint_option">socket_optint_option</a> -> int option</code></pre><div class="info ">
 Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for a socket option whose value is an <code class="code">int option</code>.<br>
 </div>
-<pre><span id="VALsetsockopt_optint"><span class="keyword">val</span> setsockopt_optint</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_optint_option">socket_optint_option</a> -> int option -> unit</code></pre><div class="info">
+
+<pre><span id="VALsetsockopt_optint"><span class="keyword">val</span> setsockopt_optint</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_optint_option">socket_optint_option</a> -> int option -> unit</code></pre><div class="info ">
 Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for a socket option whose value is an <code class="code">int option</code>.<br>
 </div>
-<pre><span id="VALgetsockopt_float"><span class="keyword">val</span> getsockopt_float</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_float_option">socket_float_option</a> -> float</code></pre><div class="info">
+
+<pre><span id="VALgetsockopt_float"><span class="keyword">val</span> getsockopt_float</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_float_option">socket_float_option</a> -> float</code></pre><div class="info ">
 Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for a socket option whose value is a floating-point number.<br>
 </div>
-<pre><span id="VALsetsockopt_float"><span class="keyword">val</span> setsockopt_float</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_float_option">socket_float_option</a> -> float -> unit</code></pre><div class="info">
+
+<pre><span id="VALsetsockopt_float"><span class="keyword">val</span> setsockopt_float</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsocket_float_option">socket_float_option</a> -> float -> unit</code></pre><div class="info ">
 Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for a socket option whose value is a floating-point number.<br>
 </div>
 <br>
 <h6 id="6_Highlevelnetworkconnectionfunctions">High-level network connection functions</h6><br>
-<pre><span id="VALopen_connection"><span class="keyword">val</span> open_connection</span> : <code class="type"><a href="Unix.html#TYPEsockaddr">sockaddr</a> -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info">
+
+<pre><span id="VALopen_connection"><span class="keyword">val</span> open_connection</span> : <code class="type"><a href="Unix.html#TYPEsockaddr">sockaddr</a> -> <a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> * <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a></code></pre><div class="info ">
 Connect to a server at the given address.
    Return a pair of buffered channels connected to the server.
    Remember to call <a href="Pervasives.html#VALflush"><code class="code">Pervasives.flush</code></a> on the output channel at the right times
    to ensure correct synchronization.<br>
 </div>
-<pre><span id="VALshutdown_connection"><span class="keyword">val</span> shutdown_connection</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALshutdown_connection"><span class="keyword">val</span> shutdown_connection</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> unit</code></pre><div class="info ">
 ``Shut down'' a connection established with <a href="Unix.html#VALopen_connection"><code class="code">Unix.open_connection</code></a>;
    that is, transmit an end-of-file condition to the server reading
    on the other side of the connection.<br>
 </div>
-<pre><span id="VALestablish_server"><span class="keyword">val</span> establish_server</span> : <code class="type">(<a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> unit) -><br>       <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALestablish_server"><span class="keyword">val</span> establish_server</span> : <code class="type">(<a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> unit) -><br>       <a href="Unix.html#TYPEsockaddr">sockaddr</a> -> unit</code></pre><div class="info ">
 Establish a server on the given address.
    The function given as first argument is called for each connection
    with two buffered channels connected to the client. A new process
@@ -2148,128 +2306,138 @@ Establish a server on the given address.
 </div>
 <br>
 <h6 id="6_Hostandprotocoldatabases">Host and protocol databases</h6><br>
+
 <pre><code><span id="TYPEhost_entry"><span class="keyword">type</span> <code class="type"></code>host_entry</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELThost_entry.h_name">h_name</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELThost_entry.h_name">h_name</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELThost_entry.h_aliases">h_aliases</span>&nbsp;:<code class="type">string array</code>;</code></td>
+<code><span id="TYPEELThost_entry.h_aliases">h_aliases</span>&nbsp;: <code class="type">string array</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELThost_entry.h_addrtype">h_addrtype</span>&nbsp;:<code class="type"><a href="Unix.html#TYPEsocket_domain">socket_domain</a></code>;</code></td>
+<code><span id="TYPEELThost_entry.h_addrtype">h_addrtype</span>&nbsp;: <code class="type"><a href="Unix.html#TYPEsocket_domain">socket_domain</a></code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELThost_entry.h_addr_list">h_addr_list</span>&nbsp;:<code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a> array</code>;</code></td>
+<code><span id="TYPEELThost_entry.h_addr_list">h_addr_list</span>&nbsp;: <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a> array</code>;</code></td>
 
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 Structure of entries in the <code class="code">hosts</code> database.<br>
 </div>
+
 
 <pre><code><span id="TYPEprotocol_entry"><span class="keyword">type</span> <code class="type"></code>protocol_entry</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprotocol_entry.p_name">p_name</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTprotocol_entry.p_name">p_name</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprotocol_entry.p_aliases">p_aliases</span>&nbsp;:<code class="type">string array</code>;</code></td>
+<code><span id="TYPEELTprotocol_entry.p_aliases">p_aliases</span>&nbsp;: <code class="type">string array</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprotocol_entry.p_proto">p_proto</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTprotocol_entry.p_proto">p_proto</span>&nbsp;: <code class="type">int</code>;</code></td>
 
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 Structure of entries in the <code class="code">protocols</code> database.<br>
 </div>
+
 
 <pre><code><span id="TYPEservice_entry"><span class="keyword">type</span> <code class="type"></code>service_entry</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTservice_entry.s_name">s_name</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTservice_entry.s_name">s_name</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTservice_entry.s_aliases">s_aliases</span>&nbsp;:<code class="type">string array</code>;</code></td>
+<code><span id="TYPEELTservice_entry.s_aliases">s_aliases</span>&nbsp;: <code class="type">string array</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTservice_entry.s_port">s_port</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span id="TYPEELTservice_entry.s_port">s_port</span>&nbsp;: <code class="type">int</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTservice_entry.s_proto">s_proto</span>&nbsp;:<code class="type">string</code>;</code></td>
+<code><span id="TYPEELTservice_entry.s_proto">s_proto</span>&nbsp;: <code class="type">string</code>;</code></td>
 
 </tr></table>
 }
 
-<div class="info">
+<div class="info ">
 Structure of entries in the <code class="code">services</code> database.<br>
 </div>
 
-<pre><span id="VALgethostname"><span class="keyword">val</span> gethostname</span> : <code class="type">unit -> string</code></pre><div class="info">
+
+<pre><span id="VALgethostname"><span class="keyword">val</span> gethostname</span> : <code class="type">unit -> string</code></pre><div class="info ">
 Return the name of the local host.<br>
 </div>
-<pre><span id="VALgethostbyname"><span class="keyword">val</span> gethostbyname</span> : <code class="type">string -> <a href="Unix.html#TYPEhost_entry">host_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgethostbyname"><span class="keyword">val</span> gethostbyname</span> : <code class="type">string -> <a href="Unix.html#TYPEhost_entry">host_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">hosts</code> with the given name, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgethostbyaddr"><span class="keyword">val</span> gethostbyaddr</span> : <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a> -> <a href="Unix.html#TYPEhost_entry">host_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgethostbyaddr"><span class="keyword">val</span> gethostbyaddr</span> : <code class="type"><a href="Unix.html#TYPEinet_addr">inet_addr</a> -> <a href="Unix.html#TYPEhost_entry">host_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">hosts</code> with the given address, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetprotobyname"><span class="keyword">val</span> getprotobyname</span> : <code class="type">string -> <a href="Unix.html#TYPEprotocol_entry">protocol_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetprotobyname"><span class="keyword">val</span> getprotobyname</span> : <code class="type">string -> <a href="Unix.html#TYPEprotocol_entry">protocol_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">protocols</code> with the given name, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetprotobynumber"><span class="keyword">val</span> getprotobynumber</span> : <code class="type">int -> <a href="Unix.html#TYPEprotocol_entry">protocol_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetprotobynumber"><span class="keyword">val</span> getprotobynumber</span> : <code class="type">int -> <a href="Unix.html#TYPEprotocol_entry">protocol_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">protocols</code> with the given protocol number,
    or raise <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetservbyname"><span class="keyword">val</span> getservbyname</span> : <code class="type">string -> string -> <a href="Unix.html#TYPEservice_entry">service_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetservbyname"><span class="keyword">val</span> getservbyname</span> : <code class="type">string -> string -> <a href="Unix.html#TYPEservice_entry">service_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">services</code> with the given name, or raise
    <code class="code">Not_found</code>.<br>
 </div>
-<pre><span id="VALgetservbyport"><span class="keyword">val</span> getservbyport</span> : <code class="type">int -> string -> <a href="Unix.html#TYPEservice_entry">service_entry</a></code></pre><div class="info">
+
+<pre><span id="VALgetservbyport"><span class="keyword">val</span> getservbyport</span> : <code class="type">int -> string -> <a href="Unix.html#TYPEservice_entry">service_entry</a></code></pre><div class="info ">
 Find an entry in <code class="code">services</code> with the given service number,
    or raise <code class="code">Not_found</code>.<br>
 </div>
@@ -2280,166 +2448,167 @@ The following functions implement the POSIX standard terminal
    interface. They provide control over asynchronous communication ports
    and pseudo-terminals. Refer to the <code class="code">termios</code> man page for a
    complete description.<br>
+
 <pre><code><span id="TYPEterminal_io"><span class="keyword">type</span> <code class="type"></code>terminal_io</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ignbrk">c_ignbrk</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ignbrk">c_ignbrk</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Ignore the break condition.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_brkint">c_brkint</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_brkint">c_brkint</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Signal interrupt on break condition.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ignpar">c_ignpar</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ignpar">c_ignpar</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Ignore characters with parity errors.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_parmrk">c_parmrk</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_parmrk">c_parmrk</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Mark parity errors.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_inpck">c_inpck</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_inpck">c_inpck</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Enable parity check on input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_istrip">c_istrip</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_istrip">c_istrip</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Strip 8th bit on input characters.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_inlcr">c_inlcr</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_inlcr">c_inlcr</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Map NL to CR on input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_igncr">c_igncr</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_igncr">c_igncr</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Ignore CR on input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_icrnl">c_icrnl</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_icrnl">c_icrnl</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Map CR to NL on input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ixon">c_ixon</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ixon">c_ixon</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Recognize XON/XOFF characters on input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ixoff">c_ixoff</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ixoff">c_ixoff</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Emit XON/XOFF chars to control input flow.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_opost">c_opost</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_opost">c_opost</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Enable output processing.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_obaud">c_obaud</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_obaud">c_obaud</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Output baud rate (0 means close connection).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ibaud">c_ibaud</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_ibaud">c_ibaud</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Input baud rate.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_csize">c_csize</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_csize">c_csize</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Number of bits per character (5-8).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_cstopb">c_cstopb</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_cstopb">c_cstopb</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Number of stop bits (1-2).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_cread">c_cread</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_cread">c_cread</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Reception is enabled.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_parenb">c_parenb</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_parenb">c_parenb</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Enable parity generation and detection.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_parodd">c_parodd</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_parodd">c_parodd</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Specify odd parity instead of even.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_hupcl">c_hupcl</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_hupcl">c_hupcl</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Hang up on last close.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_clocal">c_clocal</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_clocal">c_clocal</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Ignore modem status lines.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_isig">c_isig</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_isig">c_isig</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Generate signal on INTR, QUIT, SUSP.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_icanon">c_icanon</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_icanon">c_icanon</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Enable canonical processing
                                  (line buffering and editing)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
@@ -2447,84 +2616,84 @@ The following functions implement the POSIX standard terminal
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_noflsh">c_noflsh</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_noflsh">c_noflsh</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Disable flush after INTR, QUIT, SUSP.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echo">c_echo</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echo">c_echo</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Echo input characters.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echoe">c_echoe</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echoe">c_echoe</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Echo ERASE (to erase previous character).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echok">c_echok</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echok">c_echok</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Echo KILL (to erase the current line).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echonl">c_echonl</span>&nbsp;:<code class="type">bool</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_echonl">c_echonl</span>&nbsp;: <code class="type">bool</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Echo NL even if c_echo is not set.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vintr">c_vintr</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vintr">c_vintr</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Interrupt character (usually ctrl-C).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vquit">c_vquit</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vquit">c_vquit</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Quit character (usually ctrl-\).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_verase">c_verase</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_verase">c_verase</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Erase character (usually DEL or ctrl-H).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vkill">c_vkill</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vkill">c_vkill</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Kill line character (usually ctrl-U).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_veof">c_veof</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_veof">c_veof</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >End-of-file character (usually ctrl-D).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_veol">c_veol</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_veol">c_veol</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Alternate end-of-line char. (usually none).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vmin">c_vmin</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vmin">c_vmin</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Minimum number of characters to read
                                  before the read request is satisfied.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
@@ -2532,30 +2701,32 @@ The following functions implement the POSIX standard terminal
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vtime">c_vtime</span>&nbsp;:<code class="type">int</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vtime">c_vtime</span>&nbsp;: <code class="type">int</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Maximum read wait (in 0.1s units).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vstart">c_vstart</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vstart">c_vstart</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Start character (usually ctrl-Q).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vstop">c_vstop</span>&nbsp;:<code class="type">char</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTterminal_io.c_vstop">c_vstop</span>&nbsp;: <code class="type">char</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Stop character (usually ctrl-S).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
 
-<pre><span id="VALtcgetattr"><span class="keyword">val</span> tcgetattr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEterminal_io">terminal_io</a></code></pre><div class="info">
+
+<pre><span id="VALtcgetattr"><span class="keyword">val</span> tcgetattr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEterminal_io">terminal_io</a></code></pre><div class="info ">
 Return the status of the terminal referred to by the given
    file descriptor.<br>
 </div>
+
 <pre><code><span id="TYPEsetattr_when"><span class="keyword">type</span> <code class="type"></code>setattr_when</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -2580,7 +2751,8 @@ Return the status of the terminal referred to by the given
 </tr></table>
 
 
-<pre><span id="VALtcsetattr"><span class="keyword">val</span> tcsetattr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsetattr_when">setattr_when</a> -> <a href="Unix.html#TYPEterminal_io">terminal_io</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALtcsetattr"><span class="keyword">val</span> tcsetattr</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEsetattr_when">setattr_when</a> -> <a href="Unix.html#TYPEterminal_io">terminal_io</a> -> unit</code></pre><div class="info ">
 Set the status of the terminal referred to by the given
    file descriptor. The second argument indicates when the
    status change takes place: immediately (<code class="code">TCSANOW</code>),
@@ -2590,15 +2762,18 @@ Set the status of the terminal referred to by the given
    the output parameters; <code class="code">TCSAFLUSH</code>, when changing the input
    parameters.<br>
 </div>
-<pre><span id="VALtcsendbreak"><span class="keyword">val</span> tcsendbreak</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> unit</code></pre><div class="info">
+
+<pre><span id="VALtcsendbreak"><span class="keyword">val</span> tcsendbreak</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> int -> unit</code></pre><div class="info ">
 Send a break condition on the given file descriptor.
    The second argument is the duration of the break, in 0.1s units;
    0 means standard duration (0.25s).<br>
 </div>
-<pre><span id="VALtcdrain"><span class="keyword">val</span> tcdrain</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALtcdrain"><span class="keyword">val</span> tcdrain</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> unit</code></pre><div class="info ">
 Waits until all output written on the given file descriptor
    has been transmitted.<br>
 </div>
+
 <pre><code><span id="TYPEflush_queue"><span class="keyword">type</span> <code class="type"></code>flush_queue</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -2623,13 +2798,15 @@ Waits until all output written on the given file descriptor
 </tr></table>
 
 
-<pre><span id="VALtcflush"><span class="keyword">val</span> tcflush</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEflush_queue">flush_queue</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALtcflush"><span class="keyword">val</span> tcflush</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEflush_queue">flush_queue</a> -> unit</code></pre><div class="info ">
 Discard data written on the given file descriptor but not yet
    transmitted, or data received but not yet read, depending on the
    second argument: <code class="code">TCIFLUSH</code> flushes data received but not read,
    <code class="code">TCOFLUSH</code> flushes data written but not transmitted, and
    <code class="code">TCIOFLUSH</code> flushes both.<br>
 </div>
+
 <pre><code><span id="TYPEflow_action"><span class="keyword">type</span> <code class="type"></code>flow_action</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -2661,14 +2838,16 @@ Discard data written on the given file descriptor but not yet
 </tr></table>
 
 
-<pre><span id="VALtcflow"><span class="keyword">val</span> tcflow</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEflow_action">flow_action</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALtcflow"><span class="keyword">val</span> tcflow</span> : <code class="type"><a href="Unix.html#TYPEfile_descr">file_descr</a> -> <a href="Unix.html#TYPEflow_action">flow_action</a> -> unit</code></pre><div class="info ">
 Suspend or restart reception or transmission of data on
    the given file descriptor, depending on the second argument:
    <code class="code">TCOOFF</code> suspends output, <code class="code">TCOON</code> restarts output,
    <code class="code">TCIOFF</code> transmits a STOP character to suspend input,
    and <code class="code">TCION</code> transmits a START character to restart input.<br>
 </div>
-<pre><span id="VALsetsid"><span class="keyword">val</span> setsid</span> : <code class="type">unit -> int</code></pre><div class="info">
+
+<pre><span id="VALsetsid"><span class="keyword">val</span> setsid</span> : <code class="type">unit -> int</code></pre><div class="info ">
 Put the calling process in a new session and detach it from
    its controlling terminal.<br>
 </div>

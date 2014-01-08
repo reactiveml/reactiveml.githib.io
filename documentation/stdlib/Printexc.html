@@ -58,17 +58,20 @@
 &nbsp;<a class="post" href="Printf.html" title="Printf">Next</a>
 </div>
 <h1>Module <a href="type_Printexc.html">Printexc</a></h1>
-<pre><span class="keyword">module</span> Printexc: <code class="code">sig</code> <a href="Printexc.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Printexc: <code class="code">sig</code> <a href="Printexc.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Facilities for printing exceptions.<br>
 </div>
 <hr width="100%">
 <br>
 Facilities for printing exceptions.<br>
-<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">exn -> string</code></pre><div class="info">
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">exn -> string</code></pre><div class="info ">
 <code class="code">Printexc.to_string e</code> returns a string representation of
    the exception <code class="code">e</code>.<br>
 </div>
-<pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info">
+
+<pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
 <code class="code">Printexc.print fn x</code> applies <code class="code">fn</code> to <code class="code">x</code> and returns the result.
    If the evaluation of <code class="code">fn x</code> raises any exception, the
    name of the exception is printed on standard error output,
@@ -76,7 +79,8 @@ Facilities for printing exceptions.<br>
    The typical use is to catch and report exceptions that
    escape a function application.<br>
 </div>
-<pre><span id="VALcatch"><span class="keyword">val</span> catch</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info">
+
+<pre><span id="VALcatch"><span class="keyword">val</span> catch</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
 <code class="code">Printexc.catch fn x</code> is similar to <a href="Printexc.html#VALprint"><code class="code">Printexc.print</code></a>, but
    aborts the program with exit code 2 after printing the
    uncaught exception.  This function is deprecated: the runtime
