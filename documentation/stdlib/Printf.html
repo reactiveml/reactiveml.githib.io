@@ -58,13 +58,15 @@
 &nbsp;<a class="post" href="Queue.html" title="Queue">Next</a>
 </div>
 <h1>Module <a href="type_Printf.html">Printf</a></h1>
-<pre><span class="keyword">module</span> Printf: <code class="code">sig</code> <a href="Printf.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Printf: <code class="code">sig</code> <a href="Printf.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Formatted output functions.<br>
 </div>
 <hr width="100%">
 <br>
 Formatted output functions.<br>
-<pre><span id="VALfprintf"><span class="keyword">val</span> fprintf</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -><br>       ('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+
+<pre><span id="VALfprintf"><span class="keyword">val</span> fprintf</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -><br>       ('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
 <code class="code">fprintf outchan format arg1 ... argN</code> formats the arguments
    <code class="code">arg1</code> to <code class="code">argN</code> according to the format string <code class="code">format</code>,
    and outputs the resulting string on the channel <code class="code">outchan</code>.
@@ -148,23 +150,28 @@ Formatted output functions.<br>
    <code class="code">x=1 y=2 x=1 y=3</code>.  To get the expected behavior, do
    <code class="code">List.iter (fun y -&gt; printf "x=%d y=%d " 1 y) [2;3]</code>.<br>
 </div>
-<pre><span id="VALprintf"><span class="keyword">val</span> printf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+
+<pre><span id="VALprintf"><span class="keyword">val</span> printf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
 Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stdout</code>.<br>
 </div>
-<pre><span id="VALeprintf"><span class="keyword">val</span> eprintf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+
+<pre><span id="VALeprintf"><span class="keyword">val</span> eprintf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
 Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stderr</code>.<br>
 </div>
-<pre><span id="VALsprintf"><span class="keyword">val</span> sprintf</span> : <code class="type">('a, unit, string) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+
+<pre><span id="VALsprintf"><span class="keyword">val</span> sprintf</span> : <code class="type">('a, unit, string) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
 Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
    return a string containing the result of formatting
    the arguments.<br>
 </div>
-<pre><span id="VALbprintf"><span class="keyword">val</span> bprintf</span> : <code class="type"><a href="Buffer.html#TYPEt">Buffer.t</a> -> ('a, <a href="Buffer.html#TYPEt">Buffer.t</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info">
+
+<pre><span id="VALbprintf"><span class="keyword">val</span> bprintf</span> : <code class="type"><a href="Buffer.html#TYPEt">Buffer.t</a> -> ('a, <a href="Buffer.html#TYPEt">Buffer.t</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
 Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
    append the formatted arguments to the given extensible buffer
    (see module <a href="Buffer.html"><code class="code">Buffer</code></a>).<br>
 </div>
-<pre><span id="VALkprintf"><span class="keyword">val</span> kprintf</span> : <code class="type">(string -> 'a) -> ('b, unit, string, 'a) <a href="Pervasives.html#TYPEformat4">Pervasives.format4</a> -> 'b</code></pre><div class="info">
+
+<pre><span id="VALkprintf"><span class="keyword">val</span> kprintf</span> : <code class="type">(string -> 'a) -> ('b, unit, string, 'a) <a href="Pervasives.html#TYPEformat4">Pervasives.format4</a> -> 'b</code></pre><div class="info ">
 <code class="code">kprintf k format arguments</code> is the same as <code class="code">sprintf format arguments</code>,
     except that the resulting string is passed as argument to <code class="code">k</code>; the
     result of <code class="code">k</code> is then returned as the result of <code class="code">kprintf</code>.<br>

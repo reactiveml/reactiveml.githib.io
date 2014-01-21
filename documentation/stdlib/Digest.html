@@ -58,7 +58,8 @@
 &nbsp;<a class="post" href="Filename.html" title="Filename">Next</a>
 </div>
 <h1>Module <a href="type_Digest.html">Digest</a></h1>
-<pre><span class="keyword">module</span> Digest: <code class="code">sig</code> <a href="Digest.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Digest: <code class="code">sig</code> <a href="Digest.html">..</a> <code class="code">end</code></pre><div class="info module top">
 MD5 message digest.
 <p>
 
@@ -76,20 +77,24 @@ MD5 message digest.
    arbitrary-length strings or files. The digests are of cryptographic
    quality: it is very hard, given a digest, to forge a string having
    that digest. The algorithm used is MD5.<br>
+
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type">string</code> </pre>
-<div class="info">
+<div class="info ">
 The type of digests: 16-character strings.<br>
 </div>
 
-<pre><span id="VALstring"><span class="keyword">val</span> string</span> : <code class="type">string -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALstring"><span class="keyword">val</span> string</span> : <code class="type">string -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info ">
 Return the digest of the given string.<br>
 </div>
-<pre><span id="VALsubstring"><span class="keyword">val</span> substring</span> : <code class="type">string -> int -> int -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALsubstring"><span class="keyword">val</span> substring</span> : <code class="type">string -> int -> int -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">Digest.substring s ofs len</code> returns the digest of the substring
    of <code class="code">s</code> starting at character number <code class="code">ofs</code> and containing <code class="code">len</code>
    characters.<br>
 </div>
-<pre><span id="VALchannel"><span class="keyword">val</span> channel</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> int -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALchannel"><span class="keyword">val</span> channel</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> int -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info ">
 If <code class="code">len</code> is nonnegative, <code class="code">Digest.channel ic len</code> reads <code class="code">len</code>
    characters from channel <code class="code">ic</code> and returns their digest, or raises
    <code class="code">End_of_file</code> if end-of-file is reached before <code class="code">len</code> characters
@@ -97,16 +102,20 @@ If <code class="code">len</code> is nonnegative, <code class="code">Digest.chann
    all characters from <code class="code">ic</code> until end-of-file is reached and return
    their digest.<br>
 </div>
-<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">string -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">string -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info ">
 Return the digest of the file whose name is given.<br>
 </div>
-<pre><span id="VALoutput"><span class="keyword">val</span> output</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Digest.html#TYPEt">t</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALoutput"><span class="keyword">val</span> output</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> <a href="Digest.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
 Write a digest on the given output channel.<br>
 </div>
-<pre><span id="VALinput"><span class="keyword">val</span> input</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALinput"><span class="keyword">val</span> input</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> <a href="Digest.html#TYPEt">t</a></code></pre><div class="info ">
 Read a digest from the given input channel.<br>
 </div>
-<pre><span id="VALto_hex"><span class="keyword">val</span> to_hex</span> : <code class="type"><a href="Digest.html#TYPEt">t</a> -> string</code></pre><div class="info">
+
+<pre><span id="VALto_hex"><span class="keyword">val</span> to_hex</span> : <code class="type"><a href="Digest.html#TYPEt">t</a> -> string</code></pre><div class="info ">
 Return the printable hexadecimal representation of the given digest.<br>
 </div>
 </body></html>

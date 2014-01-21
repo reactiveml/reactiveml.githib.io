@@ -58,7 +58,8 @@
 &nbsp;<a class="post" href="Nativeint.html" title="Nativeint">Next</a>
 </div>
 <h1>Module <a href="type_Marshal.html">Marshal</a></h1>
-<pre><span class="keyword">module</span> Marshal: <code class="code">sig</code> <a href="Marshal.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Marshal: <code class="code">sig</code> <a href="Marshal.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Marshaling of data structures.
 <p>
 
@@ -126,6 +127,7 @@ Marshaling of data structures.
    <code class="code">open_out_bin</code> or <code class="code">open_in_bin</code>; channels opened in text mode will
    cause unmarshaling errors on platforms where text channels behave
    differently than binary channels, e.g. Windows.<br>
+
 <pre><code><span id="TYPEextern_flags"><span class="keyword">type</span> <code class="type"></code>extern_flags</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -142,11 +144,12 @@ Marshaling of data structures.
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Send function closures</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info">
+<div class="info ">
 The flags to the <code class="code">Marshal.to_*</code> functions below.<br>
 </div>
 
-<pre><span id="VALto_channel"><span class="keyword">val</span> to_channel</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> 'a -> <a href="Marshal.html#TYPEextern_flags">extern_flags</a> list -> unit</code></pre><div class="info">
+
+<pre><span id="VALto_channel"><span class="keyword">val</span> to_channel</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -> 'a -> <a href="Marshal.html#TYPEextern_flags">extern_flags</a> list -> unit</code></pre><div class="info ">
 <code class="code">Marshal.to_channel chan v flags</code> writes the representation
    of <code class="code">v</code> on channel <code class="code">chan</code>. The <code class="code">flags</code> argument is a
    possibly empty list of flags that governs the marshaling
@@ -178,13 +181,15 @@ The flags to the <code class="code">Marshal.to_*</code> functions below.<br>
    at un-marshaling time, using an MD5 digest of the code
    transmitted along with the code position.)<br>
 </div>
-<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">'a -> <a href="Marshal.html#TYPEextern_flags">extern_flags</a> list -> string</code></pre><div class="info">
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">'a -> <a href="Marshal.html#TYPEextern_flags">extern_flags</a> list -> string</code></pre><div class="info ">
 <code class="code">Marshal.to_string v flags</code> returns a string containing
    the representation of <code class="code">v</code> as a sequence of bytes.
    The <code class="code">flags</code> argument has the same meaning as for
    <a href="Marshal.html#VALto_channel"><code class="code">Marshal.to_channel</code></a>.<br>
 </div>
-<pre><span id="VALto_buffer"><span class="keyword">val</span> to_buffer</span> : <code class="type">string -> int -> int -> 'a -> <a href="Marshal.html#TYPEextern_flags">extern_flags</a> list -> int</code></pre><div class="info">
+
+<pre><span id="VALto_buffer"><span class="keyword">val</span> to_buffer</span> : <code class="type">string -> int -> int -> 'a -> <a href="Marshal.html#TYPEextern_flags">extern_flags</a> list -> int</code></pre><div class="info ">
 <code class="code">Marshal.to_buffer buff ofs len v flags</code> marshals the value <code class="code">v</code>,
    storing its byte representation in the string <code class="code">buff</code>,
    starting at character number <code class="code">ofs</code>, and writing at most
@@ -193,19 +198,22 @@ The flags to the <code class="code">Marshal.to_*</code> functions below.<br>
    of <code class="code">v</code> does not fit in <code class="code">len</code> characters, the exception <code class="code">Failure</code>
    is raised.<br>
 </div>
-<pre><span id="VALfrom_channel"><span class="keyword">val</span> from_channel</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> 'a</code></pre><div class="info">
+
+<pre><span id="VALfrom_channel"><span class="keyword">val</span> from_channel</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -> 'a</code></pre><div class="info ">
 <code class="code">Marshal.from_channel chan</code> reads from channel <code class="code">chan</code> the
    byte representation of a structured value, as produced by
    one of the <code class="code">Marshal.to_*</code> functions, and reconstructs and
    returns the corresponding value.<br>
 </div>
-<pre><span id="VALfrom_string"><span class="keyword">val</span> from_string</span> : <code class="type">string -> int -> 'a</code></pre><div class="info">
+
+<pre><span id="VALfrom_string"><span class="keyword">val</span> from_string</span> : <code class="type">string -> int -> 'a</code></pre><div class="info ">
 <code class="code">Marshal.from_string buff ofs</code> unmarshals a structured value
    like <a href="Marshal.html#VALfrom_channel"><code class="code">Marshal.from_channel</code></a> does, except that the byte
    representation is not read from a channel, but taken from
    the string <code class="code">buff</code>, starting at position <code class="code">ofs</code>.<br>
 </div>
-<pre><span id="VALheader_size"><span class="keyword">val</span> header_size</span> : <code class="type">int</code></pre><div class="info">
+
+<pre><span id="VALheader_size"><span class="keyword">val</span> header_size</span> : <code class="type">int</code></pre><div class="info ">
 The bytes representing a marshaled value are composed of
    a fixed-size header and a variable-sized data part,
    whose size can be determined from the header.
@@ -228,10 +236,12 @@ The bytes representing a marshaled value are composed of
    data, then read it, and finally call <a href="Marshal.html#VALfrom_string"><code class="code">Marshal.from_string</code></a>
    to unmarshal the value.<br>
 </div>
-<pre><span id="VALdata_size"><span class="keyword">val</span> data_size</span> : <code class="type">string -> int -> int</code></pre><div class="info">
+
+<pre><span id="VALdata_size"><span class="keyword">val</span> data_size</span> : <code class="type">string -> int -> int</code></pre><div class="info ">
 See <a href="Marshal.html#VALheader_size"><code class="code">Marshal.header_size</code></a>.<br>
 </div>
-<pre><span id="VALtotal_size"><span class="keyword">val</span> total_size</span> : <code class="type">string -> int -> int</code></pre><div class="info">
+
+<pre><span id="VALtotal_size"><span class="keyword">val</span> total_size</span> : <code class="type">string -> int -> int</code></pre><div class="info ">
 See <a href="Marshal.html#VALheader_size"><code class="code">Marshal.header_size</code></a>.<br>
 </div>
 </body></html>

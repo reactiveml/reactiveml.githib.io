@@ -58,81 +58,96 @@
 &nbsp;<a class="post" href="Rml_process_manager.html" title="Rml_process_manager">Next</a>
 </div>
 <h1>Module <a href="type_Rml_list.html">Rml_list</a></h1>
-<pre><span class="keyword">module</span> Rml_list: <code class="code">sig</code> <a href="Rml_list.html">..</a> <code class="code">end</code></pre><div class="info">
+
+<pre><span class="keyword">module</span> Rml_list: <code class="code">sig</code> <a href="Rml_list.html">..</a> <code class="code">end</code></pre><div class="info module top">
 Process iterators on lists.<br>
 </div>
 <hr width="100%">
 <br>
 Process iterators on lists.<br>
-<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">('a -> 'b process) -> 'a list -> unit process</code></pre><div class="info">
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">('a -> 'b process) -> 'a list -> unit process</code></pre><div class="info ">
 <code class="code">Rml_list.iter p [a1; ...; an]</code> applies process <code class="code">p</code> in turn to
     <code class="code">a1; ...; an</code>. It is equivalent to
     <code class="code">begin run p a1; run p a2; ...; run p an; () end</code>.<br>
 </div>
-<pre><span id="VALiter2"><span class="keyword">val</span> iter2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> unit process</code></pre><div class="info">
+
+<pre><span id="VALiter2"><span class="keyword">val</span> iter2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> unit process</code></pre><div class="info ">
 <code class="code">Rml_list.iter2 p [a1; ...; an]</code> applies process <code class="code">p</code> in turn to
     <code class="code">a1; ...; an</code> and <code class="code">b1; ...; bn</code>. It is equivalent to
     <code class="code">begin run p a1 b1; run p a2 b2; ...; run p an bn; () end</code>.
     Raise <code class="code">Invalid_argument</code> if the two lists have different lengths.<br>
 </div>
-<pre><span id="VALpar_iter"><span class="keyword">val</span> par_iter</span> : <code class="type">('a -> 'b process) -> 'a list -> unit process</code></pre><div class="info">
+
+<pre><span id="VALpar_iter"><span class="keyword">val</span> par_iter</span> : <code class="type">('a -> 'b process) -> 'a list -> unit process</code></pre><div class="info ">
 <code class="code">Rml_list.par_iter p [a1; ...; an]</code> applies process <code class="code">p</code> in parallel to
     <code class="code">a1; ...; an</code>. It is equivalent to
     <code class="code">begin run p a1 || run p a2 || ... || run p an; () end</code>.<br>
 </div>
-<pre><span id="VALpar_iter2"><span class="keyword">val</span> par_iter2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> unit process</code></pre><div class="info">
+
+<pre><span id="VALpar_iter2"><span class="keyword">val</span> par_iter2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> unit process</code></pre><div class="info ">
 <code class="code">Rml_list.par_iter2 p [a1; ...; an]</code> applies process <code class="code">p</code> in parallel to
     <code class="code">a1; ...; an</code> and <code class="code">b1; ...; bn</code>. It is equivalent to
     <code class="code">begin run p a1 b1 || run p a2 b2 || ... || run p an bn; () end</code>.
     Raise <code class="code">Invalid_argument</code> if the two lists have different lengths.<br>
 </div>
-<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">('a -> 'b process) -> 'a list -> 'b list process</code></pre><div class="info">
+
+<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">('a -> 'b process) -> 'a list -> 'b list process</code></pre><div class="info ">
 <code class="code">Rml_list.map p [a1; ...; an]</code> applies process <code class="code">p</code> to <code class="code">a1, ..., an</code>,
     and builds the list <code class="code">[run p a1; ...; run p an]</code>
     with the results returned by <code class="code">p</code>.  Not tail-recursive.<br>
 </div>
-<pre><span id="VALmap2"><span class="keyword">val</span> map2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> 'c list process</code></pre><div class="info">
+
+<pre><span id="VALmap2"><span class="keyword">val</span> map2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> 'c list process</code></pre><div class="info ">
 <code class="code">Rml_list.map2 p [a1; ...; an] [b1; ...; bn]</code> is
     <code class="code">[run p a1 b1; ...; run p an bn]</code>.
     Raise <code class="code">Invalid_argument</code> if the two lists have
     different lengths.  Not tail-recursive.<br>
 </div>
-<pre><span id="VALrev_map"><span class="keyword">val</span> rev_map</span> : <code class="type">('a -> 'b process) -> 'a list -> 'c list process</code></pre><div class="info">
+
+<pre><span id="VALrev_map"><span class="keyword">val</span> rev_map</span> : <code class="type">('a -> 'b process) -> 'a list -> 'c list process</code></pre><div class="info ">
 <code class="code">Rml_List.rev_map p l</code> gives the same result as
     <a href="List.html#VALrev"><code class="code">List.rev</code></a><code class="code"> (</code><a href="Rml_list.html#VALmap"><code class="code">Rml_list.map</code></a><code class="code"> p l)</code>, but is tail-recursive and
     more efficient.<br>
 </div>
-<pre><span id="VALrev_map2"><span class="keyword">val</span> rev_map2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> 'd list process</code></pre><div class="info">
+
+<pre><span id="VALrev_map2"><span class="keyword">val</span> rev_map2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> 'd list process</code></pre><div class="info ">
 <code class="code">Rml_list.rev_map2 p l1 l2</code> gives the same result as
     <a href="List.html#VALrev"><code class="code">List.rev</code></a><code class="code"> (</code><a href="Rml_list.html#VALmap2"><code class="code">Rml_list.map2</code></a><code class="code"> p l1 l2)</code>, but is tail-recursive and
     more efficient.<br>
 </div>
-<pre><span id="VALpar_map"><span class="keyword">val</span> par_map</span> : <code class="type">('a -> 'b process) -> 'a list -> 'b list process</code></pre><div class="info">
+
+<pre><span id="VALpar_map"><span class="keyword">val</span> par_map</span> : <code class="type">('a -> 'b process) -> 'a list -> 'b list process</code></pre><div class="info ">
 <code class="code">Rml_list.map p [a1; ...; an]</code> applies process <code class="code">p</code> to <code class="code">a1, ..., an</code>
     in parallel, and builds the list <code class="code">[run p a1; ...; run p an]</code> with
     the results returned by <code class="code">p</code>.  Not tail-recursive.<br>
 </div>
-<pre><span id="VALpar_map2"><span class="keyword">val</span> par_map2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> 'c list process</code></pre><div class="info">
+
+<pre><span id="VALpar_map2"><span class="keyword">val</span> par_map2</span> : <code class="type">('a -> 'b -> 'c process) -><br>       'a list -> 'b list -> 'c list process</code></pre><div class="info ">
 <code class="code">Rml_list.map2 p [a1; ...; an] [b1; ...; bn]</code> is
     <code class="code">[run p a1 b1; ...; run p an bn]</code> and runs the processes in paralell.
     Raise <code class="code">Invalid_argument</code> if the two lists have
     different lengths.  Not tail-recursive.<br>
 </div>
-<pre><span id="VALfold_left"><span class="keyword">val</span> fold_left</span> : <code class="type">('a -> 'b -> 'a process) -> 'a -> 'b list -> 'a process</code></pre><div class="info">
+
+<pre><span id="VALfold_left"><span class="keyword">val</span> fold_left</span> : <code class="type">('a -> 'b -> 'a process) -> 'a -> 'b list -> 'a process</code></pre><div class="info ">
 <code class="code">Rml_list.fold_left p a [b1; ...; bn]</code> is
     <code class="code">run p (... (run p (run p a b1) b2) ...) bn</code>.<br>
 </div>
-<pre><span id="VALfold_left2"><span class="keyword">val</span> fold_left2</span> : <code class="type">('a -> 'b -> 'c -> 'a process) -><br>       'a -> 'b list -> 'c list -> 'a process</code></pre><div class="info">
+
+<pre><span id="VALfold_left2"><span class="keyword">val</span> fold_left2</span> : <code class="type">('a -> 'b -> 'c -> 'a process) -><br>       'a -> 'b list -> 'c list -> 'a process</code></pre><div class="info ">
 <code class="code">Rml_list.fold_left2 p a [b1; ...; bn] [c1; ...; cn]</code> is
     <code class="code">run p (... (run p (run p a b1 c1) b2 c2) ...) bn cn</code>.
     Raise <code class="code">Invalid_argument</code> if the two lists have
     different lengths.<br>
 </div>
-<pre><span id="VALfold_right"><span class="keyword">val</span> fold_right</span> : <code class="type">('a -> 'b -> 'b process) -> 'a list -> 'b -> 'b process</code></pre><div class="info">
+
+<pre><span id="VALfold_right"><span class="keyword">val</span> fold_right</span> : <code class="type">('a -> 'b -> 'b process) -> 'a list -> 'b -> 'b process</code></pre><div class="info ">
 <code class="code">Rml_list.fold_right p [a1; ...; an] b</code> is
     <code class="code">run p a1 (run p a2 (... (run p an b) ...))</code>.  Not tail-recursive.<br>
 </div>
-<pre><span id="VALfold_right2"><span class="keyword">val</span> fold_right2</span> : <code class="type">('a -> 'b -> 'c -> 'c process) -><br>       'a list -> 'b list -> 'c -> 'c process</code></pre><div class="info">
+
+<pre><span id="VALfold_right2"><span class="keyword">val</span> fold_right2</span> : <code class="type">('a -> 'b -> 'c -> 'c process) -><br>       'a list -> 'b list -> 'c -> 'c process</code></pre><div class="info ">
 <code class="code">List.fold_right2 p [a1; ...; an] [b1; ...; bn] c</code> is
     <code class="code">run p a1 b1 (run p a2 b2 (... (run p an bn c) ...))</code>.
     Raise <code class="code">Invalid_argument</code> if the two lists have
