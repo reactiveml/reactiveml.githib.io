@@ -366,12 +366,14 @@ signal is to collect all emitted values in a list.
 	<br>
 	<br>
 	It is possible to match the value of a signal and keep waiting
-	if the condition is not satisfied. For
-	instance the expression <code><span style="color: #228b22;">await</span>
-	s(v) <span style="color: #008b8b;">when</span> (v &gt;
-	0) <span style="color: #228b22;">in</span> p</code> waits for
-	a positive value emitted on signal <code>s</code> to
-	execute <code>p</code>.
+	if the condition is not satisfied. For instance the
+	expression <code><span style="color: #228b22;">await</span>
+	s(x::y::_) <span style="color: #008b8b;">when</span> (x+y &gt;
+	42) <span style="color: #228b22;">in</span> p</code> waits for
+	a list of at least two elements. Then, the sum of the first two
+	elements of the list <code>x+y</code> must be greater
+	than <code>42</code> to trigger the execution
+	of <code>p</code> execute <code>p</code>.
 
 	Notice that this construct
 	keeps waiting when the value of the signal does not match the
