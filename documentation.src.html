@@ -537,8 +537,8 @@ signal is to collect all emitted values in a list.
       <p>
       For example, the expression <code><span style="color:
       #228b22;">await</span> (s1(x) /\ s2(y)) \/
-      s3(x::y::_) <span style="color: #008b8b;">when</span> x + y > 42
-      in e</code> waits for either <code>s1</code> and <code>s2</code>
+      s3(x::y::_) <span style="color: #008b8b;">when</span> (x+y > 42)
+       <span style="color: #228b22;">in</span> e</code> waits for either <code>s1</code> and <code>s2</code>
       to be present simultaneously or <code>s3</code> to be present if
       its associated value is a list of at least two elements.  In
       both cases, the variables <code>x</code> and <code>y</code> are
