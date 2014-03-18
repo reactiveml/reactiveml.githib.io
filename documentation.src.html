@@ -436,27 +436,30 @@ signal is to collect all emitted values in a list.
 	#008b8b;">done</span></code> constructs allow to suspend the
 	execution of and expression. The <code><span style="color:
 	#008b8b;">do</span> p <span style="color:
-	#008b8b;">when</span> s</code> executes its
-	body <code>p</code> only when the signal <code>s</code> is
+	#008b8b;">when</span> s <span style="color:
+	#008b8b;">done</span></code> executes its body <code>p</code>
+	only when the signal <code>s</code> is
 	present. The <code><span style="color:
 	#008b8b;">control</span> p <span style="color:
-	#008b8b;">with</span> s</code> switches between an active mode
+	#008b8b;">with</span> s <span style="color:
+	#008b8b;">done</span></code> switches between an active mode
 	and a suspended one each time that the signal <code>s</code>is
 	present.<br><br>
 
 	The preemption construct <code><span style="color:
 	#008b8b;">do</span> p <span style="color:
-	#008b8b;">until</span> s</code> stops the execution of its
+	#008b8b;">until</span> s <span style="color:
+	#008b8b;">done</span></code> stops the execution of its
 	body <code>p</code> at the end of instant when the
 	signal <code>s</code> is emitted (it is not a looping
 	construct).  It is also posible to define a
 	handler <code><span style="color: #008b8b;">do</span>
 	p <span style="color: #008b8b;">until</span>
 	s <span style="color: #008b8b;">-&gt;</span>
-	q <span style="color: #008b8b;">done</span></code>. An emission
-	of signal <code>s</code> stops the execution of <code>p</code>
-	and launches the execution of <code>q</code> at the following
-	instant.
+	q <span style="color: #008b8b;">done</span></code>. An
+	emission of signal <code>s</code> stops the execution
+	of <code>p</code> and launches the execution of <code>q</code>
+	at the following instant.
 	<br><br> 
 
 	Besides, it is always possible to match a given pattern in the
