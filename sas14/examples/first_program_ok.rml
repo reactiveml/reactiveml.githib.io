@@ -1,0 +1,22 @@
+let process clock timer s =
+  let time = ref (Unix.gettimeofday ()) in
+  loop
+    let time' = Unix.gettimeofday () in
+    if time' -. !time >= timer
+    then (emit s (); time := time');
+    pause
+  end
+
+let process print_clock s =
+  loop
+    await immediate s;
+    print_string "top"; print_newline ();
+    pause
+  end
+
+
+let process main =
+  signal s default () gather (fun () () -> ()) in
+  run (print_clock s)
+  ||
+  run (clock 1. s)

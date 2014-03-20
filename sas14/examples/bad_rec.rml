@@ -1,0 +1,10 @@
+let rec process bad_rec =
+  run bad_rec; pause
+
+let process main =
+  print_endline "Not reactive program";
+  begin
+    run bad_rec
+    ||
+    pause; print_endline "never display!"
+  end

@@ -1,0 +1,22 @@
+let rec process server add =
+  await add(p, ack) in
+  run (server add)
+  ||
+  let v = run p in emit ack v
+
+
+let process main =
+  signal add default (process (), signal ack in ack) gather (fun x y -> x) in
+  run (server add)
+  ||
+  for i = 1 to 100000 do
+    let process p =
+      loop
+        print_int i; print_newline ();
+        pause
+      end
+    in
+    signal ack in
+    emit add (p, ack);
+    pause
+  done

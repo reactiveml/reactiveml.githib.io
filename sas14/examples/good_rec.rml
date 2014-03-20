@@ -1,0 +1,7 @@
+let rec process good_rec =
+  pause; run good_rec
+
+let process main =
+  run good_rec
+  ||
+  pause; print_endline "Reactive program."

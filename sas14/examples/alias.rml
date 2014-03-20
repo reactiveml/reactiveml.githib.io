@@ -1,0 +1,15 @@
+let rec process p =
+  let q = p in
+  run q
+
+let rec process p =
+  let q = (fun x -> x) p in
+  run q
+
+let process main =
+  print_endline "Not reactive program";
+  begin
+    run p
+    ||
+    pause; print_endline "never display!"
+  end

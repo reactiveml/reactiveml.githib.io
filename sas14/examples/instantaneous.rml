@@ -1,0 +1,13 @@
+let rec process intantaneous s =
+  emit s ();
+  run (intantaneous s)
+
+let process main =
+  print_endline "Not reactive program";
+  signal s in
+  begin
+    run (intantaneous s)
+    ||
+    pause; print_endline "never display!"
+  end
+

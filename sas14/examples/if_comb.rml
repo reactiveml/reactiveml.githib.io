@@ -1,0 +1,20 @@
+let process if_comb c q1 q2 =
+  loop
+    if c then run q1 else run q2
+  end
+
+let p1 = if_comb true (process pause) (process pause)
+let p2 = if_comb true (process ()) (process ())
+
+let process main =
+  signal kill in
+  do
+    run p1
+    ||
+    pause; print_endline "p1 is reactive"; emit kill
+  until kill done;
+  do
+    run p2
+    ||
+    pause; print_endline "p2 is not reactive"; emit kill
+  until kill done;

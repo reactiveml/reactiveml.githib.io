@@ -1,0 +1,11 @@
+let process p = pause
+let process q = ()
+let l = [p; q]
+
+let process main =
+  let rec process seq_map l =
+    match l with
+    | [] -> ()
+    | p :: l -> run p; pause; run (seq_map l)
+  in
+  run (seq_map l)

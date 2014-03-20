@@ -1,0 +1,8 @@
+let rec fix f x = f (fix f) x
+
+let process main =
+  let process p k v =
+    print_int v; print_newline ();
+    run (k (v+1))
+  in
+  run (fix p 0)

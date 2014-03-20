@@ -1,0 +1,9 @@
+let rec process imprecise =
+  signal s default () gather (fun () () -> ()) in
+  present s then () else (* implicit pause *) ();
+  run imprecise
+
+let process main =
+  run imprecise
+  ||
+  pause; print_endline "imprecise is reactive"

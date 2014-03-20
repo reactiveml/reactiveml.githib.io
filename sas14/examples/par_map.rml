@@ -1,0 +1,21 @@
+let rec process par_map p l =
+  match l with
+  | [] -> []
+  | x :: l -> let x' = run (p x)
+              and l' = run (par_map p l) in
+              x' :: l'
+
+let process main =
+  begin
+    let _ = run (par_map (fun x -> process ()) []) in ()
+    ||
+    pause; print_endline "par_map [] is reactive"
+  end;
+  begin
+    let _ =
+      let process p x = print_int x in
+      let rec l = 0 :: l in run (par_map p l)
+    in ()
+    ||
+    pause; print_endline "par_map (let rec l = 0 :: l in l) is not reactive"
+  end

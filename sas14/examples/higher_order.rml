@@ -1,0 +1,22 @@
+let higher_order f =
+ let rec process p =
+   let q = f p in
+   run q
+ in
+ p
+
+let process good = run (higher_order (fun x -> process (pause; run x)))
+let process pb = run (higher_order (fun x -> process (run x)))
+
+let process main =
+  signal kill in
+  do
+    run good
+    ||
+    pause; print_endline "good is reactive"; emit kill
+  until kill done;
+  do
+    run pb
+    ||
+    pause; print_endline "bad is not reactive"
+  until kill done;

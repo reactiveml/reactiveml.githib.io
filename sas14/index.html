@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SAS 2014</title>
+</head>
+
+<body bgcolor="#ffffff">
+<font face="Arial, Helvetica, sans-serif">
+
+<center>
+<h1>Reactivity of Cooperative Systems: Application to ReactiveML</h1>
+Louis Mandel and C&eacute;dric Pasteur<br />
+<a href="http://cs.uni-muenster.de/sev/sas14/">Submitted to SAS 2014</a>
+</center>
+
+<br>
+
+<h3>Abstract</h3>
+<blockquote>
+<p>
+Cooperative scheduling enables efficient sequential implementations of
+concurrency. It is widely used to provide lightweight threads
+facilities as libraries or programming constructs in many programming
+languages. However, it is up to programmers to actually cooperate to
+ensure the reactivity of their programs.
+</p>
+<p>
+We present a static analysis that checks the reactivity of programs by
+abstracting them into so-called behaviors using a type-and-effect
+system. Our objective is to find a good compromise between the
+complexity of the analysis and its precision for typical reactive
+programs. The simplicity of the analysis is mandatory for the
+programmer to be able to understand error messages and how to fix
+reactivity problems.
+</p>
+<p>
+Our work is applied and implemented in the functional synchronous
+language ReactiveML. It handles recursion, higher-order processes and
+first-class signals. We prove the soundness of our analysis with
+respect to the big-step semantics: a well-typed program is
+reactive. The analysis is easy to implement and generic enough to be
+applicable to other models of concurrency such as coroutines.
+</p>
+</blockquote>
+
+<!-- <hr>  ************************************************************* -->
+<h3>Instructions</h3>
+
+<blockquote>
+<p>
+When compiling a ReactiveML file, adding the
+options <tt>-dreactivity</tt> and<tt>-dtypes</tt> allows to
+display types and reactivity behaviors in emacs. To do so, the
+ReactiveML emacs mode has to be installed. Then <tt>C-c C-t</tt> displays
+types of the expression under the editing point and <tt>C-c C-s</tt>
+displays the behavior.
+</p>
+<p>
+The JavaScript version of the ReactiveML toplevel
+provided <a href="tryrml/index.html">here</a> is compiled to display reactivity
+behaviors.
+</p>
+</blockquote>
+
+
+
+
+<!-- <hr>  ************************************************************* -->
+<h3>Resources</h3>
+<ul>
+  <li><a href="MandelPasteur-SAS-2014.pdf">Article</a> and
+    <a href="MandelPasteur-SAS-extended-2014.pdf">extended version</a>
+  </li>
+  <li><a href="examples">Examples</a>
+  </li>
+  <li><a href="rml-1.09.03-dev-2014-03-13.tar.gz">ReactiveML distribution</a>
+  </li>
+  <li><a href="tryrml/index.html">ReactiveML toplevel in JavaScript</a>
+  </li>
+  <li><a href="http://reactiveml.org">ReactiveML web site</a>
+  </li>
+</ul>
+
+<!-- <hr>  ************************************************************* -->
+
+<br>
+
+
+</body></html>

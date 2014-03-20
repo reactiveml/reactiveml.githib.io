@@ -1,0 +1,12 @@
+let landin () =
+  let f = ref (process ()) in
+  f := process (run !f);
+  !f
+
+let process main =
+  print_endline "Not reactive program";
+  begin
+    run (landin ())
+    ||
+    pause; print_endline "never display!"
+  end
