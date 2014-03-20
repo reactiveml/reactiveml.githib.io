@@ -128,27 +128,24 @@ This tool is based on <code>ocamlbuild</code>.
 <pre>
   <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
   <span style="color: #228b22;">process</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">proc</span>  <i>&lt;pattern&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> <span style="color: #008b8b;">-&gt;</span> <i>&lt;expr&gt;</i>
+  <span style="color: #228b22;">proc</span> <i>&lt;pattern&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> <span style="color: #008b8b;">-&gt;</span> <i>&lt;expr&gt;</i>
 </pre>
       <br>
       <p>
-	Process definitions are introduced by the <code>process</code>
-        keyword. Process can take several arguments <code> x1 x2
-        ... </code><br> They can be named
+	Process definitions are introduced by the <code><span style="color: #228b22;">process</span></code>
+        keyword.
+	The notation
 	<code>
 	  <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> p x1 x2	... = e</code>
-	or anonymous
+	is a shortcut for
 	<code>
-	  <span style="color: #228b22;">process</span> x1 x2
-	  ... <span style="color: #008b8b;">-&gt;</span> e.
-	</code>
-	The notation <code>(<span style="color:
-	#228b22;">proc</span> <i>&lt;pattern&gt;</i> <span style="color:
-	#008b8b;">-&gt;</span> <i>&lt;expr&gt;</i>)</code> is a
-	shortcut for <code>( <span style="color:
-	#228b22;">fun</span> <i>&lt;pattern&gt;</i> <span style="color:
-	#008b8b;">-&gt;</span> ( <span style="color:
-	#228b22;">process</span> <i>&lt;expr&gt;</i>))</code>.
+	  <span style="color: #228b22;">let</span> p = <span style="color: #228b22;">fun</span> x1 x2 ... -> <span style="color: #228b22;">process</span> e</code>
+	and the notation
+	<code>
+	  (<span style="color: #228b22;">proc</span> x1 x2 ... <span style="color: #008b8b;">-&gt;</span> e)</code>
+	is a shortcut for
+	<code>
+	  (<span style="color: #228b22;">fun</span> x1 x2 ... <span style="color: #008b8b;">-&gt;</span> (<span style="color: #228b22;">process</span> e))</code>.
       </p>
     </section>
     <hr>
@@ -183,7 +180,7 @@ This tool is based on <code>ocamlbuild</code>.
   <i>&lt;expr&gt;</i> ; <i>&lt;expr&gt;</i>
   <i>&lt;expr&gt;</i> <span style="color: #008b8b;">||</span> <i>&lt;expr&gt;</i>
   <span style="color: #228b22;">let</span> <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; {</i> <span style="color: #228b22;">and</span> <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; }</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
-  <i>&lt;expr&gt;</i> <span style="color: #008b8b;">|</span>&gt; <i>&lt;expr&gt;</i></pre>
+  <i>&lt;expr&gt;</i> <span style="color: #008b8b;">|&gt;</span> <i>&lt;expr&gt;</i></pre>
       <br>
       <p>
         In ReactiveML, expressions can be composed in
@@ -191,15 +188,15 @@ This tool is based on <code>ocamlbuild</code>.
         parallel&nbsp;(<code>p<span style="color:
         #008b8b;">||</span>q</code>). The expression
 	<span style="color: #228b22;">let</span>
-	e1 <span style="color: #228b22;">and</span>
-	e2 <span style="color: #228b22;">and</span>
-	e3 <span style="color: #228b22;">and</span>
-	... <span style="color: #228b22;">in</span> p</pre> compute
+	x1 = e1 <span style="color: #228b22;">and</span>
+	x2 = e2 <span style="color: #228b22;">and</span>
+	x3 = e3 <span style="color: #228b22;">and</span>
+	... <span style="color: #228b22;">in</span> e</pre> compute
 	expressions <code>e1, e2, e3, ...</code> in parallel to use
-	the result in expresion p.
+	the result in expresion <code>e</code>.
 
 	<br><br> The expression <code>e1 <span style="color:
-	#008b8b;">|</span>&gt; e2</code> executes <code>e1</code>
+	#008b8b;">|&gt;</span> e2</code> executes <code>e1</code>
 	and <code>e2</code> in parallel, but at each
 	instant <code>e1</code> is executed before <code>e2</code>
 	(this construct is not supported in all runtime).
