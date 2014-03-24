@@ -67,7 +67,7 @@ Let <code>hello.rml</code> be a file containing the following program:
   <span style="color: #228b22;">let</span> () = <span style="color: #483d8b;">run</span> main
 </pre>
 <p>
-To produce an executable, first the file must be compiled into pure
+To produce an executable, the file must be first compiled into pure
 OCaml code using the following command:
 </p>
 <pre>
@@ -132,7 +132,7 @@ This tool is based on <code>ocamlbuild</code>.
 </pre>
       <br>
       <p>
-	Process definition are introduced by the <code>process</code>
+	Process definitions are introduced by the <code>process</code>
         keyword. Process can take several arguments <code> x1 x2
         ... </code><br> They can be named
 	<code>
@@ -140,7 +140,7 @@ This tool is based on <code>ocamlbuild</code>.
 	or anonymous
 	<code>
 	  <span style="color: #228b22;">process</span> x1 x2
-	  ... <span style="color: #008b8b;">-&gt;</span> e
+	  ... <span style="color: #008b8b;">-&gt;</span> e.
 	</code>
 	The notation <code>(<span style="color:
 	#228b22;">proc</span> <i>&lt;pattern&gt;</i> <span style="color:
@@ -257,9 +257,7 @@ logical instant. This phenomenon is
 called <i>Multi-emission</i>. Hence, when a signal is declared, it is
 possible to define how to combine the values emitted during an instant
 with the <code>
-<span style="color: #228b22;">signal</span>/
-<span style="color: #228b22;">default</span>/
-<span style="color: #228b22;">gather</span>
+<span style="color: #228b22;">signal</span>/<span style="color: #228b22;">default</span>/<span style="color: #228b22;">gather</span>
 </code> construct. Note that in this case, a default value is required. 
 <br> 
 For instance 
@@ -267,10 +265,10 @@ For instance
 <span style="color: #228b22;">signal</span> s 
 <span style="color: #228b22;">default</span> 0 
 <span style="color: #228b22;">gather</span> 
-(<span style="color: #228b22;">fun</span> x y <span style="color: #008b8b;">-&gt;</span> x+y) 
+(<span style="color: #228b22;">fun</span> x y <span style="color: #008b8b;">-&gt;</span> x + y) 
 </code>
 defines a a signal <code>s</code> with <code>0</code> as default
-value, and <code>(+)</code> as gathering function. Thus, in case of
+value, and <code>(+)</code> as combination function. Thus, in case of
 multi-emission, the value of the signal is the sum of all emitted
 values. If no combination function is given, the behavior of the
 signal is to collect all emitted values in a list.
@@ -308,10 +306,10 @@ signal is to collect all emitted values in a list.
   s <span style="color: #008b8b;">then</span> p <span style="color:
   #008b8b;">else</span> q</code> tests the status of a
   signal <code>s</code>. If the signal is present,
-  the <code><span style="color: #008b8b;">then</span></code> branch,
-  i.e., <code>p</code> is executed instantaneously, otherwise
-  the <code><span style="color: #008b8b;">else</span></code> branch,
-  i.e., <code>q</code> is executed at the following instant.
+  the <code><span style="color: #008b8b;">then</span></code>
+  branch <code>p</code> is executed instantaneously, otherwise
+  the <code><span style="color: #008b8b;">else</span></code>
+  branch <code>q</code> is executed at the following instant.
   <br><br>
 
   The expression <code><span style="color: #228b22;">await</span> s</code>
@@ -324,8 +322,9 @@ signal is to collect all emitted values in a list.
 
 
   Like in Esterel, the non-immediate version
-  of <code><span style="color: #228b22;">await</span></code> is the default one such
-  that <code><span style="color: #228b22;">await</span> s; <span style="color: #228b22;">await</span> s</code> waits two
+  of <code><span style="color: #228b22;">await</span></code> is the
+  default one. Hence <code><span style="color: #228b22;">await</span>
+  s; <span style="color: #228b22;">await</span> s</code> waits two
   occurrences of <code>s</code>, while
   <code><span style="color: #228b22;">await</span> <span style="color:
   #228b22;">immediate</span> s; <span style="color:
@@ -336,10 +335,8 @@ signal is to collect all emitted values in a list.
   #228b22;">immediate</span> s</code>.
   <br><br>
 
-  The expression <code><span style="color: #483d8b;">pre</span> s</code> evaluates
-  to <code>true</code> if the signal
-  <code>s</code> has been emitted at the preceding
-  instant. Otherwise, it evaluates to <code>false</code>.
+  The expression <code><span style="color: #483d8b;">pre</span> s</code> returns <code>true</code> if the signal
+  <code>s</code> has been emitted at the preceding, and <code>false</code> otherwise.
 </p>
 </section>
 
@@ -358,7 +355,7 @@ signal is to collect all emitted values in a list.
         The construct <code><span style="color:
         #228b22;">await</span> s(v) <span style="color:
         #228b22;">in p</span></code> waits the emission of a signal <code>s</code>. At
-        the instant following the emission, the body, i.e., <code>p</code> is executed in an
+        the instant following the emission, the body <code>p</code> is executed in an
         environment where the pattern <code>v</code> is bind to the value of the
         signal (the combination of the values emitted at the preceding
         instant). 
@@ -368,17 +365,17 @@ signal is to collect all emitted values in a list.
 	It is possible to match the value of a signal and keep waiting
 	if the condition is not satisfied. For instance the
 	expression <code><span style="color: #228b22;">await</span>
-	s(x::y::_) <span style="color: #008b8b;">when</span> (x+y &gt;
+	s(x::y::_) <span style="color: #008b8b;">when</span> (x + y &gt;
 	42) <span style="color: #228b22;">in</span> p</code> waits for
 	a list of at least two elements. Then, the sum of the first two
-	elements of the list <code>x+y</code> must be greater
+	elements of the list <code>x + y</code> must be greater
 	than <code>42</code> to trigger the execution
-	of <code>p</code> execute <code>p</code>.
+	of <code>p</code>.
 
-	Notice that this construct
-	keeps waiting when the value of the signal does not match the
-	pattern or if the condition specified after the when keyword
-	is not satisfied.<br><br>
+	Notice that this construct keeps waiting when the value of the
+	signal does not match the pattern (e.g., <code>x::y::_</code>) or if
+	the condition specified after the when keyword is not
+	satisfied (e.g., <code>x + y &gt; 42</code>).<br><br>
 
         The expression expression <code><span style="color:
         #228b22;">await</span> <span style="color:
@@ -404,12 +401,12 @@ signal is to collect all emitted values in a list.
         the declaration point of the signal. <code><span style="color: #483d8b;">last</span> ?s</code>
         has a slight different behavior. It evaluates
         to the last value associated to <code>s</code> when it was
-        emitted. While <code>s</code> has never been emitted, <code><span style="color: #483d8b;">pre</span>
+        emitted. Until the first emission of signal <code>s</code>, <code><span style="color: #483d8b;">pre</span>
 	  ?s</code> and <code><span style="color: #483d8b;">last</span> ?s</code> both evaluates to the default
         value of <code>s</code>.<br><br>
 
-        The <code><span style="color: #228b22;">default</span></code> function returns the default value
-        of a signal.
+        The expression <code><span style="color: #228b22;">default s</span></code> returns the default value
+        of a signal <code>s</code>.
       </p>
     </section>
     <!-- </div> -->
@@ -434,12 +431,12 @@ signal is to collect all emitted values in a list.
 	#008b8b;">control</span>/<span style="color:
 	#008b8b;">with</span>/<span style="color:
 	#008b8b;">done</span></code> constructs allow to suspend the
-	execution of and expression. The <code><span style="color:
+	execution of an expression. <code><span style="color:
 	#008b8b;">do</span> p <span style="color:
 	#008b8b;">when</span> s <span style="color:
 	#008b8b;">done</span></code> executes its body <code>p</code>
 	only when the signal <code>s</code> is
-	present. The <code><span style="color:
+	present. <code><span style="color:
 	#008b8b;">control</span> p <span style="color:
 	#008b8b;">with</span> s <span style="color:
 	#008b8b;">done</span></code> switches between an active mode
@@ -456,7 +453,7 @@ signal is to collect all emitted values in a list.
 	handler <code><span style="color: #008b8b;">do</span>
 	p <span style="color: #008b8b;">until</span>
 	s <span style="color: #008b8b;">-&gt;</span>
-	q <span style="color: #008b8b;">done</span></code>. An
+	q <span style="color: #008b8b;">done</span></code>. In this case, an
 	emission of signal <code>s</code> stops the execution
 	of <code>p</code> and launches the execution of <code>q</code>
 	at the following instant.
@@ -537,15 +534,16 @@ signal is to collect all emitted values in a list.
       <!-- 	  <td align=left nowrap>&nbsp;<code><i>&lt;config-patt&gt;</i> \/ <i>&lt;config-patt&gt;</i></td> -->
       <!-- 	</tr> -->
       <!-- </table> -->
+      <br>
       <p>
       For example, the expression <code><span style="color:
       #228b22;">await</span> (s1(x) /\ s2(y)) \/
-      s3(x::y::_) <span style="color: #008b8b;">when</span> (x+y > 42)
+      s3(x::y::_) <span style="color: #008b8b;">when</span> (x + y > 42)
        <span style="color: #228b22;">in</span> e</code> waits for either <code>s1</code> and <code>s2</code>
       to be present simultaneously or <code>s3</code> to be present if
       its associated value is a list of at least two elements.  In
       both cases, the variables <code>x</code> and <code>y</code> are
-      bind and the sum of their value must be greater
+      bound and the sum of their value must be greater
       than <code>42</code> to trigger the execution of <code>e</code>.
       </p>
     </section>
@@ -557,7 +555,7 @@ signal is to collect all emitted values in a list.
     <h2>Standard Library</h2>
     <p>
       Any OCaml code can be linked to a ReactiveML program as long as
-      it provides an interface file which is compatible with
+      it provides an interface file (<code>file.rmli</code>) which is compatible with
       ReactiveML. Therefore, the standard library of OCaml is
       available in ReactiveML.
     </p>
