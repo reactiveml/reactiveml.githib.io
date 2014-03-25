@@ -357,7 +357,7 @@ signal is to collect all emitted values in a list.
       <p>
         The construct <code><span style="color:
         #228b22;">await</span> s(v) <span style="color:
-        #228b22;">in p</span></code> waits the emission of a signal <code>s</code>. At
+        #228b22;">in</span> p</code> waits the emission of a signal <code>s</code>. At
         the instant following the emission, the body <code>p</code> is executed in an
         environment where the pattern <code>v</code> is bind to the value of the
         signal (the combination of the values emitted at the preceding
@@ -408,7 +408,7 @@ signal is to collect all emitted values in a list.
 	  ?s</code> and <code><span style="color: #483d8b;">last</span> ?s</code> both evaluates to the default
         value of <code>s</code>.<br><br>
 
-        The expression <code><span style="color: #228b22;">default s</span></code> returns the default value
+        The expression <code><span style="color: #228b22;">default</span> s</code> returns the default value
         of a signal <code>s</code>.
       </p>
     </section>
@@ -481,7 +481,7 @@ signal is to collect all emitted values in a list.
     <section id="config">
 <pre>
   <span style="color: #008b8b;">present</span> <i>&lt;config&gt;</i> <span style="color: #008b8b;">then</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">else</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">await</span> <i>[</i> immediate <i>]</i> <i>&lt;config&gt;</i>
+  <span style="color: #228b22;">await</span> <i>[</i> <span style="color: #228b22;">immediate</span> <i>]</i> <i>&lt;config&gt;</i>
   <span style="color: #228b22;">await</span> <i>&lt;config-patt&gt; [</i> <span style="color: #008b8b;">when</span> <i>&lt;expr&gt; ]</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
   <span style="color: #008b8b;">do</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">when</span> <i>&lt;config&gt;</i> <span style="color: #008b8b;">done</span>
   <span style="color: #008b8b;">control</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">with</span> <i>&lt;config-patt&gt; [</i> <span style="color: #008b8b;">when</span> <i> &lt;expr&gt; ]</i> <span style="color: #008b8b;">done</span>
