@@ -63,8 +63,8 @@ documentation of the <a href="#stdlib">standard library</a>. An <a href="<#ROOTD
 Let <code>hello.rml</code> be a file containing the following program:
 </p>
  <pre>
-  <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> main = print_endline <span style="color: #8b2252;">"Hello World!"</span>
-  <span style="color: #228b22;">let</span> () = <span style="color: #483d8b;">run</span> main
+  <span style="color: #008b8b;">let</span> <span style="color: #008b8b;">process</span> main = print_endline <span style="color: #8b2252;">"Hello World!"</span>
+  <span style="color: #008b8b;">let</span> () = <span style="color: #008b8b;">run</span> main
 </pre>
 <p>
 To produce an executable, the file must be first compiled into pure
@@ -126,15 +126,15 @@ This tool is based on <code>ocamlbuild</code>.
     <section id="process">
       <h3>Process Definitions</h3>
 <pre>
-  <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">process</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">proc</span> <i>&lt;pattern&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> <span style="color: #008b8b;">-&gt;</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">let</span> <span style="color: #008b8b;">process</span> <i>&lt;id&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> = <i>&lt;expr&gt;</i> <span style="color: #008b8b;">in</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">process</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">proc</span> <i>&lt;pattern&gt;</i> <i>{</i> <i>&lt;pattern&gt;</i> <i>}</i> <span style="color: #008b8b;">-&gt;</span> <i>&lt;expr&gt;</i>
 </pre>
       <br>
       <p>
 	Process definitions are introduced by
-        the <code><span style="color: #228b22;">process</span></code>
-        keyword. For instance <code><span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> p x1 x2 ... = e</code>
+        the <code><span style="color: #008b8b;">process</span></code>
+        keyword. For instance <code><span style="color: #008b8b;">let</span> <span style="color: #008b8b;">process</span> p x1 x2 ... = e</code>
         defines a process <code>p</code> with several
         arguments <code>x1</code>, <code>x2</code>, ... and a
         body <code>e</code>.
@@ -142,16 +142,16 @@ This tool is based on <code>ocamlbuild</code>.
 
 	The notation
 	<code>
-	  <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> p x1 x2	... = e</code>
+	  <span style="color: #008b8b;">let</span> <span style="color: #008b8b;">process</span> p x1 x2	... = e</code>
 	is a shortcut for
 	<code>
-	  <span style="color: #228b22;">let</span> p = <span style="color: #228b22;">fun</span> x1 x2 ... -> <span style="color: #228b22;">process</span> e</code>
+	  <span style="color: #008b8b;">let</span> p = <span style="color: #008b8b;">fun</span> x1 x2 ... -> <span style="color: #008b8b;">process</span> e</code>
 	and the notation
 	<code>
-	  (<span style="color: #228b22;">proc</span> x1 x2 ... <span style="color: #008b8b;">-&gt;</span> e)</code>
+	  (<span style="color: #008b8b;">proc</span> x1 x2 ... <span style="color: #008b8b;">-&gt;</span> e)</code>
 	is a shortcut for
 	<code>
-	  (<span style="color: #228b22;">fun</span> x1 x2 ... <span style="color: #008b8b;">-&gt;</span> (<span style="color: #228b22;">process</span> e))</code>.
+	  (<span style="color: #008b8b;">fun</span> x1 x2 ... <span style="color: #008b8b;">-&gt;</span> (<span style="color: #008b8b;">process</span> e))</code>.
       </p>
     </section>
     <hr>
@@ -159,23 +159,23 @@ This tool is based on <code>ocamlbuild</code>.
     <section id="statements">
       <h3>Basic statements</h3>
 <pre>
-  <span style="color: #483d8b;">nothing</span>
-  <span style="color: #483d8b;">pause</span>
-  <span style="color: #483d8b;">halt</span>
-  <span style="color: #483d8b;">run</span> <i>&lt;process&gt;</i>
+  <span style="color: #008b8b;">nothing</span>
+  <span style="color: #008b8b;">pause</span>
+  <span style="color: #008b8b;">halt</span>
+  <span style="color: #008b8b;">run</span> <i>&lt;process&gt;</i>
 </pre>
       <br>
       <p>
-        <code><span style="color: #483d8b;">nothing</span></code> is equivalent to<code>()</code> (can be used only in a process).<br>
-        <code><span style="color: #483d8b;">pause</span></code> suspends the
+        <code><span style="color: #008b8b;">nothing</span></code> is equivalent to<code>()</code> (can be used only in a process).<br>
+        <code><span style="color: #008b8b;">pause</span></code> suspends the
         execution until next instant.<br>
-        <code><span style="color: #483d8b;">halt</span></code>
+        <code><span style="color: #008b8b;">halt</span></code>
         suspends the execution forever (it is equivalent
         to <code><span style="color:
-        #a020f0;">loop</span> <span style="color:
-        #483d8b;">pause</span> <span style="color:
-        #a020f0;">end</span></code>, see below).<br>
-        <code><span style="color: #483d8b;">run</span> p</code> executes the process <code>p</code>.
+        #008b8b;">loop</span> <span style="color:
+        #008b8b;">pause</span> <span style="color:
+        #008b8b;">end</span></code>, see below).<br>
+        <code><span style="color: #008b8b;">run</span> p</code> executes the process <code>p</code>.
       </p>
     </section>
     <hr>
@@ -184,25 +184,23 @@ This tool is based on <code>ocamlbuild</code>.
       <h3>Compositions</h3>
 <pre>
   <i>&lt;expr&gt;</i> ; <i>&lt;expr&gt;</i>
-  <i>&lt;expr&gt;</i> <span style="color: #008b8b;">||</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">let</span> <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; {</i> <span style="color: #228b22;">and</span> <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; }</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
-  <i>&lt;expr&gt;</i> <span style="color: #008b8b;">|&gt;</span> <i>&lt;expr&gt;</i></pre>
+  <i>&lt;expr&gt;</i> || <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">let</span> <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; {</i> <span style="color: #008b8b;">and</span> <i>&lt;pattern&gt;</i> = <i>&lt;expr&gt; }</i> <span style="color: #008b8b;">in</span> <i>&lt;expr&gt;</i>
+  <i>&lt;expr&gt;</i> |&gt; <i>&lt;expr&gt;</i></pre>
       <br>
       <p>
         In ReactiveML, expressions can be composed in
         sequence&nbsp;(<code>p;q</code>) or in
-        parallel&nbsp;(<code>p<span style="color:
-        #008b8b;">||</span>q</code>). The expression
-	<span style="color: #228b22;">let</span>
-	x1 = e1 <span style="color: #228b22;">and</span>
-	x2 = e2 <span style="color: #228b22;">and</span>
-	x3 = e3 <span style="color: #228b22;">and</span>
-	... <span style="color: #228b22;">in</span> e</pre> compute
+        parallel&nbsp;(<code>p||q</code>). The expression
+	<span style="color: #008b8b;">let</span>
+	x1 = e1 <span style="color: #008b8b;">and</span>
+	x2 = e2 <span style="color: #008b8b;">and</span>
+	x3 = e3 <span style="color: #008b8b;">and</span>
+	... <span style="color: #008b8b;">in</span> e</pre> compute
 	expressions <code>e1, e2, e3, ...</code> in parallel to use
 	the result in expresion <code>e</code>.
 
-	<br><br> The expression <code>e1 <span style="color:
-	#008b8b;">|&gt;</span> e2</code> executes <code>e1</code>
+	<br><br> The expression <code>e1 |&gt; e2</code> executes <code>e1</code>
 	and <code>e2</code> in parallel, but at each
 	instant <code>e1</code> is executed before <code>e2</code>
 	(this construct is not supported in all runtime).
@@ -213,15 +211,15 @@ This tool is based on <code>ocamlbuild</code>.
     <section id="iterators">
       <h3>Iterators</h3>
 <pre>
-  <span style="color: #a020f0;">loop</span> <i>&lt;expr&gt;</i> <span style="color: #a020f0;">end</span>
+  <span style="color: #008b8b;">loop</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">end</span>
   <span style="color: #008b8b;">while</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">do</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">done</span>
   <span style="color: #008b8b;">for</span> <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> <span style="color: #008b8b;">to</span> <i> | </i> <span style="color: #008b8b;">downto</span> <i>) </i> <span style="color: #008b8b;">do</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">done</span>
   <span style="color: #008b8b;">for</span> <i>&lt;id&gt;</i> = <i>&lt;expr&gt; (</i> <span style="color: #008b8b;">to</span> <i> | </i> <span style="color: #008b8b;">downto</span> <i>)</i> <span style="color: #008b8b;">dopar</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">done</span></pre>
 <br>
       <p>
         The construct <code><span style="color:
-        #a020f0;">loop</span>/<span style="color:
-        #a020f0;">end</span></code> is an infinite
+        #008b8b;">loop</span>/<span style="color:
+        #008b8b;">end</span></code> is an infinite
         loop. <code><span style="color:
         #008b8b;">while</span>/<span style="color:
         #008b8b;">do</span>/<span style="color:
@@ -244,14 +242,14 @@ This tool is based on <code>ocamlbuild</code>.
     <section id="signalDecl">
       <h3>Signal declaration</h3>
 <pre>
-  <span style="color: #228b22;">signal</span> <i>&lt;id&gt; {</i> , <i>&lt;id&gt; }</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">signal</span> <i>&lt;id&gt;</i> <span style="color: #228b22;">default</span> <i>&lt;value&gt;</i> <span style="color: #228b22;">gather</span> <i>&lt;function&gt;</i>  <span style="color: #228b22;">in</span>  <i>&lt;expr&gt;</i></pre>
+  <span style="color: #008b8b;">signal</span> <i>&lt;id&gt; {</i> , <i>&lt;id&gt; }</i> <span style="color: #008b8b;">in</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">signal</span> <i>&lt;id&gt;</i> <span style="color: #008b8b;">default</span> <i>&lt;value&gt;</i> <span style="color: #008b8b;">gather</span> <i>&lt;function&gt;</i>  <span style="color: #008b8b;">in</span>  <i>&lt;expr&gt;</i></pre>
       <br>
       <p>
         The construct <code><span style="color:
-#228b22;">signal</span> s</code> declares a new signal.
+#008b8b;">signal</span> s</code> declares a new signal.
 It is also possible to declare several signals at once: <code><span style="color:
-#228b22;">signal</span> s1, s2, s3, ...</code>.
+#008b8b;">signal</span> s1, s2, s3, ...</code>.
 <br>
 <br>
 
@@ -260,15 +258,15 @@ logical instant. This phenomenon is
 called <i>Multi-emission</i>. Hence, when a signal is declared, it is
 possible to define how to combine the values emitted during an instant
 with the <code>
-<span style="color: #228b22;">signal</span>/<span style="color: #228b22;">default</span>/<span style="color: #228b22;">gather</span>
+<span style="color: #008b8b;">signal</span>/<span style="color: #008b8b;">default</span>/<span style="color: #008b8b;">gather</span>
 </code> construct. Note that in this case, a default value is required. 
 <br> 
 For instance 
 <code>
-<span style="color: #228b22;">signal</span> s 
-<span style="color: #228b22;">default</span> 0 
-<span style="color: #228b22;">gather</span> 
-(<span style="color: #228b22;">fun</span> x y <span style="color: #008b8b;">-&gt;</span> x + y) 
+<span style="color: #008b8b;">signal</span> s 
+<span style="color: #008b8b;">default</span> 0 
+<span style="color: #008b8b;">gather</span> 
+(<span style="color: #008b8b;">fun</span> x y <span style="color: #008b8b;">-&gt;</span> x + y) 
 </code>
 defines a a signal <code>s</code> with <code>0</code> as default
 value, and <code>(+)</code> as combination function. Thus, in case of
@@ -283,14 +281,14 @@ signal is to collect all emitted values in a list.
     <section id="signalEm">
       <h3>Signal emission</h3>
 <pre>
-  <span style="color: #483d8b;">emit</span> <i>&lt;signal&gt; [ &lt;value&gt; ]</i></pre>
+  <span style="color: #008b8b;">emit</span> <i>&lt;signal&gt; [ &lt;value&gt; ]</i></pre>
       <br>
       <p>
         Signal emissions are instantaneous broadcasting. Hence, a
         signal is present or absent during an instant but it cannot
         have both status. The notation <code> <span style="color:
-        #483d8b;">emit</span> s</code> is a shortcut
-        for <code> <span style="color: #483d8b;">emit</span> s
+        #008b8b;">emit</span> s</code> is a shortcut
+        for <code> <span style="color: #008b8b;">emit</span> s
         ()</code>, i.e., emit the value <code>()</code> on
         signal <code>s</code>.
       </p>
@@ -301,8 +299,8 @@ signal is to collect all emitted values in a list.
       <h3>Signal status</h3>
 <pre>
   <span style="color: #008b8b;">present</span> <i>&lt;signal&gt;</i> <span style="color: #008b8b;">then</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">else</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">await</span>  <i>[</i> <span style="color: #228b22;">immediate</span> <i>]</i> <i>&lt;signal&gt;</i>
-  <span style="color: #483d8b;">pre</span> <i>&lt;signal&gt;</i></pre>
+  <span style="color: #008b8b;">await</span>  <i>[</i> <span style="color: #008b8b;">immediate</span> <i>]</i> <i>&lt;signal&gt;</i>
+  <span style="color: #008b8b;">pre</span> <i>&lt;signal&gt;</i></pre>
       <br>
 <p>
   The expression <code><span style="color: #008b8b;">present</span>
@@ -315,30 +313,30 @@ signal is to collect all emitted values in a list.
   branch <code>q</code> is executed at the following instant.
   <br><br>
 
-  The expression <code><span style="color: #228b22;">await</span> s</code>
+  The expression <code><span style="color: #008b8b;">await</span> s</code>
   waits <code>s</code> to be emitted and terminates at
   the following instant. Whereas the expression
-  <code><span style="color: #228b22;">await</span> <span style="color:
-  #228b22;">immediate</span> s</code> waits <code>s</code> to be
+  <code><span style="color: #008b8b;">await</span> <span style="color:
+  #008b8b;">immediate</span> s</code> waits <code>s</code> to be
   emitted and terminates instantaneously.
   <br><br>
 
 
   Like in Esterel, the non-immediate version
-  of <code><span style="color: #228b22;">await</span></code> is the
-  default one. Hence <code><span style="color: #228b22;">await</span>
-  s; <span style="color: #228b22;">await</span> s</code> waits two
+  of <code><span style="color: #008b8b;">await</span></code> is the
+  default one. Hence <code><span style="color: #008b8b;">await</span>
+  s; <span style="color: #008b8b;">await</span> s</code> waits two
   occurrences of <code>s</code>, while
-  <code><span style="color: #228b22;">await</span> <span style="color:
-  #228b22;">immediate</span> s; <span style="color:
-  #228b22;">await</span> <span style="color:
-  #228b22;">immediate</span> s</code> is equivalent
+  <code><span style="color: #008b8b;">await</span> <span style="color:
+  #008b8b;">immediate</span> s; <span style="color:
+  #008b8b;">await</span> <span style="color:
+  #008b8b;">immediate</span> s</code> is equivalent
   to <code><span style="color:
-  #228b22;">await</span> <span style="color:
-  #228b22;">immediate</span> s</code>.
+  #008b8b;">await</span> <span style="color:
+  #008b8b;">immediate</span> s</code>.
   <br><br>
 
-  The expression <code><span style="color: #483d8b;">pre</span> s</code> returns <code>true</code> if the signal
+  The expression <code><span style="color: #008b8b;">pre</span> s</code> returns <code>true</code> if the signal
   <code>s</code> has been emitted at the preceding, and <code>false</code> otherwise.
 </p>
 </section>
@@ -348,16 +346,16 @@ signal is to collect all emitted values in a list.
     <section id="signalVal">
       <h3>Signal value</h3>
 <pre>
-  <span style="color: #228b22;">await</span>  <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> <span style="color: #008b8b;">when</span> <i>&lt;expr&gt; ]</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">await</span> <i>[</i> <span style="color: #228b22;">immediate</span> <i>]</i> <span style="color: #228b22;">one</span> <i>&lt;signal&gt; (&lt;variable&gt;)</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
-  <span style="color: #483d8b;">pre</span> ?<i>&lt;signal&gt;</i>
-  <span style="color: #483d8b;">last</span> ?<i>&lt;signal&gt;</i>
-  <span style="color: #228b22;">default</span> ?<i>&lt;signal&gt;</i></pre>
+  <span style="color: #008b8b;">await</span>  <i>&lt;signal&gt; (&lt;pattern&gt;) [</i> <span style="color: #008b8b;">when</span> <i>&lt;expr&gt; ]</i> <span style="color: #008b8b;">in</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">await</span> <i>[</i> <span style="color: #008b8b;">immediate</span> <i>]</i> <span style="color: #008b8b;">one</span> <i>&lt;signal&gt; (&lt;variable&gt;)</i> <span style="color: #008b8b;">in</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">pre</span> ?<i>&lt;signal&gt;</i>
+  <span style="color: #008b8b;">last</span> ?<i>&lt;signal&gt;</i>
+  <span style="color: #008b8b;">default</span> ?<i>&lt;signal&gt;</i></pre>
       <br>
       <p>
         The construct <code><span style="color:
-        #228b22;">await</span> s(v) <span style="color:
-        #228b22;">in</span> p</code> waits the emission of a signal <code>s</code>. At
+        #008b8b;">await</span> s(v) <span style="color:
+        #008b8b;">in</span> p</code> waits the emission of a signal <code>s</code>. At
         the instant following the emission, the body <code>p</code> is executed in an
         environment where the pattern <code>v</code> is bind to the value of the
         signal (the combination of the values emitted at the preceding
@@ -367,9 +365,9 @@ signal is to collect all emitted values in a list.
 	<br>
 	It is possible to match the value of a signal and keep waiting
 	if the condition is not satisfied. For instance the
-	expression <code><span style="color: #228b22;">await</span>
+	expression <code><span style="color: #008b8b;">await</span>
 	s(x::y::_) <span style="color: #008b8b;">when</span> (x + y &gt;
-	42) <span style="color: #228b22;">in</span> p</code> waits for
+	42) <span style="color: #008b8b;">in</span> p</code> waits for
 	a list of at least two elements. Then, the sum of the first two
 	elements of the list <code>x + y</code> must be greater
 	than <code>42</code> to trigger the execution
@@ -381,34 +379,34 @@ signal is to collect all emitted values in a list.
 	satisfied (e.g., <code>x + y &gt; 42</code>).<br><br>
 
         The expression expression <code><span style="color:
-        #228b22;">await</span> <span style="color:
-        #228b22;">one</span> s (v) <span style="color:
-        #228b22;">in</span> p</code> waits the emission of a
+        #008b8b;">await</span> <span style="color:
+        #008b8b;">one</span> s (v) <span style="color:
+        #008b8b;">in</span> p</code> waits the emission of a
         signal <code>s</code> to bind the pattern <code>v</code> with
         one of the emitted values on signal <code>s</code>. In case of
         multiple emission during an instant, the choice of the value
         is not specified. Like <code><span style="color:
-        #228b22;">await</span></code>, the body of the expression is
+        #008b8b;">await</span></code>, the body of the expression is
         executed at the instant following the reception of the signal
         (except if there is the <code><span style="color:
-        #228b22;">immediate</span></code> keyword). To be causal by
+        #008b8b;">immediate</span></code> keyword). To be causal by
         construction, there is no immediate version of
         the <code><span style="color:
-        #228b22;">await</span>/<span style="color:
-        #228b22;">in</span></code> construct.<br><br>
+        #008b8b;">await</span>/<span style="color:
+        #008b8b;">in</span></code> construct.<br><br>
 
-        The expression <code><span style="color: #483d8b;">pre</span> ?s</code> evaluates to the value
+        The expression <code><span style="color: #008b8b;">pre</span> ?s</code> evaluates to the value
         associated to <code>s</code> at the preceding instant. If <code>s</code>
         has not been emitted at the preceding instant,
-        <code><span style="color: #483d8b;">pre</span> ?s</code> is equal to the default value given at
-        the declaration point of the signal. <code><span style="color: #483d8b;">last</span> ?s</code>
+        <code><span style="color: #008b8b;">pre</span> ?s</code> is equal to the default value given at
+        the declaration point of the signal. <code><span style="color: #008b8b;">last</span> ?s</code>
         has a slight different behavior. It evaluates
         to the last value associated to <code>s</code> when it was
-        emitted. Until the first emission of signal <code>s</code>, <code><span style="color: #483d8b;">pre</span>
-	  ?s</code> and <code><span style="color: #483d8b;">last</span> ?s</code> both evaluates to the default
+        emitted. Until the first emission of signal <code>s</code>, <code><span style="color: #008b8b;">pre</span>
+	  ?s</code> and <code><span style="color: #008b8b;">last</span> ?s</code> both evaluates to the default
         value of <code>s</code>.<br><br>
 
-        The expression <code><span style="color: #228b22;">default</span> s</code> returns the default value
+        The expression <code><span style="color: #008b8b;">default</span> s</code> returns the default value
         of a signal <code>s</code>.
       </p>
     </section>
@@ -481,8 +479,8 @@ signal is to collect all emitted values in a list.
     <section id="config">
 <pre>
   <span style="color: #008b8b;">present</span> <i>&lt;config&gt;</i> <span style="color: #008b8b;">then</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">else</span> <i>&lt;expr&gt;</i>
-  <span style="color: #228b22;">await</span> <i>[</i> <span style="color: #228b22;">immediate</span> <i>]</i> <i>&lt;config&gt;</i>
-  <span style="color: #228b22;">await</span> <i>&lt;config-patt&gt; [</i> <span style="color: #008b8b;">when</span> <i>&lt;expr&gt; ]</i> <span style="color: #228b22;">in</span> <i>&lt;expr&gt;</i>
+  <span style="color: #008b8b;">await</span> <i>[</i> <span style="color: #008b8b;">immediate</span> <i>]</i> <i>&lt;config&gt;</i>
+  <span style="color: #008b8b;">await</span> <i>&lt;config-patt&gt; [</i> <span style="color: #008b8b;">when</span> <i>&lt;expr&gt; ]</i> <span style="color: #008b8b;">in</span> <i>&lt;expr&gt;</i>
   <span style="color: #008b8b;">do</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">when</span> <i>&lt;config&gt;</i> <span style="color: #008b8b;">done</span>
   <span style="color: #008b8b;">control</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">with</span> <i>&lt;config-patt&gt; [</i> <span style="color: #008b8b;">when</span> <i> &lt;expr&gt; ]</i> <span style="color: #008b8b;">done</span>
   <span style="color: #008b8b;">do</span> <i>&lt;expr&gt;</i> <span style="color: #008b8b;">until</span> <i>&lt;config-patt&gt; [</i> <span style="color: #008b8b;">when</span> <i> &lt;expr&gt; ]</i> <span style="color: #008b8b;">-&gt;</span> <i>&lt;expr&gt;</i>
@@ -540,9 +538,9 @@ signal is to collect all emitted values in a list.
       <br>
       <p>
       For example, the expression <code><span style="color:
-      #228b22;">await</span> (s1(x) /\ s2(y)) \/
+      #008b8b;">await</span> (s1(x) /\ s2(y)) \/
       s3(x::y::_) <span style="color: #008b8b;">when</span> (x + y > 42)
-       <span style="color: #228b22;">in</span> e</code> waits for either <code>s1</code> and <code>s2</code>
+       <span style="color: #008b8b;">in</span> e</code> waits for either <code>s1</code> and <code>s2</code>
       to be present simultaneously or <code>s3</code> to be present if
       its associated value is a list of at least two elements.  In
       both cases, the variables <code>x</code> and <code>y</code> are
