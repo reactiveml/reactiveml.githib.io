@@ -132,8 +132,14 @@ This tool is based on <code>ocamlbuild</code>.
 </pre>
       <br>
       <p>
-	Process definitions are introduced by the <code><span style="color: #228b22;">process</span></code>
-        keyword.
+	Process definitions are introduced by
+        the <code><span style="color: #228b22;">process</span></code>
+        keyword. For instance <code><span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> p x1 x2 ... = e</code>
+        defines a process <code>p</code> with several
+        arguments <code>x1</code>, <code>x2</code>, ... and a
+        body <code>e</code>.
+
+
 	The notation
 	<code>
 	  <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> p x1 x2	... = e</code>

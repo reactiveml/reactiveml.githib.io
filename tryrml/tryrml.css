@@ -160,6 +160,14 @@ table th{padding-top:9px;font-weight:bold;vertical-align:middle;}
 table td{vertical-align:top;border-top:1px solid #ddd;}
 table tbody th{border-top:1px solid #ddd;vertical-align:top;}
 
+
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 /*
 a:focus {
     outline:thin dotted;
