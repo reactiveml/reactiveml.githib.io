@@ -1,0 +1,17 @@
+<p>
+Then lets define the clock control signals,
+</p>
+
+<p><pre class="code">
+signal ck_off, ck_bip, ck_snooze;;
+</pre></p>
+<p><pre class="code">
+signal ck_arm default 0 gather (fun x y -> x);;
+</pre></p>
+
+<p>
+Note that signal <code>ck_arm</code> carry a value. This value will be
+used to set up the countdown of the alarm. On the other hand, when the
+snooze button is hit, the duration of the countdown is fixed. Hence
+signal <code>ck_snooze</code> does not need to carry a value.
+</p>

@@ -1,0 +1,21 @@
+<p>
+Now lets try a little more complex example: an alarm-clock.
+</p>
+
+<p>
+The controller of an alarm-clock has three states:
+<ul>
+<li> <code>idle</code>: the alarm is deactivated </li>
+<li> <code>armed</code>: the clock is waiting </li> 
+<li> <code>ring</code>: the clock is ringing </li>
+</ul>
+</p>
+
+<img src="lessons/lesson4/alarm.png" alt="clock" align="middle">
+
+<p>
+The user controls the alarm-clock through the emission of three signals
+<code>ck_arm</code>, <code>ck_off</code>
+and <code>ck_snooze</code>. An additional signal <code>ck_bip</code>
+is emitted when the alarm starts ringing.
+</p>

@@ -1,0 +1,30 @@
+<p>
+Now we declare the control signals.
+</p>
+
+<p><pre class="code">
+signal switch_on, switch_off;;
+</pre></p>
+
+<p>
+Then we can run the controller,
+</p>
+
+<p><pre class="code">
+#run light switch_on switch_off;;
+</pre></p>
+
+<p>
+and control the light via the emission of signals <code>switch_on</code>
+and <code>switch_off</code>.
+</p>
+
+<p><pre class="code">
+emit switch_on;;
+</pre></p>
+
+<p><pre class="code">
+emit switch_off;;
+</pre></p>
+
+
