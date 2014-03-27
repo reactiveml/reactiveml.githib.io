@@ -1,0 +1,35 @@
+This virtual machine contains the ReactiveML distribution and the
+examples accompanying the SAS14 submission number 3.
+
+The user and password for this machine are:
+  login: sas14
+  password: sas14
+
+To try the examples, in a terminal you can go into the sas14-examples
+directory:
+  $ cd ~/sas14-examples
+
+Compile the examples:
+  $ make
+
+Then, display the type of each expression using emacs. For example,
+you can open the file first_program.rml:
+  $ emacs first_program.rml &
+
+Put the cursor on the "clock" identifier (line 1, character 12).
+Press Ctrl-c Ctrl-t. The type of the process is displayed at the
+bottom of the window.
+
+You can also display the behavior of each expression. For example, you
+can put the cursor on the "loop" keyword (line 3, character 3).
+Press Ctrl-c Ctrl-s.
+
+To have more information on how to compile ReactiveML programs, you
+can visit the ReactiveML web site:
+  http://reactiveml.org/documentation.html
+When compiling a ReactiveML file, adding the options -dreactivity
+and -dtypes allows to display types and reactivity behaviors in emacs.
+
+You can also use the on-line version of the toplevel:
+  http://reactiveml.org/sas14/tryrml
+
