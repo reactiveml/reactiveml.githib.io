@@ -1,5 +1,6 @@
 This virtual machine contains the ReactiveML distribution and the
-examples accompanying the SAS14 submission number 3.
+examples accompanying the SAS14 paper entitled "Reactivity of
+Cooperative Systems".
 
 The user and password for this machine are:
   login: sas14
@@ -33,3 +34,4 @@ and -dtypes allows to display types and reactivity behaviors in emacs.
 You can also use the on-line version of the toplevel:
   http://reactiveml.org/sas14/tryrml
 
+Louis Mandel and Cédric Pasteur
