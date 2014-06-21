@@ -1,0 +1,32 @@
+<p>
+This two states automaton can be implemented with two mutually
+recursive processes.  Transitions are triggered by the emission of
+signals <code>switch_on</code> and <code>switch_off</code>. The
+initial state is <code>state_off</code>.
+</p>
+
+<p><pre class="code">
+let process light switch_on switch_off =
+
+  let rec process state_on =
+    do
+      print_endline "Light on!";
+      halt
+    until switch_off -> run state_off
+    done
+
+  and process state_off =
+    do
+      print_endline "Light off!";
+      halt
+    until switch_on -> run state_on
+    done
+
+  in
+  run state_off
+</pre></p>
+
+<p>
+When a state becomes active, the message <code>Light on!</code>
+or <code>Light off!</code> is displayed.
+</p>

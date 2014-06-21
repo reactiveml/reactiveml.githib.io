@@ -1,0 +1,34 @@
+<p>
+Let us build the three state automata using three mutually recursive
+processes.
+</p>
+
+<p><pre class="code">
+let process alarm ck_off ck_bip ck_snooze ck_arm =
+  let rec process idle =
+    do halt
+    until
+    | ck_arm (d) -> print_endline "Armed!";
+                    run (armed d)
+    done
+
+  and process armed d =
+    do run (sleep d);
+       emit ck_bip; pause
+    until
+    | ck_off -> print_endline "Off!";
+                run idle
+    | ck_bip -> run ring
+    done
+
+  and process ring =
+    do run bipbipbipbip
+    until
+    | ck_snooze -> print_endline "Snooze!";
+                   run (armed 200)
+    | ck_off -> print_endline "Off!";
+                run idle
+    done
+  in
+  run idle
+</pre></p>
