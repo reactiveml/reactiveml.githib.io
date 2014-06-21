@@ -1483,7 +1483,7 @@ Returns the material printed with <code class="code">str_formatter</code>, flush
 </td></tr>
 <tr><td><a href="Rml_list.html#VALfold_left">fold_left</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.fold_left p a [b1; ...; bn]</code> is
+<code class="code">run Rml_list.fold_left p a [b1; ...; bn]</code> is
     <code class="code">run p (... (run p (run p a b1) b2) ...) bn</code>.
 </div>
 </td></tr>
@@ -1502,7 +1502,7 @@ Returns the material printed with <code class="code">str_formatter</code>, flush
 </td></tr>
 <tr><td><a href="Rml_list.html#VALfold_left2">fold_left2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.fold_left2 p a [b1; ...; bn] [c1; ...; cn]</code> is
+<code class="code">run Rml_list.fold_left2 p a [b1; ...; bn] [c1; ...; cn]</code> is
     <code class="code">run p (... (run p (run p a b1 c1) b2 c2) ...) bn cn</code>.
 </div>
 </td></tr>
@@ -1514,7 +1514,7 @@ Returns the material printed with <code class="code">str_formatter</code>, flush
 </td></tr>
 <tr><td><a href="Rml_list.html#VALfold_right">fold_right</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.fold_right p [a1; ...; an] b</code> is
+<code class="code">run Rml_list.fold_right p [a1; ...; an] b</code> is
     <code class="code">run p a1 (run p a2 (... (run p an b) ...))</code>.
 </div>
 </td></tr>
@@ -1533,7 +1533,7 @@ Returns the material printed with <code class="code">str_formatter</code>, flush
 </td></tr>
 <tr><td><a href="Rml_list.html#VALfold_right2">fold_right2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">List.fold_right2 p [a1; ...; an] [b1; ...; bn] c</code> is
+<code class="code">run List.fold_right2 p [a1; ...; an] [b1; ...; bn] c</code> is
     <code class="code">run p a1 b1 (run p a2 b2 (... (run p an bn c) ...))</code>.
 </div>
 </td></tr>
@@ -2188,7 +2188,7 @@ Return <code class="code">true</code> if the file name is relative to the curren
 </td></tr>
 <tr><td><a href="Rml_list.html#VALiter">iter</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.iter p [a1; ...; an]</code> applies process <code class="code">p</code> in turn to
+<code class="code">run Rml_list.iter p [a1; ...; an]</code> applies process <code class="code">p</code> in turn to
     <code class="code">a1; ...; an</code>.
 </div>
 </td></tr>
@@ -2217,7 +2217,7 @@ Return <code class="code">true</code> if the file name is relative to the curren
 </td></tr>
 <tr><td><a href="Rml_list.html#VALiter2">iter2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.iter2 p [a1; ...; an]</code> applies process <code class="code">p</code> in turn to
+<code class="code">run Rml_list.iter2 p [a1; ...; an]</code> applies process <code class="code">p</code> in turn to
     <code class="code">a1; ...; an</code> and <code class="code">b1; ...; bn</code>.
 </div>
 </td></tr>
@@ -2591,7 +2591,7 @@ Construct the lexer function.
 </td></tr>
 <tr><td><a href="Rml_list.html#VALmap">map</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.map p [a1; ...; an]</code> applies process <code class="code">p</code> to <code class="code">a1, ..., an</code>,
+<code class="code">run Rml_list.map p [a1; ...; an]</code> applies process <code class="code">p</code> to <code class="code">a1, ..., an</code>,
     and builds the list <code class="code">[run p a1; ...; run p an]</code>
     with the results returned by <code class="code">p</code>.
 </div>
@@ -2612,7 +2612,7 @@ Construct the lexer function.
 </td></tr>
 <tr><td><a href="Rml_list.html#VALmap2">map2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.map2 p [a1; ...; an] [b1; ...; bn]</code> is
+<code class="code">run Rml_list.map2 p [a1; ...; an] [b1; ...; bn]</code> is
     <code class="code">[run p a1 b1; ...; run p an bn]</code>.
 </div>
 </td></tr>
@@ -3228,26 +3228,26 @@ Tests if the maximum number of boxes allowed have already been opened.
 <tr><td align="left"><br>P</td></tr>
 <tr><td><a href="Rml_list.html#VALpar_iter">par_iter</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.par_iter p [a1; ...; an]</code> applies process <code class="code">p</code> in parallel to
+<code class="code">run Rml_list.par_iter p [a1; ...; an]</code> applies process <code class="code">p</code> in parallel to
     <code class="code">a1; ...; an</code>.
 </div>
 </td></tr>
 <tr><td><a href="Rml_list.html#VALpar_iter2">par_iter2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.par_iter2 p [a1; ...; an]</code> applies process <code class="code">p</code> in parallel to
+<code class="code">run Rml_list.par_iter2 p [a1; ...; an]</code> applies process <code class="code">p</code> in parallel to
     <code class="code">a1; ...; an</code> and <code class="code">b1; ...; bn</code>.
 </div>
 </td></tr>
 <tr><td><a href="Rml_list.html#VALpar_map">par_map</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.map p [a1; ...; an]</code> applies process <code class="code">p</code> to <code class="code">a1, ..., an</code>
+<code class="code">run Rml_list.map p [a1; ...; an]</code> applies process <code class="code">p</code> to <code class="code">a1, ..., an</code>
     in parallel, and builds the list <code class="code">[run p a1; ...; run p an]</code> with
     the results returned by <code class="code">p</code>.
 </div>
 </td></tr>
 <tr><td><a href="Rml_list.html#VALpar_map2">par_map2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.map2 p [a1; ...; an] [b1; ...; bn]</code> is
+<code class="code">run Rml_list.map2 p [a1; ...; an] [b1; ...; bn]</code> is
     <code class="code">[run p a1 b1; ...; run p an bn]</code> and runs the processes in paralell.
 </div>
 </td></tr>
@@ -3892,7 +3892,7 @@ List reversal.
 </td></tr>
 <tr><td><a href="Rml_list.html#VALrev_map">rev_map</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_List.rev_map p l</code> gives the same result as
+<code class="code">run Rml_List.rev_map p l</code> gives the same result as
     <a href="List.html#VALrev"><code class="code">List.rev</code></a><code class="code"> (</code><a href="Rml_list.html#VALmap"><code class="code">Rml_list.map</code></a><code class="code"> p l)</code>, but is tail-recursive and
     more efficient.
 </div>
@@ -3906,7 +3906,7 @@ List reversal.
 </td></tr>
 <tr><td><a href="Rml_list.html#VALrev_map2">rev_map2</a> [<a href="Rml_list.html">Rml_list</a>]</td>
 <td><div class="info">
-<code class="code">Rml_list.rev_map2 p l1 l2</code> gives the same result as
+<code class="code">run Rml_list.rev_map2 p l1 l2</code> gives the same result as
     <a href="List.html#VALrev"><code class="code">List.rev</code></a><code class="code"> (</code><a href="Rml_list.html#VALmap2"><code class="code">Rml_list.map2</code></a><code class="code"> p l1 l2)</code>, but is tail-recursive and
     more efficient.
 </div>

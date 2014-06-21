@@ -1,5 +1,14 @@
 Warning: incompatible changes with previous versions are marked with "*".
 
+ReactiveML 1.09.03 (2014-06-21):
+--------------------------------
+ - rmllib: bug fixes.
+ - install: bug fixes.
+ - tutorial: new lesson.
+ - doc: bug fixes.
+ - emacs-mode: bug fixes.
+
+
 ReactiveML 1.09.02 (2014-01-08):
 --------------------------------
  * New construct: "signal s memory v gather f in e" declares a signal
