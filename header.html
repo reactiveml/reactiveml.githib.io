@@ -16,33 +16,40 @@
 
 <body>
   <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="<#ROOTDIR>/index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
 
-    <div class="masthead">
-      <div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-	  <div class="container">
 
-	    <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
-	      <!-- <span class="icon-bar"></span> -->
-	      <!-- <span class="icon-bar"></span> -->
-	      <!-- <span class="icon-bar"></span> -->
-	      menu
-	    </a>
 
-	    <a class="brand" href="<#ROOTDIR>/index.html">ReactiveML</a>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="<#ROOTDIR>/index.html">Home</a></li>
+            <li><a href="<#ROOTDIR>/tryrml/tryrml.html">Try online</a></li>
+            <li><a href="<#ROOTDIR>/documentation.html">Documentation</a></li>
+            <li class="dropdown">
+              <a href="<#ROOTDIR>/examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="glonemo/index.html">Glonemo</a></li>
+                <li><a href="reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="<#ROOTDIR>/videos.html">Videos</a></li>
+            <li><a href="<#ROOTDIR>/publications.html">Publications</a></li>
+            <li><a href="<#ROOTDIR>/contact.html">Contact</a></li>
+          </ul>
 
-	    <div class="nav-collapse collapse">
-	      <ul class="nav">
-		<li><a href="<#ROOTDIR>/index.html">Home</a></li>
-		<li><a href="<#ROOTDIR>/tryrml/tryrml.html">Try online</a></li>
-		<li><a href="<#ROOTDIR>/documentation.html">Documentation</a></li>
-		<li><a href="<#ROOTDIR>/examples.html">Examples</a></li>
-		<li><a href="<#ROOTDIR>/videos.html">Videos</a></li>
-		<li><a href="<#ROOTDIR>/publications.html">Publications</a></li>
-		<li><a href="<#ROOTDIR>/contact.html">Contact</a></li>
-	      </ul>
-	    </div> <!-- /nav-collapse -->
-	  </div> <!-- /container -->
-	</div> <!-- /navbar-inner -->
-      </div> <!-- /navbar -->
-    </div> <!-- /masthead -->
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>

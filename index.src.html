@@ -13,62 +13,85 @@
     <!-- problems. --> <!-- ReactiveML mixes the temporal expressiveness of -->
     <!-- synchronous languages with the power of functional programming. -->
   </p>
-  <br>
-  <div id='content' class='row-fluid'>
-    <div class='span6 TryRML'>
+
+  <div id="content" class="row spaced">
+    <div class="col-md-4">
       <p>
-      <a class="btn btn-large btn-primary"
-         href="tryrml/tryrml.html">
-        <!-- <i class="icon-globe icon-white"></i> -->
-        Try it online
-      </a>
+        <a class="btn btn-default btn-lg fixed-size"
+           href="<#ROOTDIR>/distrib">
+          Download
+        </a>
       </p>
     </div>
-    <div class='span6 Download'>
+    <div class="col-md-4">
       <p>
-      <a class="btn btn-large btn-primary"
-         href="<#ROOTDIR>/distrib">
-        <!-- <i class="icon-globe icon-white"></i> -->
-        Download
-      </a>
+        <a class="btn btn-default btn-lg fixed-size"
+           href="tryrml/tryrml.html">
+          Try it online
+        </a>
       </p>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default btn-lg dropdown-toggle fixed-size" data-toggle="dropdown">
+          Examples <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="examples.html">Basic Examples</a></li>
+          <li class="divider"></li>
+          <li><a href="examples/simulator_elip/index.html">Network Simulation</a></li>
+          <li><a href="glonemo/index.html">Glonemo</a></li>
+          <li><a href="reactive_asco/index.html">Reactive Asco</a></li>
+        </ul>
     </div>
   </div>
 </div>
 
-<h4>What is ReactiveML?</h4>
-<p>
-  ReactiveML is a general purpose programming language extended with
-  concurrency constructs to ease the programming of interactive
-  systems. The concurrency model of the language originates from the
-  synchronous model that is used to program real-time
-  applications. Therefore, it takes advantages of the expressiveness
-  and determinism of the model and removes the real-time constraints.
-  Click <a href="<#ROOTDIR>/videos.html">here</a> to see some video
-  about ReactiveML.
-</p>
-<br/>
-<h4>What are the uses of ReactiveML?</h4>
-<p>
-  ReactiveML is dedicated to the implementation of interactive systems
-  as found in video games and simulation problems. For example, it has
-  been used to simulate power consumption in sensor networks
-  (<a href="<#ROOTDIR>/glonemo/">Glonemo</a>) or to implement a
-  sequencer for mixed music
-  (<a href="<#ROOTDIR>/reactive_asco/index.html">ReactiveAsco</a>). More
-  examples are given in
-  the <a href="<#ROOTDIR>/examples.html">examples page</a>.
-</p>
-<br/>
-<h4>How to learn ReactiveML?</h4>
-<p>
-  Start learning ReactiveML with
-  the <a href="<#ROOTDIR>/tryrml/tryrml.html">interactive tutorial</a>
-  available
-  online. A <a href="<#ROOTDIR>/documentation.html">documentation</a>
-  explains how to compile ReactiveML programs and gives the syntax and
-  intuitive semantics of the reactive
-  constructs. Finally, <a href="<#ROOTDIR>/publications.html">academic
-  publications</a> describes precisely the language, its static
-  analysis and implementation.
-</p>
+
+
+ <div id='content' class='row'>
+    <div class='col-md-4'>
+      <h4>What is ReactiveML?</h4>
+      <p>
+        ReactiveML is a general purpose programming language extended with
+        concurrency constructs to ease the programming of interactive
+        systems. The concurrency model of the language originates from the
+        synchronous model that is used to program real-time
+        applications. Therefore, it takes advantages of the expressiveness
+        and determinism of the model and removes the real-time constraints.
+        Click <a href="<#ROOTDIR>/videos.html">here</a> to see some video
+        about ReactiveML.
+      </p>
+
+
+    </div>
+    <div class='col-md-4'>
+      <h4>What are the uses of ReactiveML?</h4>
+      <p>
+        ReactiveML is dedicated to the implementation of interactive systems
+        as found in video games and simulation problems. For example, it has
+        been used to simulate power consumption in sensor networks
+        (<a href="<#ROOTDIR>/glonemo/">Glonemo</a>) or to implement a
+        sequencer for mixed music
+        (<a href="<#ROOTDIR>/reactive_asco/index.html">ReactiveAsco</a>). More
+        examples are given in
+        the <a href="<#ROOTDIR>/examples.html">examples page</a>.
+      </p>
+
+
+    </div>
+    <div class='col-md-4'>
+      <h4>How to learn ReactiveML?</h4>
+      <p>
+        Start learning ReactiveML with
+        the <a href="<#ROOTDIR>/tryrml/tryrml.html">interactive tutorial</a>
+        available
+        online. A <a href="<#ROOTDIR>/documentation.html">documentation</a>
+        explains how to compile ReactiveML programs and gives the syntax and
+        intuitive semantics of the reactive
+        constructs. Finally, <a href="<#ROOTDIR>/publications.html">academic
+          publications</a> describes precisely the language, its static
+        analysis and implementation.
+      </p>
+
+    </div>
+  </div>
