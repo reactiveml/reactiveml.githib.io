@@ -72,12 +72,12 @@ video {
     color: white;
 }
 
-/* .navbar .nav li.dropdown.open > .dropdown-toggle, */
-/* .navbar .nav li.dropdown.active > .dropdown-toggle, */
-/* .navbar .nav li.dropdown.open.active > .dropdown-toggle { */
-/* background-color: #7298D8; */
-/* color:white; */
-/* } */
+.navbar .nav li.dropdown.open > .dropdown-toggle,
+.navbar .nav li.dropdown.active > .dropdown-toggle,
+.navbar .nav li.dropdown.open.active > .dropdown-toggle {
+background-color: #7298D8;
+color:white;
+}
 
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
@@ -88,11 +88,13 @@ video {
     color: white;
 }
 
-/* .dropdown-menu > li > a:hover, */
-/* .dropdown-menu > li > a:focus { */
-/*     background-color: #7298D8; */
-/*     color: white; */
-/* } */
+
+.navbar .nav li.dropdown.open > .dropdown-toggle,
+.navbar .nav li.dropdown.active > .dropdown-toggle,
+.navbar .nav li.dropdown.open.active > .dropdown-toggle {
+    background-color: #7298D8;
+    color:white;
+}
 
 .spaced {
 margin-top: 4em;
