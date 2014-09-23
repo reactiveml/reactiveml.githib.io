@@ -87,8 +87,8 @@ pre {
 
 pre.code {
     border: 1px #000 solid;
-    background-color: #99ccff;
-    /* background-color: #ffff66; */
+    background-color: #E6E8F2;
+    /* background-color: #99ccff; */
     font-size: 12px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -169,8 +169,11 @@ img {
 }
 
 
+
 .btn{
-    color: white;
+    border: 1px solid #CBCBCB;
+    background-color: white;
+    font-weight: bold;
 }
 
 
