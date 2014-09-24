@@ -141,20 +141,20 @@ reactive_asco/code/jacques.html: reactive_asco/code/jacques.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
 		header.html reactive_asco/code/footer.html reactive_asco/code/jacques.src.html > $@
 
-emsoft13/code/header.html: header.html emsoft13/code/header.src.html
-	cat header.html emsoft13/code/header.src.html > $@
+emsoft13/code/header.html: emsoft13/header.html emsoft13/code/header.src.html
+	cat emsoft13/header.html emsoft13/code/header.src.html > $@
 
-emsoft13/index.html: header.html footer.html emsoft13/index.src.html
+emsoft13/index.html: emsoft13/header.html footer.html emsoft13/index.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
-		header.html emsoft13/footer.html emsoft13/index.src.html > $@
+		emsoft13/header.html emsoft13/footer.html emsoft13/index.src.html > $@
 
-emsoft13/videos.html: header.html footer.html emsoft13/videos.src.html
+emsoft13/videos.html: emsoft13/header.html footer.html emsoft13/videos.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
-		header.html emsoft13/footer.html emsoft13/videos.src.html > $@
+		emsoft13/header.html emsoft13/footer.html emsoft13/videos.src.html > $@
 
-emsoft13/source.html: header.html footer.html emsoft13/source.src.html
+emsoft13/source.html: emsoft13/header.html footer.html emsoft13/source.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
-		header.html emsoft13/footer.html emsoft13/source.src.html > $@
+		emsoft13/header.html emsoft13/footer.html emsoft13/source.src.html > $@
 
 emsoft13/code/types.html: emsoft13/code/header.html emsoft13/code/types.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
@@ -185,21 +185,21 @@ emsoft13/code/syntax.html: emsoft13/code/header.html emsoft13/code/syntax.src.ht
 		emsoft13/code/header.html emsoft13/footer.html emsoft13/code/syntax.src.html > $@
 
 
-farm13/index.html: header.html footer.html farm13/index.src.html
+farm13/index.html: farm13/header.html footer.html farm13/index.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
-		header.html farm13/footer.html farm13/index.src.html > $@
+		farm13/header.html farm13/footer.html farm13/index.src.html > $@
 
-farm13/videos.html: header.html footer.html farm13/videos.src.html
+farm13/videos.html: farm13/header.html footer.html farm13/videos.src.html
 	$(SRC2HTML) ".." "ReactiveML - Reactive Asco" "XXX" \
-		header.html farm13/footer.html farm13/videos.src.html > $@
+		farm13/header.html farm13/footer.html farm13/videos.src.html > $@
 
 farm13/code/jacques.html: farm13/code/jacques.src.html
 	$(SRC2HTML) "../.." "ReactiveML - Reactive Asco" "XXX" \
-		header.html farm13/code/footer.html farm13/code/jacques.src.html > $@
+		farm13/header.html farm13/code/footer.html farm13/code/jacques.src.html > $@
 
-these_pasteur/index.html: header.html footer.html these_pasteur/index.src.html
+these_pasteur/index.html: farm13/header.html footer.html these_pasteur/index.src.html
 	$(SRC2HTML) ".." "These de C. Pasteur" "XXX" \
-		header.html footer.html these_pasteur/index.src.html > $@
+		farm13/header.html footer.html these_pasteur/index.src.html > $@
 
 
 publications/rml.html: publications/rml.bib

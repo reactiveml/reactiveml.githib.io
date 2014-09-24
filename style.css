@@ -1,4 +1,4 @@
-/*** BASICS ***/
+/*************** BASICS ***************/
 
 body {
     padding-top: 80px;
@@ -18,6 +18,8 @@ h1 {
 h2 {
     font-weight: bold;
     text-align: center;
+    margin-top:1em;
+    margin-bottom:0.5em;
 }
 
 h4 {
@@ -27,9 +29,9 @@ h4 {
 
 h3 {
     font-weight: bold;
-    padding-top: 50px;
+    padding-top: 60px;
     padding-bottom: 10px;
-    margin: -50px 0 0;
+    margin: -60px 0 0;
 }
 
 code {
@@ -43,7 +45,7 @@ code {
 }
 
 pre {
-    margin: 0;
+    margin-bottom: 1em;
     /* padding: 0; */
 }
 
@@ -56,7 +58,8 @@ video {
 }
 
 
-/*** NAVIGATION ***/
+
+/*************** NAVIGATION ***************/
 
 .navbar-brand {
   font-weight: bold;
@@ -67,18 +70,7 @@ video {
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-    background-color: #7298D8;
-    color: white;
-}
-
-.navbar .nav li.dropdown.open > .dropdown-toggle,
-.navbar .nav li.dropdown.active > .dropdown-toggle,
-.navbar .nav li.dropdown.open.active > .dropdown-toggle {
-background-color: #7298D8;
-color:white;
-}
-
+.navbar-default .navbar-nav > li > a:focus,
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus,
@@ -88,18 +80,9 @@ color:white;
     color: white;
 }
 
-
-.navbar .nav li.dropdown.open > .dropdown-toggle,
-.navbar .nav li.dropdown.active > .dropdown-toggle,
-.navbar .nav li.dropdown.open.active > .dropdown-toggle {
-    background-color: #7298D8;
-    color:white;
-}
-
-.spaced {
-margin-top: 4em;
-margin-bottom:1em;
-}
+.dropdown:hover .dropdown-menu {
+    display: block;
+ }
 
 .sidebar-nav {
     position:fixed;
@@ -107,67 +90,13 @@ margin-bottom:1em;
     background-color: #f5f5f5;
     border: 1px solid #CBCBCB;
     border-radius: 5px;
-}
-
-.sidebar-nav a {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     line-height:0.3em;
 }
 
-.sidebar-nav ul{
-    display: block;
-}
-
+.sidebar-nav ul,
 .sidebar-nav li{
     display: block;
-
 }
-
-.sidebar-nav a:hover,
-.sidebar-nav a:focus,
-.sidebar-nav a:active,
-.sidebar-nav a .active,
-.open .dropdown-toggle.btn {
-  color: white;
-}
-
-.sidebar-nav li a:hover,
-.sidebar-nav li:focus,
-.sidebar-nav li:active,
-.sidebar-nav li .active,
-.open .dropdown-toggle.btn {
-  background-color: #7298D8;
-}
-
-
-@media (max-height: 700px) {
-    .sidebar-nav {
-        position:static;
-        width: auto;
-    }
-}
-
-
-@media (max-width: 990px) {
-    .sidebar-nav {
-        position:static;
-        width:auto;
-        margin-top:3em;
-    }
-}
-
-
-@media (max-width: 768px) {
-    .sidebar-nav {
-        position:static;
-        width:auto;
-        margin-top:0;
-    }
-}
-
-
 
 .nav > li.disabled.nav-header > a {
     color: black;
@@ -178,12 +107,40 @@ margin-bottom:1em;
     margin-top: 1em;
 }
 
-.black{
-    color: black;
+.sidebar-nav li a:hover,
+.sidebar-nav li:focus,
+.sidebar-nav li:active,
+.sidebar-nav li .active,
+.open .dropdown-toggle.btn {
+  background-color: #7298D8;
+   color: white;
 }
 
 
-/*** CONTENT ***/
+@media (max-height: 700px) {
+    .sidebar-nav {
+        position:static;
+        width: auto;
+    }
+}
+
+@media (max-width: 990px) {
+    .sidebar-nav {
+        position:static;
+        width:auto;
+        margin-top:3em;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar-nav {
+        position:static;
+        width:auto;
+        margin-top:0;
+    }
+}
+
+/*************** CONTENT ***************/
 
 .thumbnail .caption p {
     text-align: center;
@@ -234,10 +191,6 @@ margin-bottom:1em;
 }
 
 
-.fixed-size {
-    width: 150px !important;
-}
-
 @media (max-width: 979px) {
     .jumbotron h1 {
         font-size: 50pt;
@@ -251,8 +204,24 @@ margin-bottom:1em;
 }
 
 
+/*************** MISC ***************/
 
-/*** MEDIA ***/
+.black{
+    color: black;
+}
+
+.fixed-size {
+    width: 150px !important;
+}
+
+.spaced {
+margin-top: 4em;
+margin-bottom:1em;
+}
+
+
+/*************** MEDIA ***************/
+
 .flex-video {
   position: relative;
   padding-top: 25px;
@@ -274,7 +243,11 @@ margin-bottom:1em;
   width: 100%;
   height: 100%;
 }
-@media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px), only screen and (max-width: 767px) {
+@media only screen and (max-device-width: 800px),
+only screen and (device-width: 1024px) and (device-height: 600px),
+only screen and (width: 1280px) and (orientation: landscape),
+only screen and (device-width: 800px),
+only screen and (max-width: 767px) {
   .flex-video { padding-top: 0; }
 }
 
@@ -285,68 +258,80 @@ margin-bottom:1em;
     -webkit-appearance:none;
     -moz-apperance:none;
     background-color:#ddd;
-        border: 1px solid #bbb;
-        height:.5em;
-        border-radius:.5em;
+    border: 1px solid #bbb;
+    height:.5em;
+    border-radius:.5em;
     width:100%;
-        margin:-2px;
-        padding:0 !important;
-        line-height:0;
+    margin:-2px;
+    padding:0 !important;
+    line-height:0;
 }
 .playa input[type=range]::-webkit-slider-thumb {
     -webkit-appearance:none;
     -moz-apperance:none;
-        z-index:3;
-        height:1em;
-        width:1em;
-        border-radius:1em;
-        border:1px solid #aaa;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1));
+    z-index:3;
+    height:1em;
+    width:1em;
+    border-radius:1em;
+    border:1px solid #aaa;
+    background-image: -webkit-gradient(linear,
+                                       left top,
+                                       left bottom,
+                                       color-stop(0, #fefefe),
+                                       color-stop(0.49, #dddddd),
+                                       color-stop(0.51, #d1d1d1),
+                                       color-stop(1, #a1a1a1));
 }
 
-.playa {
-        /*margin:0;*/
-}
-
-.playa  .thumbnail  {
-        width:96%;
-        padding:1.5%;
+.playa .thumbnail  {
+    width:96%;
+    padding:1.5%;
 }
 
 .playa  .btn-group  {
-        text-align:center;
+    text-align:center;
 }
 
 @media (max-width: 979px) and (min-width: 768px){
-        .span4 .playa, .playa.span4{
-                padding:0;
-        }
+    .span4 .playa, .playa.span4{
+        padding:0;
+    }
 }
 @media (min-width: 768px){
-        .playa .btn-group .btn {
-                padding:4px 3px;
-                margin:auto;
-                display:inline-block;
-                float:none;
-        }
-        .playa .btn-group .span1 {
-                width:8%;
-        }
-        .playa .btn-group .span2 {
-                width:16%;
-        }
-        .playa .btn-group .span3 {
-                width:25%;
-        }
-        .playa .btn-group .span4{
-                width:33%;
-        }
-        .playa.span2 .btn-group .btn, .playa.span1 .btn-group .btn, .span2 .playa .btn-group .btn, .span1 .playa .btn-group .btn{
-                width:100%;
-                display:block;
-        }
-        .span4.playa, .span3 .playa, .span2 .playa, .span1 .playa, .playa.span4, .playa.span3, .playa.span2, .playa.span1{
-                padding:0;
-                overflow:hidden;
-        }
+    .playa .btn-group .btn {
+        padding:4px 3px;
+        margin:auto;
+        display:inline-block;
+        float:none;
+    }
+    .playa .btn-group .span1 {
+        width:8%;
+    }
+    .playa .btn-group .span2 {
+        width:16%;
+    }
+    .playa .btn-group .span3 {
+        width:25%;
+    }
+    .playa .btn-group .span4{
+        width:33%;
+    }
+    .playa .span2 .btn-group .btn,
+    .playa .span1 .btn-group .btn,
+    .span2 .playa .btn-group .btn,
+    .span1 .playa .btn-group .btn{
+        width:100%;
+        display:block;
+    }
+    .span4.playa,
+    .span3 .playa,
+    .span2 .playa,
+    .span1 .playa,
+    .playa .span4,
+    .playa .span3,
+    .playa .span2,
+    .playa .span1{
+        padding:0;
+        overflow:hidden;
+    }
 }

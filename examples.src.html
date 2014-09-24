@@ -36,11 +36,11 @@
   <!--     <br><br> -->
 
   <!--     <pre> -->
-  <!-- <col-md- class="type">let</col-md-> <col-md- class="type">process</col-md-> hello_word = -->
-  <!--   <col-md- class="type">signal</col-md-> s <col-md- class="type">in</col-md-> -->
-  <!--   <col-md- class="type">await</col-md-> s; print_string <col-md- class="string">"World!"</col-md-> -->
-  <!--   <col-md- class="constant">||</col-md-> -->
-  <!--   print_string <col-md- class="string">"Hello "</col-md->; <col-md- class="builtin">emit</col-md-> s</pre> -->
+  <!-- <span class="type">let</span> <span class="type">process</span> hello_word = -->
+  <!--   <span class="type">signal</span> s <span class="type">in</span> -->
+  <!--   <span class="type">await</span> s; print_string <span class="string">"World!"</span> -->
+  <!--   <span class="constant">||</span> -->
+  <!--   print_string <span class="string">"Hello "</span>; <span class="builtin">emit</span> s</pre> -->
   <!--   </section> -->
   <!--   <hr> -->
 
@@ -50,19 +50,19 @@
       <br><br
 <!-- *************************** -->
 <pre>
-  <col-md- style="color: #b22222;">(* </col-md-><col-md- style="color: #b22222;">Definition of binary trees. </col-md-><col-md- style="color: #b22222;">*)</col-md->
-  <col-md- style="color: #228b22;">type</col-md-> 'a tree =
-    <col-md- style="color: #008b8b;">|</col-md-> <col-md- style="color: #0000ff;">Empty</col-md->
-    <col-md- style="color: #008b8b;">|</col-md-> <col-md- style="color: #0000ff;">Node</col-md-> <col-md- style="color: #228b22;">of</col-md-> 'a * 'a tree * 'a tree
+  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Definition of binary trees. </span><span style="color: #b22222;">*)</span>
+  <span style="color: #228b22;">type</span> 'a tree =
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Empty</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Node</span> <span style="color: #228b22;">of</span> 'a * 'a tree * 'a tree
 
-  <col-md- style="color: #b22222;">(* </col-md-><col-md- style="color: #b22222;">Breadth first traveral. </col-md-><col-md- style="color: #b22222;">*)</col-md->
-  <col-md- style="color: #228b22;">let</col-md-> <col-md- style="color: #228b22;">rec</col-md-> <col-md- style="color: #228b22;">process</col-md-> iter_breadth f t =
-    <col-md- style="color: #008b8b;">match</col-md-> t <col-md- style="color: #008b8b;">with</col-md->
-    <col-md- style="color: #008b8b;">|</col-md-> <col-md- style="color: #0000ff;">Empty</col-md-> <col-md- style="color: #008b8b;">-&gt;</col-md-> ()
-    <col-md- style="color: #008b8b;">|</col-md-> <col-md- style="color: #0000ff;">Node</col-md-> (x, l, r) <col-md- style="color: #008b8b;">-&gt;</col-md->
+  <span style="color: #b22222;">(* </span><span style="color: #b22222;">Breadth first traveral. </span><span style="color: #b22222;">*)</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> <span style="color: #228b22;">process</span> iter_breadth f t =
+    <span style="color: #008b8b;">match</span> t <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Empty</span> <span style="color: #008b8b;">-&gt;</span> ()
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Node</span> (x, l, r) <span style="color: #008b8b;">-&gt;</span>
         f x;
-        <col-md- style="color: #483d8b;">pause</col-md->;
-        <col-md- style="color: #483d8b;">run</col-md-> (iter_breadth f l) <col-md- style="color: #008b8b;">||</col-md-> <col-md- style="color: #483d8b;">run</col-md-> (iter_breadth f r)</pre>
+        <span style="color: #483d8b;">pause</span>;
+        <span style="color: #483d8b;">run</span> (iter_breadth f l) <span style="color: #008b8b;">||</span> <span style="color: #483d8b;">run</span> (iter_breadth f r)</pre>
 <!-- *************************** -->
     </section>
     <hr>

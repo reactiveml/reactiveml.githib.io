@@ -1,27 +1,26 @@
-<div class="row-fluid">
-  <div class="span3">
-    <div class="well sidebar-nav sidebar-nav-fixed">
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav">
       <ul class="nav nav-list">
-	<li class="nav-header">Try ReactiveML</li>
-	<li><a href="<#ROOTDIR>/tryrml/tryrml.html"><i class="icon-globe icon-black"></i> Try it online</a></li>
-	<li><a href="<#ROOTDIR>/distrib"><i class="icon-globe icon-black"></i> Download</a></li>
+        <li class="nav-header disabled"><a>Try ReactiveML</a></li>
+        <li><a href="<#ROOTDIR>/tryrml/tryrml.html"> Try it online</a></li>
+        <li><a href="<#ROOTDIR>/distrib"> Download</a></li>
 
-	<li class="nav-header">Examples</li>
-        <!-- <li><a href="<#ROOTDIR>/examples.html#hello"><i class="icon-chevron-right"></i> Hello World!</a></li> -->
-        <li><a href="<#ROOTDIR>/examples.html#breadth"><i class="icon-chevron-right"></i> Breadth first traversal</a></li>
-	<li><a href="<#ROOTDIR>/examples.html#jacques"><i class="icon-chevron-right"></i> Frère Jacques</a></li>
-        <li><a href="<#ROOTDIR>/examples.html#nbody"><i class="icon-chevron-right"></i> N-body</a></li>
-        <li><a href="<#ROOTDIR>/examples.html#cell"><i class="icon-chevron-right"></i> Cellular automata</a></li>
+        <li class="nav-header disabled"><a>Examples</a></li>
+        <li><a href="#breadth"> Breadth first traversal</a></li>
+        <li><a href="#jacques"> Frère Jacques</a></li>
+        <li><a href="#nbody"> N-body</a></li>
+        <li><a href="#cell"> Cellular automata</a></li>
 
-	<li class="nav-header">Projects</li>
-        <li><a href="<#ROOTDIR>/examples.html#network"><i class="icon-chevron-right"></i> Network simulation</a></li>
-        <li><a href="<#ROOTDIR>/examples.html#glonemo"><i class="icon-chevron-right"></i> Glonemo</a></li>
-	<li><a href="<#ROOTDIR>/examples.html#reactiveasco"><i class="icon-chevron-right"></i> Reactive Asco</a></li>
+        <li class="nav-header disabled"><a>Projects</a></li>
+        <li><a href="<#ROOTDIR>/examples/simulator_elip/index.html"> Network simulation</a></li>
+        <li><a href="<#ROOTDIR>/glonemo/index.html"> Glonemo</a></li>
+        <li><a href="<#ROOTDIR>/reactive_asco/index.html"> Reactive Asco</a></li>
       </ul>
     </div>
-  </div><!--/span-->
+  </div>
 
-  <div class="span9">
+  <div class="col-md-9">
 
 <h1>Frère Jacques</h1>
 <hr>
@@ -36,12 +35,13 @@
   advantage of the expressiveness of ReactiveML to program the classic
   French musical round "Frère Jacques".
 </p>
-<div class="raw-fluid row">
-  <div class="span6 offset1">
+
+<div class="row">
+  <div class="col-md-6 offset1">
     <audio controls>
       <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
-	      type="audio/mp3">
-	<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+              type="audio/mp3">
+        <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
     </audio>
   </div>
 </div>
@@ -227,12 +227,12 @@ A performance is represented by a signal on which notes to play are sent.
 <p>
   Here is the result of the round:
 </p>
-<div class="raw-fluid row">
-  <div class="span6 offset1">
+<div class="row">
+  <div class="col-md-6 offset1">
     <audio controls>
       <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.mp3"
-	      type="audio/mp3">
-	<source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+              type="audio/mp3">
+        <source src="<#ROOTDIR>/reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
     </audio>
   </div>
 </div>
