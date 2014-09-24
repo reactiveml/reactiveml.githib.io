@@ -1,0 +1,256 @@
+body {
+    padding-top: 80px;
+    padding-bottom: 0px;
+}
+
+p {
+    text-align: justify;
+}
+
+code {
+    text-family: courier;
+    margin: 0;
+    padding: 0;
+}
+
+pre {
+    margin: 0;
+    /* padding: 0; */
+}
+
+.thumbnail .caption p {
+    text-align: center;
+}
+
+blockquote p {
+    font-size: 14px;
+}
+
+
+
+
+/* Customize the navbar links to be fill the entire space of the .navbar */
+
+
+.navbar .brand {
+  float: right;
+  font-weight: bold;
+}
+
+.navbar .btn-navbar {
+    float: left;
+    color: inherit;
+}
+
+.sidebar-nav-fixed {
+    position:fixed;
+}
+
+.sidebar-nav a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+    .sidebar-nav-fixed {
+        width:auto;
+    }
+}
+
+@media (max-height: 720px) {
+    .sidebar-nav-fixed {
+        position:static;
+        width: auto;
+    }
+}
+
+code {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    font-size: 100%;
+    font-family: courier;
+}
+
+
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+h4 {
+  text-align: center;
+}
+
+h3 {
+  padding-top: 50px;
+  padding-bottom: 10px;
+  margin: -50px 0 0;
+}
+
+video {
+  max-width: 100%;
+}
+
+ /* Custom container */
+ .container {
+     margin: 0 auto;
+    max-width: 1000px;
+}
+.container > hr {
+    margin: 60px 0;
+}
+
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    margin: 80px 0;
+    text-align: center;
+}
+
+
+.jumbotron h1 {
+    font-size: 75pt;
+    line-height: 1;
+}
+
+@media (max-width: 979px) {
+    .jumbotron h1 {
+        font-size: 50pt;
+    }
+}
+
+@media (max-width: 500px) {
+    .jumbotron h1 {
+        font-size:35pt;
+    }
+}
+
+
+.jumbotron p {
+    text-align: center;
+}
+
+
+.flex-video {
+  position: relative;
+  padding-top: 25px;
+  padding-bottom: 67.5%;
+  height: 0;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.flex-video.widescreen { padding-bottom: 57.25%; }
+.flex-video.vimeo { padding-top: 0; }
+
+.flex-video iframe,
+.flex-video object,
+.flex-video embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+@media only screen and (max-device-width: 800px),
+only screen and (device-width: 1024px) and (device-height: 600px),
+only screen and (width: 1280px) and (orientation: landscape),
+only screen and (device-width: 800px),
+only screen and (max-width: 767px) {
+  .flex-video { padding-top: 0; }
+}
+
+
+/* Audio player*/
+
+.playa input[type=range] {
+    -webkit-appearance:none;
+    -moz-apperance:none;
+    background-color:#ddd;
+        border: 1px solid #bbb;
+        height:.5em;
+        border-radius:.5em;
+    width:100%;
+        margin:-2px;
+        padding:0 !important;
+        line-height:0;
+}
+.playa input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none;
+    -moz-apperance:none;
+        z-index:3;
+        height:1em;
+        width:1em;
+        border-radius:1em;
+        border:1px solid #aaa;
+    background-image: -webkit-gradient(linear,
+                                       left top,
+                                       left bottom,
+                                       color-stop(0, #fefefe),
+                                       color-stop(0.49, #dddddd),
+                                       color-stop(0.51, #d1d1d1),
+                                       color-stop(1, #a1a1a1));
+}
+
+.playa {
+        /*margin:0;*/
+}
+
+.playa  .thumbnail  {
+        width:96%;
+        padding:1.5%;
+}
+
+.playa  .btn-group  {
+        text-align:center;
+}
+
+@media (max-width: 979px) and (min-width: 768px){
+        .span4 .playa, .playa.span4{
+                padding:0;
+        }
+}
+@media (min-width: 768px){
+        .playa .btn-group .btn {
+                padding:4px 3px;
+                margin:auto;
+                display:inline-block;
+                float:none;
+        }
+        .playa .btn-group .span1 {
+                width:8%;
+        }
+        .playa .btn-group .span2 {
+                width:16%;
+        }
+        .playa .btn-group .span3 {
+                width:25%;
+        }
+        .playa .btn-group .span4{
+                width:33%;
+        }
+        .playa .span2 .btn-group .btn,
+        .playa .span1 .btn-group .btn,
+        .span2 .playa .btn-group .btn,
+        .span1 .playa .btn-group .btn{
+                width:100%;
+                display:block;
+        }
+        .span4.playa,
+        .span3 .playa,
+        .span2 .playa,
+        .span1 .playa,
+        .playa.span4,
+        .playa.span3,
+        .playa.span2,
+        .playa.span1{
+                padding:0;
+                overflow:hidden;
+        }
+}
