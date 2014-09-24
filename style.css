@@ -117,7 +117,7 @@ video {
 }
 
 
-@media (max-height: 700px) {
+@media (max-height: 770px) {
     .sidebar-nav {
         position:static;
         width: auto;
