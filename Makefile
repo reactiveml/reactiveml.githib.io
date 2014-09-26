@@ -199,7 +199,7 @@ farm13/code/jacques.html: farm13/code/jacques.src.html
 
 these_pasteur/index.html: farm13/header.html footer.html these_pasteur/index.src.html
 	$(SRC2HTML) ".." "These de C. Pasteur" "XXX" \
-		farm13/header.html footer.html these_pasteur/index.src.html > $@
+		farm13/header.html farm13/footer.html these_pasteur/index.src.html > $@
 
 
 publications/rml.html: publications/rml.bib
