@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
-<link rel="previous" href="Luc4ocaml.html">
-<link rel="next" href="Marshal.html">
+<link rel="previous" href="Random.html">
+<link rel="next" href="Rml_list.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
@@ -50,22 +50,52 @@
 <link title="String" rel="Chapter" href="String.html">
 <link title="Sys" rel="Chapter" href="Sys.html">
 <link title="Unix" rel="Chapter" href="Unix.html">
-<link title="Weak" rel="Chapter" href="Weak.html"><title>Luc4ocaml_nolbl</title>
+<link title="Weak" rel="Chapter" href="Weak.html"><title>Rml_async</title>
 </head>
 <body>
-<div class="navbar"><a class="pre" href="Luc4ocaml.html" title="Luc4ocaml">Previous</a>
+<div class="navbar"><a class="pre" href="Random.html" title="Random">Previous</a>
 &nbsp;<a class="up" href="index.html" title="Index">Up</a>
-&nbsp;<a class="post" href="Marshal.html" title="Marshal">Next</a>
+&nbsp;<a class="post" href="Rml_list.html" title="Rml_list">Next</a>
 </div>
-<h1>Module <a href="type_Luc4ocaml_nolbl.html">Luc4ocaml_nolbl</a></h1>
+<h1>Module <a href="type_Rml_async.html">Rml_async</a></h1>
 
-<pre><span class="keyword">module</span> Luc4ocaml_nolbl: <code class="code">sig</code> <a href="Luc4ocaml_nolbl.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Lucky ocaml API.<br>
+<pre><span class="keyword">module</span> Rml_async: <code class="code">sig</code> <a href="Rml_async.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Launching asychronous computations.
+<p>
+
+    To use this module, ReactiveML programs need to be compiled with
+    the option -thread.<br>
 </div>
 <hr width="100%">
 <br>
-Lucky ocaml API.<br>
+Launching asychronous computations.
+<p>
 
-<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">int -> bool -> string -> int -> int -> string list -> <a href="Luc4ocaml.html#TYPEstate">Luc4ocaml.state</a></code></pre>
-<pre><span id="VALstep"><span class="keyword">val</span> step</span> : <code class="type"><a href="Luc4ocaml.html#TYPEstep_mode">Luc4ocaml.step_mode</a> -><br>       <a href="Luc4ocaml.html#TYPEstate">Luc4ocaml.state</a> -> <a href="Luc4ocaml.html#TYPEinputs">Luc4ocaml.inputs</a> -> <a href="Luc4ocaml.html#TYPEstate">Luc4ocaml.state</a> * <a href="Luc4ocaml.html#TYPEsolution">Luc4ocaml.solution</a></code></pre>
-<pre><span id="VALstep_se"><span class="keyword">val</span> step_se</span> : <code class="type"><a href="Luc4ocaml.html#TYPEstep_mode">Luc4ocaml.step_mode</a> -><br>       <a href="Luc4ocaml.html#TYPEstate">Luc4ocaml.state</a> <a href="Pervasives.html#TYPEref">Pervasives.ref</a> -> <a href="Luc4ocaml.html#TYPEinputs">Luc4ocaml.inputs</a> -> <a href="Luc4ocaml.html#TYPEsolution">Luc4ocaml.solution</a></code></pre></body></html>
+    To use this module, ReactiveML programs need to be compiled with
+    the option -thread.<br>
+
+<pre><span id="VALproc_of_fun"><span class="keyword">val</span> proc_of_fun</span> : <code class="type">('a -> 'b) -> 'a -> 'b process</code></pre><div class="info ">
+<code class="code">run proc_of_fun f x</code> executes <code class="code">f x</code> in a thread. The execution
+    can last several instants and terminates when the computation of
+    <code class="code">f x</code> terminates. If <code class="code">f x</code> do not terminate, the system remains
+    cooperative.<br>
+</div>
+
+<pre><span id="VALexec"><span class="keyword">val</span> exec</span> : <code class="type">('a, 'b) event -> ('c -> 'a) -> 'c -> unit</code></pre><div class="info ">
+<code class="code">exec term f x</code> spawns the computation of <code class="code">f x</code> in a thread and
+    terminates instantaneously. When the computation of <code class="code">f x</code>
+    terminates, the result is sent on the signal <code class="code">term</code>.<br>
+</div>
+
+<pre><span id="VALsafe_emit"><span class="keyword">val</span> safe_emit</span> : <code class="type">('a, 'b) event -> 'a -> unit</code></pre><div class="info ">
+<code class="code">safe_emit s v</code> will emit the value <code class="code">v</code> on the signal <code class="code">s</code>, but
+    there is no guaranty on the instant of emission. This function can
+    be called from an external thread.<br>
+</div>
+
+<pre><span id="VALyield"><span class="keyword">val</span> yield</span> : <code class="type">unit -> unit</code></pre><div class="info ">
+<code class="code">yield ()</code> re-schedules the calling thread without suspending
+   it. This function can be used to give scheduling hints, telling the
+   thread scheduler that now is a good time to switch to other threads.<br>
+</div>
+</body></html>

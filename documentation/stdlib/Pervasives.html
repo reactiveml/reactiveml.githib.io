@@ -13,7 +13,6 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Arg" rel="Chapter" href="Arg.html">
 <link title="Array" rel="Chapter" href="Array.html">
-<link title="Async" rel="Chapter" href="Async.html">
 <link title="Buffer" rel="Chapter" href="Buffer.html">
 <link title="Callback" rel="Chapter" href="Callback.html">
 <link title="Char" rel="Chapter" href="Char.html">
@@ -41,6 +40,7 @@
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
 <link title="Random" rel="Chapter" href="Random.html">
+<link title="Rml_async" rel="Chapter" href="Rml_async.html">
 <link title="Rml_list" rel="Chapter" href="Rml_list.html">
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
@@ -54,6 +54,7 @@
 <link title="Comparisons" rel="Section" href="#6_Comparisons">
 <link title="Boolean operations" rel="Section" href="#6_Booleanoperations">
 <link title="Integer arithmetic" rel="Section" href="#6_Integerarithmetic">
+<link title="Integer arithmetic" rel="Section" href="#6_Integerarithmetic">
 <link title="Floating-point arithmetic" rel="Section" href="#6_Floatingpointarithmetic">
 <link title="String operations" rel="Section" href="#6_Stringoperations">
 <link title="Character operations" rel="Section" href="#6_Characteroperations">
@@ -64,13 +65,16 @@
 <link title="Input/output" rel="Section" href="#6_Inputoutput">
 <link title="References" rel="Section" href="#6_References">
 <link title="Operations on format strings" rel="Section" href="#6_Operationsonformatstrings">
+<link title="Operations on format strings" rel="Section" href="#6_Operationsonformatstrings">
 <link title="Program termination" rel="Section" href="#6_Programtermination">
+<link title="For system use only, not for the casual user" rel="Section" href="#6_Forsystemuseonlynotforthecasualuser">
 <link title="Bitwise operations" rel="Subsection" href="#7_Bitwiseoperations">
 <link title="Output functions on standard output" rel="Subsection" href="#7_Outputfunctionsonstandardoutput">
 <link title="Output functions on standard error" rel="Subsection" href="#7_Outputfunctionsonstandarderror">
 <link title="Input functions on standard input" rel="Subsection" href="#7_Inputfunctionsonstandardinput">
 <link title="General output functions" rel="Subsection" href="#7_Generaloutputfunctions">
 <link title="General input functions" rel="Subsection" href="#7_Generalinputfunctions">
+<link title="Operations on large files" rel="Subsection" href="#7_Operationsonlargefiles">
 <link title="Operations on large files" rel="Subsection" href="#7_Operationsonlargefiles">
 <title>Pervasives</title>
 </head>
@@ -160,6 +164,18 @@ A special case of Sys_error raised when no I/O is possible on a
 </div>
 
 <pre><span id="EXCEPTIONUndefined_recursive_module"><span class="keyword">exception</span> Undefined_recursive_module</span> <span class="keyword">of</span> <code class="type">(string * int * int)</code></pre>
+<br>
+The initially opened module.
+<p>
+
+   This module provides the basic operations over the built-in types
+   (numbers, booleans, strings, exceptions, references, lists, arrays,
+   input-output channels, ...)
+<p>
+
+   This module is automatically opened at the beginning of each compilation.
+   All components of this module can therefore be referred by their short
+   name, without prefixing them by <code class="code">Pervasives</code>.<br>
 <br>
 The initially opened module.
 <p>
@@ -281,6 +297,8 @@ The boolean ``or''. Evaluation is sequential, left-to-right:
    in <code class="code">e1 or e2</code>, <code class="code">e1</code> is evaluated first, and if it returns <code class="code">true</code>,
    <code class="code">e2</code> is not evaluated at all.<br>
 </div>
+<br>
+<h6 id="6_Integerarithmetic">Integer arithmetic</h6><br>
 <br>
 <h6 id="6_Integerarithmetic">Integer arithmetic</h6><br>
 <br>
@@ -563,35 +581,50 @@ The smallest positive float <code class="code">x</code> such that <code class="c
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTfpclass.FP_normal"><span class="constructor">FP_normal</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Normal number, none of the below</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Normal number, none of the below<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTfpclass.FP_subnormal"><span class="constructor">FP_subnormal</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Number very close to 0.0, has reduced precision</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Number very close to 0.0, has reduced precision<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTfpclass.FP_zero"><span class="constructor">FP_zero</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Number is 0.0 or -0.0</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Number is 0.0 or -0.0<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTfpclass.FP_infinite"><span class="constructor">FP_infinite</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Number is positive or negative infinity</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Number is positive or negative infinity<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTfpclass.FP_nan"><span class="constructor">FP_nan</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Not a number: result of an undefined operation</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Not a number: result of an undefined operation<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
 <div class="info ">
@@ -805,63 +838,90 @@ Flush standard output, then read one line from standard input
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_rdonly"><span class="constructor">Open_rdonly</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >open for reading.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+open for reading.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_wronly"><span class="constructor">Open_wronly</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >open for writing.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+open for writing.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_append"><span class="constructor">Open_append</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >open for appending: always write at end of file.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+open for appending: always write at end of file.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_creat"><span class="constructor">Open_creat</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >create the file if it does not exist.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+create the file if it does not exist.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_trunc"><span class="constructor">Open_trunc</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >empty the file if it already exists.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+empty the file if it already exists.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_excl"><span class="constructor">Open_excl</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >fail if the file already exists.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+fail if the file already exists.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_binary"><span class="constructor">Open_binary</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >open in binary mode (no conversion).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+open in binary mode (no conversion).<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_text"><span class="constructor">Open_text</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >open in text mode (may perform conversions).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+open in text mode (may perform conversions).<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTopen_flag.Open_nonblock"><span class="constructor">Open_nonblock</span></span></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >open in non-blocking mode.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+open in non-blocking mode.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
 <div class="info ">
@@ -1112,6 +1172,15 @@ Operations on large files.
   regular integers (type <code class="code">int</code>), these alternate functions allow
   operating on files whose sizes are greater than <code class="code">max_int</code>.<br>
 <br>
+<div class="h7" id="7_Operationsonlargefiles">Operations on large files</div><br>
+<br>
+Operations on large files.
+  This sub-module provides 64-bit variants of the channel functions
+  that manipulate file positions and file sizes.  By representing
+  positions and sizes by 64-bit integers (type <code class="code">int64</code>) instead of
+  regular integers (type <code class="code">int</code>), these alternate functions allow
+  operating on files whose sizes are greater than <code class="code">max_int</code>.<br>
+<br>
 <h6 id="6_References">References</h6><br>
 
 <pre><code><span id="TYPEref"><span class="keyword">type</span> <code class="type">'a</code> ref</span> = {</code></pre><table class="typetable">
@@ -1153,6 +1222,8 @@ Increment the integer contained in the given reference.
 Decrement the integer contained in the given reference.
    Equivalent to <code class="code">fun r -&gt; r := pred !r</code>.<br>
 </div>
+<br>
+<h6 id="6_Operationsonformatstrings">Operations on format strings</h6><br>
 <br>
 <h6 id="6_Operationsonformatstrings">Operations on format strings</h6><br>
 <br>
@@ -1207,4 +1278,9 @@ Register the given function to be called at program
    The functions are called in ``last in, first out'' order:
    the function most recently added with <code class="code">at_exit</code> is called first.<br>
 </div>
-</body></html>
+<br>
+<h6 id="6_Forsystemuseonlynotforthecasualuser">For system use only, not for the casual user</h6><br>
+
+<pre><span id="VALvalid_float_lexem"><span class="keyword">val</span> valid_float_lexem</span> : <code class="type">string -> string</code></pre>
+<pre><span id="VALunsafe_really_input"><span class="keyword">val</span> unsafe_really_input</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">in_channel</a> -> string -> int -> int -> unit</code></pre>
+<pre><span id="VALdo_at_exit"><span class="keyword">val</span> do_at_exit</span> : <code class="type">unit -> unit</code></pre></body></html>

@@ -9,7 +9,6 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Arg" rel="Chapter" href="Arg.html">
 <link title="Array" rel="Chapter" href="Array.html">
-<link title="Async" rel="Chapter" href="Async.html">
 <link title="Buffer" rel="Chapter" href="Buffer.html">
 <link title="Callback" rel="Chapter" href="Callback.html">
 <link title="Char" rel="Chapter" href="Char.html">
@@ -37,6 +36,7 @@
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
 <link title="Random" rel="Chapter" href="Random.html">
+<link title="Rml_async" rel="Chapter" href="Rml_async.html">
 <link title="Rml_list" rel="Chapter" href="Rml_list.html">
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
@@ -1053,6 +1053,8 @@ Integer division.
 Division
 </div>
 </td></tr>
+<tr><td><a href="Pervasives.html#VALdo_at_exit">do_at_exit</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
 <tr><td><a href="Obj.html#VALdouble_array_tag">double_array_tag</a> [<a href="Obj.html">Obj</a>]</td>
 <td></td></tr>
 <tr><td><a href="Obj.html#VALdouble_tag">double_tag</a> [<a href="Obj.html">Obj</a>]</td>
@@ -1121,6 +1123,8 @@ A value of type <code class="code">position</code>, guaranteed to be different f
    valid position.
 </div>
 </td></tr>
+<tr><td><a href="Stream.html#VALdump">dump</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="Graphics.html#VALdump_image">dump_image</a> [<a href="Graphics.html">Graphics</a>]</td>
 <td><div class="info">
 Convert an image to a color matrix.
@@ -1197,9 +1201,9 @@ Return a string representing the given character,
 Establish a server on the given address.
 </div>
 </td></tr>
-<tr><td><a href="Async.html#VALexec">exec</a> [<a href="Async.html">Async</a>]</td>
+<tr><td><a href="Rml_async.html#VALexec">exec</a> [<a href="Rml_async.html">Rml_async</a>]</td>
 <td><div class="info">
-<code class="code">exec term f x</code> spawn the computation of <code class="code">f x</code> in a thread and
+<code class="code">exec term f x</code> spawns the computation of <code class="code">f x</code> in a thread and
     terminates instantaneously.
 </div>
 </td></tr>
@@ -1580,6 +1584,24 @@ Default background and foreground colors (usually, either black
 <tr><td><a href="Unix.html#VALfork">fork</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Fork a new process.
+</div>
+</td></tr>
+<tr><td><a href="Nativeint.html#VALformat">format</a> [<a href="Nativeint.html">Nativeint</a>]</td>
+<td><div class="info">
+<code class="code">Nativeint.format fmt n</code> return the string representation of the
+   native integer <code class="code">n</code> in the format specified by <code class="code">fmt</code>.
+</div>
+</td></tr>
+<tr><td><a href="Int64.html#VALformat">format</a> [<a href="Int64.html">Int64</a>]</td>
+<td><div class="info">
+<code class="code">Int64.format fmt n</code> return the string representation of the
+   64-bit integer <code class="code">n</code> in the format specified by <code class="code">fmt</code>.
+</div>
+</td></tr>
+<tr><td><a href="Int32.html#VALformat">format</a> [<a href="Int32.html">Int32</a>]</td>
+<td><div class="info">
+<code class="code">Int32.format fmt n</code> return the string representation of the
+   32-bit integer <code class="code">n</code> in the format specified by <code class="code">fmt</code>.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALformat_of_string">format_of_string</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -1997,6 +2019,10 @@ The bytes representing a marshaled value are composed of
 The complex number <code class="code">i</code>.
 </div>
 </td></tr>
+<tr><td><a href="Stream.html#VALiapp">iapp</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
+<tr><td><a href="Stream.html#VALicons">icons</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="Pervasives.html#VALignore">ignore</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
 Discard the value of its argument and return <code class="code">()</code>.
@@ -2167,6 +2193,8 @@ Return <code class="code">true</code> if the file name is relative to the curren
    directory, <code class="code">false</code> if it is absolute (i.e.
 </div>
 </td></tr>
+<tr><td><a href="Stream.html#VALising">ising</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="String.html#VALiter">iter</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 <code class="code">String.iter f s</code> applies function <code class="code">f</code> in turn to all
@@ -2290,6 +2318,8 @@ Same as <code class="code">sprintf</code> above, but instead of returning the st
 </div>
 </td></tr>
 <tr><td align="left"><br>L</td></tr>
+<tr><td><a href="Stream.html#VALlapp">lapp</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="Str.html#VALlast_chars">last_chars</a> [<a href="Str.html">Str</a>]</td>
 <td><div class="info">
 <code class="code">last_chars s n</code> returns the last <code class="code">n</code> characters of <code class="code">s</code>.
@@ -2315,6 +2345,8 @@ Same as <code class="code">sprintf</code> above, but instead of returning the st
 </div>
 </td></tr>
 <tr><td><a href="Obj.html#VALlazy_tag">lazy_tag</a> [<a href="Obj.html">Obj</a>]</td>
+<td></td></tr>
+<tr><td><a href="Stream.html#VALlcons">lcons</a> [<a href="Stream.html">Stream</a>]</td>
 <td></td></tr>
 <tr><td><a href="Pervasives.html#VALldexp">ldexp</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
@@ -2525,6 +2557,8 @@ Convert the given character to its equivalent lowercase character.
 Set the current position for a file descriptor
 </div>
 </td></tr>
+<tr><td><a href="Stream.html#VALlsing">lsing</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="Unix.html#VALlstat">lstat</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Same as <a href="Unix.html#VALstat"><code class="code">Unix.stat</code></a>, but in case the file is a symbolic link,
@@ -3619,7 +3653,7 @@ Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code
 Same as <code class="code">fprintf</code> above, but output on <code class="code">std_formatter</code>.
 </div>
 </td></tr>
-<tr><td><a href="Async.html#VALproc_of_fun">proc_of_fun</a> [<a href="Async.html">Async</a>]</td>
+<tr><td><a href="Rml_async.html#VALproc_of_fun">proc_of_fun</a> [<a href="Rml_async.html">Rml_async</a>]</td>
 <td><div class="info">
 <code class="code">run proc_of_fun f x</code> executes <code class="code">f x</code> in a thread.
 </div>
@@ -3987,7 +4021,7 @@ Remove an empty directory.
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
-<tr><td><a href="Async.html#VALsafe_emit">safe_emit</a> [<a href="Async.html">Async</a>]</td>
+<tr><td><a href="Rml_async.html#VALsafe_emit">safe_emit</a> [<a href="Rml_async.html">Rml_async</a>]</td>
 <td><div class="info">
 <code class="code">safe_emit s v</code> will emit the value <code class="code">v</code> on the signal <code class="code">s</code>, but
     there is no guaranty on the instant of emission.
@@ -4029,6 +4063,8 @@ Initialize the generator with a more-or-less random seed chosen
    in a system-dependent way.
 </div>
 </td></tr>
+<tr><td><a href="Stream.html#VALsempty">sempty</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="Unix.html#VALsend">send</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Send data over a connected socket.
@@ -4427,6 +4463,8 @@ See <a href="Graphics.html#VALsize_y"><code class="code">Graphics.size_y</code><
 Return the size of the graphics window.
 </div>
 </td></tr>
+<tr><td><a href="Stream.html#VALslazy">slazy</a> [<a href="Stream.html">Stream</a>]</td>
+<td></td></tr>
 <tr><td><a href="Unix.html#VALsleep">sleep</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Stop execution for the given number of seconds.
@@ -5036,6 +5074,12 @@ Removes the named file
 </td></tr>
 <tr><td><a href="Obj.html#VALunmarshal">unmarshal</a> [<a href="Obj.html">Obj</a>]</td>
 <td></td></tr>
+<tr><td><a href="Array.html#VALunsafe_get">unsafe_get</a> [<a href="Array.html">Array</a>]</td>
+<td></td></tr>
+<tr><td><a href="Pervasives.html#VALunsafe_really_input">unsafe_really_input</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
+<tr><td><a href="Array.html#VALunsafe_set">unsafe_set</a> [<a href="Array.html">Array</a>]</td>
+<td></td></tr>
 <tr><td><a href="String.html#VALuppercase">uppercase</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 Return a copy of the argument, with all lowercase letters
@@ -5060,6 +5104,9 @@ Set the last access time (second arg) and last modification time
    (third arg) for a file.
 </div>
 </td></tr>
+<tr><td align="left"><br>V</td></tr>
+<tr><td><a href="Pervasives.html#VALvalid_float_lexem">valid_float_lexem</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>W</td></tr>
 <tr><td><a href="Unix.html#VALwait">wait</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
@@ -5097,6 +5144,12 @@ Size of one word on the machine currently executing the Caml
 <tr><td align="left"><br>Y</td></tr>
 <tr><td><a href="Graphics.html#VALyellow">yellow</a> [<a href="Graphics.html">Graphics</a>]</td>
 <td></td></tr>
+<tr><td><a href="Rml_async.html#VALyield">yield</a> [<a href="Rml_async.html">Rml_async</a>]</td>
+<td><div class="info">
+<code class="code">yield ()</code> re-schedules the calling thread without suspending
+   it.
+</div>
+</td></tr>
 <tr><td align="left"><br>Z</td></tr>
 <tr><td><a href="Nativeint.html#VALzero">zero</a> [<a href="Nativeint.html">Nativeint</a>]</td>
 <td><div class="info">
