@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
@@ -10,7 +11,9 @@
 <link title="Arg" rel="Chapter" href="Arg.html">
 <link title="Array" rel="Chapter" href="Array.html">
 <link title="Buffer" rel="Chapter" href="Buffer.html">
+<link title="Bytes" rel="Chapter" href="Bytes.html">
 <link title="Callback" rel="Chapter" href="Callback.html">
+<link title="CamlinternalBigarray" rel="Chapter" href="CamlinternalBigarray.html">
 <link title="Char" rel="Chapter" href="Char.html">
 <link title="Complex" rel="Chapter" href="Complex.html">
 <link title="Digest" rel="Chapter" href="Digest.html">
@@ -59,6 +62,11 @@
 Flags for the <a href="Unix.html#VALaccess"><code class="code">Unix.access</code></a> call.
 </div>
 </td></tr>
+<tr><td><a href="Unix.html#TYPEaddr_info">addr_info</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Address information returned by <a href="Unix.html#VALgetaddrinfo"><code class="code">Unix.getaddrinfo</code></a>.
+</div>
+</td></tr>
 <tr><td><a href="Gc.html#TYPEalarm">alarm</a> [<a href="Gc.html">Gc</a>]</td>
 <td><div class="info">
 An alarm is a piece of data that calls a user function at the end of
@@ -67,12 +75,21 @@ An alarm is a piece of data that calls a user function at the end of
 </td></tr>
 <tr><td><a href="Arg.html#TYPEanon_fun">anon_fun</a> [<a href="Arg.html">Arg</a>]</td>
 <td></td></tr>
+<tr><td align="left"><br>B</td></tr>
+<tr><td><a href="Pervasives.html#TYPEbytes">bytes</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>C</td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEc_layout">c_layout</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
 <tr><td><a href="Graphics.html#TYPEcolor">color</a> [<a href="Graphics.html">Graphics</a>]</td>
 <td><div class="info">
 A color is specified by its R, G, B components.
 </div>
 </td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEcomplex32_elt">complex32_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEcomplex64_elt">complex64_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>D</td></tr>
 <tr><td><a href="Unix.html#TYPEdir_handle">dir_handle</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
@@ -107,9 +124,13 @@ The abstract type of file descriptors.
 <td></td></tr>
 <tr><td><a href="Unix.html#TYPEfile_perm">file_perm</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-The type of file access rights.
+The type of file access rights, e.g.
 </div>
 </td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEfloat32_elt">float32_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEfloat64_elt">float64_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
 <tr><td><a href="Unix.html#TYPEflow_action">flow_action</a> [<a href="Unix.html">Unix</a>]</td>
 <td></td></tr>
 <tr><td><a href="Unix.html#TYPEflush_queue">flush_queue</a> [<a href="Unix.html">Unix</a>]</td>
@@ -136,6 +157,8 @@ The tag handling functions specific to a formatter:
    those markers as 0 length tokens in the output device of the formatter.
 </div>
 </td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEfortran_layout">fortran_layout</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
 <tr><td><a href="Pervasives.html#TYPEfpclass">fpclass</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
 The five classes of floating-point numbers, as determined by
@@ -143,6 +166,18 @@ The five classes of floating-point numbers, as determined by
 </div>
 </td></tr>
 <tr><td align="left"><br>G</td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEgenarray">genarray</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="Unix.html#TYPEgetaddrinfo_option">getaddrinfo_option</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Options to <a href="Unix.html#VALgetaddrinfo"><code class="code">Unix.getaddrinfo</code></a>.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#TYPEgetnameinfo_option">getnameinfo_option</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Options to <a href="Unix.html#VALgetnameinfo"><code class="code">Unix.getnameinfo</code></a>.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#TYPEgroup_entry">group_entry</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Structure of entries in the <code class="code">groups</code> database.
@@ -177,9 +212,27 @@ The abstract type of Internet addresses.
 </td></tr>
 <tr><td><a href="Luc4ocaml.html#TYPEinputs">inputs</a> [<a href="Luc4ocaml.html">Luc4ocaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint16_signed_elt">int16_signed_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint16_unsigned_elt">int16_unsigned_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="Pervasives.html#TYPEint32">int32</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
 <tr><td><a href="Int32.html#TYPEint32">int32</a> [<a href="Int32.html">Int32</a>]</td>
 <td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint32_elt">int32_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="Pervasives.html#TYPEint64">int64</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
 <tr><td><a href="Int64.html#TYPEint64">int64</a> [<a href="Int64.html">Int64</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint64_elt">int64_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint8_signed_elt">int8_signed_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint8_unsigned_elt">int8_unsigned_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEint_elt">int_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
 <td></td></tr>
 <tr><td><a href="Unix.html#TYPEinterval_timer">interval_timer</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
@@ -194,7 +247,11 @@ The type describing the status of an interval timer
 <tr><td align="left"><br>K</td></tr>
 <tr><td><a href="Arg.html#TYPEkey">key</a> [<a href="Arg.html">Arg</a>]</td>
 <td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEkind">kind</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>L</td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPElayout">layout</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
+<td></td></tr>
 <tr><td><a href="Lazy.html#TYPElazy_t">lazy_t</a> [<a href="Lazy.html">Lazy</a>]</td>
 <td></td></tr>
 <tr><td><a href="Lexing.html#TYPElexbuf">lexbuf</a> [<a href="Lexing.html">Lexing</a>]</td>
@@ -213,7 +270,16 @@ Commands for <a href="Unix.html#VALlockf"><code class="code">Unix.lockf</code></
 <tr><td><a href="Unix.html#TYPEmsg_flag">msg_flag</a> [<a href="Unix.html">Unix</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>N</td></tr>
+<tr><td><a href="Unix.html#TYPEname_info">name_info</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Host and service information returned by <a href="Unix.html#VALgetnameinfo"><code class="code">Unix.getnameinfo</code></a>.
+</div>
+</td></tr>
+<tr><td><a href="Pervasives.html#TYPEnativeint">nativeint</a> [<a href="Pervasives.html">Pervasives</a>]</td>
+<td></td></tr>
 <tr><td><a href="Nativeint.html#TYPEnativeint">nativeint</a> [<a href="Nativeint.html">Nativeint</a>]</td>
+<td></td></tr>
+<tr><td><a href="CamlinternalBigarray.html#TYPEnativeint_elt">nativeint_elt</a> [<a href="CamlinternalBigarray.html">CamlinternalBigarray</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>O</td></tr>
 <tr><td><a href="Unix.html#TYPEopen_flag">open_flag</a> [<a href="Unix.html">Unix</a>]</td>
@@ -333,7 +399,11 @@ The type of socket kinds, specifying the semantics of
 <tr><td><a href="Luc4ocaml.html#TYPEsolution">solution</a> [<a href="Luc4ocaml.html">Luc4ocaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Arg.html#TYPEspec">spec</a> [<a href="Arg.html">Arg</a>]</td>
-<td></td></tr>
+<td><div class="info">
+The concrete type describing the behavior associated
+   with a keyword.
+</div>
+</td></tr>
 <tr><td><a href="Str.html#TYPEsplit_result">split_result</a> [<a href="Str.html">Str</a>]</td>
 <td></td></tr>
 <tr><td><a href="Gc.html#TYPEstat">stat</a> [<a href="Gc.html">Gc</a>]</td>
@@ -348,7 +418,7 @@ Abtract state containing the Lucky runtime information.
 </td></tr>
 <tr><td><a href="Unix.html#TYPEstats">stats</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-The informations returned by the <a href="Unix.html#VALstat"><code class="code">Unix.stat</code></a> calls.
+The information returned by the <a href="Unix.html#VALstat"><code class="code">Unix.stat</code></a> calls.
 </div>
 </td></tr>
 <tr><td><a href="Graphics.html#TYPEstatus">status</a> [<a href="Graphics.html">Graphics</a>]</td>
@@ -433,6 +503,11 @@ The type of complex numbers.
 <tr><td><a href="Char.html#TYPEt">t</a> [<a href="Char.html">Char</a>]</td>
 <td><div class="info">
 An alias for the type of characters.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#TYPEt">t</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+An alias for the type of byte sequences.
 </div>
 </td></tr>
 <tr><td><a href="Buffer.html#TYPEt">t</a> [<a href="Buffer.html">Buffer</a>]</td>

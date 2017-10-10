@@ -1,5 +1,15 @@
 Warning: incompatible changes with previous versions are marked with "*".
 
+ReactiveML 1.09.05 (2017-10-10):
+--------------------------------
+ - rmlc: bug fixes.
+ - stdlib: update of some modules.
+ * rmlbuild: distributed as an independent project
+   https://github.com/reactiveml/rmlbuild.
+ - rmlbuild: new -rmlc and -rmldep options
+
+
+
 ReactiveML 1.09.04 (2016-03-23):
 --------------------------------
  - rmlbuild: sim field not mandatory.
@@ -7,6 +17,7 @@ ReactiveML 1.09.04 (2016-03-23):
  - new example: reactive_art.
  - install: fix patch problem on recent Linux.
  - install: fix install script for rmlbuild on OCaml 4.03.
+ - install: fix uninstall
 
 
 ReactiveML 1.09.03 (2014-06-21):

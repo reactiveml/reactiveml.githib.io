@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
@@ -10,7 +11,9 @@
 <link title="Arg" rel="Chapter" href="Arg.html">
 <link title="Array" rel="Chapter" href="Array.html">
 <link title="Buffer" rel="Chapter" href="Buffer.html">
+<link title="Bytes" rel="Chapter" href="Bytes.html">
 <link title="Callback" rel="Chapter" href="Callback.html">
+<link title="CamlinternalBigarray" rel="Chapter" href="CamlinternalBigarray.html">
 <link title="Char" rel="Chapter" href="Char.html">
 <link title="Complex" rel="Chapter" href="Complex.html">
 <link title="Digest" rel="Chapter" href="Digest.html">
@@ -258,8 +261,7 @@ Accept connections on the given socket.
 </td></tr>
 <tr><td><a href="Unix.html#VALaccess">access</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Check that the process has the given permissions over the named
-   file.
+Check that the process has the given permissions over the named file.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALacos">acos</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -334,6 +336,12 @@ Addition
 <tr><td><a href="Unix.html#VALalarm">alarm</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Schedule a <code class="code">SIGALRM</code> signal after the given number of seconds.
+</div>
+</td></tr>
+<tr><td><a href="Arg.html#VALalign">align</a> [<a href="Arg.html">Arg</a>]</td>
+<td><div class="info">
+Align the documentation strings by inserting spaces at the first
+    space, according to the length of the keyword.
 </div>
 </td></tr>
 <tr><td><a href="Gc.html#VALallocated_bytes">allocated_bytes</a> [<a href="Gc.html">Gc</a>]</td>
@@ -456,6 +464,13 @@ Return the internal representation of the given float according
    string <code class="code">dst</code>, starting at character number <code class="code">dstoff</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALblit">blit</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">blit src srcoff dst dstoff len</code> copies <code class="code">len</code> bytes from sequence
+    <code class="code">src</code>, starting at index <code class="code">srcoff</code>, to sequence <code class="code">dst</code>, starting at
+    index <code class="code">dstoff</code>.
+</div>
+</td></tr>
 <tr><td><a href="Array.html#VALblit">blit</a> [<a href="Array.html">Array</a>]</td>
 <td><div class="info">
 <code class="code">Array.blit v1 o1 v2 o2 len</code> copies <code class="code">len</code> elements
@@ -467,6 +482,13 @@ Return the internal representation of the given float according
 <td><div class="info">
 <code class="code">blit_image img x y</code> copies screen pixels into the image <code class="code">img</code>,
    modifying <code class="code">img</code> in-place.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALblit_string">blit_string</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">blit src srcoff dst dstoff len</code> copies <code class="code">len</code> bytes from string
+    <code class="code">src</code>, starting at index <code class="code">srcoff</code>, to byte sequence <code class="code">dst</code>,
+    starting at index <code class="code">dstoff</code>.
 </div>
 </td></tr>
 <tr><td><a href="Graphics.html#VALblue">blue</a> [<a href="Graphics.html">Graphics</a>]</td>
@@ -523,6 +545,20 @@ Return <code class="code">true</code> if the mouse button is pressed, <code clas
 <tr><td><a href="String.html#VALcapitalize">capitalize</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 Return a copy of the argument, with the first letter set to uppercase.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALcapitalize">capitalize</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td></td></tr>
+<tr><td><a href="Bytes.html#VALcapitalize_ascii">capitalize_ascii</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a copy of the argument, with the first character set to uppercase,
+   using the US-ASCII character set.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALcat">cat</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">cat s1 s2</code> concatenates <code class="code">s1</code> and <code class="code">s2</code> and returns the result
+     as new byte sequence.
 </div>
 </td></tr>
 <tr><td><a href="Printexc.html#VALcatch">catch</a> [<a href="Printexc.html">Printexc</a>]</td>
@@ -799,6 +835,12 @@ The comparison function for characters, with the same specification as
     <a href="Pervasives.html#VALcompare"><code class="code">Pervasives.compare</code></a>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALcompare">compare</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+The comparison function for byte sequences, with the same
+    specification as <a href="Pervasives.html#VALcompare"><code class="code">Pervasives.compare</code></a>.
+</div>
+</td></tr>
 <tr><td><a href="String.html#VALconcat">concat</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 <code class="code">String.concat sep sl</code> concatenates the list of strings <code class="code">sl</code>,
@@ -814,6 +856,13 @@ Concatenate a list of lists.
 <td><div class="info">
 <code class="code">concat dir file</code> returns a file name that designates file
    <code class="code">file</code> in directory <code class="code">dir</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALconcat">concat</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">concat sep sl</code> concatenates the list of byte sequences <code class="code">sl</code>,
+    inserting the separator byte sequence <code class="code">sep</code> between each, and
+    returns the result as a new byte sequence.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALconcat">concat</a> [<a href="Array.html">Array</a>]</td>
@@ -837,11 +886,22 @@ Connect a socket to an address.
    appears in the string <code class="code">s</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALcontains">contains</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">contains s c</code> tests if byte <code class="code">c</code> appears in <code class="code">s</code>.
+</div>
+</td></tr>
 <tr><td><a href="String.html#VALcontains_from">contains_from</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 <code class="code">String.contains_from s start c</code> tests if character <code class="code">c</code>
    appears in the substring of <code class="code">s</code> starting from <code class="code">start</code> to the end
    of <code class="code">s</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALcontains_from">contains_from</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">contains_from s start c</code> tests if byte <code class="code">c</code> appears in <code class="code">s</code> after
+    position <code class="code">start</code>.
 </div>
 </td></tr>
 <tr><td><a href="Buffer.html#VALcontents">contents</a> [<a href="Buffer.html">Buffer</a>]</td>
@@ -867,6 +927,12 @@ Return a copy of the given queue.
 <tr><td><a href="Hashtbl.html#VALcopy">copy</a> [<a href="Hashtbl.html">Hashtbl</a>]</td>
 <td><div class="info">
 Return a copy of the given hashtable.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALcopy">copy</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a new byte sequence that contains the same bytes as the
+    argument.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALcopy">copy</a> [<a href="Array.html">Array</a>]</td>
@@ -919,6 +985,11 @@ Return a new queue, initially empty.
 <td><div class="info">
 <code class="code">Hashtbl.create n</code> creates a new, empty hash table, with
    initial size <code class="code">n</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALcreate">create</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">create n</code> returns a new byte sequence of length <code class="code">n</code>.
 </div>
 </td></tr>
 <tr><td><a href="Buffer.html#VALcreate">create</a> [<a href="Buffer.html">Buffer</a>]</td>
@@ -1053,8 +1124,11 @@ Integer division.
 Division
 </div>
 </td></tr>
-<tr><td><a href="Pervasives.html#VALdo_at_exit">do_at_exit</a> [<a href="Pervasives.html">Pervasives</a>]</td>
-<td></td></tr>
+<tr><td><a href="Unix.html#VALdomain_of_sockaddr">domain_of_sockaddr</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Return the socket domain adequate for the given socket address.
+</div>
+</td></tr>
 <tr><td><a href="Obj.html#VALdouble_array_tag">double_array_tag</a> [<a href="Obj.html">Obj</a>]</td>
 <td></td></tr>
 <tr><td><a href="Obj.html#VALdouble_tag">double_tag</a> [<a href="Obj.html">Obj</a>]</td>
@@ -1123,8 +1197,6 @@ A value of type <code class="code">position</code>, guaranteed to be different f
    valid position.
 </div>
 </td></tr>
-<tr><td><a href="Stream.html#VALdump">dump</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
 <tr><td><a href="Graphics.html#VALdump_image">dump_image</a> [<a href="Graphics.html">Graphics</a>]</td>
 <td><div class="info">
 Convert an image to a color matrix.
@@ -1150,6 +1222,11 @@ Return a new file descriptor referencing the same file as
 Return <code class="code">()</code> if the stream is empty, else raise <code class="code">Stream.Failure</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALempty">empty</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+A byte sequence of size 0.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALenvironment">environment</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Return the process environment, as an array of strings
@@ -1169,6 +1246,11 @@ Same as <code class="code">fprintf</code> above, but output on <code class="code
 <tr><td><a href="Pervasives.html#VALepsilon_float">epsilon_float</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
 The smallest positive float <code class="code">x</code> such that <code class="code">1.0 +. x &lt;&gt; 1.0</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALequal">equal</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+The equality function for byte sequences.
 </div>
 </td></tr>
 <tr><td><a href="Format.html#VALerr_formatter">err_formatter</a> [<a href="Format.html">Format</a>]</td>
@@ -1194,6 +1276,12 @@ Return a copy of the argument, with special characters
 Return a string representing the given character,
    with special characters escaped following the lexical conventions
    of Objective Caml.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALescaped">escaped</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a copy of the argument, with special characters represented
+    by escape sequences, following the lexical conventions of OCaml.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALestablish_server">establish_server</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1226,13 +1314,13 @@ Same as <a href="Unix.html#VALexecv"><code class="code">Unix.execv</code></a>, e
 </td></tr>
 <tr><td><a href="Unix.html#VALexecvp">execvp</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALexecv"><code class="code">Unix.execv</code></a> respectively, except that
+Same as <a href="Unix.html#VALexecv"><code class="code">Unix.execv</code></a>, except that
    the program is searched in the path.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALexecvpe">execvpe</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALexecvp"><code class="code">Unix.execvp</code></a> respectively, except that
+Same as <a href="Unix.html#VALexecve"><code class="code">Unix.execve</code></a>, except that
    the program is searched in the path.
 </div>
 </td></tr>
@@ -1262,6 +1350,13 @@ Exponential.
 <tr><td><a href="Complex.html#VALexp">exp</a> [<a href="Complex.html">Complex</a>]</td>
 <td><div class="info">
 Exponentiation.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALextend">extend</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">extend s left right</code> returns a new byte sequence that contains
+    the bytes of <code class="code">s</code>, with <code class="code">left</code> uninitialized bytes prepended and
+    <code class="code">right</code> uninitialized bytes appended to it.
 </div>
 </td></tr>
 <tr><td><a href="Rml_process_manager.html#VALextensible">extensible</a> [<a href="Rml_process_manager.html">Rml_process_manager</a>]</td>
@@ -1321,6 +1416,12 @@ Test if a file with the given name exists.
 <code class="code">String.fill s start len c</code> modifies string <code class="code">s</code> in place,
    replacing the characters number <code class="code">start</code> to <code class="code">start + len - 1</code>
    by <code class="code">c</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALfill">fill</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">fill s start len c</code> modifies <code class="code">s</code> in place, replacing <code class="code">len</code>
+    characters with <code class="code">c</code>, starting at <code class="code">start</code>.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALfill">fill</a> [<a href="Array.html">Array</a>]</td>
@@ -1586,24 +1687,6 @@ Default background and foreground colors (usually, either black
 Fork a new process.
 </div>
 </td></tr>
-<tr><td><a href="Nativeint.html#VALformat">format</a> [<a href="Nativeint.html">Nativeint</a>]</td>
-<td><div class="info">
-<code class="code">Nativeint.format fmt n</code> return the string representation of the
-   native integer <code class="code">n</code> in the format specified by <code class="code">fmt</code>.
-</div>
-</td></tr>
-<tr><td><a href="Int64.html#VALformat">format</a> [<a href="Int64.html">Int64</a>]</td>
-<td><div class="info">
-<code class="code">Int64.format fmt n</code> return the string representation of the
-   64-bit integer <code class="code">n</code> in the format specified by <code class="code">fmt</code>.
-</div>
-</td></tr>
-<tr><td><a href="Int32.html#VALformat">format</a> [<a href="Int32.html">Int32</a>]</td>
-<td><div class="info">
-<code class="code">Int32.format fmt n</code> return the string representation of the
-   32-bit integer <code class="code">n</code> in the format specified by <code class="code">fmt</code>.
-</div>
-</td></tr>
 <tr><td><a href="Pervasives.html#VALformat_of_string">format_of_string</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
 <code class="code">format_of_string s</code> returns a format string read from the string
@@ -1688,7 +1771,7 @@ Return the first component of a pair.
 </td></tr>
 <tr><td><a href="Unix.html#VALfstat">fstat</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Return the informations for the file associated with the given
+Return the information for the file associated with the given
    descriptor.
 </div>
 </td></tr>
@@ -1726,6 +1809,11 @@ Same as <a href="Str.html#VALsplit_delim"><code class="code">Str.split_delim</co
 <tr><td><a href="String.html#VALget">get</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 <code class="code">String.get s n</code> returns character number <code class="code">n</code> in string <code class="code">s</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALget">get</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">get s n</code> returns the byte at index <code class="code">n</code> in argument <code class="code">s</code>.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALget">get</a> [<a href="Array.html">Array</a>]</td>
@@ -1788,6 +1876,13 @@ Return the value of the maximum indentation limit (in characters).
 </td></tr>
 <tr><td><a href="Format.html#VALget_print_tags">get_print_tags</a> [<a href="Format.html">Format</a>]</td>
 <td></td></tr>
+<tr><td><a href="Unix.html#VALgetaddrinfo">getaddrinfo</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+<code class="code">getaddrinfo host service opts</code> returns a list of <a href="Unix.html#TYPEaddr_info"><code class="code">Unix.addr_info</code></a>
+    records describing socket parameters and addresses suitable for
+    communicating with the given host and service.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALgetcwd">getcwd</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Return the name of the current working directory.
@@ -1806,7 +1901,7 @@ Return the effective group id under which the process runs.
 <tr><td><a href="Unix.html#VALgetenv">getenv</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Return the value associated to a variable in the process
-   environment.
+   environment, unless the process has special privileges.
 </div>
 </td></tr>
 <tr><td><a href="Sys.html#VALgetenv">getenv</a> [<a href="Sys.html">Sys</a>]</td>
@@ -1827,14 +1922,12 @@ Return the group id of the user executing the process.
 </td></tr>
 <tr><td><a href="Unix.html#VALgetgrgid">getgrgid</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">group</code> with the given group id, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">group</code> with the given group id.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetgrnam">getgrnam</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">group</code> with the given name, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">group</code> with the given name.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetgroups">getgroups</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1845,14 +1938,12 @@ Return the list of groups to which the user executing the process
 </td></tr>
 <tr><td><a href="Unix.html#VALgethostbyaddr">gethostbyaddr</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">hosts</code> with the given address, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">hosts</code> with the given address.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgethostbyname">gethostbyname</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">hosts</code> with the given name, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">hosts</code> with the given name.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgethostname">gethostname</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1868,6 +1959,12 @@ Return the current status of the given interval timer.
 <tr><td><a href="Unix.html#VALgetlogin">getlogin</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Return the login name of the user executing the process.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALgetnameinfo">getnameinfo</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+<code class="code">getnameinfo addr opts</code> returns the host name and service name
+    corresponding to the socket address <code class="code">addr</code>.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetpeername">getpeername</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1887,38 +1984,32 @@ Return the pid of the parent process.
 </td></tr>
 <tr><td><a href="Unix.html#VALgetprotobyname">getprotobyname</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">protocols</code> with the given name, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">protocols</code> with the given name.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetprotobynumber">getprotobynumber</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">protocols</code> with the given protocol number,
-   or raise <code class="code">Not_found</code>.
+Find an entry in <code class="code">protocols</code> with the given protocol number.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetpwnam">getpwnam</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">passwd</code> with the given name, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">passwd</code> with the given name.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetpwuid">getpwuid</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">passwd</code> with the given user id, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">passwd</code> with the given user id.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetservbyname">getservbyname</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">services</code> with the given name, or raise
-   <code class="code">Not_found</code>.
+Find an entry in <code class="code">services</code> with the given name.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetservbyport">getservbyport</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Find an entry in <code class="code">services</code> with the given service number,
-   or raise <code class="code">Not_found</code>.
+Find an entry in <code class="code">services</code> with the given service number.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetsockname">getsockname</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1932,9 +2023,16 @@ Return the current status of a boolean-valued option
    in the given socket.
 </div>
 </td></tr>
+<tr><td><a href="Unix.html#VALgetsockopt_error">getsockopt_error</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Return the error condition associated with the given socket,
+    and clear it.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALgetsockopt_float">getsockopt_float</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for a socket option whose value is a floating-point number.
+Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for a socket option whose value is a
+   floating-point number.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgetsockopt_int">getsockopt_int</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1944,7 +2042,8 @@ Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</co
 </td></tr>
 <tr><td><a href="Unix.html#VALgetsockopt_optint">getsockopt_optint</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for a socket option whose value is an <code class="code">int option</code>.
+Same as <a href="Unix.html#VALgetsockopt"><code class="code">Unix.getsockopt</code></a> for a socket option whose value is an
+   <code class="code">int option</code>.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALgettimeofday">gettimeofday</a> [<a href="Unix.html">Unix</a>]</td>
@@ -1999,6 +2098,11 @@ Convert a time in seconds, as returned by <a href="Unix.html#VALtime"><code clas
 <code class="code">handle_unix_error f x</code> applies <code class="code">f</code> to <code class="code">x</code> and returns the result.
 </div>
 </td></tr>
+<tr><td><a href="Unix.html#VALhas_symlink">has_symlink</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Returns <code class="code">true</code> if the user is able to create symbolic links.
+</div>
+</td></tr>
 <tr><td><a href="Hashtbl.html#VALhash">hash</a> [<a href="Hashtbl.html">Hashtbl</a>]</td>
 <td></td></tr>
 <tr><td><a href="List.html#VALhd">hd</a> [<a href="List.html">List</a>]</td>
@@ -2019,10 +2123,6 @@ The bytes representing a marshaled value are composed of
 The complex number <code class="code">i</code>.
 </div>
 </td></tr>
-<tr><td><a href="Stream.html#VALiapp">iapp</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
-<tr><td><a href="Stream.html#VALicons">icons</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
 <tr><td><a href="Pervasives.html#VALignore">ignore</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
 Discard the value of its argument and return <code class="code">()</code>.
@@ -2050,22 +2150,62 @@ Increment the integer contained in the given reference.
    occurrence of character <code class="code">c</code> in string <code class="code">s</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALindex">index</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">index s c</code> returns the index of the first occurrence of byte <code class="code">c</code>
+    in <code class="code">s</code>.
+</div>
+</td></tr>
 <tr><td><a href="String.html#VALindex_from">index_from</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 Same as <a href="String.html#VALindex"><code class="code">String.index</code></a>, but start
    searching at the character position given as second argument.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALindex_from">index_from</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">index_from s i c</code> returns the index of the first occurrence of
+    byte <code class="code">c</code> in <code class="code">s</code> after position <code class="code">i</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALindex_from_opt">index_from_opt</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">index_from _opts i c</code> returns the index of the first occurrence of
+    byte <code class="code">c</code> in <code class="code">s</code> after position <code class="code">i</code> or <code class="code">None</code> if <code class="code">c</code> does not occur in <code class="code">s</code> after position <code class="code">i</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALindex_opt">index_opt</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">index_opt s c</code> returns the index of the first occurrence of byte <code class="code">c</code>
+    in <code class="code">s</code> or <code class="code">None</code> if <code class="code">c</code> does not occur in <code class="code">s</code>.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALinet6_addr_any">inet6_addr_any</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+A special IPv6 address, for use only with <code class="code">bind</code>, representing
+   all the Internet addresses that the host machine possesses.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALinet6_addr_loopback">inet6_addr_loopback</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+A special IPv6 address representing the host machine (<code class="code">::1</code>).
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALinet_addr_any">inet_addr_any</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-A special Internet address, for use only with <code class="code">bind</code>, representing
+A special IPv4 address, for use only with <code class="code">bind</code>, representing
    all the Internet addresses that the host machine possesses.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALinet_addr_loopback">inet_addr_loopback</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+A special IPv4 address representing the host machine (<code class="code">127.0.0.1</code>).
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALinet_addr_of_string">inet_addr_of_string</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Conversions between string with the format <code class="code">XXX.YYY.ZZZ.TTT</code>
-   and Internet addresses.
+Conversion from the printable representation of an Internet
+    address to its internal representation.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALinfinity">infinity</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -2080,10 +2220,24 @@ Positive infinity.
 Initialize the generator, using the argument as a seed.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALinit">init</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">Bytes.init n f</code> returns a fresh byte sequence of length <code class="code">n</code>, with
+    character <code class="code">i</code> initialized to the result of <code class="code">f i</code> (in increasing
+    index order).
+</div>
+</td></tr>
 <tr><td><a href="Array.html#VALinit">init</a> [<a href="Array.html">Array</a>]</td>
 <td><div class="info">
 <code class="code">Array.init n f</code> returns a fresh array of length <code class="code">n</code>,
    with element number <code class="code">i</code> initialized to the result of <code class="code">f i</code>.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALinitgroups">initgroups</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+<code class="code">initgroups user group</code> initializes the group access list by
+    reading the group database /etc/group and using all groups of
+    which <code class="code">user</code> is a member.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALinput">input</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -2193,8 +2347,12 @@ Return <code class="code">true</code> if the file name is relative to the curren
    directory, <code class="code">false</code> if it is absolute (i.e.
 </div>
 </td></tr>
-<tr><td><a href="Stream.html#VALising">ising</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
+<tr><td><a href="Unix.html#VALisatty">isatty</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Return <code class="code">true</code> if the given file descriptor refers to a terminal or
+   console window, <code class="code">false</code> otherwise.
+</div>
+</td></tr>
 <tr><td><a href="String.html#VALiter">iter</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 <code class="code">String.iter f s</code> applies function <code class="code">f</code> in turn to all
@@ -2237,6 +2395,11 @@ Return <code class="code">true</code> if the file name is relative to the curren
 <code class="code">Hashtbl.iter f tbl</code> applies <code class="code">f</code> to all bindings in table <code class="code">tbl</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALiter">iter</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">iter f s</code> applies function <code class="code">f</code> in turn to all the bytes of <code class="code">s</code>.
+</div>
+</td></tr>
 <tr><td><a href="Array.html#VALiter">iter</a> [<a href="Array.html">Array</a>]</td>
 <td><div class="info">
 <code class="code">Array.iter f a</code> applies function <code class="code">f</code> in turn to all
@@ -2253,6 +2416,13 @@ Return <code class="code">true</code> if the file name is relative to the curren
 <td><div class="info">
 <code class="code">List.iter2 f [a1; ...; an] [b1; ...; bn]</code> calls in turn
    <code class="code">f a1 b1; ...; f an bn</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALiteri">iteri</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Same as <a href="Bytes.html#VALiter"><code class="code">Bytes.iter</code></a>, but the function is applied to the index of
+    the byte as first argument and the byte itself as second
+    argument.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALiteri">iteri</a> [<a href="Array.html">Array</a>]</td>
@@ -2318,8 +2488,6 @@ Same as <code class="code">sprintf</code> above, but instead of returning the st
 </div>
 </td></tr>
 <tr><td align="left"><br>L</td></tr>
-<tr><td><a href="Stream.html#VALlapp">lapp</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
 <tr><td><a href="Str.html#VALlast_chars">last_chars</a> [<a href="Str.html">Str</a>]</td>
 <td><div class="info">
 <code class="code">last_chars s n</code> returns the last <code class="code">n</code> characters of <code class="code">s</code>.
@@ -2345,8 +2513,6 @@ Same as <code class="code">sprintf</code> above, but instead of returning the st
 </div>
 </td></tr>
 <tr><td><a href="Obj.html#VALlazy_tag">lazy_tag</a> [<a href="Obj.html">Obj</a>]</td>
-<td></td></tr>
-<tr><td><a href="Stream.html#VALlcons">lcons</a> [<a href="Stream.html">Stream</a>]</td>
 <td></td></tr>
 <tr><td><a href="Pervasives.html#VALldexp">ldexp</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
@@ -2377,6 +2543,11 @@ Return the number of elements in a queue.
 <tr><td><a href="List.html#VALlength">length</a> [<a href="List.html">List</a>]</td>
 <td><div class="info">
 Return the length (number of elements) of the given list.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALlength">length</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return the length (number of bytes) of the argument.
 </div>
 </td></tr>
 <tr><td><a href="Buffer.html#VALlength">length</a> [<a href="Buffer.html">Buffer</a>]</td>
@@ -2552,17 +2723,24 @@ Return a copy of the argument, with all uppercase letters
 Convert the given character to its equivalent lowercase character.
 </div>
 </td></tr>
-<tr><td><a href="Unix.html#VALlseek">lseek</a> [<a href="Unix.html">Unix</a>]</td>
+<tr><td><a href="Bytes.html#VALlowercase">lowercase</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td></td></tr>
+<tr><td><a href="Bytes.html#VALlowercase_ascii">lowercase_ascii</a> [<a href="Bytes.html">Bytes</a>]</td>
 <td><div class="info">
-Set the current position for a file descriptor
+Return a copy of the argument, with all uppercase letters
+   translated to lowercase, using the US-ASCII character set.
 </div>
 </td></tr>
-<tr><td><a href="Stream.html#VALlsing">lsing</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
+<tr><td><a href="Unix.html#VALlseek">lseek</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Set the current position for a file descriptor, and return the resulting
+    offset (from the beginning of the file).
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALlstat">lstat</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Same as <a href="Unix.html#VALstat"><code class="code">Unix.stat</code></a>, but in case the file is a symbolic link,
-   return the informations for the link itself.
+   return the information for the link itself.
 </div>
 </td></tr>
 <tr><td align="left"><br>M</td></tr>
@@ -2591,6 +2769,12 @@ Do a minor collection and a slice of major collection.
 <tr><td><a href="Luc4ocaml.html#VALmake">make</a> [<a href="Luc4ocaml.html">Luc4ocaml</a>]</td>
 <td><div class="info">
 Builds the initial state of the Lucky machine
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALmake">make</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">make n c</code> returns a new byte sequence of length <code class="code">n</code>, filled with
+    the byte <code class="code">c</code>.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALmake">make</a> [<a href="Array.html">Array</a>]</td>
@@ -2637,6 +2821,13 @@ Construct the lexer function.
    with the results returned by <code class="code">f</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALmap">map</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">map f s</code> applies function <code class="code">f</code> in turn to all the bytes of <code class="code">s</code>
+    (in increasing index order) and stores the resulting bytes in
+    a new sequence that is returned as the result.
+</div>
+</td></tr>
 <tr><td><a href="Array.html#VALmap">map</a> [<a href="Array.html">Array</a>]</td>
 <td><div class="info">
 <code class="code">Array.map f a</code> applies function <code class="code">f</code> to all the elements of <code class="code">a</code>,
@@ -2654,6 +2845,18 @@ Construct the lexer function.
 <td><div class="info">
 <code class="code">List.map2 f [a1; ...; an] [b1; ...; bn]</code> is
    <code class="code">[f a1 b1; ...; f an bn]</code>.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALmap_file">map_file</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Memory mapping of a file as a big array.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALmapi">mapi</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">mapi f s</code> calls <code class="code">f</code> with each character of <code class="code">s</code> and its
+    index (in increasing index order) and stores the resulting bytes
+    in a new sequence that is returned as the result.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALmapi">mapi</a> [<a href="Array.html">Array</a>]</td>
@@ -2832,12 +3035,12 @@ The 32-bit integer -1.
 </td></tr>
 <tr><td><a href="Unix.html#VALmkdir">mkdir</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Create a directory with the given permissions.
+Create a directory with the given permissions (see <a href="Unix.html#VALumask"><code class="code">Unix.umask</code></a>).
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALmkfifo">mkfifo</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Create a named pipe with the given permissions.
+Create a named pipe with the given permissions (see <a href="Unix.html#VALumask"><code class="code">Unix.umask</code></a>).
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALmktime">mktime</a> [<a href="Unix.html">Unix</a>]</td>
@@ -2923,6 +3126,12 @@ Negative infinity.
 </td></tr>
 <tr><td><a href="Obj.html#VALnew_block">new_block</a> [<a href="Obj.html">Obj</a>]</td>
 <td></td></tr>
+<tr><td><a href="Lexing.html#VALnew_line">new_line</a> [<a href="Lexing.html">Lexing</a>]</td>
+<td><div class="info">
+Update the <code class="code">lex_curr_p</code> field of the lexbuf to reflect the start
+    of a new line.
+</div>
+</td></tr>
 <tr><td><a href="Stream.html#VALnext">next</a> [<a href="Stream.html">Stream</a>]</td>
 <td><div class="info">
 Return the first element of the stream and remove it from the
@@ -3065,6 +3274,12 @@ Convert the given string to a 64-bit integer.
 <tr><td><a href="Int32.html#VALof_string">of_string</a> [<a href="Int32.html">Int32</a>]</td>
 <td><div class="info">
 Convert the given string to a 32-bit integer.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALof_string">of_string</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a new byte sequence that contains the same bytes as the
+    given string.
 </div>
 </td></tr>
 <tr><td><a href="Format.html#VALopen_box">open_box</a> [<a href="Format.html">Format</a>]</td>
@@ -3300,6 +3515,18 @@ The conventional name for the parent of the current directory
 <td><div class="info">
 <code class="code">Arg.parse_argv ~current args speclist anon_fun usage_msg</code> parses
   the array <code class="code">args</code> as if it were the command line.
+</div>
+</td></tr>
+<tr><td><a href="Arg.html#VALparse_argv_dynamic">parse_argv_dynamic</a> [<a href="Arg.html">Arg</a>]</td>
+<td><div class="info">
+Same as <a href="Arg.html#VALparse_argv"><code class="code">Arg.parse_argv</code></a>, except that the <code class="code">speclist</code> argument is a
+    reference and may be updated during the parsing.
+</div>
+</td></tr>
+<tr><td><a href="Arg.html#VALparse_dynamic">parse_dynamic</a> [<a href="Arg.html">Arg</a>]</td>
+<td><div class="info">
+Same as <a href="Arg.html#VALparse"><code class="code">Arg.parse</code></a>, except that the <code class="code">speclist</code> argument is a reference
+    and may be updated during the parsing.
 </div>
 </td></tr>
 <tr><td><a href="List.html#VALpartition">partition</a> [<a href="List.html">List</a>]</td>
@@ -3712,11 +3939,17 @@ Raise the given exception value
    of <code class="code">s</code> to index <code class="code">stop</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALrcontains_from">rcontains_from</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">rcontains_from s stop c</code> tests if byte <code class="code">c</code> appears in <code class="code">s</code> before
+    position <code class="code">stop+1</code>.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALread">read</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-<code class="code">read fd buff ofs len</code> reads <code class="code">len</code> characters from descriptor
-   <code class="code">fd</code>, storing them in string <code class="code">buff</code>, starting at position <code class="code">ofs</code>
-   in string <code class="code">buff</code>.
+<code class="code">read fd buff ofs len</code> reads <code class="code">len</code> bytes from descriptor <code class="code">fd</code>,
+    storing them in byte sequence <code class="code">buff</code>, starting at position <code class="code">ofs</code> in
+    <code class="code">buff</code>.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALread_float">read_float</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -3755,7 +3988,7 @@ Return the names of all files present in the given directory.
 </td></tr>
 <tr><td><a href="Unix.html#VALreadlink">readlink</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Read the contents of a link.
+Read the contents of a symbolic link.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALreally_input">really_input</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -3863,7 +4096,8 @@ Same as <a href="List.html#VALremove_assoc"><code class="code">List.remove_assoc
 </td></tr>
 <tr><td><a href="Unix.html#VALrename">rename</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-<code class="code">rename old new</code> changes the name of a file from <code class="code">old</code> to <code class="code">new</code>.
+<code class="code">rename old new</code> changes the name of a file from <code class="code">old</code> to <code class="code">new</code>,
+    moving it between directories if needed.
 </div>
 </td></tr>
 <tr><td><a href="Sys.html#VALrename">rename</a> [<a href="Sys.html">Sys</a>]</td>
@@ -3997,10 +4231,35 @@ Reads from an in_channel Lucky inputs in RIF
    occurrence of character <code class="code">c</code> in string <code class="code">s</code>.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALrindex">rindex</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">rindex s c</code> returns the index of the last occurrence of byte <code class="code">c</code>
+    in <code class="code">s</code>.
+</div>
+</td></tr>
 <tr><td><a href="String.html#VALrindex_from">rindex_from</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 Same as <a href="String.html#VALrindex"><code class="code">String.rindex</code></a>, but start
    searching at the character position given as second argument.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALrindex_from">rindex_from</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">rindex_from s i c</code> returns the index of the last occurrence of
+    byte <code class="code">c</code> in <code class="code">s</code> before position <code class="code">i+1</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALrindex_from_opt">rindex_from_opt</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">rindex_from_opt s i c</code> returns the index of the last occurrence
+    of byte <code class="code">c</code> in <code class="code">s</code> before position <code class="code">i+1</code> or <code class="code">None</code> if <code class="code">c</code> does not
+    occur in <code class="code">s</code> before position <code class="code">i+1</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALrindex_opt">rindex_opt</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">rindex_opt s c</code> returns the index of the last occurrence of byte <code class="code">c</code>
+    in <code class="code">s</code> or <code class="code">None</code> if <code class="code">c</code> does not occur in <code class="code">s</code>.
 </div>
 </td></tr>
 <tr><td><a href="Graphics.html#VALrlineto">rlineto</a> [<a href="Graphics.html">Graphics</a>]</td>
@@ -4063,16 +4322,26 @@ Initialize the generator with a more-or-less random seed chosen
    in a system-dependent way.
 </div>
 </td></tr>
-<tr><td><a href="Stream.html#VALsempty">sempty</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
 <tr><td><a href="Unix.html#VALsend">send</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Send data over a connected socket.
 </div>
 </td></tr>
+<tr><td><a href="Unix.html#VALsend_substring">send_substring</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Same as <code class="code">send</code>, but take the data from a string instead of a byte
+    sequence.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALsendto">sendto</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Send data over an unconnected socket.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALsendto_substring">sendto_substring</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Same as <code class="code">sendto</code>, but take the data from a string instead of a
+    byte sequence.
 </div>
 </td></tr>
 <tr><td><a href="Weak.html#VALset">set</a> [<a href="Weak.html">Weak</a>]</td>
@@ -4086,6 +4355,12 @@ Send data over an unconnected socket.
 <td><div class="info">
 <code class="code">String.set s n c</code> modifies string <code class="code">s</code> in place,
    replacing the character number <code class="code">n</code> by <code class="code">c</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALset">set</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">set s n c</code> modifies <code class="code">s</code> in place, replacing the byte at index <code class="code">n</code>
+    with <code class="code">c</code>.
 </div>
 </td></tr>
 <tr><td><a href="Array.html#VALset">set</a> [<a href="Array.html">Array</a>]</td>
@@ -4220,6 +4495,12 @@ Set the title of the graphics window.
 Set the real group id and effective group id for the process.
 </div>
 </td></tr>
+<tr><td><a href="Unix.html#VALsetgroups">setgroups</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+<code class="code">setgroups groups</code> sets the supplementary group IDs for the
+    calling process.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALsetitimer">setitimer</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 <code class="code">setitimer t s</code> sets the interval timer <code class="code">t</code> and returns
@@ -4239,7 +4520,8 @@ Set or clear a boolean-valued option in the given socket.
 </td></tr>
 <tr><td><a href="Unix.html#VALsetsockopt_float">setsockopt_float</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for a socket option whose value is a floating-point number.
+Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for a socket option whose value is a
+   floating-point number.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALsetsockopt_int">setsockopt_int</a> [<a href="Unix.html">Unix</a>]</td>
@@ -4249,7 +4531,8 @@ Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</co
 </td></tr>
 <tr><td><a href="Unix.html#VALsetsockopt_optint">setsockopt_optint</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for a socket option whose value is an <code class="code">int option</code>.
+Same as <a href="Unix.html#VALsetsockopt"><code class="code">Unix.setsockopt</code></a> for a socket option whose value is an
+   <code class="code">int option</code>.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALsetuid">setuid</a> [<a href="Unix.html">Unix</a>]</td>
@@ -4397,7 +4680,7 @@ Stop
 </td></tr>
 <tr><td><a href="Unix.html#VALsigsuspend">sigsuspend</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-<code class="code">sigsuspend sigs</code> atomically sets the blocked signals to <code class="code">sig</code>
+<code class="code">sigsuspend sigs</code> atomically sets the blocked signals to <code class="code">sigs</code>
    and waits for a non-ignored, non-blocked signal to be delivered.
 </div>
 </td></tr>
@@ -4441,6 +4724,17 @@ Timeout in virtual time
 See <a href="Pervasives.html#VALatan2"><code class="code">Pervasives.atan2</code></a>.
 </div>
 </td></tr>
+<tr><td><a href="Unix.html#VALsingle_write">single_write</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Same as <code class="code">write</code>, but attempts to write only once.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALsingle_write_substring">single_write_substring</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Same as <code class="code">single_write</code>, but take the data from a string instead of
+    a byte sequence.
+</div>
+</td></tr>
 <tr><td><a href="Pervasives.html#VALsinh">sinh</a> [<a href="Pervasives.html">Pervasives</a>]</td>
 <td><div class="info">
 See <a href="Pervasives.html#VALtanh"><code class="code">Pervasives.tanh</code></a>.
@@ -4463,9 +4757,12 @@ See <a href="Graphics.html#VALsize_y"><code class="code">Graphics.size_y</code><
 Return the size of the graphics window.
 </div>
 </td></tr>
-<tr><td><a href="Stream.html#VALslazy">slazy</a> [<a href="Stream.html">Stream</a>]</td>
-<td></td></tr>
 <tr><td><a href="Unix.html#VALsleep">sleep</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Stop execution for the given number of seconds.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALsleepf">sleepf</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Stop execution for the given number of seconds.
 </div>
@@ -4564,7 +4861,7 @@ Same as <a href="Array.html#VALsort"><code class="code">Array.sort</code></a>, b
 </td></tr>
 <tr><td><a href="Unix.html#VALstat">stat</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Return the informations for the named file.
+Return the information for the named file.
 </div>
 </td></tr>
 <tr><td><a href="Gc.html#VALstat">stat</a> [<a href="Gc.html">Gc</a>]</td>
@@ -4586,7 +4883,7 @@ The string buffer in which <code class="code">str_formatter</code> writes.
 </td></tr>
 <tr><td><a href="Unix.html#VALstderr">stderr</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-File descriptor for standard standard error.
+File descriptor for standard error.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALstderr">stderr</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -4676,7 +4973,7 @@ Converts a format string into a string.
 </td></tr>
 <tr><td><a href="Unix.html#VALstring_of_inet_addr">string_of_inet_addr</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-See <a href="Unix.html#VALinet_addr_of_string"><code class="code">Unix.inet_addr_of_string</code></a>.
+Return the printable representation of the given Internet address.
 </div>
 </td></tr>
 <tr><td><a href="Pervasives.html#VALstring_of_int">string_of_int</a> [<a href="Pervasives.html">Pervasives</a>]</td>
@@ -4724,6 +5021,13 @@ Subtraction.
 Subtraction
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALsub">sub</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+<code class="code">sub s start len</code> returns a new byte sequence of length <code class="code">len</code>,
+    containing the subsequence of <code class="code">s</code> that starts at position <code class="code">start</code>
+    and has length <code class="code">len</code>.
+</div>
+</td></tr>
 <tr><td><a href="Buffer.html#VALsub">sub</a> [<a href="Buffer.html">Buffer</a>]</td>
 <td><div class="info">
 <code class="code">Buffer.sub b off len</code> returns (a copy of) the substring of the
@@ -4736,6 +5040,11 @@ current contents of the buffer <code class="code">b</code> starting at offset <c
 <code class="code">Array.sub a start len</code> returns a fresh array of length <code class="code">len</code>,
    containing the elements number <code class="code">start</code> to <code class="code">start + len - 1</code>
    of array <code class="code">a</code>.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALsub_string">sub_string</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Same as <code class="code">sub</code> but return a string instead of a byte sequence.
 </div>
 </td></tr>
 <tr><td><a href="Str.html#VALsubstitute_first">substitute_first</a> [<a href="Str.html">Str</a>]</td>
@@ -4800,7 +5109,7 @@ Same as <code class="code">symbol_start</code>, but return a <code class="code">
 </td></tr>
 <tr><td><a href="Unix.html#VALsymlink">symlink</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-<code class="code">symlink source dest</code> creates the file <code class="code">dest</code> as a symbolic link
+<code class="code">symlink ?to_dir source dest</code> creates the file <code class="code">dest</code> as a symbolic link
    to the file <code class="code">source</code>.
 </div>
 </td></tr>
@@ -5012,6 +5321,12 @@ Return the string representation of its argument, in decimal.
 Return the string representation of its argument, in signed decimal.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALto_string">to_string</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a new string that contains the same bytes as the given byte
+    sequence.
+</div>
+</td></tr>
 <tr><td><a href="Stack.html#VALtop">top</a> [<a href="Stack.html">Stack</a>]</td>
 <td><div class="info">
 <code class="code">top s</code> returns the topmost element in stack <code class="code">s</code>,
@@ -5043,6 +5358,12 @@ In matrices of colors, this color represent a ``transparent''
    of the corresponding point in the image.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALtrim">trim</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a copy of the argument, without leading and trailing
+    whitespace.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALtruncate">truncate</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
 Truncates the named file to the given size.
@@ -5067,19 +5388,44 @@ Set the process's file mode creation mask, and return the previous
 Return a copy of the argument, with the first letter set to lowercase.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALuncapitalize">uncapitalize</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td></td></tr>
+<tr><td><a href="Bytes.html#VALuncapitalize_ascii">uncapitalize_ascii</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a copy of the argument, with the first character set to lowercase,
+   using the US-ASCII character set.
+</div>
+</td></tr>
 <tr><td><a href="Unix.html#VALunlink">unlink</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Removes the named file
+Removes the named file.
 </div>
 </td></tr>
 <tr><td><a href="Obj.html#VALunmarshal">unmarshal</a> [<a href="Obj.html">Obj</a>]</td>
 <td></td></tr>
-<tr><td><a href="Array.html#VALunsafe_get">unsafe_get</a> [<a href="Array.html">Array</a>]</td>
-<td></td></tr>
-<tr><td><a href="Pervasives.html#VALunsafe_really_input">unsafe_really_input</a> [<a href="Pervasives.html">Pervasives</a>]</td>
-<td></td></tr>
-<tr><td><a href="Array.html#VALunsafe_set">unsafe_set</a> [<a href="Array.html">Array</a>]</td>
-<td></td></tr>
+<tr><td><a href="Unix.html#VALunsafe_environment">unsafe_environment</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Return the process environment, as an array of strings with the
+    format ``variable=value''.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALunsafe_getenv">unsafe_getenv</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Return the value associated to a variable in the process
+   environment.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALunsafe_of_string">unsafe_of_string</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Unsafely convert a shared string to a byte sequence that should
+    not be mutated.
+</div>
+</td></tr>
+<tr><td><a href="Bytes.html#VALunsafe_to_string">unsafe_to_string</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Unsafely convert a byte sequence into a string.
+</div>
+</td></tr>
 <tr><td><a href="String.html#VALuppercase">uppercase</a> [<a href="String.html">String</a>]</td>
 <td><div class="info">
 Return a copy of the argument, with all lowercase letters
@@ -5092,10 +5438,24 @@ Return a copy of the argument, with all lowercase letters
 Convert the given character to its equivalent uppercase character.
 </div>
 </td></tr>
+<tr><td><a href="Bytes.html#VALuppercase">uppercase</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td></td></tr>
+<tr><td><a href="Bytes.html#VALuppercase_ascii">uppercase_ascii</a> [<a href="Bytes.html">Bytes</a>]</td>
+<td><div class="info">
+Return a copy of the argument, with all lowercase letters
+   translated to uppercase, using the US-ASCII character set.
+</div>
+</td></tr>
 <tr><td><a href="Arg.html#VALusage">usage</a> [<a href="Arg.html">Arg</a>]</td>
 <td><div class="info">
-<code class="code">Arg.usage speclist usage_msg</code> prints an error message including
-    the list of valid options.
+<code class="code">Arg.usage speclist usage_msg</code> prints to standard error
+    an error message that includes the list of valid options.
+</div>
+</td></tr>
+<tr><td><a href="Arg.html#VALusage_string">usage_string</a> [<a href="Arg.html">Arg</a>]</td>
+<td><div class="info">
+Returns the message that would have been printed by <a href="Arg.html#VALusage"><code class="code">Arg.usage</code></a>,
+    if provided with the same parameters.
 </div>
 </td></tr>
 <tr><td><a href="Unix.html#VALutimes">utimes</a> [<a href="Unix.html">Unix</a>]</td>
@@ -5104,9 +5464,6 @@ Set the last access time (second arg) and last modification time
    (third arg) for a file.
 </div>
 </td></tr>
-<tr><td align="left"><br>V</td></tr>
-<tr><td><a href="Pervasives.html#VALvalid_float_lexem">valid_float_lexem</a> [<a href="Pervasives.html">Pervasives</a>]</td>
-<td></td></tr>
 <tr><td align="left"><br>W</td></tr>
 <tr><td><a href="Unix.html#VALwait">wait</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
@@ -5123,7 +5480,7 @@ Wait until one of the events specified in the given event list
 </td></tr>
 <tr><td><a href="Unix.html#VALwaitpid">waitpid</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-Same as <a href="Unix.html#VALwait"><code class="code">Unix.wait</code></a>, but waits for the process whose pid is given.
+Same as <a href="Unix.html#VALwait"><code class="code">Unix.wait</code></a>, but waits for the child process whose pid is given.
 </div>
 </td></tr>
 <tr><td><a href="Graphics.html#VALwhite">white</a> [<a href="Graphics.html">Graphics</a>]</td>
@@ -5136,9 +5493,15 @@ Size of one word on the machine currently executing the Caml
 </td></tr>
 <tr><td><a href="Unix.html#VALwrite">write</a> [<a href="Unix.html">Unix</a>]</td>
 <td><div class="info">
-<code class="code">write fd buff ofs len</code> writes <code class="code">len</code> characters to descriptor
-   <code class="code">fd</code>, taking them from string <code class="code">buff</code>, starting at position <code class="code">ofs</code>
-   in string <code class="code">buff</code>.
+<code class="code">write fd buff ofs len</code> writes <code class="code">len</code> bytes to descriptor <code class="code">fd</code>,
+    taking them from byte sequence <code class="code">buff</code>, starting at position <code class="code">ofs</code>
+    in <code class="code">buff</code>.
+</div>
+</td></tr>
+<tr><td><a href="Unix.html#VALwrite_substring">write_substring</a> [<a href="Unix.html">Unix</a>]</td>
+<td><div class="info">
+Same as <code class="code">write</code>, but take the data from a string instead of a byte
+    sequence.
 </div>
 </td></tr>
 <tr><td align="left"><br>Y</td></tr>

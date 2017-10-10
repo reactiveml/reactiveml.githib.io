@@ -3,6 +3,7 @@
 <head>
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Parsing.html">
 <link rel="next" href="Printexc.html">
@@ -14,7 +15,9 @@
 <link title="Arg" rel="Chapter" href="Arg.html">
 <link title="Array" rel="Chapter" href="Array.html">
 <link title="Buffer" rel="Chapter" href="Buffer.html">
+<link title="Bytes" rel="Chapter" href="Bytes.html">
 <link title="Callback" rel="Chapter" href="Callback.html">
+<link title="CamlinternalBigarray" rel="Chapter" href="CamlinternalBigarray.html">
 <link title="Char" rel="Chapter" href="Char.html">
 <link title="Complex" rel="Chapter" href="Complex.html">
 <link title="Digest" rel="Chapter" href="Digest.html">
@@ -54,7 +57,6 @@
 <link title="Comparisons" rel="Section" href="#6_Comparisons">
 <link title="Boolean operations" rel="Section" href="#6_Booleanoperations">
 <link title="Integer arithmetic" rel="Section" href="#6_Integerarithmetic">
-<link title="Integer arithmetic" rel="Section" href="#6_Integerarithmetic">
 <link title="Floating-point arithmetic" rel="Section" href="#6_Floatingpointarithmetic">
 <link title="String operations" rel="Section" href="#6_Stringoperations">
 <link title="Character operations" rel="Section" href="#6_Characteroperations">
@@ -65,16 +67,13 @@
 <link title="Input/output" rel="Section" href="#6_Inputoutput">
 <link title="References" rel="Section" href="#6_References">
 <link title="Operations on format strings" rel="Section" href="#6_Operationsonformatstrings">
-<link title="Operations on format strings" rel="Section" href="#6_Operationsonformatstrings">
 <link title="Program termination" rel="Section" href="#6_Programtermination">
-<link title="For system use only, not for the casual user" rel="Section" href="#6_Forsystemuseonlynotforthecasualuser">
 <link title="Bitwise operations" rel="Subsection" href="#7_Bitwiseoperations">
 <link title="Output functions on standard output" rel="Subsection" href="#7_Outputfunctionsonstandardoutput">
 <link title="Output functions on standard error" rel="Subsection" href="#7_Outputfunctionsonstandarderror">
 <link title="Input functions on standard input" rel="Subsection" href="#7_Inputfunctionsonstandardinput">
 <link title="General output functions" rel="Subsection" href="#7_Generaloutputfunctions">
 <link title="General input functions" rel="Subsection" href="#7_Generalinputfunctions">
-<link title="Operations on large files" rel="Subsection" href="#7_Operationsonlargefiles">
 <link title="Operations on large files" rel="Subsection" href="#7_Operationsonlargefiles">
 <title>Pervasives</title>
 </head>
@@ -91,6 +90,18 @@ Exception raised when none of the cases of a pattern-matching apply.
   (file name, line number, column number).<br>
 </div>
 <hr width="100%">
+
+<pre><span id="TYPEint32"><span class="keyword">type</span> <code class="type"></code>int32</span> </pre>
+
+
+<pre><span id="TYPEint64"><span class="keyword">type</span> <code class="type"></code>int64</span> </pre>
+
+
+<pre><span id="TYPEnativeint"><span class="keyword">type</span> <code class="type"></code>nativeint</span> </pre>
+
+
+<pre><span id="TYPEbytes"><span class="keyword">type</span> <code class="type"></code>bytes</span> </pre>
+
 
 <pre><span id="EXCEPTIONMatch_failure"><span class="keyword">exception</span> Match_failure</span> <span class="keyword">of</span> <code class="type">(string * int * int)</code></pre>
 <div class="info ">
@@ -164,18 +175,6 @@ A special case of Sys_error raised when no I/O is possible on a
 </div>
 
 <pre><span id="EXCEPTIONUndefined_recursive_module"><span class="keyword">exception</span> Undefined_recursive_module</span> <span class="keyword">of</span> <code class="type">(string * int * int)</code></pre>
-<br>
-The initially opened module.
-<p>
-
-   This module provides the basic operations over the built-in types
-   (numbers, booleans, strings, exceptions, references, lists, arrays,
-   input-output channels, ...)
-<p>
-
-   This module is automatically opened at the beginning of each compilation.
-   All components of this module can therefore be referred by their short
-   name, without prefixing them by <code class="code">Pervasives</code>.<br>
 <br>
 The initially opened module.
 <p>
@@ -297,8 +296,6 @@ The boolean ``or''. Evaluation is sequential, left-to-right:
    in <code class="code">e1 or e2</code>, <code class="code">e1</code> is evaluated first, and if it returns <code class="code">true</code>,
    <code class="code">e2</code> is not evaluated at all.<br>
 </div>
-<br>
-<h6 id="6_Integerarithmetic">Integer arithmetic</h6><br>
 <br>
 <h6 id="6_Integerarithmetic">Integer arithmetic</h6><br>
 <br>
@@ -1172,15 +1169,6 @@ Operations on large files.
   regular integers (type <code class="code">int</code>), these alternate functions allow
   operating on files whose sizes are greater than <code class="code">max_int</code>.<br>
 <br>
-<div class="h7" id="7_Operationsonlargefiles">Operations on large files</div><br>
-<br>
-Operations on large files.
-  This sub-module provides 64-bit variants of the channel functions
-  that manipulate file positions and file sizes.  By representing
-  positions and sizes by 64-bit integers (type <code class="code">int64</code>) instead of
-  regular integers (type <code class="code">int</code>), these alternate functions allow
-  operating on files whose sizes are greater than <code class="code">max_int</code>.<br>
-<br>
 <h6 id="6_References">References</h6><br>
 
 <pre><code><span id="TYPEref"><span class="keyword">type</span> <code class="type">'a</code> ref</span> = {</code></pre><table class="typetable">
@@ -1222,8 +1210,6 @@ Increment the integer contained in the given reference.
 Decrement the integer contained in the given reference.
    Equivalent to <code class="code">fun r -&gt; r := pred !r</code>.<br>
 </div>
-<br>
-<h6 id="6_Operationsonformatstrings">Operations on format strings</h6><br>
 <br>
 <h6 id="6_Operationsonformatstrings">Operations on format strings</h6><br>
 <br>
@@ -1278,9 +1264,4 @@ Register the given function to be called at program
    The functions are called in ``last in, first out'' order:
    the function most recently added with <code class="code">at_exit</code> is called first.<br>
 </div>
-<br>
-<h6 id="6_Forsystemuseonlynotforthecasualuser">For system use only, not for the casual user</h6><br>
-
-<pre><span id="VALvalid_float_lexem"><span class="keyword">val</span> valid_float_lexem</span> : <code class="type">string -> string</code></pre>
-<pre><span id="VALunsafe_really_input"><span class="keyword">val</span> unsafe_really_input</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">in_channel</a> -> string -> int -> int -> unit</code></pre>
-<pre><span id="VALdo_at_exit"><span class="keyword">val</span> do_at_exit</span> : <code class="type">unit -> unit</code></pre></body></html>
+</body></html>
