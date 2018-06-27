@@ -47,7 +47,15 @@ GENERATED=index.html \
 	farm13/videos.html \
 	farm13/code/jacques.html \
 	these_pasteur/index.html \
-
+	tutorial.html \
+	tutorial/lesson1.gen.html \
+	tutorial/lesson1.html \
+	tutorial/lesson2.gen.html \
+	tutorial/lesson2.html \
+	tutorial/lesson3.gen.html \
+	tutorial/lesson3.html \
+	tutorial/lesson4.gen.html \
+	tutorial/lesson4.html \
 
 all: $(GENERATED)
 
@@ -230,6 +238,83 @@ distrib/index.html: header.html footer.html distrib/index.src.html
 	$(SRC2HTML) ".." "ReactiveML - Distribution" "XXX" \
 		header.html footer.html distrib/index.src.html > $@
 
+## Tutorial
+
+tutorial.html: header.html footer.html tutorial.src.html
+	$(SRC2HTML) "." "ReactiveML - Tutorial" "Tutorial" \
+		header.html footer.html tutorial.src.html > $@
+
+
+tutorial/lesson1.html: header.html footer.html tutorial/lesson1.gen.html
+	$(SRC2HTML) ".." "ReactiveML - Tutorial" "XXX" \
+		header.html footer.html tutorial/lesson1.gen.html > $@
+
+tutorial/lesson1.gen.html: tutorial/lesson1.src.html \
+		tryrml/lessons/lesson1/step1.html \
+		tryrml/lessons/lesson1/step2.html \
+		tryrml/lessons/lesson1/step3.html \
+		tryrml/lessons/lesson1/step4.html \
+		tryrml/lessons/lesson1/step5.html \
+		tryrml/lessons/lesson1/step6.html \
+		tryrml/lessons/lesson1/step7.html
+	cat $+ > $@
+
+
+tutorial/lesson2.html: header.html footer.html tutorial/lesson2.gen.html
+	$(SRC2HTML) ".." "ReactiveML - Tutorial" "XXX" \
+		header.html footer.html tutorial/lesson2.gen.html > $@
+
+tutorial/lesson2.gen.html: tutorial/lesson2.src.html \
+		tryrml/lessons/lesson2/step1.html \
+		tryrml/lessons/lesson2/step2.html \
+		tryrml/lessons/lesson2/step3.html \
+		tryrml/lessons/lesson2/step4.html \
+		tryrml/lessons/lesson2/step5.html \
+		tryrml/lessons/lesson2/step6.html \
+		tryrml/lessons/lesson2/step7.html
+	cat $+ > $@
+
+tutorial/lesson3.html: header.html footer.html tutorial/lesson3.gen.html
+	$(SRC2HTML) ".." "ReactiveML - Tutorial" "XXX" \
+		header.html footer.html tutorial/lesson3.gen.html > $@
+
+tutorial/lesson3.gen.html: tutorial/lesson3.src.html \
+		tryrml/lessons/lesson3/step1.html \
+		tryrml/lessons/lesson3/step2.html \
+		tryrml/lessons/lesson3/step3.html \
+		tryrml/lessons/lesson3/step4.html \
+		tryrml/lessons/lesson3/step5.html \
+		tryrml/lessons/lesson3/step6.html \
+		tryrml/lessons/lesson3/step7.html \
+		tryrml/lessons/lesson3/step8.html \
+		tryrml/lessons/lesson3/step9.html \
+		tryrml/lessons/lesson3/step10.html \
+		tryrml/lessons/lesson3/step11.html \
+		tryrml/lessons/lesson3/step12.html \
+		tryrml/lessons/lesson3/step13.html \
+		tryrml/lessons/lesson3/step14.html \
+		tryrml/lessons/lesson3/step15.html \
+		tryrml/lessons/lesson3/step16.html
+	cat $+ > $@
+
+tutorial/lesson4.html: header.html footer.html tutorial/lesson4.gen.html
+	$(SRC2HTML) ".." "ReactiveML - Tutorial" "XXX" \
+		header.html footer.html tutorial/lesson4.gen.html > $@
+
+tutorial/lesson4.gen.html: tutorial/lesson4.src.html \
+		tryrml/lessons/lesson4/step1.html \
+		tryrml/lessons/lesson4/step2.html \
+		tryrml/lessons/lesson4/step3.html \
+		tryrml/lessons/lesson4/step4.html \
+		tryrml/lessons/lesson4/step5.html \
+		tryrml/lessons/lesson4/step6.html \
+		tryrml/lessons/lesson4/step7.html \
+		tryrml/lessons/lesson4/step8.html \
+		tryrml/lessons/lesson4/step9.html
+	cat $+ > $@
+
+
+## Navigation
 
 navigation.html: header.html footer.html navigation.src.html
 	$(SRC2HTML) "." "ReactiveML - Navigation" "XXX" \
