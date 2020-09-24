@@ -33,7 +33,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -43,6 +42,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -172,10 +172,10 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;single_write&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bytes&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;write_substring&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;single_write_substring&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;in_channel_of_descr&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.in_channel<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;out_channel_of_descr&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.out_channel<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;descr_of_in_channel&nbsp;:&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.file_descr<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;descr_of_out_channel&nbsp;:&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.file_descr<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;in_channel_of_descr&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.in_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;out_channel_of_descr&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.out_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;descr_of_in_channel&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.file_descr<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;descr_of_out_channel&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.file_descr<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;seek_command&nbsp;=&nbsp;<span class="constructor">SEEK_SET</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">SEEK_CUR</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">SEEK_END</span><br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lseek&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.seek_command&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;truncate&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
@@ -242,19 +242,19 @@
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process_in&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.in_channel<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process_out&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.out_channel<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.out_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process_in&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.in_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process_out&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.out_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.out_channel<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_process_full&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.in_channel<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;close_process_in&nbsp;:&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.process_status<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;close_process_out&nbsp;:&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.process_status<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.out_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.in_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;close_process_in&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.process_status<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;close_process_out&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.process_status<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;close_process&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.process_status<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.process_status<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;close_process_full&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.out_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unix</span>.process_status<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;symlink&nbsp;:&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;has_symlink&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
@@ -413,10 +413,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.socket_float_option&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;float&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;getsockopt_error&nbsp;:&nbsp;<span class="constructor">Unix</span>.file_descr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unix</span>.error&nbsp;option<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_connection&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unix</span>.sockaddr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Pervasives</span>.out_channel<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;shutdown_connection&nbsp;:&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unix</span>.sockaddr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;*&nbsp;<span class="constructor">Stdlib</span>.out_channel<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;shutdown_connection&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;establish_server&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Stdlib</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Stdlib</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unix</span>.sockaddr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;host_entry&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;h_name&nbsp;:&nbsp;string;<br>

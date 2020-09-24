@@ -33,7 +33,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -43,6 +42,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -73,7 +73,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;lex_start_p&nbsp;:&nbsp;<span class="constructor">Lexing</span>.position;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;lex_curr_p&nbsp;:&nbsp;<span class="constructor">Lexing</span>.position;<br>
 &nbsp;&nbsp;}<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_channel&nbsp;:&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Lexing</span>.lexbuf<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_channel&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Lexing</span>.lexbuf<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Lexing</span>.lexbuf<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_function&nbsp;:&nbsp;(string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Lexing</span>.lexbuf<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lexeme&nbsp;:&nbsp;<span class="constructor">Lexing</span>.lexbuf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>

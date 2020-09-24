@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,75 +62,81 @@
 </div>
 <h1>Module <a href="type_Lazy.html">Lazy</a></h1>
 
-<pre><span class="keyword">module</span> Lazy: <code class="code">sig</code> <a href="Lazy.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Deferred computations.<br>
-</div>
-<hr width="100%">
+<pre><span id="MODULELazy"><span class="keyword">module</span> Lazy</span>: <code class="code">sig</code> <a href="Lazy.html">..</a> <code class="code">end</code></pre><hr width="100%">
 
 <pre><span id="TYPElazy_t"><span class="keyword">type</span> <code class="type">'a</code> lazy_t</span> </pre>
 
-<br>
-Deferred computations.<br>
+<p>Deferred computations.</p>
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> = <code class="type">'a <a href="Lazy.html#TYPElazy_t">lazy_t</a></code> </pre>
 <div class="info ">
-A value of type <code class="code">'a Lazy.t</code> is a deferred computation, called
+<div class="info-desc">
+<p>A value of type <code class="code">'a Lazy.t</code> is a deferred computation, called
    a suspension, that has a result of type <code class="code">'a</code>.  The special
    expression syntax <code class="code">lazy (expr)</code> makes a suspension of the
    computation of <code class="code">expr</code>, without computing <code class="code">expr</code> itself yet.
    "Forcing" the suspension will then compute <code class="code">expr</code> and return its
-   result.
-<p>
+   result.</p>
 
-   Note: <code class="code">lazy_t</code> is the built-in type constructor used by the compiler
+<p>Note: <code class="code">lazy_t</code> is the built-in type constructor used by the compiler
    for the <code class="code">lazy</code> keyword.  You should not use it directly.  Always use
-   <code class="code">Lazy.t</code> instead.
-<p>
+   <code class="code">Lazy.t</code> instead.</p>
 
-   Note: if the program is compiled with the <code class="code">-rectypes</code> option,
+<p>Note: if the program is compiled with the <code class="code">-rectypes</code> option,
    ill-founded recursive definitions of the form <code class="code">let rec x = lazy x</code>
    or <code class="code">let rec x = lazy(lazy(...(lazy x)))</code> are accepted by the type-checker
    and lead, when forced, to ill-formed values that trigger infinite
    loops in the garbage collector and other parts of the run-time system.
    Without the <code class="code">-rectypes</code> option, such ill-founded recursive definitions
-   are rejected by the type-checker.<br>
+   are rejected by the type-checker.</p>
+</div>
 </div>
 
 
 <pre><span id="EXCEPTIONUndefined"><span class="keyword">exception</span> Undefined</span></pre>
 
 <pre><span id="VALforce"><span class="keyword">val</span> force</span> : <code class="type">'a <a href="Lazy.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
-<code class="code">force x</code> forces the suspension <code class="code">x</code> and returns its result.
+<div class="info-desc">
+<p><code class="code">force x</code> forces the suspension <code class="code">x</code> and returns its result.
    If <code class="code">x</code> has already been forced, <code class="code">Lazy.force x</code> returns the
    same value again without recomputing it.  If it raised an exception,
    the same exception is raised again.
    Raise <code class="code">Undefined</code> if the forcing of <code class="code">x</code> tries to force <code class="code">x</code> itself
-   recursively.<br>
+   recursively.</p>
+</div>
 </div>
 
 <pre><span id="VALforce_val"><span class="keyword">val</span> force_val</span> : <code class="type">'a <a href="Lazy.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
-<code class="code">force_val x</code> forces the suspension <code class="code">x</code> and returns its
+<div class="info-desc">
+<p><code class="code">force_val x</code> forces the suspension <code class="code">x</code> and returns its
     result.  If <code class="code">x</code> has already been forced, <code class="code">force_val x</code>
     returns the same value again without recomputing it.
     Raise <code class="code">Undefined</code> if the forcing of <code class="code">x</code> tries to force <code class="code">x</code> itself
     recursively.
     If the computation of <code class="code">x</code> raises an exception, it is unspecified
-    whether <code class="code">force_val x</code> raises the same exception or <code class="code">Undefined</code>.<br>
+    whether <code class="code">force_val x</code> raises the same exception or <code class="code">Undefined</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALlazy_from_fun"><span class="keyword">val</span> lazy_from_fun</span> : <code class="type">(unit -> 'a) -> 'a <a href="Lazy.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">lazy_from_fun f</code> is the same as <code class="code">lazy (f ())</code> but slightly more
-    efficient.<br>
+<div class="info-desc">
+<p><code class="code">lazy_from_fun f</code> is the same as <code class="code">lazy (f ())</code> but slightly more
+    efficient.</p>
+</div>
 </div>
 
 <pre><span id="VALlazy_from_val"><span class="keyword">val</span> lazy_from_val</span> : <code class="type">'a -> 'a <a href="Lazy.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">lazy_from_val v</code> returns an already-forced suspension of <code class="code">v</code>
+<div class="info-desc">
+<p><code class="code">lazy_from_val v</code> returns an already-forced suspension of <code class="code">v</code>
     This is for special purposes only and should not be confused with
-    <code class="code">lazy (v)</code>.<br>
+    <code class="code">lazy (v)</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALlazy_is_val"><span class="keyword">val</span> lazy_is_val</span> : <code class="type">'a <a href="Lazy.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
-<code class="code">lazy_is_val x</code> returns <code class="code">true</code> if <code class="code">x</code> has already been forced and
-    did not raise an exception.<br>
+<div class="info-desc">
+<p><code class="code">lazy_is_val x</code> returns <code class="code">true</code> if <code class="code">x</code> has already been forced and
+    did not raise an exception.</p>
+</div>
 </div>
 </body></html>

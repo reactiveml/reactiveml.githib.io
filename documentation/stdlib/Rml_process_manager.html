@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,73 +62,89 @@
 </div>
 <h1>Module <a href="type_Rml_process_manager.html">Rml_process_manager</a></h1>
 
-<pre><span class="keyword">module</span> Rml_process_manager: <code class="code">sig</code> <a href="Rml_process_manager.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Process management combinators.<br>
-</div>
-<hr width="100%">
-<br>
-Process management combinators.<br>
+<pre><span id="MODULERml_process_manager"><span class="keyword">module</span> Rml_process_manager</span>: <code class="code">sig</code> <a href="Rml_process_manager.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<p>Process management combinators.</p>
 
 <pre><span id="TYPEident"><span class="keyword">type</span> <code class="type"></code>ident</span> </pre>
 <div class="info ">
-Type of the process identifier.<br>
+<div class="info-desc">
+<p>Type of the process identifier.</p>
+</div>
 </div>
 
 
 <pre><span id="VALps"><span class="keyword">val</span> ps</span> : <code class="type">unit -> unit</code></pre><div class="info ">
-Display the list of running processes with their behaviors:<ul>
+<div class="info-desc">
+<p>Display the list of running processes with their behaviors:</p>
+<ul>
 <li><code class="code">k</code>: killable</li>
 <li><code class="code">s</code>: suspendable</li>
 <li><code class="code">r</code>: resetable</li>
 <li><code class="code">c</code>: changeable</li>
 <li><code class="code">x</code>: extensible</li>
 </ul>
-<br>
+</div>
 </div>
 
 <pre><span id="VALkillable"><span class="keyword">val</span> killable</span> : <code class="type">'a process -> 'a option process</code></pre><div class="info ">
-<code class="code">run killable p</code> associates an id to the process <code class="code">p</code> and executes
+<div class="info-desc">
+<p><code class="code">run killable p</code> associates an id to the process <code class="code">p</code> and executes
     it. The execution of this process can be stopped by the emission
     of its id on the signal <code class="code">kill</code>. If the execution of <code class="code">p</code> terminates
     with the value <code class="code">v</code>, then <code class="code">run killable p</code> returns <code class="code">Some v</code>. If If
-    the execution of <code class="code">p</code> is aborted, the value <code class="code">None</code> is returned.<br>
+    the execution of <code class="code">p</code> is aborted, the value <code class="code">None</code> is returned.</p>
+</div>
 </div>
 
 <pre><span id="VALkill"><span class="keyword">val</span> kill</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info ">
-Signal gathering the killing orders.<br>
+<div class="info-desc">
+<p>Signal gathering the killing orders.</p>
+</div>
 </div>
 
 <pre><span id="VALsuspendable"><span class="keyword">val</span> suspendable</span> : <code class="type">'a process -> 'a process</code></pre><div class="info ">
-<code class="code">run suspendable p</code> associates an id to the process <code class="code">p</code> and
+<div class="info-desc">
+<p><code class="code">run suspendable p</code> associates an id to the process <code class="code">p</code> and
     executes it. The execution of this process can be suspended and
-    then resumed by the emission of its id on the signal <code class="code">sr</code>.<br>
+    then resumed by the emission of its id on the signal <code class="code">sr</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALsr"><span class="keyword">val</span> sr</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info ">
-Signal gathering the suspension and resumption orders.<br>
+<div class="info-desc">
+<p>Signal gathering the suspension and resumption orders.</p>
+</div>
 </div>
 
 <pre><span id="VALresetable"><span class="keyword">val</span> resetable</span> : <code class="type">'a process -> 'a process</code></pre><div class="info ">
-<code class="code">run resetable p</code> associates an id to the process <code class="code">p</code> and executes
+<div class="info-desc">
+<p><code class="code">run resetable p</code> associates an id to the process <code class="code">p</code> and executes
     it. The execution of this process can be reset by the emission of
-    its id on the signal <code class="code">reset</code>.<br>
+    its id on the signal <code class="code">reset</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">(int, <a href="Rml_process_manager.html#TYPEident">ident</a> list) event</code></pre><div class="info ">
-Signal gathering the reseting orders.<br>
+<div class="info-desc">
+<p>Signal gathering the reseting orders.</p>
+</div>
 </div>
 
 <pre><span id="VALchangeable"><span class="keyword">val</span> changeable</span> : <code class="type">('a, (int * ('state -> unit process)) list) event -><br>       ('state -> unit process) -> 'state -> unit process</code></pre><div class="info ">
-<code class="code">run changeable change p state</code> associates an id to the process
+<div class="info-desc">
+<p><code class="code">run changeable change p state</code> associates an id to the process
     <code class="code">(p state)</code> and executes it. The behavior process can be changed
     by emitting a new process on the signal <code class="code">change</code>. The state
-    <code class="code">state</code> is transnited to the new process.<br>
+    <code class="code">state</code> is transnited to the new process.</p>
+</div>
 </div>
 
 <pre><span id="VALextensible"><span class="keyword">val</span> extensible</span> : <code class="type">('a, (int * ('state -> unit process)) list) event -><br>       ('state -> unit process) -> 'state -> unit process</code></pre><div class="info ">
-<code class="code">run extensible add p state</code> associates an id to the process
+<div class="info-desc">
+<p><code class="code">run extensible add p state</code> associates an id to the process
     <code class="code">(p state)</code> and executes it. New processes sharing the state <code class="code">state</code>
     can be executed in parallel to <code class="code">(p state)</code> by send their
-    definition on the signal <code class="code">add</code>.<br>
+    definition on the signal <code class="code">add</code>.</p>
+</div>
 </div>
 </body></html>

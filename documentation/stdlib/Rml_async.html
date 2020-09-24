@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,43 +62,42 @@
 </div>
 <h1>Module <a href="type_Rml_async.html">Rml_async</a></h1>
 
-<pre><span class="keyword">module</span> Rml_async: <code class="code">sig</code> <a href="Rml_async.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Launching asychronous computations.
-<p>
+<pre><span id="MODULERml_async"><span class="keyword">module</span> Rml_async</span>: <code class="code">sig</code> <a href="Rml_async.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<p>Launching asychronous computations.</p>
 
-    To use this module, ReactiveML programs need to be compiled with
-    the option -thread.<br>
-</div>
-<hr width="100%">
-<br>
-Launching asychronous computations.
-<p>
-
-    To use this module, ReactiveML programs need to be compiled with
-    the option -thread.<br>
+<p>To use this module, ReactiveML programs need to be compiled with
+    the option -thread.</p>
 
 <pre><span id="VALproc_of_fun"><span class="keyword">val</span> proc_of_fun</span> : <code class="type">('a -> 'b) -> 'a -> 'b process</code></pre><div class="info ">
-<code class="code">run proc_of_fun f x</code> executes <code class="code">f x</code> in a thread. The execution
+<div class="info-desc">
+<p><code class="code">run proc_of_fun f x</code> executes <code class="code">f x</code> in a thread. The execution
     can last several instants and terminates when the computation of
     <code class="code">f x</code> terminates. If <code class="code">f x</code> do not terminate, the system remains
-    cooperative.<br>
+    cooperative.</p>
+</div>
 </div>
 
 <pre><span id="VALexec"><span class="keyword">val</span> exec</span> : <code class="type">('a, 'b) event -> ('c -> 'a) -> 'c -> unit</code></pre><div class="info ">
-<code class="code">exec term f x</code> spawns the computation of <code class="code">f x</code> in a thread and
+<div class="info-desc">
+<p><code class="code">exec term f x</code> spawns the computation of <code class="code">f x</code> in a thread and
     terminates instantaneously. When the computation of <code class="code">f x</code>
-    terminates, the result is sent on the signal <code class="code">term</code>.<br>
+    terminates, the result is sent on the signal <code class="code">term</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALsafe_emit"><span class="keyword">val</span> safe_emit</span> : <code class="type">('a, 'b) event -> 'a -> unit</code></pre><div class="info ">
-<code class="code">safe_emit s v</code> will emit the value <code class="code">v</code> on the signal <code class="code">s</code>, but
+<div class="info-desc">
+<p><code class="code">safe_emit s v</code> will emit the value <code class="code">v</code> on the signal <code class="code">s</code>, but
     there is no guaranty on the instant of emission. This function can
-    be called from an external thread.<br>
+    be called from an external thread.</p>
+</div>
 </div>
 
 <pre><span id="VALyield"><span class="keyword">val</span> yield</span> : <code class="type">unit -> unit</code></pre><div class="info ">
-<code class="code">yield ()</code> re-schedules the calling thread without suspending
+<div class="info-desc">
+<p><code class="code">yield ()</code> re-schedules the calling thread without suspending
    it. This function can be used to give scheduling hints, telling the
-   thread scheduler that now is a good time to switch to other threads.<br>
+   thread scheduler that now is a good time to switch to other threads.</p>
+</div>
 </div>
 </body></html>

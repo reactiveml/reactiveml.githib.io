@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,35 +62,29 @@
 </div>
 <h1>Module <a href="type_Callback.html">Callback</a></h1>
 
-<pre><span class="keyword">module</span> Callback: <code class="code">sig</code> <a href="Callback.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Registering Caml values with the C runtime.
-<p>
+<pre><span id="MODULECallback"><span class="keyword">module</span> Callback</span>: <code class="code">sig</code> <a href="Callback.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<p>Registering Caml values with the C runtime.</p>
 
-   This module allows Caml values to be registered with the C runtime
+<p>This module allows Caml values to be registered with the C runtime
    under a symbolic name, so that C code can later call back registered
-   Caml functions, or raise registered Caml exceptions.<br>
-</div>
-<hr width="100%">
-<br>
-Registering Caml values with the C runtime.
-<p>
-
-   This module allows Caml values to be registered with the C runtime
-   under a symbolic name, so that C code can later call back registered
-   Caml functions, or raise registered Caml exceptions.<br>
+   Caml functions, or raise registered Caml exceptions.</p>
 
 <pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type">string -> 'a -> unit</code></pre><div class="info ">
-<code class="code">Callback.register n v</code> registers the value <code class="code">v</code> under
+<div class="info-desc">
+<p><code class="code">Callback.register n v</code> registers the value <code class="code">v</code> under
    the name <code class="code">n</code>. C code can later retrieve a handle to <code class="code">v</code>
-   by calling <code class="code">caml_named_value(n)</code>.<br>
+   by calling <code class="code">caml_named_value(n)</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALregister_exception"><span class="keyword">val</span> register_exception</span> : <code class="type">string -> exn -> unit</code></pre><div class="info ">
-<code class="code">Callback.register_exception n exn</code> registers the
+<div class="info-desc">
+<p><code class="code">Callback.register_exception n exn</code> registers the
    exception contained in the exception value <code class="code">exn</code>
    under the name <code class="code">n</code>. C code can later retrieve a handle to
    the exception by calling <code class="code">caml_named_value(n)</code>. The exception
    value thus obtained is suitable for passign as first argument
-   to <code class="code">raise_constant</code> or <code class="code">raise_with_arg</code>.<br>
+   to <code class="code">raise_constant</code> or <code class="code">raise_with_arg</code>.</p>
+</div>
 </div>
 </body></html>

@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,217 +62,256 @@
 </div>
 <h1>Module <a href="type_Nativeint.html">Nativeint</a></h1>
 
-<pre><span class="keyword">module</span> Nativeint: <code class="code">sig</code> <a href="Nativeint.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Processor-native integers.
-<p>
-
-   This module provides operations on the type <code class="code">nativeint</code> of
-   signed 32-bit integers (on 32-bit platforms) or
-   signed 64-bit integers (on 64-bit platforms).
-   This integer type has exactly the same width as that of a <code class="code">long</code>
-   integer type in the C compiler.  All arithmetic operations over
-   <code class="code">nativeint</code> are taken modulo 2<sup class="superscript">32</sup> or 2<sup class="superscript">64</sup> depending
-   on the word size of the architecture.
-<p>
-
-   Performance notice: values of type <code class="code">nativeint</code> occupy more memory
-   space than values of type <code class="code">int</code>, and arithmetic operations on
-   <code class="code">nativeint</code> are generally slower than those on <code class="code">int</code>.  Use <code class="code">nativeint</code>
-   only when the application requires the extra bit of precision
-   over the <code class="code">int</code> type.<br>
-</div>
-<hr width="100%">
+<pre><span id="MODULENativeint"><span class="keyword">module</span> Nativeint</span>: <code class="code">sig</code> <a href="Nativeint.html">..</a> <code class="code">end</code></pre><hr width="100%">
 
 <pre><span id="TYPEnativeint"><span class="keyword">type</span> <code class="type"></code>nativeint</span> </pre>
 
-<br>
-Processor-native integers.
-<p>
+<p>Processor-native integers.</p>
 
-   This module provides operations on the type <code class="code">nativeint</code> of
+<p>This module provides operations on the type <code class="code">nativeint</code> of
    signed 32-bit integers (on 32-bit platforms) or
    signed 64-bit integers (on 64-bit platforms).
    This integer type has exactly the same width as that of a <code class="code">long</code>
    integer type in the C compiler.  All arithmetic operations over
    <code class="code">nativeint</code> are taken modulo 2<sup class="superscript">32</sup> or 2<sup class="superscript">64</sup> depending
-   on the word size of the architecture.
-<p>
+   on the word size of the architecture.</p>
 
-   Performance notice: values of type <code class="code">nativeint</code> occupy more memory
+<p>Performance notice: values of type <code class="code">nativeint</code> occupy more memory
    space than values of type <code class="code">int</code>, and arithmetic operations on
    <code class="code">nativeint</code> are generally slower than those on <code class="code">int</code>.  Use <code class="code">nativeint</code>
    only when the application requires the extra bit of precision
-   over the <code class="code">int</code> type.<br>
+   over the <code class="code">int</code> type.</p>
 
 <pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-The native integer 0.<br>
+<div class="info-desc">
+<p>The native integer 0.</p>
 </div>
-<br>
-The native integer 1.<br>
+</div>
+<p>The native integer 1.</p>
 
 <pre><span id="VALminus_one"><span class="keyword">val</span> minus_one</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-The native integer -1.<br>
+<div class="info-desc">
+<p>The native integer -1.</p>
+</div>
 </div>
 
 <pre><span id="VALneg"><span class="keyword">val</span> neg</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Unary negation.<br>
+<div class="info-desc">
+<p>Unary negation.</p>
+</div>
 </div>
 
 <pre><span id="VALadd"><span class="keyword">val</span> add</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Addition.<br>
+<div class="info-desc">
+<p>Addition.</p>
+</div>
 </div>
 
 <pre><span id="VALsub"><span class="keyword">val</span> sub</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Subtraction.<br>
+<div class="info-desc">
+<p>Subtraction.</p>
+</div>
 </div>
 
 <pre><span id="VALmul"><span class="keyword">val</span> mul</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Multiplication.<br>
+<div class="info-desc">
+<p>Multiplication.</p>
+</div>
 </div>
 
 <pre><span id="VALdiv"><span class="keyword">val</span> div</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Integer division.  Raise <code class="code">Division_by_zero</code> if the second
+<div class="info-desc">
+<p>Integer division.  Raise <code class="code">Division_by_zero</code> if the second
    argument is zero.  This division rounds the real quotient of
-   its arguments towards zero, as specified for <a href="Pervasives.html#VAL(/)"><code class="code">Pervasives.(/)</code></a>.<br>
+   its arguments towards zero, as specified for <a href="Stdlib.html#VAL(/)"><code class="code">Stdlib.(/)</code></a>.</p>
+</div>
 </div>
 
 <pre><span id="VALrem"><span class="keyword">val</span> rem</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Integer remainder.  If <code class="code">y</code> is not zero, the result
+<div class="info-desc">
+<p>Integer remainder.  If <code class="code">y</code> is not zero, the result
    of <code class="code">Nativeint.rem x y</code> satisfies the following properties:
    <code class="code">Nativeint.zero &lt;= Nativeint.rem x y &lt; Nativeint.abs y</code> and
    <code class="code">x = Nativeint.add (Nativeint.mul (Nativeint.div x y) y) (Nativeint.rem x y)</code>.
-   If <code class="code">y = 0</code>, <code class="code">Nativeint.rem x y</code> raises <code class="code">Division_by_zero</code>.<br>
+   If <code class="code">y = 0</code>, <code class="code">Nativeint.rem x y</code> raises <code class="code">Division_by_zero</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALsucc"><span class="keyword">val</span> succ</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Successor.
-   <code class="code">Nativeint.succ x</code> is <code class="code">Nativeint.add x Nativeint.one</code>.<br>
+<div class="info-desc">
+<p>Successor.
+   <code class="code">Nativeint.succ x</code> is <code class="code">Nativeint.add x Nativeint.one</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALpred"><span class="keyword">val</span> pred</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Predecessor.
-   <code class="code">Nativeint.pred x</code> is <code class="code">Nativeint.sub x Nativeint.one</code>.<br>
+<div class="info-desc">
+<p>Predecessor.
+   <code class="code">Nativeint.pred x</code> is <code class="code">Nativeint.sub x Nativeint.one</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALabs"><span class="keyword">val</span> abs</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Return the absolute value of its argument.<br>
+<div class="info-desc">
+<p>Return the absolute value of its argument.</p>
+</div>
 </div>
 
 <pre><span id="VALsize"><span class="keyword">val</span> size</span> : <code class="type">int</code></pre><div class="info ">
-The size in bits of a native integer.  This is equal to <code class="code">32</code>
-   on a 32-bit platform and to <code class="code">64</code> on a 64-bit platform.<br>
+<div class="info-desc">
+<p>The size in bits of a native integer.  This is equal to <code class="code">32</code>
+   on a 32-bit platform and to <code class="code">64</code> on a 64-bit platform.</p>
+</div>
 </div>
 
 <pre><span id="VALmax_int"><span class="keyword">val</span> max_int</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-The greatest representable native integer,
+<div class="info-desc">
+<p>The greatest representable native integer,
    either 2<sup class="superscript">31</sup> - 1 on a 32-bit platform,
-   or 2<sup class="superscript">63</sup> - 1 on a 64-bit platform.<br>
+   or 2<sup class="superscript">63</sup> - 1 on a 64-bit platform.</p>
+</div>
 </div>
 
 <pre><span id="VALmin_int"><span class="keyword">val</span> min_int</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-The greatest representable native integer,
+<div class="info-desc">
+<p>The greatest representable native integer,
    either -2<sup class="superscript">31</sup> on a 32-bit platform,
-   or -2<sup class="superscript">63</sup> on a 64-bit platform.<br>
+   or -2<sup class="superscript">63</sup> on a 64-bit platform.</p>
+</div>
 </div>
 
 <pre><span id="VALlogand"><span class="keyword">val</span> logand</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Bitwise logical and.<br>
+<div class="info-desc">
+<p>Bitwise logical and.</p>
+</div>
 </div>
 
 <pre><span id="VALlogor"><span class="keyword">val</span> logor</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Bitwise logical or.<br>
+<div class="info-desc">
+<p>Bitwise logical or.</p>
+</div>
 </div>
 
 <pre><span id="VALlogxor"><span class="keyword">val</span> logxor</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Bitwise logical exclusive or.<br>
+<div class="info-desc">
+<p>Bitwise logical exclusive or.</p>
+</div>
 </div>
 
 <pre><span id="VALlognot"><span class="keyword">val</span> lognot</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Bitwise logical negation<br>
+<div class="info-desc">
+<p>Bitwise logical negation</p>
+</div>
 </div>
 
 <pre><span id="VALshift_left"><span class="keyword">val</span> shift_left</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> int -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-<code class="code">Nativeint.shift_left x y</code> shifts <code class="code">x</code> to the left by <code class="code">y</code> bits.
+<div class="info-desc">
+<p><code class="code">Nativeint.shift_left x y</code> shifts <code class="code">x</code> to the left by <code class="code">y</code> bits.
    The result is unspecified if <code class="code">y &lt; 0</code> or <code class="code">y &gt;= bitsize</code>,
    where <code class="code">bitsize</code> is <code class="code">32</code> on a 32-bit platform and
-   <code class="code">64</code> on a 64-bit platform.<br>
+   <code class="code">64</code> on a 64-bit platform.</p>
+</div>
 </div>
 
 <pre><span id="VALshift_right"><span class="keyword">val</span> shift_right</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> int -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-<code class="code">Nativeint.shift_right x y</code> shifts <code class="code">x</code> to the right by <code class="code">y</code> bits.
+<div class="info-desc">
+<p><code class="code">Nativeint.shift_right x y</code> shifts <code class="code">x</code> to the right by <code class="code">y</code> bits.
    This is an arithmetic shift: the sign bit of <code class="code">x</code> is replicated
    and inserted in the vacated bits.
-   The result is unspecified if <code class="code">y &lt; 0</code> or <code class="code">y &gt;= bitsize</code>.<br>
+   The result is unspecified if <code class="code">y &lt; 0</code> or <code class="code">y &gt;= bitsize</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALshift_right_logical"><span class="keyword">val</span> shift_right_logical</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> int -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-<code class="code">Nativeint.shift_right_logical x y</code> shifts <code class="code">x</code> to the right
+<div class="info-desc">
+<p><code class="code">Nativeint.shift_right_logical x y</code> shifts <code class="code">x</code> to the right
    by <code class="code">y</code> bits.
    This is a logical shift: zeroes are inserted in the vacated bits
    regardless of the sign of <code class="code">x</code>.
-   The result is unspecified if <code class="code">y &lt; 0</code> or <code class="code">y &gt;= bitsize</code>.<br>
+   The result is unspecified if <code class="code">y &lt; 0</code> or <code class="code">y &gt;= bitsize</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALof_int"><span class="keyword">val</span> of_int</span> : <code class="type">int -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Convert the given integer (type <code class="code">int</code>) to a native integer
-   (type <code class="code">nativeint</code>).<br>
+<div class="info-desc">
+<p>Convert the given integer (type <code class="code">int</code>) to a native integer
+   (type <code class="code">nativeint</code>).</p>
+</div>
 </div>
 
 <pre><span id="VALto_int"><span class="keyword">val</span> to_int</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> int</code></pre><div class="info ">
-Convert the given native integer (type <code class="code">nativeint</code>) to an
+<div class="info-desc">
+<p>Convert the given native integer (type <code class="code">nativeint</code>) to an
    integer (type <code class="code">int</code>).  The high-order bit is lost during
-   the conversion.<br>
+   the conversion.</p>
+</div>
 </div>
 
 <pre><span id="VALof_float"><span class="keyword">val</span> of_float</span> : <code class="type">float -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Convert the given floating-point number to a native integer,
+<div class="info-desc">
+<p>Convert the given floating-point number to a native integer,
    discarding the fractional part (truncate towards 0).
    The result of the conversion is undefined if, after truncation,
    the number is outside the range
-   [<a href="Nativeint.html#VALmin_int"><code class="code">Nativeint.min_int</code></a>, <a href="Nativeint.html#VALmax_int"><code class="code">Nativeint.max_int</code></a>].<br>
+   [<a href="Nativeint.html#VALmin_int"><code class="code">Nativeint.min_int</code></a>, <a href="Nativeint.html#VALmax_int"><code class="code">Nativeint.max_int</code></a>].</p>
+</div>
 </div>
 
 <pre><span id="VALto_float"><span class="keyword">val</span> to_float</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> float</code></pre><div class="info ">
-Convert the given native integer to a floating-point number.<br>
+<div class="info-desc">
+<p>Convert the given native integer to a floating-point number.</p>
+</div>
 </div>
 
 <pre><span id="VALof_int32"><span class="keyword">val</span> of_int32</span> : <code class="type"><a href="Int32.html#TYPEint32">Int32.int32</a> -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Convert the given 32-bit integer (type <code class="code">int32</code>)
-   to a native integer.<br>
+<div class="info-desc">
+<p>Convert the given 32-bit integer (type <code class="code">int32</code>)
+   to a native integer.</p>
+</div>
 </div>
 
 <pre><span id="VALto_int32"><span class="keyword">val</span> to_int32</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> <a href="Int32.html#TYPEint32">Int32.int32</a></code></pre><div class="info ">
-Convert the given native integer to a
+<div class="info-desc">
+<p>Convert the given native integer to a
    32-bit integer (type <code class="code">int32</code>).  On 64-bit platforms,
    the 64-bit native integer is taken modulo 2<sup class="superscript">32</sup>,
    i.e. the top 32 bits are lost.  On 32-bit platforms,
-   the conversion is exact.<br>
+   the conversion is exact.</p>
+</div>
 </div>
 
 <pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -> <a href="Nativeint.html#TYPEnativeint">nativeint</a></code></pre><div class="info ">
-Convert the given string to a native integer.
+<div class="info-desc">
+<p>Convert the given string to a native integer.
    The string is read in decimal (by default) or in hexadecimal,
    octal or binary if the string begins with <code class="code">0x</code>, <code class="code">0o</code> or <code class="code">0b</code>
    respectively.
    Raise <code class="code">Failure "int_of_string"</code> if the given string is not
    a valid representation of an integer, or if the integer represented
-   exceeds the range of integers representable in type <code class="code">nativeint</code>.<br>
+   exceeds the range of integers representable in type <code class="code">nativeint</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a> -> string</code></pre><div class="info ">
-Return the string representation of its argument, in decimal.<br>
+<div class="info-desc">
+<p>Return the string representation of its argument, in decimal.</p>
+</div>
 </div>
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type"><a href="Nativeint.html#TYPEnativeint">nativeint</a></code> </pre>
 <div class="info ">
-An alias for the type of native integers.<br>
+<div class="info-desc">
+<p>An alias for the type of native integers.</p>
+</div>
 </div>
 
 
 <pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Nativeint.html#TYPEt">t</a> -> <a href="Nativeint.html#TYPEt">t</a> -> int</code></pre><div class="info ">
-The comparison function for native integers, with the same specification as
-    <a href="Pervasives.html#VALcompare"><code class="code">Pervasives.compare</code></a>.  Along with the type <code class="code">t</code>, this function <code class="code">compare</code>
+<div class="info-desc">
+<p>The comparison function for native integers, with the same specification as
+    <a href="Stdlib.html#VALcompare"><code class="code">Stdlib.compare</code></a>.  Along with the type <code class="code">t</code>, this function <code class="code">compare</code>
     allows the module <code class="code">Nativeint</code> to be passed as argument to the functors
-    <code class="code">Set.Make</code> and <code class="code">Map.Make</code>.<br>
+    <code class="code">Set.Make</code> and <code class="code">Map.Make</code>.</p>
+</div>
 </div>
 </body></html>

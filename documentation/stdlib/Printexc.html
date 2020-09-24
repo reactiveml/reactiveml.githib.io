@@ -5,7 +5,7 @@
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
-<link rel="previous" href="Pervasives.html">
+<link rel="previous" href="Parsing.html">
 <link rel="next" href="Printf.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -56,41 +56,43 @@
 <link title="Weak" rel="Chapter" href="Weak.html"><title>Printexc</title>
 </head>
 <body>
-<div class="navbar"><a class="pre" href="Pervasives.html" title="Pervasives">Previous</a>
+<div class="navbar"><a class="pre" href="Parsing.html" title="Parsing">Previous</a>
 &nbsp;<a class="up" href="index.html" title="Index">Up</a>
 &nbsp;<a class="post" href="Printf.html" title="Printf">Next</a>
 </div>
 <h1>Module <a href="type_Printexc.html">Printexc</a></h1>
 
-<pre><span class="keyword">module</span> Printexc: <code class="code">sig</code> <a href="Printexc.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Facilities for printing exceptions.<br>
-</div>
-<hr width="100%">
-<br>
-Facilities for printing exceptions.<br>
+<pre><span id="MODULEPrintexc"><span class="keyword">module</span> Printexc</span>: <code class="code">sig</code> <a href="Printexc.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<p>Facilities for printing exceptions.</p>
 
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">exn -> string</code></pre><div class="info ">
-<code class="code">Printexc.to_string e</code> returns a string representation of
-   the exception <code class="code">e</code>.<br>
+<div class="info-desc">
+<p><code class="code">Printexc.to_string e</code> returns a string representation of
+   the exception <code class="code">e</code>.</p>
+</div>
 </div>
 
 <pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
-<code class="code">Printexc.print fn x</code> applies <code class="code">fn</code> to <code class="code">x</code> and returns the result.
+<div class="info-desc">
+<p><code class="code">Printexc.print fn x</code> applies <code class="code">fn</code> to <code class="code">x</code> and returns the result.
    If the evaluation of <code class="code">fn x</code> raises any exception, the
    name of the exception is printed on standard error output,
    and the exception is raised again.
    The typical use is to catch and report exceptions that
-   escape a function application.<br>
+   escape a function application.</p>
+</div>
 </div>
 
 <pre><span id="VALcatch"><span class="keyword">val</span> catch</span> : <code class="type">('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
-<code class="code">Printexc.catch fn x</code> is similar to <a href="Printexc.html#VALprint"><code class="code">Printexc.print</code></a>, but
+<div class="info-desc">
+<p><code class="code">Printexc.catch fn x</code> is similar to <a href="Printexc.html#VALprint"><code class="code">Printexc.print</code></a>, but
    aborts the program with exit code 2 after printing the
    uncaught exception.  This function is deprecated: the runtime
    system is now able to print uncaught exceptions as precisely
    as <code class="code">Printexc.catch</code> does.  Moreover, calling <code class="code">Printexc.catch</code>
    makes it harder to track the location of the exception
    using the debugger or the stack backtrace facility.
-   So, do not use <code class="code">Printexc.catch</code> in new code.<br>
+   So, do not use <code class="code">Printexc.catch</code> in new code.</p>
+</div>
 </div>
 </body></html>

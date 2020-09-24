@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,28 +62,24 @@
 </div>
 <h1>Module <a href="type_Printf.html">Printf</a></h1>
 
-<pre><span class="keyword">module</span> Printf: <code class="code">sig</code> <a href="Printf.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Formatted output functions.<br>
-</div>
-<hr width="100%">
-<br>
-Formatted output functions.<br>
+<pre><span id="MODULEPrintf"><span class="keyword">module</span> Printf</span>: <code class="code">sig</code> <a href="Printf.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<p>Formatted output functions.</p>
 
-<pre><span id="VALfprintf"><span class="keyword">val</span> fprintf</span> : <code class="type"><a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a> -><br>       ('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
-<code class="code">fprintf outchan format arg1 ... argN</code> formats the arguments
+<pre><span id="VALfprintf"><span class="keyword">val</span> fprintf</span> : <code class="type"><a href="Stdlib.html#TYPEout_channel">Stdlib.out_channel</a> -> ('a, <a href="Stdlib.html#TYPEout_channel">Stdlib.out_channel</a>, unit) <a href="Stdlib.html#TYPEformat">Stdlib.format</a> -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">fprintf outchan format arg1 ... argN</code> formats the arguments
    <code class="code">arg1</code> to <code class="code">argN</code> according to the format string <code class="code">format</code>,
-   and outputs the resulting string on the channel <code class="code">outchan</code>.
-<p>
+   and outputs the resulting string on the channel <code class="code">outchan</code>.</p>
 
-   The format is a character string which contains two types of
+<p>The format is a character string which contains two types of
    objects:  plain  characters, which are simply copied to the
    output channel, and conversion specifications, each of which
-   causes  conversion and printing of one argument.
-<p>
+   causes  conversion and printing of one argument.</p>
 
-   Conversion specifications consist in the <code class="code">%</code> character, followed
+<p>Conversion specifications consist in the <code class="code">%</code> character, followed
    by optional flags and field widths, followed by one or two conversion
-   character. The conversion characters and their meanings are:<ul>
+   character. The conversion characters and their meanings are:</p>
+<ul>
 <li><code class="code">d</code>, <code class="code">i</code>, <code class="code">n</code>, or <code class="code">N</code>: convert an integer argument to signed decimal.</li>
 <li><code class="code">u</code>: convert an integer argument to unsigned decimal.</li>
 <li><code class="code">x</code>: convert an integer argument to unsigned hexadecimal,
@@ -123,16 +119,15 @@ Formatted output functions.<br>
 <li><code class="code">!</code>: take no argument and flush the output.</li>
 <li><code class="code">%</code>: take no argument and output one <code class="code">%</code> character.</li>
 </ul>
-
-   The optional flags include:<ul>
+<p>The optional flags include:</p>
+<ul>
 <li><code class="code">-</code>: left-justify the output (default is right justification).</li>
 <li><code class="code">0</code>: for numerical conversions, pad with zeroes instead of spaces.</li>
 <li><code class="code">+</code>: for numerical conversions, prefix number with a <code class="code">+</code> sign if positive.</li>
 <li>space: for numerical conversions, prefix number with a space if positive.</li>
 <li><code class="code">#</code>: request an alternate formatting style for numbers.</li>
 </ul>
-
-   The field widths are composed of an optional integer literal
+<p>The field widths are composed of an optional integer literal
    indicating the minimal width of the result, possibly followed by
    a dot <code class="code">.</code> and another integer literal indicating how many digits
    follow the decimal point in the <code class="code">%f</code>, <code class="code">%e</code>, and <code class="code">%E</code> conversions.
@@ -140,10 +135,9 @@ Formatted output functions.<br>
    fill at least 6 characters; and <code class="code">%.4f</code> prints a float with 4
    fractional digits.  Each or both of the integer literals can also be
    specified as a <code class="code">*</code>, in which case an extra integer argument is taken
-   to specify the corresponding width or precision.
-<p>
+   to specify the corresponding width or precision.</p>
 
-   Warning: if too few arguments are provided,
+<p>Warning: if too few arguments are provided,
    for instance because the <code class="code">printf</code> function is partially
    applied, the format is immediately printed up to
    the conversion of the first missing argument; printing
@@ -151,32 +145,43 @@ Formatted output functions.<br>
    For example, <code class="code">List.iter (printf "x=%d y=%d " 1) [2;3]</code>
    prints <code class="code">x=1 y=2 3</code> instead of the expected
    <code class="code">x=1 y=2 x=1 y=3</code>.  To get the expected behavior, do
-   <code class="code">List.iter (fun y -&gt; printf "x=%d y=%d " 1 y) [2;3]</code>.<br>
+   <code class="code">List.iter (fun y -&gt; printf "x=%d y=%d " 1 y) [2;3]</code>.</p>
+</div>
 </div>
 
-<pre><span id="VALprintf"><span class="keyword">val</span> printf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
-Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stdout</code>.<br>
+<pre><span id="VALprintf"><span class="keyword">val</span> printf</span> : <code class="type">('a, <a href="Stdlib.html#TYPEout_channel">Stdlib.out_channel</a>, unit) <a href="Stdlib.html#TYPEformat">Stdlib.format</a> -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stdout</code>.</p>
+</div>
 </div>
 
-<pre><span id="VALeprintf"><span class="keyword">val</span> eprintf</span> : <code class="type">('a, <a href="Pervasives.html#TYPEout_channel">Pervasives.out_channel</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
-Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stderr</code>.<br>
+<pre><span id="VALeprintf"><span class="keyword">val</span> eprintf</span> : <code class="type">('a, <a href="Stdlib.html#TYPEout_channel">Stdlib.out_channel</a>, unit) <a href="Stdlib.html#TYPEformat">Stdlib.format</a> -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but output on <code class="code">stderr</code>.</p>
+</div>
 </div>
 
-<pre><span id="VALsprintf"><span class="keyword">val</span> sprintf</span> : <code class="type">('a, unit, string) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
-Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
+<pre><span id="VALsprintf"><span class="keyword">val</span> sprintf</span> : <code class="type">('a, unit, string) <a href="Stdlib.html#TYPEformat">Stdlib.format</a> -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
    return a string containing the result of formatting
-   the arguments.<br>
+   the arguments.</p>
+</div>
 </div>
 
-<pre><span id="VALbprintf"><span class="keyword">val</span> bprintf</span> : <code class="type"><a href="Buffer.html#TYPEt">Buffer.t</a> -> ('a, <a href="Buffer.html#TYPEt">Buffer.t</a>, unit) <a href="Pervasives.html#TYPEformat">Pervasives.format</a> -> 'a</code></pre><div class="info ">
-Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
+<pre><span id="VALbprintf"><span class="keyword">val</span> bprintf</span> : <code class="type"><a href="Buffer.html#TYPEt">Buffer.t</a> -> ('a, <a href="Buffer.html#TYPEt">Buffer.t</a>, unit) <a href="Stdlib.html#TYPEformat">Stdlib.format</a> -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as <a href="Printf.html#VALfprintf"><code class="code">Printf.fprintf</code></a>, but instead of printing on an output channel,
    append the formatted arguments to the given extensible buffer
-   (see module <a href="Buffer.html"><code class="code">Buffer</code></a>).<br>
+   (see module <a href="Buffer.html"><code class="code">Buffer</code></a>).</p>
+</div>
 </div>
 
-<pre><span id="VALkprintf"><span class="keyword">val</span> kprintf</span> : <code class="type">(string -> 'a) -> ('b, unit, string, 'a) <a href="Pervasives.html#TYPEformat4">Pervasives.format4</a> -> 'b</code></pre><div class="info ">
-<code class="code">kprintf k format arguments</code> is the same as <code class="code">sprintf format arguments</code>,
+<pre><span id="VALkprintf"><span class="keyword">val</span> kprintf</span> : <code class="type">(string -> 'a) -> ('b, unit, string, 'a) <a href="Stdlib.html#TYPEformat4">Stdlib.format4</a> -> 'b</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">kprintf k format arguments</code> is the same as <code class="code">sprintf format arguments</code>,
     except that the resulting string is passed as argument to <code class="code">k</code>; the
-    result of <code class="code">k</code> is then returned as the result of <code class="code">kprintf</code>.<br>
+    result of <code class="code">k</code> is then returned as the result of <code class="code">kprintf</code>.</p>
+</div>
 </div>
 </body></html>

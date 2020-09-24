@@ -38,7 +38,6 @@
 <link title="Nativeint" rel="Chapter" href="Nativeint.html">
 <link title="Obj" rel="Chapter" href="Obj.html">
 <link title="Parsing" rel="Chapter" href="Parsing.html">
-<link title="Pervasives" rel="Chapter" href="Pervasives.html">
 <link title="Printexc" rel="Chapter" href="Printexc.html">
 <link title="Printf" rel="Chapter" href="Printf.html">
 <link title="Queue" rel="Chapter" href="Queue.html">
@@ -48,6 +47,7 @@
 <link title="Rml_process_manager" rel="Chapter" href="Rml_process_manager.html">
 <link title="Sort" rel="Chapter" href="Sort.html">
 <link title="Stack" rel="Chapter" href="Stack.html">
+<link title="Stdlib" rel="Chapter" href="Stdlib.html">
 <link title="Str" rel="Chapter" href="Str.html">
 <link title="Stream" rel="Chapter" href="Stream.html">
 <link title="String" rel="Chapter" href="String.html">
@@ -62,12 +62,8 @@
 </div>
 <h1>Module <a href="type_Luc4ocaml.html">Luc4ocaml</a></h1>
 
-<pre><span class="keyword">module</span> Luc4ocaml: <code class="code">sig</code> <a href="Luc4ocaml.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Lucky ocaml API.<br>
-</div>
-<hr width="100%">
-<br>
-Lucky ocaml API.<br>
+<pre><span id="MODULELuc4ocaml"><span class="keyword">module</span> Luc4ocaml</span>: <code class="code">sig</code> <a href="Luc4ocaml.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<p>Lucky ocaml API.</p>
 
 <pre><span id="TYPEvar_name"><span class="keyword">type</span> <code class="type"></code>var_name</span> = <code class="type">string</code> </pre>
 
@@ -114,13 +110,17 @@ Lucky ocaml API.<br>
 
 <pre><span id="TYPEstate"><span class="keyword">type</span> <code class="type"></code>state</span> </pre>
 <div class="info ">
-Abtract state containing the Lucky runtime information. A step in Lucky
-   machine updates this state.<br>
+<div class="info-desc">
+<p>Abtract state containing the Lucky runtime information. A step in Lucky
+   machine updates this state.</p>
+</div>
 </div>
 
 
 <pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">int -> bool -> string -> int -> int -> string list -> <a href="Luc4ocaml.html#TYPEstate">state</a></code></pre><div class="info ">
-Builds the initial state of the Lucky machine<br>
+<div class="info-desc">
+<p>Builds the initial state of the Lucky machine</p>
+</div>
 </div>
 
 <pre><code><span id="TYPEstep_mode"><span class="keyword">type</span> <code class="type"></code>step_mode</span> = </code></pre><table class="typetable">
@@ -147,30 +147,39 @@ Builds the initial state of the Lucky machine<br>
 </tr></table>
 
 <div class="info ">
-To indicate whether the point used to perform the step is
+<div class="info-desc">
+<p>To indicate whether the point used to perform the step is
   drawn inside, at edges, or at vertices of the convex hull of
   numeric solutions; the step mode is used iff at least one
-  controllable variable is numeric.<br>
+  controllable variable is numeric.</p>
+</div>
 </div>
 
 
 <pre><span id="VALstep"><span class="keyword">val</span> step</span> : <code class="type"><a href="Luc4ocaml.html#TYPEstep_mode">step_mode</a> -><br>       <a href="Luc4ocaml.html#TYPEstate">state</a> -> <a href="Luc4ocaml.html#TYPEinputs">inputs</a> -> <a href="Luc4ocaml.html#TYPEstate">state</a> * <a href="Luc4ocaml.html#TYPEsolution">solution</a></code></pre><div class="info ">
-the default step mode is StepInside<br>
+<div class="info-desc">
+<p>the default step mode is StepInside</p>
+</div>
 </div>
 
-<pre><span id="VALstep_se"><span class="keyword">val</span> step_se</span> : <code class="type"><a href="Luc4ocaml.html#TYPEstep_mode">step_mode</a> -><br>       <a href="Luc4ocaml.html#TYPEstate">state</a> <a href="Pervasives.html#TYPEref">Pervasives.ref</a> -> <a href="Luc4ocaml.html#TYPEinputs">inputs</a> -> <a href="Luc4ocaml.html#TYPEsolution">solution</a></code></pre><div class="info ">
-side-effect version of step<br>
+<pre><span id="VALstep_se"><span class="keyword">val</span> step_se</span> : <code class="type"><a href="Luc4ocaml.html#TYPEstep_mode">step_mode</a> -><br>       <a href="Luc4ocaml.html#TYPEstate">state</a> <a href="Stdlib.html#TYPEref">Stdlib.ref</a> -> <a href="Luc4ocaml.html#TYPEinputs">inputs</a> -> <a href="Luc4ocaml.html#TYPEsolution">solution</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>side-effect version of step</p>
+</div>
 </div>
 
-<pre><span id="VALrif_read"><span class="keyword">val</span> rif_read</span> : <code class="type"><a href="Pervasives.html#TYPEin_channel">Pervasives.in_channel</a> -><br>       <a href="Luc4ocaml.html#TYPEstate">state</a> -> <a href="Luc4ocaml.html#TYPEinputs">inputs</a> * <a href="Luc4ocaml.html#TYPEstate">state</a></code></pre><div class="info ">
-Reads from an in_channel Lucky inputs in RIF
-<p>
+<pre><span id="VALrif_read"><span class="keyword">val</span> rif_read</span> : <code class="type"><a href="Stdlib.html#TYPEin_channel">Stdlib.in_channel</a> -> <a href="Luc4ocaml.html#TYPEstate">state</a> -> <a href="Luc4ocaml.html#TYPEinputs">inputs</a> * <a href="Luc4ocaml.html#TYPEstate">state</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Reads from an in_channel Lucky inputs in RIF</p>
 
-nb: RIF = Reactive Input Format
-  It is the input/output format of most Lustre/verimag tools.<br>
+<p>nb: RIF = Reactive Input Format
+  It is the input/output format of most Lustre/verimag tools.</p>
+</div>
 </div>
 
 <pre><span id="VALstring_of_value"><span class="keyword">val</span> string_of_value</span> : <code class="type"><a href="Luc4ocaml.html#TYPEvalue">value</a> -> string</code></pre><div class="info ">
-Pretty-print<br>
+<div class="info-desc">
+<p>Pretty-print</p>
+</div>
 </div>
 </body></html>
