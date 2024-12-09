@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>ICFP 18</title>
+</head>
+
+<body bgcolor="#ffffff">
+<font face="Arial, Helvetica, sans-serif">
+
+<center>
+<h1>Implement your own ReactiveML</h1>
+<a href="http://guillaume.baudart.eu/">Guillaume Baudart</a>,
+<a href="http://researcher.watson.ibm.com/person/us-lmandel">Louis Mandel</a>,
+<a href="http://www.di.ens.fr/~pasteur">C&eacute;dric Pasteur</a> and
+<a href="http://www.di.ens.fr/~pouzet">Marc Pouzet</a><br />
+Tutorial at the International Conference on Functional Programming 2018
+</center>
+
+<br>
+
+<blockquote>
+<p>
+<a href="http://reactiveml.org">ReactiveML</a> is an extension of a
+general purpose language a la ML with parallel and synchronization
+primitives to develop reactive applications. It is based on
+the <em>reactive model</em> introduced by Boussinot in the 90s, that
+retains the key principles of synchronous languages --- at the
+programming level, time is discrete and global to all the processes
+whose parallel composition behave deterministically --- but relaxes it
+to allow for the dynamic creation of processes. Therefore, it keeps
+the expressiveness and deterministic guarantees of synchronous
+languages like Esterel but removes its real-time
+constraints. ReactiveML allows to program applications as diverse
+as <a href="../examples/simulator_elip/index.html">network
+simulators</a>, <a href="../reactive_asco/index.html">mixed-music</a>,
+<a href="https://ibm.github.io/wcs-ocaml/">chatbots</a>, or a chess
+eye <a href="https://github.com/chesseye/chesseye"></a>.
+</p>
+
+<p>
+In this tutorial, we will present the main concepts underlying the
+language and have a hands-on session where the participants see both
+how to program in ReactiveML and how to program ReactiveML.
+</p>
+
+<!-- <p> -->
+<!-- Participants are invited to program during the tutorial. They need a ReactiveML compiler. The simplest way to install ReactiveML is to install <a href="http://opam.ocaml.org">Opam</a> and then type the following command: -->
+<!-- </p> -->
+<!-- <pre> -->
+<!--   opam install rml rmlbuild -->
+<!-- </pre> -->
+
+<!-- <p> -->
+<!-- Optionally, participants can create a free instance of <a href="https://www.ibm.com/watson/services/conversation/">Watson Assistant</a> to be able to create a chatbot using ReactiveML. They would also need the <a href="https://ibm.github.io/wcs-ocaml/">wcs-ocaml</a> library. -->
+<!-- </p> -->
+<!-- <pre> -->
+<!--   opam install wcs -->
+<!-- </pre> -->
+<!-- </blockquote> -->
+
+<!-- <br> -->
+
+<!-- <hr>  ************************************************************* -->
+
+Resources:
+<ul>
+  <li>slides about <a href="icfp18.pdf"> ReactiveML </a>
+    and <a href="icfp18-2.pdf"> comparison with other programming models </a>
+  </li>
+  <li>Darwin sieve
+    <ul>
+      <li><a href="darwin.pdf">questions</a>
+      </li>
+      <li><a href="darwin.tgz">program skeleton</a>
+      </li>
+      <li><a href="correction.tgz">answers</a>
+      </li>
+    </ul>
+  </li>
+  <li>implement your ReactiveML runtime
+    <ul>
+      <li><a href="rml-runtime.pdf">questions</a>
+      </li>
+      <li><a href="rml-1.09.06-dev-2018-09-29.tar.gz">compiler skeleton</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- <hr>  ************************************************************* -->
+
+<br>
+
+<!--
+<p><a href="http://validator.w3.org/check/referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01!" height="31" width="88"></a></p>
+-->
+
+<a href="../index.html">ReactiveML main page</a>
+
+</body></html>
