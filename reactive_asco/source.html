@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../documentation.html"> Manual</a></li>
+                <li><a href="../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../videos.html">Videos</a></li>
+            <li><a href="../publications.html">Publications</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+        <li class="nav-header disabled"><a>Reactive Asco</a></li>
+        <li><a href="./index.html"> Home</a></li>
+        <li><a href="./videos.html"> Videos Demos</a></li>
+        <li><a href="./source.html"> Source Code</a></li>
+
+        <li class="nav-header disabled"><a>Papers</a></li>
+        <li><a href="./resources/emsoft13.pdf"> EMSOFT'13</a></li>
+        <li><a href="./resources/farm13.pdf"> FARM'13</a></li>
+
+        <li class="nav-header disabled"><a>Modules</a></li>
+        <li><a href="./code/types.html"> Types</a></li>
+        <li><a href="./code/time.html"> Time</a></li>
+        <li><a href="./code/motor.html"> Motor</a></li>
+         <li><a href="./code/groups.html"> Groups</a></li>
+        <li><a href="./code/input.html"> Input</a></li>
+        <li><a href="./code/output.html"> Output</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="col-md-9">
+
+    <h1>Source Code</h1>
+    <hr>
+    <p>
+    The code is divided in several modules (click to see the code):
+    </p>
+    <ul>
+      <li><a href="./code/types.html"><b>Types:</b></a> the structure of a score in terms of ML-types.</li>
+      <li><a href="./code/time.html"><b>Time:</b></a> processes to wait and compute duration relative to the tempo.</li>
+      <li><a href="./code/motor.html"><b>Motor:</b></a> the core of the interpreter i.e. the translation of the semantics rules.</li>
+      <li><a href="./code/groups.html"><b>Groups:</b></a> group treatment functions; slice, split and extract.</li>
+      <li><a href="./code/input.html"><b>Input:</b></a> receive information from the listening machine or simulate it.</li>
+      <li><a href="./code/output.html"><b>Output:</b></a> send messages to Max/MSP.</li>
+    </ul>
+
+<p>The entire source code with some toy example and applications
+    are available in
+    the <a href="../distrib">ReactiveML
+    distribution</a> (<code>examples/reactive_asco</code>
+    directory). Applications are the following:</p>
+    <ul>
+      <li><code>asco.rml.native</code>: the sequencer
+      (type <code>asco.rml.native --help</code> to display a list of options).</li>
+      <li><code>piano_phase.rml.native</code>: Steve Reich's <a href="./videos.html">Piano Phase</a> with graphical interface.</li>
+      <li><code>frere_jacques.rml.native</code>: a famous French musical round.</li>
+      <li><code>lib/rising_sun.rml</code>: example of live coding (see the <a href="./videos.html#live_coding">video</a> demo).</li>
+    </ul>
+
+    <p>
+      These applications communicate with the listening machine of
+      Antescofo and the audio environment through UDP messages. A
+      stand-alone MacOS application that play both roles is
+      available: <code><a href="./resources/ascoDemo.app.tar.gz">ascoDemo.app</a></code>
+    </p>
+
+<br>
+
+<div class="thumbnail">
+  <img src="./resources/architecture.png" alt="">
+</div>
+
+
+
+    <hr>
+    <h3>Toy examples</h3>
+    <br>
+    <p>You can try the sequencer with several toy examples included in the distribution:</p>
+    <ul>
+      <li><a href="./code/syntax.html">An example</a> to illustrate the entire syntax of our language
+      (actions, groups, strategies, preemption)</li>
+      <li>Au clair de la lune (French folk song) </li>
+      <li>Greensleeves (English folk song) </li>
+      <li>Russian Hymn </li>
+      <li>Concerto for two violins (J.S. Bach), 3rd mvt</li>
+      <li>Concerto for violin (P. I. Tchaikovsky) 2nd and 3rd mvt </li>
+    </ul>
+    <br>
+
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

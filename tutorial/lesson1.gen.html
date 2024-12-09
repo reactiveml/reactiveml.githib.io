@@ -1,0 +1,234 @@
+<h1>Lesson 1: Quick tour</h1>
+<hr>
+<h3>OCaml code</h3>
+
+<p>ReactiveML is an extension of OCaml. Therefore, OCaml phrases are
+also ReactiveML phrases. For example, we can evaluate an expression
+(you can simply click on the code to load it in the terminal):</p>
+
+<p><pre class="code">1 + 2 ;;</pre></p>
+
+<!-- <p><pre class="code">[ "a" ; "b" ; "c" ] ;;</pre></p> -->
+
+<!-- <p><pre class="code">(fun x -> x + 1) 3 ;;</pre></p> -->
+
+<p>
+define a global value (note that the type infered by the compiler is
+printed first by the ReactiveML compiler and then by the OCaml
+compiler):
+</p>
+<p><pre class="code">let a = 1 ;;</pre></p>
+
+<!-- <p><pre class="code">let sqr x = x *. x ;;</pre></p> -->
+
+<p>
+define a type:
+</p>
+<p><pre class="code">type 'a tree =
+  | Leaf of 'a
+  | Node of 'a * 'a tree * 'a tree ;;</pre></p>
+
+<p>
+define a recursive function and apply it:
+</p>
+<p><pre class="code">let rec depth t =
+  match t with
+  | Leaf _ -> 1
+  | Node (_, t1, t2) -> 1 + max (depth t1) (depth t2) ;;</pre></p>
+
+<p><pre class="code">depth (Node (1, Node (2, Leaf 4, Leaf 5), Leaf 3)) ;;</pre></p>
+
+<p>
+Functions of the OCaml standard library are also available.
+</p>
+<p><pre class="code">List.rev [ "a" ; "b" ; "c" ] ;;</pre></p>
+
+<p>
+For more details about OCaml programming you can
+try <a href="http://try.ocamlpro.com">TryOcaml</a>.
+</p>
+<h3>Logical time</h3>
+
+<p>ReactiveML is based on the synchronous model. In this model, time
+is a succession of instants. Any OCaml function is considered to be
+instantaneous.</p>
+
+<p><pre class="code">let instantaneous_loop n =
+  for i = 1 to n do
+    print_int i; print_newline ()
+  done ;;</pre></p>
+
+<p><pre class="code">instantaneous_loop 10;;</pre></p>
+
+<p>Functions that can be executed through several instants are called
+processes. The <code>pause</code> statement waits for the next instant.</p>
+
+<p><pre class="code">let process non_instantaneous_loop n =
+  for i = 1 to n do
+    print_int i; print_newline ();
+    pause
+  done ;;</pre></p>
+
+<p>
+To apply a process, we have to use the <code>run</code> keyword.  Such
+an expression that takes time has to be executed in the background of the
+terminal using the <code>#exec</code> directive:
+</p>
+<p><pre class="code">#exec (run (non_instantaneous_loop 10));;</pre></p>
+
+<p>
+Remark: You can use the "suspend" button (or the directive
+<code>#suspend;;</code>) to execute the program step by step. To
+return to the sampled mode you can use the "resume" button (or the
+directive <code>#resume;;</code>).
+</p>
+<h3>Communication</h3>
+
+<p>The communication between parallel processes is made through events
+that are broadcast instantaneously. Hence, an event is present
+during the instant where it is broadcast, otherwise it is
+absent.</p>
+
+<p>An event is declared with the <code>signal</code> construct.</p>
+
+<p><pre class="code">signal s;;</pre></p>
+
+<p>The construct <code>await s</code> waits the next instant where s is
+broadcast.</p>
+
+<p><pre class="code">let process p =
+  await s;
+  print_endline "Hello!" ;;</pre></p>
+
+<p><pre class="code">#run p;;</pre></p>
+
+<p>An event is broadcast using <code>emit</code>.</p>
+
+<p><pre class="code">emit s;;</pre></p>
+
+<p>
+Remark: <code>#run p</code> is a shortcut for <code>#exec (run p)</code>.
+</p>
+<h3>Parallel composition</h3>
+
+<p>
+The notion of instant really becomes visible when parallel
+computations occur. The parallel execution of two expressions is
+denoted <code>e1 || e2</code> (boolean disjuction is denoted <code>e1
+or e2</code>). It guarantees that the two expressions are executed at
+each instant.
+</p>
+
+<p><pre class="code">
+#exec (   run (non_instantaneous_loop 10)
+       || run (non_instantaneous_loop 10) );;
+</pre></p>
+
+<p>
+Notice that each instance of the
+process <code>non_instantaneous_loop</code> prints one number per
+instant. In the following example, the
+function <code>instantaneous_loop</code> is executed in one instant
+(since it is not a process, <code>run</code> is not needed to apply
+it)
+</p>
+
+<p><pre class="code">
+#exec (   run (non_instantaneous_loop 10)
+       || instantaneous_loop 10 );;
+</pre></p>
+<p>
+Notice that when <code>instantaneous_loop</code> starts executing, it
+only stops after having printed the ten numbers (i.e., at
+termination), and not after each number.
+</p>
+<h3>Valued events</h3>
+
+<p>
+Events can carry values. When a signal is declared, the programmer can
+specify how to combine multiple values emitted at the same instant
+(the default behavior is to collect all the values into a list).</p>
+
+<p>Here, we define a signal <code>s</code> which sums the values it receives
+during an instant.</p>
+
+<p><pre class="code">signal s default 0 gather (+);;</pre></p>
+
+<p>
+To get the value of a signal, we can use the construct <code>await s(x)
+in e</code> which waits for the emission of <code>s</code> and then executes
+<code>e</code> with <code>x</code> taking the value carried by the signal
+<code>s</code>.
+</p>
+
+<p><pre class="code">let process print_s =
+  loop
+    await s(x) in
+    print_int x;
+    print_newline ()
+  end ;;</pre></p>
+
+<p><pre class="code">#run print_s;;</pre></p>
+
+<p><pre class="code">emit s 1;;</pre></p>
+
+<p><pre class="code">emit s 2;;</pre></p>
+
+<p><pre class="code">emit s 3; emit s 4;;</pre></p>
+
+<p>
+It is possible to access the last value of a signal using
+the <code>last</code> operator.
+</p>
+<p><pre class="code">last ?s;;</pre></p>
+<h3>Preemption</h3>
+
+<p>
+A process can be stopped when an event is received using
+the <code>do/until</code> construct (note that it is not a loop
+construct).
+</p>
+
+<p><pre class="code">signal kill;;</pre></p>
+
+<p><pre class="code">let process p =
+  do
+    for i = 1 to max_int do
+      print_int i;
+      print_newline ();
+      pause
+    done
+  until kill done ;;</pre></p>
+
+<p><pre class="code">#run p;;</pre></p>
+
+<p><pre class="code">emit kill;;</pre></p>
+<h3>Suspend/resume</h3>
+
+<p>
+Processes can also be suspended and resumed using events via the
+<code>control/with</code> construct.
+</p>
+
+<p><pre class="code">signal ctrl;;</pre></p>
+
+<p><pre class="code">let process p =
+  control
+    for i = 1 to max_int do
+      print_int i;
+      print_newline ();
+      pause
+    done
+  with ctrl done ;;</pre></p>
+
+<p><pre class="code">#run p;;</pre></p>
+
+The first emission of the <code>ctrl</code> event suspends the execution.
+<p><pre class="code">emit ctrl;;</pre></p>
+
+The second emission of <code>ctrl</code> resumes the execution at the
+point where it was suspended.
+<p><pre class="code">emit ctrl;;</pre></p>
+
+The next emission suspends the execution again.
+<p><pre class="code">emit ctrl;;</pre></p>

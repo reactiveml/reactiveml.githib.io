@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../documentation.html"> Manual</a></li>
+                <li><a href="../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../videos.html">Videos</a></li>
+            <li><a href="../publications.html">Publications</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+        <li class="nav-header disabled"><a>Reactive Asco</a></li>
+        <li><a href="./index.html"> Home</a></li>
+        <li><a href="./videos.html"> Videos Demos</a></li>
+        <li><a href="./source.html"> Source Code</a></li>
+
+        <li class="nav-header disabled"><a>Papers</a></li>
+        <li><a href="./resources/emsoft13.pdf"> EMSOFT'13</a></li>
+        <li><a href="./resources/farm13.pdf"> FARM'13</a></li>
+
+        <li class="nav-header disabled"><a>Videos</a></li>
+        <li><a href="#presentation"> Presentation</a></li>
+        <li><a href="#piano_phase"> Piano Phase</a></li>
+        <li><a href="#live_coding"> Live Coding</a></li>
+        <li><a href="#farm13"> FARM'13</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="col-md-9">
+ <h1>Videos</h1>
+<hr>
+
+<p>
+    You can find here video demos of some applications of Reactive Asco.
+The code corresponding to the examples is
+    available <a href="./source.html">here</a>.
+<br>
+<br>
+
+Our application works in interaction with Max/MSP via UDP sockets. Max
+send the output of the listening machine to our sequencer. Then the
+sequencer uses these information to send control messages in turn to
+Max/MSP. Here, the sequencer controls a simple MIDI synthesizer.
+<br><br>
+The Max/MSP application used in the demos is the following:
+</p>
+<div class="thumbnail">
+  <img src="./resources/interface.jpg" alt="">
+</div>
+
+<hr>
+
+<section id="presentation">
+  <h3>Presentation</h3>
+
+  <div class="flex-video widescreen"><iframe src="http://www.youtube.com/embed/vXnNaYhSM0U?rel=0&amp;cc_load_policy=1" allowfullscreen=""></iframe></div>
+
+  <br>
+    <p>This first video introduces the operation of our application
+      with a very simple example: a french folk song called "Au clair de la
+      lune".</p>
+<a href="./resources/presentation.mov">
+              <i class="glyphicon glyphicon-file black"></i> mov</a>
+</section>
+<hr>
+
+
+<section id="piano_phase">
+<h3>Piano Phase</h3>
+<p>
+<a href="http://en.wikipedia.org/wiki/Piano_Phase">Piano Phase</a> is a piece written in 1967 by the minimalist composer
+Steve Reich. In this piece, two pianist alternate between two modes of
+execution: synchronization and desynchronization.
+<br>
+<br>
+The interface used for this demo is the following:
+<p>
+<div class="thumbnail">
+  <img src="./resources/interface_pianophase.jpg" alt="">
+</div>
+<br>
+<ul>
+  <li><b>Synchronization:</b>
+  <ul>
+    <li>green flashes indicate that the first pianist is playing the first note of the sequence.</li>
+  </ul>
+  </li>
+  <li><b>Desynchronization:</b>
+    <ul>
+      <li>red flashes indicate that the first pianist is playing the first note.</li>
+      <li>blue flashes indicate that the second pianist is playing the kth note (first 1 then 2 then 3...).</li>
+    </ul>
+  </li>
+</ul>
+<br>
+
+
+<div class="flex-video widescreen"><iframe src="http://www.youtube.com/embed/ItvWuajB2sI?rel=0&amp;cc_load_policy=1" allowfullscreen=""></iframe></div>
+
+<br>
+<a href="./resources/piano_phase.mov">
+              <i class="glyphicon glyphicon-file black"></i> mov </a>
+</section>
+<hr>
+
+<section id="live_coding">
+<h3>Live Coding</h3>
+<p>
+In this demo, we create, correct and modify an accompaniment during the execution of a song:
+<a href="http://en.wikipedia.org/wiki/The_House_of_the_Rising_Sun">The
+house of the rising sun</a>. Here, the instrumental part is simulated
+with Max/MSP, but try to imagine that it is a real musician in a live
+concert...
+</p>
+
+<div class="flex-video
+            widescreen"><iframe src="http://www.youtube.com/embed/PaIFq4kfAe4?rel=0&amp;cc_load_policy=1"
+                                allowfullscreen=""></iframe></div>
+
+<br>
+<p>
+(You can increase the video quality if you have trouble to read the
+code)</p>
+<a href="./resources/rising_sun.mov">
+              <i class="glyphicon glyphicon-file black"></i> mov </a>
+</section>
+<hr>
+
+<section id="farm13">
+<h3>Mixed Music in ReactiveML</h3>
+
+ <p>A talk given by Guillaume Baudart at the workshop
+   "Functional Art, Music, Modeling and
+   Design" (<a href="http://www.cis.upenn.edu/~byorgey/farm13/">FARM'13</a>),
+   about programming mixed music in ReactiveML.
+ </p>
+
+ <div class="flex-video widescreen">
+      <iframe src="http://www.youtube.com/embed/UKM9vuqh-O8?rel=0" frameborder="0" allowfullscreen>
+    </iframe>
+ </div>
+<p><a class="btn btn-default" href="farm13/index.html">View details &raquo;</a></p>
+<p><a href="./resources/farm13_talk.mp4">
+              <i class="glyphicon glyphicon-file black"></i> mp4 </a></p>
+</section>
+
+
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

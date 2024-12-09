@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Try online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../rml.css" rel="stylesheet">
+  <link href="../tryrml/tryrml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../index.html">Home</a></li>
+            <li class="active"><a href="../tryrml/tryrml.html">Try online</a></li>
+            <li><a href="../documentation.html">Documentation</a></li>
+            <li class="dropdown">
+              <a href="../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../videos.html">Videos</a></li>
+            <li><a href="../publications.html">Publications</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-6">
+    <div id="sidebar">
+      <div id="intro">
+        <h3>Try ReactiveML</h3>
+        <!-- <br> -->
+        <!-- <hr /> -->
+
+        <table class="zebra-striped">
+          <thead>
+            <tr>
+              <th id="text-commands">Commands</th>
+              <th id="text-effects">Effects</th>
+            </tr>
+          </thead>
+          <tr>
+            <td id="text-enter">Enter</td>
+            <td id="text-submit">Submit code</td>
+          </tr>
+          <tr>
+            <td id="text-arrows">Up / Down</td>
+            <td id="text-history">Cycle through history</td>
+          </tr>
+          <tr>
+            <td id="text-newline">Shift + Enter</td>
+            <td id="text-multiline">Multiline edition</td>
+          </tr>
+        </table>
+
+        <!-- <hr /> -->
+
+        <p>
+          <b>ReactiveML</b> is a programming language similar to
+          <a href="http://ocaml.org">OCaml</a> extended with the
+          synchronous reactive model. It is dedicated to the
+          implementation of interactive systems as found in graphical
+          user interfaces, video games and simulation problems.
+        </p>
+        <p>
+          For example, the file <a href="lessons/planets.rml" target="_blank">planet.rml</a> contains a simple implementation of the n-body problem:
+          <br>
+        </p>
+        <p class="text-center">
+          <a class="code-file">lessons/planets.rml</a>
+        </p>
+        <br>
+        <p>
+          You can add ten new planets moving in parallel by typing the
+          following line or simply by clicking on it:
+        </p>
+        <pre class="code">#exec (for i = 1 to 10 dopar run planet done);;</pre>
+        <p>
+          You can stop the simulation with:
+        </p>
+        <pre class="code">emit quit;;</pre>
+        <br />
+
+        <!-- <p>For more details about OCaml programming you can -->
+        <!--   try <a href="http://try.ocamlpro.com">TryOcaml</a>. -->
+        <!-- </p> -->
+
+
+        <!-- <p> -->
+        <!--   To test the toplevel, you can copy the following code or -->
+        <!--   simply click on it. -->
+        <!-- </p> -->
+        <!-- <pre class="code">print_endline "Hello world!" ;;</pre> -->
+        <!-- <p> -->
+        <!--   You can also drag and drop a ReactiveML file into the -->
+        <!--   toplevel window if you want to evaluate it. Here is an -->
+        <!--   example to download and drag and -->
+        <!--   drop: <a href="lessons/planets.rml" target="_blank">planets.rml</a> (or -->
+        <!--   <a class="code-file">lessons/planets.rml</a>). -->
+        <!-- </p> -->
+        <!-- <br /> -->
+
+        <!-- <p> -->
+        <!--   An interactive tutorial is available. -->
+        <!-- </p> -->
+
+      </div>
+
+      <div id="info">
+      </div>
+
+      <div id="tutorial">
+      </div>
+
+      <div id="navbar">
+      </div>
+      <br>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div id="ocaml">
+      <div id="toplevel-container">
+        <pre id="output"></pre>
+        <div id="sharp">#</div>
+        <div id="toplevel"></div>
+      </div>
+      <div id="buttons-left"></div>
+      <div id="buttons-right"></div>
+    </div>
+
+  </div>
+
+  <div id="graphics">
+    <div id="graphicstitle">Graphics window</div>
+    <canvas id="canvas" width="300" height="300"></canvas>
+  </div>
+
+</div>
+
+<script type="text/javascript"
+        src="scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript"
+        src="scripts/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript"
+        src="scripts/graphics_init.js"></script>
+<script type="text/javascript"
+        src="toplevel.js"></script>
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+      <p>
+        <small>
+          <a href="../navigation.html">navigation</a>
+        </small>
+      </p>
+    </div>
+    <div class="col-md-6">
+      <p style="text-align: right">
+        <small>
+          <a href="../distrib">ReactiveML version 1.09.07</a><br>
+          2021-07-26 <a href="../distrib/changes">changes</a>
+            <!-- <br> -->
+            <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+        </small>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</div> <!-- /container -->
+
+<script type="text/javascript" src="../bootstrap/js/bootstrap.js"></script>
+
+</body>
+</html>

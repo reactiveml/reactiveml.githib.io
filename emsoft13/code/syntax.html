@@ -1,0 +1,176 @@
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap_v2/css/bootstrap.css" rel="stylesheet">
+  <link href="../../emsoft13/style.css" rel="stylesheet">
+  <link href="../../bootstrap_v2/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="masthead">
+      <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+
+        <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          menu
+        </a>
+
+        <a class="brand" href="../../index.html">ReactiveML</a>
+
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+        <li><a href="../../documentation.html">Documentation</a></li>
+        <li><a href="../../examples.html">Examples</a></li>
+        <li><a href="../../videos.html">Videos</a></li>
+        <li><a href="../../publications.html">Publications</a></li>
+        <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+        </div> <!-- /nav-collapse -->
+      </div> <!-- /container -->
+    </div> <!-- /navbar-inner -->
+      </div> <!-- /navbar -->
+    </div> <!-- /masthead -->
+<div class="row-fluid">
+  <div class="span3">
+    <div class="well sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+	<li class="nav-header">EMSOFT'13</li>
+        <li><a href="../index.html"><i class="icon-chevron-right"></i>Home</a></li>
+        <li><a href="../videos.html"><i class="icon-chevron-right"></i>Videos Demos</a></li>
+        <li><a href="../source.html"><i class="icon-chevron-right"></i>Source
+        Code</a></li>
+	<li class="nav-header">Download</li>
+	<li><a href="./resources/emsoft13.pdf"><i class="icon-file
+					       icon-black"></i> Paper</a></li>
+	<li><a href="./resources/reactive_asco.tar.gz"><i class="icon-file
+						       icon-black"></i> Code</a></li>
+	<li class="nav-header">Modules</li>
+        <li><a href="./types.html"><i class="icon-chevron-right"></i>Types</a></li>
+        <li><a href="./time.html"><i class="icon-chevron-right"></i>Time</a></li>
+        <li><a href="./motor.html"><i class="icon-chevron-right"></i>Motor</a></li>
+	 <li><a href="./groups.html"><i class="icon-chevron-right"></i>Groups</a></li>
+        <li><a href="./input.html"><i class="icon-chevron-right"></i>Input</a></li>
+        <li><a href="./output.html"><i class="icon-chevron-right"></i>Output</a></li>
+
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="span9">
+<pre>
+;A comment
+;We illustrate here the entire syntax of our language.
+;Group strategies are @tight @loose and @local @global @partial @causal
+;There is also an example of the preemption construct
+
+
+NOTE    69    4.0                           ;An instrumental event
+0.5     'a1'     ;Simple action
+1.2     'a2'
+0.0     GROUP @tight @causal{               ;Simple group
+        1.      'a3'                        ;Control messages are into '...'
+        1.2     'a4'
+        1.      'a5'
+        0.5     'a6'
+        1.      'a7'
+        1.78    'a8'
+        1.      'midi_note 60 127'
+        0.8     'any text can be a control message'
+        }
+
+CHORD   (52 60 68)   2.0                    ;An instrumental event
+0.0     GROUP @tight @partial{
+        0.5     'b1'
+        1.5     'b2'
+        0.5     GROUP @loose @global{       ;Nested group
+                0.0     'c1'
+                1.5     'c2'
+                }
+        0.25    'b3'
+        0.5     'b4'
+        1.5     'b5'
+        2.4     'b6'
+        0.5     'b7'
+        }
+
+
+TRILL   (63 64)   2.0                       ;An instrumental event
+UNTIL   7 {                                 ;Preemption construct (until the 7th event)
+        0.0     'd1'
+        10.0    'd2'
+        5.0     GROUP @loose @local{
+                0.0     'e1'
+                4.0     'e2'
+                }
+        }
+
+NOTE   54   2.0                             ;A set of instrumental events
+NOTE   58   2.0
+NOTE   60   2.0
+NOTE   54   2.0
+NOTE   52   2.0
+NOTE   45   2.0
+NOTE   89   2.0
+</pre>
+
+</div>
+</div>
+<div class="row-fluid">
+<div class="span12">
+
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+      <p>
+        <small>
+          <a href="../../navigation.html">navigation</a>
+        </small>
+      </p>
+    </div>
+    <div class="span6">
+      <p style="text-align: right">
+        <small>
+          <a href="../../distrib/rml-1.08.06-2013-07-12.tar.gz">ReactiveML version 1.08.06</a><br>
+        </small>
+      </p>
+    </div> <!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /footer -->
+
+</div> <!-- /span12 -->
+</div> <!-- /row-fluid -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap_v2/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap_v2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../../style.css" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../documentation.html"> Manual</a></li>
+                <li><a href="../../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../../videos.html">Videos</a></li>
+            <li><a href="../../publications.html">Publications</a></li>
+            <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<h3>Implementation of Cellular Automata</h3>
+<blockquote>
+This implementation has been made from the one of
+Fr&eacute;d&eacute;ric Boussinot in
+<a href="http://www-sop.inria.fr/mimosa/rp/LOFT">Loft</a>
+that can be found
+<a href="http://www-sop.inria.fr/mimosa/rp/CellularAutomata">here</a>.
+</blockquote>
+
+<h3>Screenshots</h3>
+<blockquote>
+<table border="0">
+<tr>
+<td align="center" width=200>
+	<a href="gol.png"><img src="thumb_gol.png" alt="game of life"></a> <br><br>John Conway's Game of Life</td>
+<td align="center" width=200>
+	<a href="fredkin.png"><img src="thumb_fredkin.png" alt="fredkin"></a> <br><br> Fredkin's automaton </td>
+<td align="center" width=200>
+	<a href="fire.png"><img src="thumb_fire.png" alt="fire"></a> <br><br> "forest fire" automaton </td>
+</tr>
+</table>
+</blockquote>
+
+<!--
+<h2>Download</h2>
+<blockquote>
+
+Source, bytecode and binary distributions are available:
+<ul>
+  <li><a href="cellular_automata.tgz">cellular_automata.tgz</a>
+  </li>
+  <li><a href="cellular_automata">cellular_automata</a>
+  - need <b>Objective Caml</b> 3.08
+  </li>
+  <li><a href="cellular_automata.opt">cellular_automata.opt</a>
+  - Linux i386 version
+  </li>
+</ul>
+
+</blockquote>
+-->
+
+<!--
+<p><a href="http://validator.w3.org/check/referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01!" height="31" width="88"></a></p>
+-->
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

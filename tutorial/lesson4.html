@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Tutorial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../documentation.html"> Manual</a></li>
+                <li><a href="../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../videos.html">Videos</a></li>
+            <li><a href="../publications.html">Publications</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<h1>Lesson 4: Alarm clock</h1>
+<hr>
+<p>
+In this lesson, we present how to implement automata in ReactiveML.<br>
+Lets start with a simple example: a light controller.
+</p>
+
+<p>
+The controller has two states:
+<ul>
+<li> <code>state_on</code> </li>
+<li> <code>state_off</code> </li>
+</ul>
+</p>
+
+<img src="lessons/lesson4/light.png" alt="light">
+
+<p>
+The user controls the light through the emission of two
+signals <code>switch_on</code> and <code>switch_off</code>.
+</p>
+<p>
+This two states automaton can be implemented with two mutually
+recursive processes.  Transitions are triggered by the emission of
+signals <code>switch_on</code> and <code>switch_off</code>. The
+initial state is <code>state_off</code>.
+</p>
+
+<p><pre class="code">
+let process light switch_on switch_off =
+
+  let rec process state_on =
+    do
+      print_endline "Light on!";
+      halt
+    until switch_off -> run state_off
+    done
+
+  and process state_off =
+    do
+      print_endline "Light off!";
+      halt
+    until switch_on -> run state_on
+    done
+
+  in
+  run state_off
+</pre></p>
+
+<p>
+When a state becomes active, the message <code>Light on!</code>
+or <code>Light off!</code> is displayed.
+</p>
+<p>
+Let us declare the control signals.
+</p>
+
+<p><pre class="code">
+signal switch_on, switch_off;;
+</pre></p>
+
+<p>
+Now we can run the controller,
+</p>
+
+<p><pre class="code">
+#run light switch_on switch_off;;
+</pre></p>
+
+<p>
+and control the light via the emission of signals <code>switch_on</code>
+and <code>switch_off</code>.
+</p>
+
+<p><pre class="code">
+emit switch_on;;
+</pre></p>
+
+<p><pre class="code">
+emit switch_off;;
+</pre></p>
+
+<p>
+Messages displayed on the standard output show the current state of
+the automaton.
+<!-- We can observe the messages on the standard output. -->
+</p>
+<p>
+Lets try a little more complex example: an alarm-clock.
+</p>
+
+<p>
+The controller of an alarm-clock has three states:
+<ul>
+<li> <code>idle</code>: the alarm is deactivated </li>
+<li> <code>armed</code>: the countdown is triggered </li>
+<li> <code>ring</code>: the clock is ringing </li>
+</ul>
+</p>
+
+<img src="lessons/lesson4/alarm.png" alt="clock">
+
+<p>
+The user controls the alarm-clock through the emission of three signals
+<code>ck_arm</code>, <code>ck_off</code>
+and <code>ck_snooze</code>. An additional signal <code>ck_bip</code>
+is emitted when the alarm starts ringing.
+</p>
+<p>
+First, we need a process that waits either for one step or for a given
+duration <code>d</code> expressed in a number of logical steps (for
+the sake of simplicity).
+</p>
+<p><pre class="code">
+let process sleep d =
+  pause ||
+  for i = 1 to d do pause done
+</pre></p>
+<p>
+It is possible to link logical time and physical time, the interested
+reader can find details in
+the <a href="http://reactiveml.org/reactive_asco">Reactive Asco
+example</a>.
+</p>
+
+<p>
+Using the <code>sleep</code> process, we can define the ring tone, a
+process that periodically prints <code>Bip Bip Bip Bip</code> on the
+standard output.
+</p>
+
+<p><pre class="code">
+let process bipbipbipbip =
+     loop
+       for i = 1 to 4 do
+         print_string "Bip "; flush stdout;
+         run sleep 10
+       done;
+       run sleep 100;
+       print_newline ()
+      end
+</pre></p>
+<p>
+Let us build the three state automata using three mutually recursive
+processes.
+</p>
+
+<p><pre class="code">
+let process alarm ck_off ck_bip ck_snooze ck_arm =
+  let rec process idle =
+    do halt
+    until
+    | ck_arm (d) -> print_endline "Armed!";
+                    run (armed d)
+    done
+
+  and process armed d =
+    do run (sleep d);
+       emit ck_bip; pause
+    until
+    | ck_off -> print_endline "Off!";
+                run idle
+    | ck_bip -> run ring
+    done
+
+  and process ring =
+    do run bipbipbipbip
+    until
+    | ck_snooze -> print_endline "Snooze!";
+                   run (armed 200)
+    | ck_off -> print_endline "Off!";
+                run idle
+    done
+  in
+  run idle
+</pre></p>
+<p>
+Now, we define the clock control signals. Note that
+signal <code>ck_arm</code> carries the value used to set up the
+countdown of the alarm.
+</p>
+
+<p><pre class="code">
+signal ck_off, ck_bip, ck_snooze;;
+</pre></p>
+<p><pre class="code">
+signal ck_arm default 0 gather (fun x y -> x);;
+</pre></p>
+
+
+<p>
+Then, we can run our alarm-clock.
+</p>
+
+<p><pre class="code">
+#run alarm ck_off ck_bip ck_snooze ck_arm;;
+</pre></p>
+
+<p>
+We arm the alarm by emitting the value 500 on <code>ck_arm</code> and
+wait until the alarm rings (about 5 seconds depending on the browser).
+</p>
+
+<p><pre class="code">
+emit ck_arm 500;;
+</pre></p>
+
+<p>
+Then, one can snooze the clock. It should ring again in one or two seconds.
+</p>
+<p><pre class="code">
+emit ck_snooze;;
+</pre></p>
+
+<p>
+Finally, one can turn off the clock.
+</p>
+<p><pre class="code">
+emit ck_off;;
+</pre></p>
+<p>
+It is very easy to make our two automata communicate through
+a third one. For instance we can switch on the light when the alarm is
+ringing, and switch off the light when the alarm is snoozed or turned
+off.
+</p>
+
+<p>
+The idea is to write a one state automaton that listens to the control
+signals of the alarm clock and emits control signals of the light.
+</p>
+
+<p><pre class="code">
+let rec process light_clock =
+  do
+    halt
+  until
+  | ck_off ->
+      emit switch_off;
+      run light_clock
+  | ck_bip ->
+      emit switch_on;
+      run light_clock
+  | ck_snooze ->
+      emit switch_off;
+      run light_clock
+  done
+</pre></p>
+<p>
+Now we can run the light clock,
+</p>
+
+<p><pre class="code">
+#run light_clock;;
+</pre></p>
+
+<p>
+and play with it!
+</p>
+
+<p><pre class="code">
+emit ck_arm 500;;
+</pre></p>
+
+<p><pre class="code">
+emit ck_snooze;;
+</pre></p>
+
+<p><pre class="code">
+emit ck_off;;
+</pre></p>
+
+<p>
+You can vary the duration of the coundown by sending another value on
+the <code>ck_arm</code> signal.
+</p>
+<p><pre class="code">
+emit ck_arm 250;;
+</pre></p>
+
+<p>
+Again, messages displayed on the standard output show the state of the
+light controller and the alarm-clock.
+</p>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<h1>Lesson 3: Dynamic reconfiguration</h1>
+<hr>
+<p>
+In this lesson, we show how we can add and remove processes to a
+system during execution. To illustrate that, we will use a simple
+graphical application which displays a moving point.
+</p>
+<p>
+We define the state of a moving point by a record containing the
+color of the point, and two signals that represent respectively the
+flows of positions and velocities of the point.
+</p>
+<p><pre class="code">
+type state =
+    { color: Graphics.color;
+      pos: (float * float, float * float) event;
+      vel: (float * float, float * float) event; }
+</pre></p>
+<p>
+At each instant, the position and velocity of a point are represented
+by a pair of floats.
+</p>
+<p>
+We program a way to observe the moving points. To do that we
+define a global signal <code>to_draw</code> on which points will
+send their states.
+</p>
+<p><pre class="code">
+signal to_draw;;
+</pre></p>
+<p>
+Then we define a process called <code>window</code> which opens the
+graphical window and displays the points.
+</p>
+<p><pre class="code">
+let process window =
+  Graphics.open_graph "";
+  loop
+    await to_draw (all) in
+    Graphics.clear_graph();
+    List.iter
+      (fun state ->
+        let x, y = last ?state.pos in
+        let x_int = (truncate x) mod (Graphics.size_x()) in
+        let y_int = truncate y in
+        Graphics.set_color state.color;
+        Graphics.fill_circle x_int y_int 5)
+      all
+  end
+</pre></p>
+<p><pre class="code">
+#run window;;
+</pre></p>
+<p>
+To create a value of type <code>state</code>, we need some auxiliary
+functions.
+</p>
+<p>
+We define the function <code>+:</code> to add a pair of floats.
+</p>
+<p><pre class="code">
+let (+:) (x1, y1) (x2, y2) = (x1 +. x2, y1 +. y2)
+</pre></p>
+<p>
+We define a function <code>color_of_int</code> which converts an
+integer into a value of type <code>Graphics.color</code>.
+</p>
+<p><pre class="code">
+let color_of_int = function
+  | 0 -> Graphics.black
+  | 1 -> Graphics.magenta
+  | 2 -> Graphics.green
+  | 3 -> Graphics.red
+  | 4 -> Graphics.blue
+  | _ -> Graphics.black
+</pre></p>
+
+<p>
+We can now define a function which creates a new state.
+</p>
+<p><pre class="code">
+let new_state () =
+  signal pos default (0., 0.) gather (+:) in
+  signal vel default (0., 0.) gather (+:) in
+  emit pos (0., float (Graphics.size_y () / 2));
+  { color = (color_of_int (Random.int 5));
+    pos = pos;
+    vel = vel; }
+</pre></p>
+<p>
+The flow of positions is initialized on the left side of the graphical
+window by an emission on the <code>pos</code> signal.
+</p>
+<p>
+To compute the position of the point, we integrate the velocity.
+</p>
+<p><pre class="code">
+let process compute_pos state =
+  loop
+    let p = last ?state.pos +: last ?state.vel in
+    emit state.pos p;
+    pause
+  end
+</pre></p>
+
+<p>
+So, to move a point from left to right, we define a process which
+maintains the velocity of a point at each instant.
+</p>
+<p><pre class="code">
+let process left_right state =
+  loop emit state.vel (2.0, 0.); pause end
+</pre></p>
+
+<p>
+To observe the position of a point, we define a
+process <code>draw</code> which emits the state of a point at each
+instant.
+</p>
+<p><pre class="code">
+let process draw state =
+  loop
+    emit to_draw state; pause
+  end
+</pre></p>
+<p>
+The behavior of a moving point is the parallel composition of the
+three preceding processes.
+</p>
+<p><pre class="code">
+let process moving_point state =
+   run (compute_pos state)
+   ||
+   run (left_right state)
+   ||
+   run (draw state)
+</pre></p>
+<p><pre class="code">
+#run moving_point (new_state ());;
+</pre></p>
+
+<p>
+The created process cannot be removed since it never terminates. In
+the next step, we will see how to implement a simple process manager
+that can stop the execution of a process in a modular way.
+</p>
+<p>
+We first define a function generating a unique identifier for each
+process.
+</p>
+<p><pre class="code">
+let gen_id =
+  let cpt = ref 0 in fun () -> incr cpt; !cpt
+</pre></p>
+
+<p>
+We define a global signal <code>to_kill</code> on which we will send the
+id of the processes to kill.
+</p>
+<p><pre class="code">
+signal to_kill;;
+</pre></p>
+
+<p>
+We define a process <code>killable</code> such that <code>killable
+p</code> associates an id to the process <code>p</code> given as
+argument and executes it. When the id associated to <code>p</code> is
+emitted on <code>to_kill</code>, the execution of <code>p</code> is
+stopped.
+</p>
+<p><pre class="code">
+let process killable p =
+  let id = gen_id () in
+  print_endline ("["^(string_of_int id)^"]");
+  do run p
+  until to_kill(ids) when List.mem id ids done
+</pre></p>
+<p>
+The identifier <code>id</code> is generated then the
+process <code>p</code> is executed. If during the execution, the
+signal <code>to_kill</code> is emitted, the variable <code>ids</code>
+will be assigned the list of processes to kill, thanks to
+the <code>do/until/when</code> construct. If <code>id</code> belongs
+to this list (<code>List.mem id ids</code>) then the execution is
+stopped otherwise execution continues.
+</p>
+<p>
+We can test our new combinator with a moving point.
+</p>
+<p><pre class="code">
+#run killable (moving_point (new_state ()));;
+</pre></p>
+<p>
+Observe that the id <code>[1]</code> is printed into the
+terminal. Thefore, we can kill this process by sending its id on the
+signal <code>to_kill</code>.
+</p>
+<p><pre class="code">
+emit to_kill 1;;
+</pre></p>
+<p>
+Let's now see how we can change the behavior of a process. We define a
+process <code>replace</code> which takes as argument an initial
+behavior <code>p_init</code>, a state <code>state</code> and a
+signal <code>new_behavior</code> on which new behavior to replace the
+current behavior can be sent.
+</p>
+<p><pre class="code">
+let rec process replace p_init state new_behavior =
+  do
+    run (p_init state)
+  until new_behavior(p) ->
+    run (replace p state new_behavior)
+  done
+</pre></p>
+<p>
+The process <code>p_init</code> parameterized by <code>state</code> is
+executed under the control of the
+signal <code>new_behavior</code>. When <code>new_behavior</code> is
+emitted, <code>p_init</code> is stopped and we receive the process
+<code>p</code> carried on this signal. The new process <code>p</code>
+is executed through the recursive call to <code>replace</code>, which
+continues to allow changes to the behavior of the process.
+</p>
+<p>
+To use this process, we need a signal on which we can send and receive
+a process. To handle multiple emissions during the same instant, we
+build the parallel composition of the sent processes.
+</p>
+<p><pre class="code">
+signal new_behavior
+  default (fun state -> process ())
+  gather (fun p q state ->
+            process (run (p state) || run (q state)))
+;;
+</pre></p>
+<p>
+We can now execute a moving point whose behavior can be replaced
+dynamically.
+</p>
+<p><pre class="code">
+#run replace moving_point (new_state ()) new_behavior;;
+</pre></p>
+
+<p>
+Now, to replace the point moving from left to right, we define the
+behavior of a point moving up and down.
+</p>
+<p><pre class="code">
+let process up_down state =
+  for i = 1 to 50 do emit state.vel (0., 2.); pause done;
+  loop
+    for i = 1 to 100 do emit state.vel (0., - 2.); pause done;
+    for i = 1 to 100 do emit state.vel (0., 2.); pause done
+  end
+</pre></p>
+<p><pre class="code">
+let process moving_point' state =
+   run (up_down state) ||
+   run (compute_pos state) || run (draw state)
+</pre></p>
+
+<p>
+To reconfigure the previous point, we need only send
+this <code>moving_point'</code> process on the
+signal <code>new_behavior</code>.
+</p>
+<p><pre class="code">
+emit new_behavior moving_point';;
+</pre></p>
+<p>
+We can restore the previous behavior as follows.
+</p>
+<p><pre class="code">
+emit new_behavior moving_point;;
+</pre></p>
+<p>
+Another useful reconfiguration combinator is one that adds a new
+behavior to a running process. To do that, we define a
+process <code>extend</code> that executes a
+process <code>p_init</code> and awaits new processes to execute on a
+signal <code>add_behavior</code>. The initial
+process <code>p_init</code> and the added processes will share a
+common state <code>state</code>.
+</p>
+<p><pre class="code">
+let rec process extend p_init state add_behavior =
+  run (p_init state)
+  ||
+  await add_behavior (p) in
+  run (extend p state add_behavior)
+</pre></p>
+<p>
+In this process, <code>p_init</code> is executed and in parallel a
+process <code>p</code> is awaited on the
+signal <code>add_behavior</code>. When <code>p</code> is received, it
+is executed through a recursive call to <code>extend</code> so that
+it is still possible to add new behaviors.
+</p>
+<p>
+Similarly to <code>new_behavior</code>, we define a
+signal <code>add_behavior</code> on which the adding requests will be sent.
+</p>
+<p><pre class="code">
+signal add_behavior
+  default (fun state -> process ())
+  gather (fun p q state ->
+            process (run (p state) || run (q state)))
+;;
+</pre></p>
+
+<p>
+We can run an extensible moving point,
+</p>
+<p><pre class="code">
+#run extend moving_point (new_state ()) add_behavior ;;
+</pre></p>
+<p>
+and add an up/down behavior to this point moving left to right.
+</p>
+<p><pre class="code">
+emit add_behavior up_down ;;
+</pre></p>
+<p>
+Of course, we can combine the previous operators. For example, we can
+define a process that can be extended and killed.
+</p>
+<p><pre class="code">
+#run
+  killable
+   (extend moving_point (new_state ()) add_behavior) ;;
+</pre></p>
+<p>
+Then we can reconfigure this process
+</p>
+<p><pre class="code">
+emit add_behavior up_down ;;
+</pre></p>
+<p>
+and kill it.
+</p>
+<p><pre class="code">
+emit to_kill 2 ;;
+</pre></p>
+<p>
+We can also combine the operators in another way. First we run an
+extensible process.
+</p>
+<p><pre class="code">
+#run extend moving_point (new_state ()) add_behavior ;;
+</pre></p>
+<p>
+and then we add a behavior which is killable.
+</p>
+<p><pre class="code">
+emit add_behavior
+  (fun state -> process (run (killable (up_down state)))) ;;
+</pre></p>
+<p>
+You can see that the behavior of two moving points have been modified
+because two processes are waiting on the
+signal <code>add_behavior</code>. The two processes execute a new
+killable behavior in parallel to their previous behavior and thus the
+id of two killable processes are printed into the terminal. We can now
+kill these processes.
+</p>
+<p><pre class="code">
+emit to_kill 3 ;;
+</pre></p>
+<p><pre class="code">
+emit to_kill 4 ;;
+</pre></p>
+<p>
+Note that the two moving points that were modified still exist
+because we only killed the added behaviors.
+</p>
+<p>
+To avoid that multiple processes share the same
+reconfiguration signal, we can associate an id to each extensible process and
+dispatch the requests.
+</p>
+<p>
+The adding requests will be sent on the signal <code>to_add</code>
+with the id of the process to extend.
+</p>
+<p><pre class="code">
+signal to_add ;;
+</pre></p>
+<p>
+Each extensible process has its own <code>add_behavior</code> signal
+and filters the <code>to_add</code> signal to extract only those
+requests addressed to it.
+</p>
+<p><pre class="code">
+let process extensible p_init state =
+  let id = gen_id () in
+  print_endline ("{"^(string_of_int id)^"}");
+  signal add_behavior default (fun state -> process ())
+    gather
+     (fun p q state -> process (run (p state) || run (q state)))
+  in
+  run (extend p_init state add_behavior)
+  ||
+  loop
+    await to_add(reqs) in
+    List.iter
+     (fun (x, p) -> if x = id then emit add_behavior p)
+     reqs
+  end
+</pre></p>
+<p>
+We can test our new combinator as follows.
+<p>
+<p><pre class="code">
+#run extensible moving_point (new_state ()) ;;
+</pre></p>
+<p><pre class="code">
+emit to_add (5, up_down) ;;
+</pre></p>
+
+<p>
+A small library of process management can be found in the standard library:
+<a href="http://reactiveml.org/documentation/stdlib/Rml_process_manager.html">rml_process_manager.rmli</a>.
+
+For more information about dynamic reconfiguration in ReactiveML you
+can
+read <a href="http://reactiveml.org/papers/MandelPlateau-draft-2010-rmltop.pdf">this
+paper</a>.
+</p>

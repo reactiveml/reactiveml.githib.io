@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../../style.css" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../documentation.html"> Manual</a></li>
+                <li><a href="../../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../../videos.html">Videos</a></li>
+            <li><a href="../../publications.html">Publications</a></li>
+            <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+        <li class="nav-header disabled"><a>Reactive Asco</a></li>
+        <li><a href="../../reactive_asco/index.html"> Home</a></li>
+        <li><a href="../../reactive_asco/videos.html"> Videos Demos</a></li>
+        <li><a href="../../reactive_asco/source.html"> Source Code</a></li>
+
+        <li class="nav-header disabled"><a>Papers</a></li>
+        <li><a href="../../reactive_asco/resources/emsoft13.pdf"> EMSOFT'13</a></li>
+        <li><a href="../../reactive_asco/resources/farm13.pdf"> FARM'13</a></li>
+
+        <li class="nav-header disabled"><a>Modules</a></li>
+        <li><a href="../../reactive_asco/code/types.html"> Types</a></li>
+        <li><a href="../../reactive_asco/code/time.html"> Time</a></li>
+        <li><a href="../../reactive_asco/code/motor.html"> Motor</a></li>
+         <li><a href="../../reactive_asco/code/groups.html"> Groups</a></li>
+        <li><a href="../../reactive_asco/code/input.html"> Input</a></li>
+        <li><a href="../../reactive_asco/code/output.html"> Output</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+
+  <div class="col-md-9">
+    <pre>
+<span style="color: #b22222;">(***************************************************************)</span>
+<span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">delay </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> delay = float
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">label of an instrumental event </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> instr_event_label = int
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">tempo </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> tempo = float
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Atomic action </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> action =
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> <span style="color: #228b22;">of</span> string  <span style="color: #b22222;">(** </span><span style="color: #b22222;">Max/MSP control message </span><span style="color: #b22222;">*)</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> <span style="color: #228b22;">of</span> (unit, unit list) event <span style="color: #b22222;">(** </span><span style="color: #b22222;">ReactiveML signal </span><span style="color: #b22222;">*)</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Synchronization strategies </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> sync = <span style="color: #0000ff;">Tight</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Loose</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Error handling strategies </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> err = <span style="color: #0000ff;">Local</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Global</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Causal</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Partial</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Electronic score event </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> score_event =
+    { event : instr_event_label;
+      seq : sequence; }
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Sequence of electronic actions </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">and</span> sequence =  (delay * asco_event) list
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Generic asco event </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">and</span> asco_event =
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Group</span> <span style="color: #228b22;">of</span> group
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Action</span> <span style="color: #228b22;">of</span> action
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Until</span> <span style="color: #228b22;">of</span> asco_until
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Asco group </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">and</span> group =
+      { group_synchro : sync;
+        group_error : err;
+        group_seq : sequence }
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Preemption construct </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">and</span> asco_until =
+    { until_seq : sequence;
+      until_event : instr_event_label; }
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Instrumental score </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> instr_score = delay list
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Electronic score </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> score = score_event list
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Instrumental event </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> instr_event =
+    { index : instr_event_label;
+      bps : float; }
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Status for an event </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> status = <span style="color: #0000ff;">Detected</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Missed</span> <span style="color: #228b22;">of</span> instr_event_label
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Performance element </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> perf_elem = instr_event_label * delay * action
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Simulation of the listening machine </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> simulation = (instr_event_label * delay * tempo) list
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Type of input </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> input_mode =
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Udp</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">File</span> <span style="color: #228b22;">of</span> string
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Score</span>
+</pre>
+
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

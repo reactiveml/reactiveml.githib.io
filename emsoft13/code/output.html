@@ -1,0 +1,174 @@
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap_v2/css/bootstrap.css" rel="stylesheet">
+  <link href="../../emsoft13/style.css" rel="stylesheet">
+  <link href="../../bootstrap_v2/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="masthead">
+      <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+
+        <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          menu
+        </a>
+
+        <a class="brand" href="../../index.html">ReactiveML</a>
+
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+        <li><a href="../../documentation.html">Documentation</a></li>
+        <li><a href="../../examples.html">Examples</a></li>
+        <li><a href="../../videos.html">Videos</a></li>
+        <li><a href="../../publications.html">Publications</a></li>
+        <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+        </div> <!-- /nav-collapse -->
+      </div> <!-- /container -->
+    </div> <!-- /navbar-inner -->
+      </div> <!-- /navbar -->
+    </div> <!-- /masthead -->
+<div class="row-fluid">
+  <div class="span3">
+    <div class="well sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+	<li class="nav-header">EMSOFT'13</li>
+        <li><a href="../index.html"><i class="icon-chevron-right"></i>Home</a></li>
+        <li><a href="../videos.html"><i class="icon-chevron-right"></i>Videos Demos</a></li>
+        <li><a href="../source.html"><i class="icon-chevron-right"></i>Source
+        Code</a></li>
+	<li class="nav-header">Download</li>
+	<li><a href="./resources/emsoft13.pdf"><i class="icon-file
+					       icon-black"></i> Paper</a></li>
+	<li><a href="./resources/reactive_asco.tar.gz"><i class="icon-file
+						       icon-black"></i> Code</a></li>
+	<li class="nav-header">Modules</li>
+        <li><a href="./types.html"><i class="icon-chevron-right"></i>Types</a></li>
+        <li><a href="./time.html"><i class="icon-chevron-right"></i>Time</a></li>
+        <li><a href="./motor.html"><i class="icon-chevron-right"></i>Motor</a></li>
+	 <li><a href="./groups.html"><i class="icon-chevron-right"></i>Groups</a></li>
+        <li><a href="./input.html"><i class="icon-chevron-right"></i>Input</a></li>
+        <li><a href="./output.html"><i class="icon-chevron-right"></i>Output</a></li>
+
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="span9">
+    <pre>
+<span style="color: #b22222;">(***************************************************************)</span>
+<span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Handle output: send control messages to Max/MSP via UDP or print
+    in the standart output.
+</span><span style="color: #b22222;">*)</span>
+
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Send control message in UDP or emit a ReactiveML signal. </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> udp out_port perf =
+  <span style="color: #228b22;">let</span> send (i,d,a) sock_actions =
+    <span style="color: #008b8b;">match</span> a <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> m <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #0000ff;">Network</span>.sendUDP m sock_actions out_port ()
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> s <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #483d8b;">emit</span> s
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> sock_actions = <span style="color: #0000ff;">Network</span>.init_client () <span style="color: #228b22;">in</span>
+  print_endline (<span style="color: #8b2252;">"playing on port : "</span>^(string_of_int out_port));
+  <span style="color: #a020f0;">loop</span>
+    <span style="color: #228b22;">await</span> perf (p) <span style="color: #228b22;">in</span>
+    <span style="color: #0000ff;">List</span>.iter (<span style="color: #228b22;">fun</span> x <span style="color: #008b8b;">-&gt;</span> send x sock_actions) p
+  <span style="color: #a020f0;">end</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Print a feedback on the standart output. </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> stdout perf =
+  <span style="color: #228b22;">let</span> print (i,d,a) =
+    <span style="color: #008b8b;">match</span> a <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Message</span> m <span style="color: #008b8b;">-&gt;</span>
+        print_endline (m^<span style="color: #8b2252;">"\t\tevent : "</span>^
+                       (string_of_int i)^
+                       <span style="color: #8b2252;">" delay : "</span>^
+                       (string_of_float d))
+    <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Signal</span> s <span style="color: #008b8b;">-&gt;</span>
+        print_endline (<span style="color: #8b2252;">"emit rml signal"</span>^<span style="color: #8b2252;">"\t\tevent : "</span>^
+                       (string_of_int i)^
+                       <span style="color: #8b2252;">" delay : "</span>^
+                       (string_of_float d))
+  <span style="color: #228b22;">in</span>
+  <span style="color: #a020f0;">loop</span>
+    <span style="color: #228b22;">await</span> perf (p) <span style="color: #228b22;">in</span>
+    <span style="color: #0000ff;">List</span>.iter (<span style="color: #228b22;">fun</span> x <span style="color: #008b8b;">-&gt;</span> print x) p
+  <span style="color: #a020f0;">end</span>
+</pre>
+
+</div>
+</div>
+<div class="row-fluid">
+<div class="span12">
+
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+      <p>
+        <small>
+          <a href="../../navigation.html">navigation</a>
+        </small>
+      </p>
+    </div>
+    <div class="span6">
+      <p style="text-align: right">
+        <small>
+          <a href="../../distrib/rml-1.08.06-2013-07-12.tar.gz">ReactiveML version 1.08.06</a><br>
+        </small>
+      </p>
+    </div> <!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /footer -->
+
+</div> <!-- /span12 -->
+</div> <!-- /row-fluid -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap_v2/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap_v2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

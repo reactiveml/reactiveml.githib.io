@@ -1,0 +1,153 @@
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../bootstrap_v2/css/bootstrap.css" rel="stylesheet">
+  <link href="../emsoft13/style.css" rel="stylesheet">
+  <link href="../bootstrap_v2/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="masthead">
+      <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+
+        <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          menu
+        </a>
+
+        <a class="brand" href="../index.html">ReactiveML</a>
+
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../tryrml/tryrml.html">Try online</a></li>
+        <li><a href="../documentation.html">Documentation</a></li>
+        <li><a href="../examples.html">Examples</a></li>
+        <li><a href="../videos.html">Videos</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+          </ul>
+        </div> <!-- /nav-collapse -->
+      </div> <!-- /container -->
+    </div> <!-- /navbar-inner -->
+      </div> <!-- /navbar -->
+    </div> <!-- /masthead -->
+<div class="row-fluid">
+<div class="span12">
+
+
+  <h1>A Synchronous Embedding of Antescofo,</h1>
+  <h2>a Domain-Specific Language for Interactive Mixed Music</h2>
+  <br>
+  <h4>G. Baudart, F. Jacquemard, L. Mandel, M. Pouzet<br><br><a href="http://www.emsoft.org/">EMSOFT 2013</a></h4>
+
+  <hr>
+
+
+  <p><a href="http://repmus.ircam.fr/antescofo">Antescofo</a> is recently
+  developed software for musical score following and mixed music: it
+  automatically, and in real-time, synchronizes electronic instruments
+  with a musician playing on a classical instrument. Therefore, it faces
+  some of the same major challenges as embedded systems.</p>
+
+
+  <p>
+The system
+provides a programming language used by composers to specify musical
+pieces that mix interacting electronic and classical instruments. This
+language is developed with and for musicians and it continues to
+evolve according to their needs. Yet its semantics has only recently
+been formally defined. This paper presents a synchronous semantics for
+the core language of Antescofo and an alternative implementation
+based on an embedding inside an existing synchronous language, namely
+ReactiveML. The semantics reduces to a few rules, is mathematically
+precise and leads to an interpretor of only a few hundred lines. The
+efficiency of this interpretor compares well with that of the actual
+implementation: on all musical pieces we have tested, response times
+have been less than the reaction time of the human ear. Moreover, this
+embedding permitted the prototyping of several new programming
+constructs, some of which are described in this paper.
+</p>
+
+<div class="row-fluid">
+
+<div class="span6">
+  <div class="thumbnail">
+    <img src="./resources/asco_score.png" alt="">
+  </div>
+</div>
+
+<div class="span6">
+  <h3>Ressources</h3>
+  <ul>
+    <li><a href="./resources/emsoft13.pdf">Paper <i class="icon-file icon-black"></i></a></li>
+    <li><a href="./resources/reactive_asco.tar.gz">Code <i class="icon-file icon-black"></i></a></li>
+    <li><a href="./videos.html">Videos Demos</a></li>
+    <li><a href="./source.html">Source Code</a></li>
+    <li><a href="../distrib/rml-1.08.06-2013-07-12.tar.gz">ReactiveML
+	Compiler version 1.08.06</a></li>
+    <li><a href="../reactive_asco/index.html">Project Reactive Asco</a></li>
+  </ul>
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="row-fluid">
+<div class="span12">
+
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+      <p>
+        <small>
+          <a href="../navigation.html">navigation</a>
+        </small>
+      </p>
+    </div>
+    <div class="span6">
+      <p style="text-align: right">
+        <small>
+          <a href="../distrib/rml-1.08.06-2013-07-12.tar.gz">ReactiveML version 1.08.06</a><br>
+        </small>
+      </p>
+    </div> <!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /footer -->
+
+</div> <!-- /span12 -->
+</div> <!-- /row-fluid -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../bootstrap_v2/js/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap_v2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

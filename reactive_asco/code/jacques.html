@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../../style.css" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../documentation.html"> Manual</a></li>
+                <li><a href="../../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../../videos.html">Videos</a></li>
+            <li><a href="../../publications.html">Publications</a></li>
+            <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav">
+      <ul class="nav nav-list">
+        <li class="nav-header disabled"><a>Try ReactiveML</a></li>
+        <li><a href="../../tryrml/tryrml.html"> Try it online</a></li>
+        <li><a href="../../distrib"> Download</a></li>
+
+        <li class="nav-header disabled"><a>Examples</a></li>
+        <li><a href="../../examples.html#breadth"> Breadth first traversal</a></li>
+        <li><a href="../../examples.html#jacques"> Frère Jacques</a></li>
+        <li><a href="../../examples.html#nbody"> N-body</a></li>
+        <li><a href="../../examples.html#cell"> Cellular automata</a></li>
+
+        <li class="nav-header disabled"><a>Projects</a></li>
+        <li><a href="../../examples/simulator_elip/index.html"> Network simulation</a></li>
+        <li><a href="../../glonemo/index.html"> Glonemo</a></li>
+        <li><a href="../../reactive_asco/index.html"> Reactive Asco</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+
+<h1>Frère Jacques</h1>
+<hr>
+<div class="thumbnail">
+  <img src="../../reactive_asco/resources/score_jacques.png" alt="jacques">
+</div>
+<br><br>
+<p>
+  ReactiveML has been used to
+  implement <a href="../../reactive_asco/index.html">a sequencer
+  for mixed music</a>. Here, we present a simple library that takes
+  advantage of the expressiveness of ReactiveML to program the classic
+  French musical round "Frère Jacques".
+</p>
+
+<div class="row">
+  <div class="col-md-6 offset1">
+    <audio controls>
+      <source src="../../reactive_asco/resources/jacques_round.mp3"
+              type="audio/mp3">
+        <source src="../../reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+    </audio>
+  </div>
+</div>
+
+<p>
+  Traditionally, in western music, a melody is a sequence of notes,
+  where a note is a sound event characterized by a pitch and a
+  duration. Notes can be defined with the following types using a
+  syntax similar to the one of OCaml.
+</p>
+<pre>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Pitch class of a note (Af = A flat, As = A sharp, ...). </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> pitch_class =
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">A</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Af</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">As</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">B</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Bf</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Bs</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">C</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Cf</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Cs</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">D</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Df</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Ds</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">E</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Ef</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Es</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">F</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Ff</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Fs</span>
+  <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">G</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Gf</span> <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Gs</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Octave </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> octave = int
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Pitch </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> pitch = pitch_class * octave
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Duration </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> dur = float
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Note</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">type</span> note = dur * pitch
+</pre>
+<p>
+  The pitch is represented by a pair <code>(pitch_class,
+  octave)</code>, where <code>pitch_class</code> denotes one of the
+  twelve semi-tones, e.g., A, A#, A♭, B, B#..., and octave is an
+  integer. For instance <code>(A,4)</code> denotes the famous A 440Hz.
+</p>
+<p>
+  Using these data types, we can define the score of Frère Jacques as list of notes:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> jacques =
+  [1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">G</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
+   1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">Bf</span>,4); 2.0, (<span style="color:rgb(0,0,255)">C</span>,5);
+   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">D</span>,5); 0.5, (<span style="color:rgb(0,0,255)">C</span>,5); 0.5, (<span style="color:rgb(0,0,255)">Bf</span>,4); 1.0, (<span style="color:rgb(0,0,255)">A</span>,4); 1.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);
+   1.0, (<span style="color:rgb(0,0,255)">F</span>,4); 1.0, (<span style="color:rgb(0,0,255)">C</span>,4); 2.0, (<span style="color:rgb(0,0,255)">F</span>,4);]
+</pre>
+<p>
+  In order to play the score, we have to build a link between the
+  logical time and the physical time. Let us define a
+  signal <code>clock</code> which will be emitted
+  every <code>period</code> seconds:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">signal</span> clock
+<span style="color:rgb(34,139,34)">let</span> period = 0.01
+</pre>
+<p>
+The process <code>emit_clock</code> emits the
+signal <code>clock</code>. The function <code>gettimeofday</code> of
+the <code>Unix</code> module gives access to the physical time:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> emit_clock =
+  <span style="color:rgb(178,34,34)">(* set the next deadline *)</span>
+  <span style="color:rgb(34,139,34)">let</span> next = ref (<span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () +. period) <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(34,139,34)">let</span> current = <span style="color:rgb(0,0,255)">Unix</span>.gettimeofday () <span style="color:rgb(34,139,34)">in</span>
+    <span style="color:rgb(178,34,34)">(* check if the deadline has been reached *)</span>
+    <span style="color:rgb(0,139,139)">if</span> (current &gt;= !next)
+    <span style="color:rgb(0,139,139)">then</span>
+      <span style="color:rgb(160,32,240)">begin</span>
+        <span style="color:rgb(72,61,139)">emit</span> clock ();
+        next := !next +. period; <span style="color:rgb(178,34,34)">(* update the next deadline *)</span>
+      <span style="color:rgb(160,32,240)">end</span>;
+    <span style="color:rgb(72,61,139)">pause</span>
+  <span style="color:rgb(160,32,240)">end</span>
+</pre>
+<p>
+  Now, to wait a duration of <code>dur</code> seconds, we only have to
+  count the occurrences of the signal <code>clock</code>:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> wait dur =
+  <span style="color:rgb(34,139,34)">let</span> d = int_of_float (dur /. period) <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(0,139,139)">for</span> i = 1 <span style="color:rgb(0,139,139)">to</span> d <span style="color:rgb(0,139,139)">do</span>
+    <span style="color:rgb(34,139,34)">await</span> clock
+  <span style="color:rgb(0,139,139)">done</span>
+</pre>
+
+<p>
+A performance is represented by a signal on which notes to play are sent.
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">signal</span> perf <span style="color:rgb(34,139,34)">default</span> [] <span style="color:rgb(34,139,34)">gather</span> (<span style="color:rgb(34,139,34)">fun</span> x y <span style="color:rgb(0,139,139)">-&gt;</span> x::y)
+</pre>
+<p>
+  The execution of a score is the traversal of the list of notes at the right speed.
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">rec</span> <span style="color:rgb(34,139,34)">process</span> play sequence =
+  <span style="color:rgb(0,139,139)">match</span> sequence <span style="color:rgb(0,139,139)">with</span>
+  <span style="color:rgb(0,139,139)">|</span> [] <span style="color:rgb(0,139,139)">-&gt;</span> ()
+  <span style="color:rgb(0,139,139)">|</span> ((dur, pitch) <span style="color:rgb(34,139,34)">as</span> note) :: s <span style="color:rgb(0,139,139)">-&gt;</span>
+      <span style="color:rgb(72,61,139)">emit</span> perf note;
+      <span style="color:rgb(72,61,139)">run</span> (wait dur);
+      <span style="color:rgb(72,61,139)">run</span> (play s)
+</pre>
+
+<p>
+  In order to produce actual sounds, notes are converted into UDP messages and sent to an audio environment. This is done by the process <code>sender</code>. This process awaits notes produced on the signal <code>perf</code> and sends UDP messages.
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> send_to_audio sock note =
+  <span style="color:rgb(34,139,34)">let</span> m = Music.string_of_note note <span style="color:rgb(34,139,34)">in</span>
+  <span style="color:rgb(0,0,255)">Network</span>.sendUDP m sock 7400 ()
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> sender =
+  <span style="color:rgb(34,139,34)">let</span> sock = <span style="color:rgb(0,0,255)">Network</span>.init_client () <span style="color:rgb(34,139,34)">in</span>
+  print_endline (<span style="color:rgb(139,34,82)">"playing on port : "</span>^(string_of_int 7400));
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(34,139,34)">await</span> perf (notes) <span style="color:rgb(34,139,34)">in</span>
+    <span style="color:rgb(0,0,255)">List</span>.iter (<span style="color:rgb(34,139,34)">fun</span> n <span style="color:rgb(0,139,139)">-&gt;</span> send_to_audio sock n) notes
+  <span style="color:rgb(160,32,240)">end</span>
+</pre>
+
+<p>
+  To test our implementation, we can play the theme as an infinite repetition of the score:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> theme =
+  <span style="color:rgb(160,32,240)">loop</span>
+    <span style="color:rgb(72,61,139)">run</span> (play jacques)
+  <span style="color:rgb(160,32,240)">end</span>
+</pre>
+<p>
+  Finally, the main process is the parallel composition of the metronome (the <code>emit_clock</code> process), the theme and the <code>sender</code> process:
+</p>
+<pre>
+  <span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> main =
+  <span style="color:rgb(72,61,139)">run</span> emit_clock <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> sender</pre>
+</pre>
+
+<p>
+  Now to perform a round, we first define a process <code>delayed</code> which delays the execution of a process:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> delayed p dur =
+  <span style="color:rgb(72,61,139)">run</span> (wait dur);
+  <span style="color:rgb(72,61,139)">run</span> p
+</pre>
+<p>
+  Then, we can execute the theme four times in parallel, each time delayed by 8 seconds:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> round_basic =
+  <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (delayed theme 8.0) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (delayed theme 16.0) <span style="color:rgb(0,139,139)">||</span>
+  <span style="color:rgb(72,61,139)">run</span> (delayed theme 24.0)
+</pre>
+<p>
+  Finally, we can redefine the round using parallel iterations or recursive processes:
+</p>
+<pre>
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">process</span> round_for =
+  <span style="color:rgb(0,139,139)">for</span> i = 0 <span style="color:rgb(0,139,139)">to</span> 3 <span style="color:rgb(0,139,139)">dopar</span>
+    <span style="color:rgb(72,61,139)">run</span> (delayed theme (float (i * 8)))
+  <span style="color:rgb(0,139,139)">done</span>
+
+<span style="color:rgb(34,139,34)">let</span> <span style="color:rgb(34,139,34)">rec</span> <span style="color:rgb(34,139,34)">process</span> round nb_voices =
+  <span style="color:rgb(0,139,139)">if</span> nb_voices &lt;= 0 <span style="color:rgb(0,139,139)">then</span> ()
+  <span style="color:rgb(0,139,139)">else</span> <span style="color:rgb(160,32,240)">begin</span>
+    <span style="color:rgb(72,61,139)">run</span> theme <span style="color:rgb(0,139,139)">||</span>
+    <span style="color:rgb(72,61,139)">run</span> (delayed (round (nb_voices - 1)) 8.0)
+  <span style="color:rgb(160,32,240)">end</span>
+</pre>
+<p>
+  Here is the result of the round:
+</p>
+<div class="row">
+  <div class="col-md-6 offset1">
+    <audio controls>
+      <source src="../../reactive_asco/resources/jacques_round.mp3"
+              type="audio/mp3">
+        <source src="../../reactive_asco/resources/jacques_round.ogg" type="audio/ogg">
+    </audio>
+  </div>
+</div>
+<p>
+  The complete implementation is available in the
+  directory <code>examples/reactive_asco</code> of the ReactiveML
+  distribution.
+</p>
+</div>
+</div>
+
+<div class="row-fluid">
+<div class="span12">
+
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+      <p>
+	<small>
+	  <a href="../../navigation.html">navigation</a>
+	</small>
+      </p>
+    </div>
+    <div class="span6">
+      <p style="text-align: right">
+	<small>
+	  <a href="../../distrib">ReactiveML version 1.09.07</a><br>
+	  2021-07-26 <a href="../../distrib/changes">changes</a>
+	    <!-- <br> -->
+	    <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	</small>
+      </p>
+    </div> <!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /footer -->
+
+</div> <!-- /span12 -->
+</div> <!-- /row-fluid -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/html5slider.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap-player.js"></script>
+
+</body>
+</html>

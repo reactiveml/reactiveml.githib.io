@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="./bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="./style.css" rel="stylesheet">
+  <link href="./bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="./rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="./index.html">Home</a></li>
+            <li><a href="./tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="./documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="./documentation.html"> Manual</a></li>
+                <li><a href="./tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="./examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="./examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="./examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="./glonemo/index.html">Glonemo</a></li>
+                <li><a href="./reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="./videos.html">Videos</a></li>
+            <li><a href="./publications.html">Publications</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<!-- Jumbotron -->
+<div class="jumbotron">
+  <h1>ReactiveML</h1>
+  <br>
+  <p class="lead">
+    A programming language for implementing interactive systems.
+    ReactiveML combines the temporal expressiveness of
+    synchronous languages with the power of functional programming.
+
+    <!-- A programming language -->
+    <!-- dedicated to the implementation of interactive systems. -->
+    <!-- as found in video games or simulation -->
+    <!-- problems. --> <!-- ReactiveML mixes the temporal expressiveness of -->
+    <!-- synchronous languages with the power of functional programming. -->
+  </p>
+
+  <div id="content" class="row spaced">
+    <div class="col-md-4">
+      <p>
+        <a class="btn btn-default btn-lg fixed-size"
+           href="./distrib">
+          Download
+        </a>
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p>
+        <a class="btn btn-default btn-lg fixed-size"
+           href="tryrml/tryrml.html">
+          Try it online
+        </a>
+      </p>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default btn-lg dropdown-toggle fixed-size" data-toggle="dropdown">
+          Examples <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="examples.html">Basic Examples</a></li>
+          <li class="divider"></li>
+          <li><a href="examples/simulator_elip/index.html">Network Simulation</a></li>
+          <li><a href="glonemo/index.html">Glonemo</a></li>
+          <li><a href="reactive_asco/index.html">Reactive Asco</a></li>
+        </ul>
+    </div>
+  </div>
+</div>
+
+
+
+ <div id='content' class='row'>
+    <div class='col-md-4'>
+      <h4>What is ReactiveML?</h4>
+      <p>
+        ReactiveML is a general purpose programming language extended with
+        concurrency constructs to ease the programming of interactive
+        systems. The concurrency model of the language originates from the
+        synchronous model that is used to program real-time
+        applications. Therefore, it takes advantages of the expressiveness
+        and determinism of the model and removes the real-time constraints.
+        Click <a href="./videos.html">here</a> to see some video
+        about ReactiveML.
+      </p>
+
+
+    </div>
+    <div class='col-md-4'>
+      <h4>What are the uses of ReactiveML?</h4>
+      <p>
+        ReactiveML is dedicated to the implementation of interactive systems
+        as found in video games and simulation problems. For example, it has
+        been used to simulate power consumption in sensor networks
+        (<a href="./glonemo/">Glonemo</a>) or to implement a
+        sequencer for mixed music
+        (<a href="./reactive_asco/index.html">ReactiveAsco</a>). More
+        examples are given in
+        the <a href="./examples.html">examples page</a>.
+      </p>
+
+
+    </div>
+    <div class='col-md-4'>
+      <h4>How to learn ReactiveML?</h4>
+      <p>
+        Start learning ReactiveML with
+        the <a href="./tryrml/tryrml.html">interactive tutorial</a>
+        available
+        online. A <a href="./documentation.html">documentation</a>
+        explains how to compile ReactiveML programs and gives the syntax and
+        intuitive semantics of the reactive
+        constructs. Finally, <a href="./publications.html">academic
+          publications</a> describes precisely the language, its static
+        analysis and implementation.
+      </p>
+
+    </div>
+  </div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="./navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="./distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="./distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="./bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

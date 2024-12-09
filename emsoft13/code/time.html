@@ -1,0 +1,221 @@
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap_v2/css/bootstrap.css" rel="stylesheet">
+  <link href="../../emsoft13/style.css" rel="stylesheet">
+  <link href="../../bootstrap_v2/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="masthead">
+      <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+
+        <a class="btn navbar-inverse btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="padding-top: 3px">
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          <!-- <span class="icon-bar"></span> -->
+          menu
+        </a>
+
+        <a class="brand" href="../../index.html">ReactiveML</a>
+
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+        <li><a href="../../documentation.html">Documentation</a></li>
+        <li><a href="../../examples.html">Examples</a></li>
+        <li><a href="../../videos.html">Videos</a></li>
+        <li><a href="../../publications.html">Publications</a></li>
+        <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+        </div> <!-- /nav-collapse -->
+      </div> <!-- /container -->
+    </div> <!-- /navbar-inner -->
+      </div> <!-- /navbar -->
+    </div> <!-- /masthead -->
+<div class="row-fluid">
+  <div class="span3">
+    <div class="well sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+	<li class="nav-header">EMSOFT'13</li>
+        <li><a href="../index.html"><i class="icon-chevron-right"></i>Home</a></li>
+        <li><a href="../videos.html"><i class="icon-chevron-right"></i>Videos Demos</a></li>
+        <li><a href="../source.html"><i class="icon-chevron-right"></i>Source
+        Code</a></li>
+	<li class="nav-header">Download</li>
+	<li><a href="./resources/emsoft13.pdf"><i class="icon-file
+					       icon-black"></i> Paper</a></li>
+	<li><a href="./resources/reactive_asco.tar.gz"><i class="icon-file
+						       icon-black"></i> Code</a></li>
+	<li class="nav-header">Modules</li>
+        <li><a href="./types.html"><i class="icon-chevron-right"></i>Types</a></li>
+        <li><a href="./time.html"><i class="icon-chevron-right"></i>Time</a></li>
+        <li><a href="./motor.html"><i class="icon-chevron-right"></i>Motor</a></li>
+	 <li><a href="./groups.html"><i class="icon-chevron-right"></i>Groups</a></li>
+        <li><a href="./input.html"><i class="icon-chevron-right"></i>Input</a></li>
+        <li><a href="./output.html"><i class="icon-chevron-right"></i>Output</a></li>
+
+      </ul>
+    </div>
+  </div><!--/span-->
+
+  <div class="span9">
+    <pre>
+<span style="color: #b22222;">(***************************************************************)</span>
+<span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Implement the [wait] process (relative to the tempo). This is an
+    optimized version using a priority queue.
+</span><span style="color: #b22222;">*)</span>
+
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
+<span style="color: #a0522d;">open</span> <span style="color:
+						       #0000ff;">Utils</span>
+
+<section id="emit_clock"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Generate a regular real-time signal [clock] of frequency [freq]. </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> emit_clock clock freq  =
+  <span style="color: #228b22;">let</span> period = 1. /. freq <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> start = <span style="color: #0000ff;">Unix</span>.gettimeofday () <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> cpt = ref 1 <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> next = ref (start +. period) <span style="color: #228b22;">in</span>
+  <span style="color: #a020f0;">loop</span>
+    <span style="color: #228b22;">let</span> current = <span style="color: #0000ff;">Unix</span>.gettimeofday () <span style="color: #228b22;">in</span>
+    <span style="color: #008b8b;">if</span> (current &gt;= !next)
+    <span style="color: #008b8b;">then</span>
+      <span style="color: #a020f0;">begin</span>
+        <span style="color: #483d8b;">emit</span> clock ();
+        cpt := !cpt + 1;
+        next := start +. (float !cpt) *. period
+      <span style="color: #a020f0;">end</span>;
+    <span style="color: #483d8b;">pause</span>
+  <span style="color: #a020f0;">end</span></section>
+<section id="elapsed"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Compute the delay, relative to the tempo, elapsed since the
+    beginning of its execution. The signal [listen] carries the
+    estimation of the tempo. The signal [clock] is a signal present at
+    a frequency [freq]. And [date] is the output signal.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> elapsed listen clock freq date =
+  <span style="color: #228b22;">let</span> period = 1. /. freq <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> m = ref 0.0 <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> c = ref 0.0 <span style="color: #228b22;">in</span>
+  <span style="color: #483d8b;">emit</span> date 0.0;
+  <span style="color: #008b8b;">do</span>
+    <span style="color: #b22222;">(* </span><span style="color: #b22222;">use Kahan summation </span><span style="color: #b22222;">*)</span>
+    <span style="color: #a020f0;">loop</span>
+      <span style="color: #228b22;">let</span> ev = last_one listen <span style="color: #228b22;">in</span>
+      <span style="color: #228b22;">let</span> y = ev.bps -. !c <span style="color: #228b22;">in</span>
+      <span style="color: #228b22;">let</span> t = !m +. y <span style="color: #228b22;">in</span>
+      c := (t -. !m) -. y;
+      m := t;
+      <span style="color: #483d8b;">emit</span> date (!m *. period);
+      <span style="color: #483d8b;">pause</span>
+    <span style="color: #a020f0;">end</span>
+  <span style="color: #008b8b;">when</span> clock <span style="color: #008b8b;">done</span></section>
+<span style="color: #b22222;">(* </span><span style="color: #b22222;">Run the processes [emit_clock] and [elapsed] and return [date]. </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> metronome listen freq date =
+  <span style="color: #228b22;">signal</span> clock <span style="color: #228b22;">in</span>
+  <span style="color: #483d8b;">run</span> (emit_clock clock freq) <span style="color: #008b8b;">||</span>
+  <span style="color: #483d8b;">run</span> (elapsed listen clock freq
+  date)
+
+<section id="scheduler"><h3></h3><span style="color: #b22222;">(** </span><span style="color: #b22222;">Wait a delay [dur] relatively to the tempo. The waiting process is
+    realized by the scheduler. Therefore to achieve the desired
+    behavior we just need to register on the scheduler queue with the
+    [adding] signal. The signal [date] carries the current date
+    relative to the tempo.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> wait date adding dur =
+  <span style="color: #228b22;">signal</span> s <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> <span style="color: #228b22;">one</span> date(e) <span style="color: #228b22;">in</span>
+  <span style="color: #483d8b;">emit</span> adding (dur +. e, s);
+  <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> s</section>
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Create a pair of processes [(scheduler, wait)]. The process [wait]
+    suspends the execution for a duration [dur] relative to the tempo
+    given by the signal [date]. The process [scheduler] manages the
+    waiting.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> make_action_scheduler date =
+  <span style="color: #228b22;">signal</span> adding <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> sending d sl = <span style="color: #0000ff;">List</span>.iter (<span style="color: #228b22;">fun</span> (_, s) <span style="color: #008b8b;">-&gt;</span> <span style="color: #483d8b;">emit</span> s) sl <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> wait = wait date adding <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">signal</span> deadline <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> <span style="color: #228b22;">process</span> deadline_generator pre_d =
+    <span style="color: #228b22;">await</span> <span style="color: #228b22;">immediate</span> <span style="color: #228b22;">one</span> date (d) <span style="color: #228b22;">in</span>
+    <span style="color: #483d8b;">emit</span> deadline (d +. (d -. pre_d) /. 2.);
+    <span style="color: #483d8b;">pause</span>;
+    <span style="color: #483d8b;">run</span> (deadline_generator d)
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">process</span> action_scheduler =
+    <span style="color: #483d8b;">run</span> (<span style="color: #0000ff;">Reactive_queue</span>.scheduler deadline sending adding)
+    <span style="color: #008b8b;">||</span>
+    <span style="color: #483d8b;">run</span> (deadline_generator 0.0)
+  <span style="color: #228b22;">in</span>
+  action_scheduler, wait
+</pre>
+
+
+</div>
+</div>
+<div class="row-fluid">
+<div class="span12">
+
+<hr>
+<div class="footer">
+  <div class="row-fluid">
+    <div class="span6">
+      <p>
+        <small>
+          <a href="../../navigation.html">navigation</a>
+        </small>
+      </p>
+    </div>
+    <div class="span6">
+      <p style="text-align: right">
+        <small>
+          <a href="../../distrib/rml-1.08.06-2013-07-12.tar.gz">ReactiveML version 1.08.06</a><br>
+        </small>
+      </p>
+    </div> <!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /footer -->
+
+</div> <!-- /span12 -->
+</div> <!-- /row-fluid -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap_v2/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap_v2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

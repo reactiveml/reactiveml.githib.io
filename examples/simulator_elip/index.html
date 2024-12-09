@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../../style.css" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../documentation.html"> Manual</a></li>
+                <li><a href="../../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../../videos.html">Videos</a></li>
+            <li><a href="../../publications.html">Publications</a></li>
+            <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<h3>Simulation of Mobile Ad hoc Network Protocols in ReactiveML</h3>
+<br>
+
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <img src="screenshot_voisinage.png" alt="voisinage">
+    </div>
+    <br>
+    <div class="thumbnail">
+      <img src="screenshot_routage.png" alt="routage">
+    </div>
+    </div>
+    <div class="col-md-8">
+      <p>
+        This paper presents a programming experiment of a complex network
+        routing protocol for mobile ad hoc networks within the ReactiveML language.
+        <br>
+        Mobile ad hoc networks are highly dynamic networks characterized by
+        the absence of physical infrastructure. In such networks, nodes are
+        able to move, evolve concurrently and synchronize continuously with
+        their neighbors.  Due to mobility, connections in the network can
+        change dynamically and nodes can be added or removed at any time.  All
+        these characteristics -- concurrency with many communications and the
+        need of complex data-structure -- combined to our routing protocol
+        specifications make the use of standard simulation tools (e.g., NS,
+        OPNET) inadequate and network protocols appear to be very hard to
+        program efficiently in conventional programming languages.
+        <br>
+        In this paper, we show that the synchronous reactive model, as
+        introduced in the pioneering work of Boussinot, matters for
+        programming such systems. This model provides adequate programming
+        constructs -- namely synchronous parallel composition, broadcast
+        communication and dynamic creation -- which allow for a natural
+        implementation of the hard part of the simulation.
+        <br>
+        The implementation has been done in ReactiveML, an embedding of the reactive
+        model inside a statically typed, strict functional language. ReactiveML
+        provides reactive programming constructions with most of the features
+        of OCaml. Moreover, it provides an efficient execution scheme for
+        reactive constructs which made the simulation of real-size examples
+        feasible. Experimental results show that the ReactiveML implementation is
+        two orders of magnitude faster than the original C version; it was
+        able to simulate more than 1000 nodes where the original C version
+        failed (after 200 nodes) and compares favorably with the version programmed
+        in NAB.
+      </p>
+
+      <h4>Simulator</h4>
+
+      This sources works with ReactiveML version 1.04:
+
+        <ul>
+          <li><a href="simulator">Sources in HTML</a>
+          </li>
+          <li><a href="simulator.tgz">simulator.tgz for ReactiveML 1.04</a>
+          </li>
+          <li><a href="http://ReactiveML.org/distrib">ReactiveML distribution with the simulator working with the current version of the compiler (example/elip_v2)</a>
+          </li>
+        </ul>
+
+      <!-- <hr>  ************************************************************* -->
+
+      <h4>Papers</h4>
+        <ul>
+          <li>Louis Mandel and Farid Benbadis.
+            <b>Simulation of Mobile Ad hoc Network Protocols in ReactiveML</b>.
+            <i>Synchronous Languages, Applications, and Programming 2005</i>
+            <a href="http://ReactiveML.org/papers/MandelBenbadis-SLAP-2005.pdf">[pdf]</a>
+          </li>
+          <li>Louis Mandel and Marc Pouzet.
+            <b>ReactiveML, a Reactive Extension to ML</b>.
+            <a href="http://ReactiveML.org/papers/MandelPouzet-PPDP-2005.pdf">[pdf]</a>
+          </li>
+        </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

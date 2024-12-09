@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Videos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="./bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="./style.css" rel="stylesheet">
+  <link href="./bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="./rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="./documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="./documentation.html"> Manual</a></li>
+                <li><a href="./tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="./examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="./examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="./examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="./glonemo/index.html">Glonemo</a></li>
+                <li><a href="./reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li class="active"><a href="./videos.html">Videos</a></li>
+            <li><a href="./publications.html">Publications</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav">
+      <ul class="nav nav-list">
+        <li class="nav-header disabled"><a>Try ReactiveML</a></li>
+        <li><a href="./tryrml/tryrml.html"> Try it online</a></li>
+        <li><a href="./distrib"> Download</a></li>
+
+        <li class="nav-header disabled"><a>Videos</a></li>
+        <li><a href="#live_coding"> Music</a></li>
+        <li><a href="#mamux"> MaMux</a></li>
+        <li><a href="#inria"> INRIA</a></li>
+        <li><a href="#inria"> FARM</a></li>
+        <li><a href="#rmltop"> Toplevel</a></li>
+      </ul>
+    </div>
+  </div><!--/col-md--->
+
+  <div class="col-md-9">
+    <h1>Videos</h1>
+    <hr>
+
+    <section id="live_coding">
+      <h3>Music: Live Coding in ReactiveML</h3>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="thumbnails">
+            <video width="100%" controls>
+              <source src="./reactive_asco/resources/rising_sun.mp4" type="video/mp4">
+              <source src="./reactive_asco/resources/rising_sun.ogg" type="video/ogg">
+            </video>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p>
+            This demo shows an application of ReactiveML to live coding of
+            mixed-music. ReactiveML interact with
+            musician (here simulated) during the performance through the
+            <a href="http://repmus.ircam.fr/antescofo">Antescofo</a> listening machine. <br></p>
+          <p><a class="btn btn-default" href="./reactive_asco/index.html">View details &raquo;</a>
+          </p>
+          <p><a href="./reactive_asco/resources/rising_sun.mp4"><i class="glyphicon glyphicon-file black"></i>mp4</a>
+             <a href="./reactive_asco/resources/rising_sun.ogg"><i class="glyphicon glyphicon-file black"></i>ogg</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="mamux">
+      <h3>ReactiveML</h3>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="thumbnails">
+            <video width="100%" controls>
+              <source src="./videos/mamux-2012-02-03-mandel.mp4" type="video/mp4">
+                <source src="./videos/mamux-2012-02-03-mandel.ogg" type="video/ogg">
+            </video>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p>A talk given (in french) by Louis Mandel at
+            the <a href="http://repmus.ircam.fr/mamux/saisons/saison11-2011-2012/2012-02-03">MaMux
+            seminar</a>
+            of <a href="http://www.ircam.fr">IRCAM</a> about ReactiveML
+            and dynamic aspects in synchronous languages. </p>
+          <p><a href="./videos/mamux-2012-02-03-mandel.mp4"><i class="glyphicon glyphicon-file black"></i>mp4</a>
+             <a href="./videos/mamux-2012-02-03-mandel.ogg"><i class="glyphicon glyphicon-file black"></i>ogg</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="inria">
+      <h3>Synchronous Concurrency</h3>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="thumbnails">
+              <video width="100%" controls>
+                <source src="./videos/inria-junior-seminar-2013-02-26-pasteur.mp4" type="video/mp4">
+                <source src="./videos/inria-junior-seminar-2013-02-26-pasteur.ogg" type="video/ogg">
+              </video>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p>C&eacute;dric Pasteur gave an introduction to time and
+            concurrency in programming languages, more specifically,
+            synchronous functional programming languages at
+            the <a href="http://pauillac.inria.fr/~protzenk/semdoc/">Inria's
+              Junior Seminar</a>.
+          </p>
+          <p><a href="./videos/inria-junior-seminar-2013-02-26-pasteur.mp4"><i class="glyphicon glyphicon-file black"></i>mp4</a>
+             <a href="./videos/inria-junior-seminar-2013-02-26-pasteur.ogg"><i class="glyphicon glyphicon-file black"></i>ogg</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+   <section id="farm13">
+      <h3>Mixed Music in ReactiveML</h3>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="thumbnails">
+            <video width="100%" controls>
+              <source src="./videos/farm13-2013-09-28-baudart.mp4" type="video/mp4">
+                <source src="./videos/farm13-2013-09-28-baudart.ogg" type="video/ogg">
+            </video>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p>A talk given by Guillaume Baudart at the workshop
+            "Functional Art, Music, Modeling and
+            Design" (<a href="http://www.cis.upenn.edu/~byorgey/farm13/">FARM'13</a>),
+            about programming mixed music in ReactiveML.
+          </p>
+          <p><a class="btn btn-default" href="farm13/index.html">View details &raquo;</a></p>
+          <p><a href="./videos/farm13-2013-09-28-baudart.mp4"><i class="glyphicon glyphicon-file black"></i>mp4</a>
+             <a href="./videos/farm13-2013-09-28-baudart.ogg"><i class="glyphicon glyphicon-file black"></i>ogg</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+   <hr>
+
+    <section id="rmltop">
+      <h3>ReactiveML Toplevel</h3>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="thumbnails">
+            <video width="100%" controls>
+              <source src="./rmltop/planets.mp4" type="video/mp4">
+                <source src="./rmltop/planets.ogg" type="video/ogg">
+            </video>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p>Demonstration of the ReactiveML toplevel with the N-body problem.</p>
+          <p><a class="btn btn-default" href="rmltop">View details &raquo;</a>
+          </p>
+          <p><a href="./rmltop/planets.mp4"><i class="glyphicon glyphicon-file black"></i>mp4</a>
+             <a href="./rmltop/planets.ogg"><i class="glyphicon glyphicon-file black"></i>ogg</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="./navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="./distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="./distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="./bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

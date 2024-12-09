@@ -1,0 +1,228 @@
+<h1>Lesson 2: Moving ball</h1>
+<hr>
+<p>
+In this lesson, we will program a ball which bounces against the edges
+of a box, and which is duplicated on every emission of a signal split
+<code>split</code>. Here is an example of what we aim to achieve:
+<a class="code-file" href="lessons/lesson2/split.rml"  target="_blank">lessons/lesson2/split.rml</a>
+</p>
+
+<p>
+We first define the data structure to represent the bounds of a box.
+</p>
+
+<p><pre class="code">
+type box =
+    { left: float;
+      right: float;
+      top: float;
+      bot: float; }
+</pre></p>
+<p>
+We create a box.
+</p>
+<p><pre class="code">
+let box =
+  { left = 0.; right = 400.;
+    bot = 0.; top = 400.; }
+</pre></p>
+<p>
+We display the box.
+</p>
+<p><pre class="code">
+let () =
+  let g =
+    " " ^
+    (string_of_int (int_of_float (box.right -. box.left))) ^
+    "x" ^
+    (string_of_int (int_of_float (box.top -. box.bot)))
+  in
+  Graphics.open_graph g
+</pre></p>
+<p>
+We now define the data structure to represent the state of a ball.
+</p>
+<p><pre class="code">
+type state =
+    { pos: (float * float, float * float) event;
+      speed: (float * float, float * float) event;
+      radius: float;
+      color: Graphics.color; }
+</pre></p>
+<p>
+It is a record whose
+fields <code>pos</code>, <code>speed</code>, <code>radius</code>
+and <code>color</code> represent respectively the position, velocity,
+radius and color of a ball.
+</p>
+<p>
+The type of the field <code>pos</code> is <code>(float * float, float
+* float) event</code>. That is, it is an event on which we can emit and
+receive a tuple of floating numbers. It will represent the flow of
+positions.
+</p>
+<br />
+<p>
+To observe the balls, we use a global signal named <code>draw</code> on
+which each ball will emit its state. All the emitted states are
+collected into a list.
+</p>
+<p><pre class="code">
+signal draw default [] gather (fun x y -> x :: y) ;;
+</pre></p>
+
+<p>
+The behavior of a ball bouncing into the limit of the box can be
+programmed as follows.
+</p>
+<p><pre class="code">
+let process move state =
+  loop
+    (* emit the position *)
+    emit draw state;
+
+    (* compute the new position *)
+    let pre_vx, pre_vy = last ?state.speed in
+    let pre_x, pre_y = last ?state.pos in
+    let vx =
+      if box.left < pre_x && pre_x < box.right then pre_vx
+      else -. pre_vx
+    in
+    let vy =
+      if box.bot < pre_y && pre_y < box.top then pre_vy
+      else -. pre_vy
+    in
+    let x, y = (pre_x +. vx, pre_y +. vy) in
+
+    (* update the state *)
+    emit state.speed (vx, vy);
+    emit state.pos (x, y);
+    pause
+  end
+</pre></p>
+<p>
+The process is an infinite loop that first emits the current state,
+then computes the new position and then finally updates the state.
+</p>
+<p>
+Let us now create a state. To do that, we have to define auxiliary
+functions. The first one associates a color to an integer.
+</p>
+<p><pre class="code">
+let color_of_int n =
+  match n mod 7 with
+  | 0 -> Graphics.rgb 220 20 60
+  | 1 -> Graphics.blue
+  | 2 -> Graphics.rgb 34 139 34
+  | 3 -> Graphics.red
+  | 4 -> Graphics.rgb 150 150 150
+  | 5 -> Graphics.black
+  | 6 -> Graphics.magenta
+  | _ -> Graphics.black
+</pre></p>
+<p>
+The second function creates a vector of norm <code>k</code>.
+</p>
+<p><pre class="code">
+let random_speed k =
+  let alpha = Random.float 7. in
+  (k *. cos alpha, k *. sin alpha)
+</pre></p>
+
+<p>
+Now, a function which creates a value of type <code>state</code> can be
+defined as follows.
+</p>
+<p><pre class="code">
+let new_state () =
+  signal pos
+    default ((box.right -. box.left) /. 2., (box.top -. box.bot) /. 2.)
+    gather (fun x _ -> x)
+  in
+  signal speed default random_speed 2. gather (fun x _ -> x) in
+  let color = color_of_int (Random.int 7) in
+  { pos = pos; speed = speed; radius = 25.; color = color; }
+</pre></p>
+<p>
+The default value of the signal <code>pos</code> is the center of the
+box. The combination function only keeps one of the values emitted
+during an instant.
+</p>
+<p>
+Let us create a ball:
+</p>
+<p><pre class="code">
+#run (move (new_state ())) ;;
+</pre></p>
+
+<p>
+To observe the position of the ball, we program a process which
+displays the value of the <code>draw</code> signal.
+</p>
+<p><pre class="code">
+let process window =
+  loop
+    await draw (all) in
+    Graphics.clear_graph();
+    List.iter
+      (fun state ->
+        let x, y = last ?state.pos in
+        Graphics.set_color state.color;
+        Graphics.fill_circle
+          (int_of_float x) (int_of_float y)
+          (int_of_float state.radius))
+      all
+  end
+</pre></p>
+<p><pre class="code">
+#run window ;;
+</pre></p>
+<p>
+Now we want to create a ball which is duplicated each time a
+signal <code>split</code> is emitted.
+</p>
+<p><pre class="code">
+signal split default () gather (fun () () -> ()) ;;
+</pre></p>
+
+<p>
+We first define a function which creates a new state from an existing one.
+</p>
+<p><pre class="code">
+let new_state' state =
+  signal pos default last ?state.pos gather fun x _ -> x in
+  signal speed default random_speed 2. gather fun x _ -> x in
+  let radius = max 1. (state.radius -. state.radius /. 5.) in
+  let color = color_of_int (Random.int 7) in
+  { pos = pos; speed = speed; radius = radius; color = color; }
+</pre></p>
+<p>
+Dynamic creation is achieved by combining recursion and parallel
+composition.
+</p>
+<p><pre class="code">
+let rec process ball state =
+  do run (move state)
+  until split ->
+    run (ball (new_state' state))
+    ||
+    run (ball (new_state' state))
+  done
+</pre></p>
+
+<p><pre class="code">
+#run (ball (new_state ())) ;;
+</pre></p>
+
+<p>
+Finally, each time we emit the <code>split</code> event, the ball is duplicated.
+</p>
+<p><pre class="code">
+emit split ;;
+</pre></p>
+<p><pre class="code">
+emit split ;;
+</pre></p>
+<p>
+Warning the JavaScript interpreter can stop if there is to many balls.
+</p>

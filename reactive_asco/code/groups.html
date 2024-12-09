@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ReactiveML - Reactive Asco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../../style.css" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../../rml.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../../index.html">ReactiveML</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Menu</span>
+            Menu
+          </button>
+        </div>
+
+
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../tryrml/tryrml.html">Try online</a></li>
+            <li class="dropdown">
+              <a href="../../documentation.html" class="dropdown-toggle" data-toggle="dropdown">
+                Documentation <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../documentation.html"> Manual</a></li>
+                <li><a href="../../tutorial.html">Tutorial</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="../../examples.html" class="dropdown-toggle" data-toggle="dropdown">
+                Examples <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="../../examples.html"> Basic Examples</a></li>
+                <li class="divider"></li>
+                <li><a href="../../examples/simulator_elip/index.html">Network Simulation</a></li>
+                <li><a href="../../glonemo/index.html">Glonemo</a></li>
+                <li><a href="../../reactive_asco/index.html">Reactive Asco</a></li>
+              </ul>
+            </li>
+            <li><a href="../../videos.html">Videos</a></li>
+            <li><a href="../../publications.html">Publications</a></li>
+            <li><a href="../../contact.html">Contact</a></li>
+          </ul>
+
+        </div> <!-- /navbar-collapse -->
+      </div> <!-- /container -->
+    </div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar-nav sidebar-nav-fixed">
+      <ul class="nav nav-list">
+        <li class="nav-header disabled"><a>Reactive Asco</a></li>
+        <li><a href="../../reactive_asco/index.html"> Home</a></li>
+        <li><a href="../../reactive_asco/videos.html"> Videos Demos</a></li>
+        <li><a href="../../reactive_asco/source.html"> Source Code</a></li>
+
+        <li class="nav-header disabled"><a>Papers</a></li>
+        <li><a href="../../reactive_asco/resources/emsoft13.pdf"> EMSOFT'13</a></li>
+        <li><a href="../../reactive_asco/resources/farm13.pdf"> FARM'13</a></li>
+
+        <li class="nav-header disabled"><a>Modules</a></li>
+        <li><a href="../../reactive_asco/code/types.html"> Types</a></li>
+        <li><a href="../../reactive_asco/code/time.html"> Time</a></li>
+        <li><a href="../../reactive_asco/code/motor.html"> Motor</a></li>
+         <li><a href="../../reactive_asco/code/groups.html"> Groups</a></li>
+        <li><a href="../../reactive_asco/code/input.html"> Input</a></li>
+        <li><a href="../../reactive_asco/code/output.html"> Output</a></li>
+      </ul>
+    </div>
+  </div><!--/span-->
+
+
+  <div class="col-md-9">
+  <pre>
+<span style="color: #b22222;">(***************************************************************)</span>
+<span style="color: #b22222;">(*                        </span><span style="color: #b22222;">Reactive Asco                        </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*             </span><span style="color: #b22222;">http://reactiveml.org/reactive_asco             </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(*  </span><span style="color: #b22222;">Authors: Guillaume Baudart (guillaume.baudart@ens.fr)      </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*           </span><span style="color: #b22222;">Louis Mandel (louis.mandel@lri.fr)                </span><span style="color: #b22222;">*)</span>
+<span style="color: #b22222;">(*                                                             *)</span>
+<span style="color: #b22222;">(***************************************************************)</span>
+
+<span style="color: #b22222;">(** </span><span style="color: #b22222;">Groups traitment. </span><span style="color: #b22222;">*)</span>
+
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Types</span>
+<span style="color: #a0522d;">open</span> <span style="color: #0000ff;">Reactive_map</span>
+
+
+<a name="slice"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Slice the group [g] associated to the event [i] after a delay [delta].
+    Each action in [g.group_seq] is reassociated to the nearest event.
+    Return a list of score_event.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> slice instr_score i delta g =
+  <span style="color: #228b22;">let</span> di = instr_score.find i <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> asso_nearest de l acc =
+    <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> acc
+    <span style="color: #008b8b;">|</span> (da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #228b22;">let</span> date = de +. da <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> r, d = instr_score.nearest date <span style="color: #228b22;">in</span>
+        <span style="color: #a020f0;">begin</span> <span style="color: #008b8b;">match</span> acc <span style="color: #008b8b;">with</span>
+        <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span>
+            <span style="color: #228b22;">let</span> dn = date -. d <span style="color: #228b22;">in</span>
+            asso_nearest date t [ (r, [(dn, ae)]) ]
+        <span style="color: #008b8b;">|</span> (r', l) :: acc' <span style="color: #008b8b;">-&gt;</span>
+            <span style="color: #008b8b;">if</span> r = r' <span style="color: #008b8b;">then</span>
+              asso_nearest date t ((r, ((da, ae) :: l)) :: acc')
+            <span style="color: #008b8b;">else</span>
+              <span style="color: #228b22;">let</span> dn = date -. d <span style="color: #228b22;">in</span>
+              asso_nearest date t ((r, [(dn, ae)]) :: acc)
+        <span style="color: #a020f0;">end</span>
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> build_groups l acc =
+    <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> acc
+    <span style="color: #008b8b;">|</span> (r, l1)::l2 <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #228b22;">let</span> br = <span style="color: #0000ff;">List</span>.rev l1 <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> g =
+          { group_synchro = <span style="color: #0000ff;">Loose</span>;
+            group_error = g.group_error;
+            group_seq = br; }
+        <span style="color: #228b22;">in</span>
+        <span style="color: #228b22;">let</span> se =
+          { event = r;
+            seq = [(0.0, <span style="color: #0000ff;">Group</span>(g))]; }
+        <span style="color: #228b22;">in</span>
+        build_groups l2 (se::acc)
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> nl = asso_nearest (di +. delta) g.group_seq [] <span style="color: #228b22;">in</span>
+  build_groups nl []
+
+<a name="split"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Split the group [g] associated to the event [i] after a delay [delta]
+    in two. Actions that should happen before event [j] and action
+    that should happen after [j]. Return two sequences of actions.
+</span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> split instr_score i j delta g =
+  <span style="color: #228b22;">let</span> di = instr_score.find i <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> dj = instr_score.find j <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux de ael p f df =
+    <span style="color: #008b8b;">match</span> ael <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> p, f, df
+    <span style="color: #008b8b;">|</span> (da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #008b8b;">if</span> (de +. da) &lt; dj <span style="color: #008b8b;">then</span>
+          aux (de +. da) t ((da, ae)::p) f (de +. da)
+        <span style="color: #008b8b;">else</span>
+          aux (de +. da) t p ((da, ae)::f) df
+  <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> p, f, df = aux (di +. delta) g.group_seq [] [] (di +. delta) <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> past, future = <span style="color: #0000ff;">List</span>.rev p, <span style="color: #0000ff;">List</span>.rev f <span style="color: #228b22;">in</span>
+  <span style="color: #228b22;">let</span> future =
+    <span style="color: #008b8b;">match</span> future <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> []
+    <span style="color: #008b8b;">|</span> (dae, ae)::t <span style="color: #008b8b;">-&gt;</span> ((df +. dae -. dj), ae)::t
+  <span style="color: #228b22;">in</span>
+  past, future
+
+<a name="extract"></a><span style="color: #b22222;">(** </span><span style="color: #b22222;">Extract groups from a list of electronic actions. </span><span style="color: #b22222;">*)</span>
+<span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> extract_group l =
+  <span style="color: #228b22;">let</span> <span style="color: #228b22;">rec</span> aux d l =
+    <span style="color: #008b8b;">match</span> l <span style="color: #008b8b;">with</span>
+    <span style="color: #008b8b;">|</span> [] <span style="color: #008b8b;">-&gt;</span> []
+    <span style="color: #008b8b;">|</span> (da, ae)::t <span style="color: #008b8b;">-&gt;</span>
+        <span style="color: #a020f0;">begin</span> <span style="color: #008b8b;">match</span> ae <span style="color: #008b8b;">with</span>
+        <span style="color: #008b8b;">|</span> <span style="color: #0000ff;">Group</span>(g) <span style="color: #008b8b;">-&gt;</span> (da +. d, ae)::(aux 0.0 t)
+        <span style="color: #008b8b;">|</span> _ <span style="color: #008b8b;">-&gt;</span> aux (da +. d) t
+        <span style="color: #a020f0;">end</span>
+  <span style="color: #228b22;">in</span>
+  aux 0.0 l
+</pre>
+
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+
+<hr>
+<div class="footer">
+  <div class="row">
+    <div class="col-md-6">
+	<p>
+	  <small>
+	    <a href="../../navigation.html">navigation</a>
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+    <div class="col-md-6">
+	<p style="text-align: right">
+	  <small>
+	    <a href="../../distrib">ReactiveML version 1.09.07</a><br>
+	    2021-07-26 <a href="../../distrib/changes">changes</a>
+	      <!-- <br> -->
+	      <!-- Warning: incompatible changes with previous versions are marked with <tt>*</tt>: <a href="distrib/changes">changes</a> -->
+	  </small>
+	</p>
+    </div> <!-- /col-md-6 -->
+  </div> <!-- /row -->
+</div> <!-- /footer -->
+
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37633890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript" src="../../bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>
